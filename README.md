@@ -1,8 +1,8 @@
 # SPOCK Tutorial
 
-Šestitýdenní SPOCK Builder onboarding (do 17. 12. 2026) pro práci v Claude Code.
+Uživatelský onboarding do SPOCKu pro **Product Managera, Product Designera a Software Engineera**, od instalace až po superusera. Vychází ze zdrojového repozitáře [SPOCK-Workflow-1.0](https://github.com/TominoHav/SPOCK-Workflow-1.0).
 
-- `onboarding/` – lekce po týdnech, tahák, slovník, diagnostika, pokrok
-- `.claude/skills/spock-onboarding/` – průvodce; v Claude Code ho spustíte příkazem `/spock-onboarding`
+- `onboarding/`: lekce podle úrovní a rolí, tahák, slovník, diagnostika, pokrok
+- `.claude/skills/spock-onboarding/`: průvodce, v Claude Code se spouští příkazem `/spock-onboarding`
 
 Začněte v [onboarding/README.md](onboarding/README.md).

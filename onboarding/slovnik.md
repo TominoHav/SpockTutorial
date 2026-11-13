@@ -1,28 +1,27 @@
 # Slovník
 
-| Pojem | Význam | Oblast |
-|---|---|---|
-| **LLM** | Velký jazykový model. Dostane text a pokračuje v něm, mezi konverzacemi si nic nepamatuje. | základ |
-| **Kontext** | Všechen text, který model právě vidí: instrukce, konverzace, přečtené soubory. | základ |
-| **Instrukce (system prompt)** | Text, který model dostane před zprávou uživatele. Ve SPOCKu instrukce, wrapper a skill. | základ |
-| **Nástroj (tool)** | Funkce, o jejíž spuštění model požádá a prostředí ji provede. | základ |
-| **Agent** | Model, který ve smyčce přemýšlí, volá nástroje a čte výsledky, dokud není hotovo. | základ |
-| **Workflow** | Předem dané pořadí kroků. SPOCK je workflow s agentem v každém kroku. | základ |
-| **Halucinace** | Model s jistotou tvrdí něco nepravdivého. Proto se vše ověřuje kódem. | základ |
-| **Prompt injection** | Pokyn pro AI ukrytý v materiálu, který agent čte. Obranou je agent bez přístupu ven. | základ |
-| **Eval (evaluace)** | Sada vstupů s předem známým správným chováním. Spouští se před změnou a po ní. | základ |
-| **Git, commit, větev, diff** | Verzování: uložená změna, paralelní linie práce a rozdíl mezi verzemi. | základ |
-| **Pull request** | Návrh změny v gitu, který si před sloučením někdo zreviduje. | základ |
-| **Run (běh)** | Jedna iniciativa procházející 7 fázemi ve vlastní složce runs/. | SPOCK |
-| **Wrapper** | Soubor .agent.md, tenká identita agenta. | SPOCK |
-| **Binding** | Vazba skillu na agenta v agents.yaml. | SPOCK |
-| **Know-how** | Znalost, kterou skill čte a nikdy nepíše. Vlastní ji ČS. | SPOCK |
-| **Q1–Q7** | Kvalitní brány. Kontroluje je kód. | SPOCK |
-| **G1–G7** | Rozhodovací brány. Rozhoduje člověk svým jménem. | SPOCK |
-| **Mechanical / judged** | Pravidlo rozhoduje kód / pravidlo musí posoudit člověk. | SPOCK |
-| **Negativní případ (arm)** | Záměrné rozbití, které dokazuje, že kontrola umí selhat. | SPOCK |
-| **Hook / step guard** | Skript, který VS Code spustí v určitém okamžiku tahu agenta a který může krok odmítnout. | SPOCK |
-| **Karanténa** | Fáze 2: materiál zákazníka čte agent bez přístupu ven. | SPOCK |
-| **Declared reduction** | Skill, kterému chybí know-how, to přizná a pokračuje v omezeném rozsahu. | SPOCK |
-| **Free-roam** | Režim mimo workflow, bez bran. Spouští se prefixem free-roam:. | SPOCK |
-| **Output / asset** | Výstup fáze pro člověka / trvalý podklad, ze kterého čtou další fáze. | SPOCK |
+| Pojem | Význam |
+|---|---|
+| **Běh (run)** | Jedna iniciativa procházející 7 fázemi. Celá je ve složce `runs/<běh>/` na vašem počítači, mimo git. |
+| **Fáze (stage)** | Jedna ze 7. Má agenta, vstupy, artefakty, kvalitní bránu a většinou rozhodnutí člověka. |
+| **Agent** | Identita, se kterou mluvíte v Copilot Chatu. Šest agentů: čtyři vedou fáze, dva pomáhají. |
+| **Task** | Krok, který udělá systém: zápis do záznamu, podpis, kontrola. Spouští se přes `Tasks: Run Task`. |
+| **Políčko (box)** | Vstup, který task otevře nahoře v okně. Políčko na jméno, roli, důvod nebo rozhodnutí vyplňujete jen vy. |
+| **Artefakt (A1–A15)** | Dokument, který fáze vyprodukuje, plus záznam za ním. |
+| **Output / asset** | Output musí člověk schválit a má rozhodovací bránu. Asset je mezivýsledek bez podpisu. |
+| **Q1–Q7** | Kvalitní brány: automatické kontroly, které nespouští agent, který dokument napsal. |
+| **G1, G2, G4, G5b, G6, G7** | Rozhodovací brány: rozhoduje člověk svým jménem, rolí a datem. |
+| **pass / fail / incomplete** | Výsledek brány. `incomplete` není pass. |
+| **Mechanická / posuzovaná polovina** | Pravidla, která rozhodne kód / pravidla, která musí posoudit člověk. Zelená brána znamená, že prošla mechanická polovina. |
+| **Výjimka (sign-off)** | Podepsané „tuto kontrolu běh nemůže splnit“. Brána zůstane `fail`. |
+| **Stale** | Pozdější fáze, jejíž podklad se změnil. Buď se ponechá, nebo přepracuje. |
+| **Trust tag** | strong / weak / unrated. Odvozuje se z důkazů za problémem, nikdy se jen neprohlásí. |
+| **Karanténa** | Fáze 2: materiál zákazníka čte agent bez přístupu ven a pokyn v materiálu bere jen jako text. |
+| **Supplied** | Složka fáze, do které dáváte svůj materiál (`2-problems/supplied/`, `3-competitive-analysis/supplied/`). |
+| **Touchpoint** | Místo, kde řešení naráží na regulatorní povinnost. Porovnávají se ve fázi 4 místo skóre. |
+| **Titulní stránka běhu** | `runs/<běh>/README.md`. Říká, kde běh stojí, a vede na hlavní dokumenty. |
+| **RUN-STATE.md** | Záznam běhu: stav fází, podpisy, verze know-how. |
+| **Free-roam** | Práce mimo běh, bez bran a bez záznamu. Zpráva musí začínat doslovně `free-roam:`. |
+| **Trio** | PM, designer a engineer dělající discovery spolu. Každý vede ve své oblasti, odpovídají společně. |
+| **Opportunity Solution Tree** | Metoda SPOCKu: outcome → příležitosti → řešení → artefakty. |
+| **Outcome** | Změna chování nebo výsledku, ke které se brief zavazuje. Není to řešení. |
