@@ -2,185 +2,177 @@
 
 Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po vašem souhlasu ho aktualizuje.
 
-## Týden 1: Základy: jak fungují AI agenti
+**Moje role:** _(PM / Product Designer / Software Engineer)_
 
-**Po 9. 11. — Co je LLM a co je agent**
+## Úroveň 0: Příprava
 
-- [ ] T1.1 Otestujte, jestli si model vymýšlí
-- [ ] T1.1 Porovnejte tři odpovědi na stejnou otázku
-- [ ] T1.1 Vyzkoušejte, co model „uvidí" v dlouhém textu
-- [ ] T1.1 Založte si deník
+**0.1 — Instalace a kontrola nastavení**
 
-**Út 10. 11. — Psaní instrukcí**
+- [ ] 0.1 Naklonujte SPOCK a otevřete ho
+- [ ] 0.1 Spusťte SPOCK: check my setup
+- [ ] 0.1 Zkontrolujte šest agentů
+- [ ] 0.1 Nastavte model
 
-- [ ] T1.2 Napište stejnou instrukci ve třech verzích
-- [ ] T1.2 Porovnejte výsledky
-- [ ] T1.2 Najděte stejné techniky ve skutečném skillu
+**0.2 — Pět pravidel, která se neporušují**
 
-**St 11. 11. — Terminál a git**
+- [ ] 0.2 Najděte v `TASKS.md` tři tasky, které otevírají políčka
+- [ ] 0.2 Založte si deník
 
-- [ ] T1.3 Naučte se pohyb v terminálu
-- [ ] T1.3 Uložte první verzi v gitu
-- [ ] T1.3 Udělejte změnu na vlastní větvi
-- [ ] T1.3 Vraťte se na hlavní větev
+- [ ] Kvíz: Úroveň 0: Příprava
 
-**Čt 12. 11. — Markdown, YAML, JSON a Node**
+## Úroveň 1: Základy
 
-- [ ] T1.4 YAML: přečtěte záznam skillu
-- [ ] T1.4 YAML: změňte a vraťte
-- [ ] T1.4 Markdown: porovnejte text a náhled
-- [ ] T1.4 JSON: najděte schvalovací tlačítko
-- [ ] T1.4 Node: přečtěte bránu Q1
-- [ ] T1.4 Nechte si vysvětlit kontrolu
-- [ ] T1.4 Přidejte vlastní zkušební kontrolu
+**1.1 — Co SPOCK dělá**
 
-**Pá 13. 11. — První agent ve VS Code**
+- [ ] 1.1 Nechte SPOCK popsat sám sebe
+- [ ] 1.1 Pojmenujte, co SPOCK neumí
 
-- [ ] T1.5 Projděte brief s agentem ve své kopii SPOCKu
-- [ ] T1.5 Odeberte agentovi nástroj
-- [ ] T1.5 Páteční schůzka s Igorem
+**1.2 — Agenti, tasky a brány**
 
-## Týden 2: SPOCK jako uživatel
+- [ ] 1.2 Nakreslete si rytmus jedné fáze
+- [ ] 1.2 Zeptejte se Methodology Coache
 
-**Po 16. 11. — Co SPOCK dělá a instalace**
+**1.3 — Čtení hotového běhu**
 
-- [ ] T2.1 Nainstalujte SPOCK a ověřte nastavení
-- [ ] T2.1 Nechte SPOCK popsat sám sebe
-- [ ] T2.1 Projděte ukázkový běh
-- [ ] T2.1 Dohledejte tvrzení zpět ke zdroji
+- [ ] 1.3 Projděte ukázkový běh
+- [ ] 1.3 Dohledejte jedno tvrzení zpět ke zdroji
+- [ ] 1.3 Najděte v běhu podpisy
 
-**Út 17. 11. — Fáze 1 a 2: brief a problémy**
+- [ ] Kvíz: Úroveň 1: Základy
 
-- [ ] T2.2 Založte běh
-- [ ] T2.2 Projděte fázi 1 se schválnou chybou
-- [ ] T2.2 Schvalte brief
-- [ ] T2.2 Projděte fázi 2
+## Úroveň 2: Product Manager
 
-**St 18. 11. — Fáze 3 a 4: trh a řešení**
+**2P.1 — Fáze 1: brief**
 
-- [ ] T2.3 Fáze 3 s vyhledáváním
-- [ ] T2.3 Fáze 3 s vlastním souborem trhu
-- [ ] T2.3 Fáze 4: vyberte řešení
+- [ ] 2P.1 Založte běh
+- [ ] 2P.1 Projděte brief se schválnou chybou
+- [ ] 2P.1 Schvalte brief (G1)
 
-**Čt 19. 11. — Fáze 5 až 7: MVP, PRD a iniciativa**
+**2P.2 — Fáze 2: problémy a příležitosti**
 
-- [ ] T2.4 Fáze 5: přidejte vlastní variantu MVP
-- [ ] T2.4 Fáze 6 a 7: PRD a iniciativa
-- [ ] T2.4 Zkontrolujte celý běh
+- [ ] 2P.2 Dodejte materiál a načtěte ho
+- [ ] 2P.2 Přidejte problém vlastními slovy
+- [ ] 2P.2 Potvrďte a seřaďte příležitosti (G2)
 
-**Pá 20. 11. — Scénáře 2–4: když jde něco špatně**
+**2P.3 — Fáze 3: trh**
 
-- [ ] T2.5 Scénář 3: podstrčená instrukce
-- [ ] T2.5 Scénáře 2 a 4 zkráceně
-- [ ] T2.5 Vyzkoušejte nouzová tlačítka
-- [ ] T2.5 Požádejte Igora o celý repozitář
+- [ ] 2P.3 Připravte seznam trhu a projděte fázi 3
 
-## Týden 3: Jak je SPOCK postavený
+**2P.4 — Fáze 4: řešení**
 
-**Po 23. 11. — Agenti a jejich práva**
+- [ ] 2P.4 Vyberte řešení (G4)
 
-- [ ] T3.1 Zmapujte všech 6 agentů
-- [ ] T3.1 Ověřte wrapper proti registru
-- [ ] T3.1 Přečtěte komentáře v settings.json
+**2P.5 — Fáze 5: MVP**
 
-**Út 24. 11. — Skilly a know-how**
+- [ ] 2P.5 Přidejte vlastní variantu a vyberte
 
-- [ ] T3.2 Zmapujte know-how skillu brief-creation
-- [ ] T3.2 Prohlédněte si karanténu
-- [ ] T3.2 Projděte katalog vzorů
+**2P.6 — Fáze 6 a 7: PRD a iniciativa**
 
-**St 25. 11. — Registry a kontrakty**
+- [ ] 2P.6 Odsouhlaste PRD (G6)
+- [ ] 2P.6 Schvalte iniciativu (G7)
 
-- [ ] T3.3 Rozeberte kontrakt fáze 1 a 2
-- [ ] T3.3 Projděte registry
+**2P.7 — Po běhu**
 
-**Čt 26. 11. — Kontroly a brány**
+- [ ] 2P.7 Zkontrolujte celý běh
+- [ ] 2P.7 Exportujte chaty a zapište nálezy
 
-- [ ] T3.4 Spusťte brány nad ukázkovým během
-- [ ] T3.4 Propojte kritéria s kontrolami
-- [ ] T3.4 Rozbijte kopii a sledujte chybu
+- [ ] Kvíz: Úroveň 2: Product Manager
 
-**Pá 27. 11. — Hlídače kroků (hooks)**
+## Úroveň 2: Product Designer
 
-- [ ] T3.5 Prohlédněte nastavení hlídačů
-- [ ] T3.5 Najděte rozhodnutí hlídače
-- [ ] T3.5 Páteční schůzka s Igorem
+**2D.1 — Kde designer do běhu vstupuje**
 
-## Týden 4: Měníte metodiku
+- [ ] 2D.1 Najděte v ukázkovém běhu, kde by pomohl designer
+- [ ] 2D.1 Zeptejte se Methodology Coache na trio
 
-**Po 30. 11. — Ověřovací sada**
+**2D.2 — Materiál do fáze 2**
 
-- [ ] T4.1 Spusťte ověřovací sadu
+- [ ] 2D.2 Připravte materiál pro cvičný běh
+- [ ] 2D.2 Veďte fázi 2 pod svým jménem
 
-**Út 1. 12. — Postup změny know-how**
+**2D.3 — Posouzení příležitostí**
 
-- [ ] T4.2 Přidejte příklad do Method Canonu
-- [ ] T4.2 Commitněte změnu
+- [ ] 2D.3 Projděte rámované příležitosti s PM před G2
 
-**St 2. 12. — Změna skillu a měření rozdílu**
+**2D.4 — Řešení a MVP z pohledu designera**
 
-- [ ] T4.3 Změňte otázku ve skillu
-- [ ] T4.3 Změřte rozdíl
+- [ ] 2D.4 Navrhněte řešení nebo variantu MVP
 
-**Čt 3. 12. — První skutečná změna**
+**2D.5 — PRD a iniciativa**
 
-- [ ] T4.4 Vyberte skutečný problém
-- [ ] T4.4 Napište návrh změny
-- [ ] T4.4 Proveďte změnu
+- [ ] 2D.5 Zkontrolujte uživatelskou část PRD
 
-**Pá 4. 12. — Revize s Igorem**
+- [ ] Kvíz: Úroveň 2: Product Designer
 
-- [ ] T4.5 Revize s Igorem
-- [ ] T4.5 Zapište si pravidla
+## Úroveň 2: Software Engineer
 
-## Týden 5: Stavíte nové
+**2E.1 — Jak SPOCK funguje uvnitř (pro uživatele)**
 
-**Po 7. 12. — Nový skill bez brány**
+- [ ] 2E.1 Projděte strukturu ukázkového běhu
+- [ ] 2E.1 Spusťte kontroly nad ukázkovým během
 
-- [ ] T5.1 Napište SKILL.md
-- [ ] T5.1 Zapište skill do registrů
-- [ ] T5.1 Napojte skill na agenta
-- [ ] T5.1 Ověřte
+**2E.2 — Proveditelnost před G4**
 
-**Út 8. 12. — Evaluace nového skillu**
+- [ ] 2E.2 Napište PM krátké technické posouzení řešení
 
-- [ ] T5.2 Připravte testovací briefy
-- [ ] T5.2 Otestujte a vylepšete
+**2E.3 — MVP a PRD jako vstup pro delivery**
 
-**St 9. 12. — Nová kontrola a její negativní případ**
+- [ ] 2E.3 Přečtěte PRD jako engineer
+- [ ] 2E.3 Přečtěte iniciativu
 
-- [ ] T5.3 Napište kontrolu
-- [ ] T5.3 Napište negativní případ
+**2E.4 — Záznamy a kontroly ve vlastním běhu**
 
-**Čt 10. 12. — Vlastní hook**
+- [ ] 2E.4 Vysvětlete PM jednu neprošlou kontrolu
 
-- [ ] T5.4 Napište hook
-- [ ] T5.4 Otestujte hook
+- [ ] Kvíz: Úroveň 2: Software Engineer
 
-**Pá 11. 12. — Stejná architektura v Claude Code**
+## Úroveň 3: Pokročilý
 
-- [ ] T5.5 Přeneste kousek SPOCKu do Claude Code
-- [ ] T5.5 Prostudujte složku prototype
-- [ ] T5.5 Volitelně: uc-v-prompts jako skill
+**3.1 — Vrácení a změny**
 
-## Týden 6: Převzetí a generálka
+- [ ] 3.1 Vraťte fázi 2 kvůli novému materiálu
+- [ ] 3.1 Zapište ruční úpravu
 
-**Po 14. 12. — Co budete vlastnit**
+**3.2 — Když brána neprojde**
 
-- [ ] T6.1 Předávací schůzka s Igorem
-- [ ] T6.1 Domluvte své oblasti
+- [ ] 3.2 Projděte jednu neprošlou kontrolu
 
-**Út 15. 12. — Nedodělky a plán na Q1 2027**
+**3.3 — Předání běhu, vlastnictví a jména**
 
-- [ ] T6.2 Napište plán metodiky na Q1 2027
+- [ ] 3.3 Předejte běh kolegovi z tria
 
-**St 16. 12. — Generálka**
+**3.4 — Pomocníci a práce mimo workflow**
 
-- [ ] T6.3 Najděte chybu
-- [ ] T6.3 Opravte a ověřte
-- [ ] T6.3 Zapište postup
+- [ ] 3.4 Vyzkoušejte free-roam a jeho hranici
 
-**Čt 17. 12. — Ukázka Igorovi**
+**3.5 — Údržba kopie a ukončení běhu**
 
-- [ ] T6.4 Ukázka Igorovi
-- [ ] T6.4 Poslední otázka
+- [ ] 3.5 Aktualizujte kopii
+
+- [ ] Kvíz: Úroveň 3: Pokročilý
+
+## Úroveň 4: Superuser
+
+**4.1 — Co výstup SPOCKu dokazuje a co ne**
+
+- [ ] 4.1 Připravte si „poctivé shrnutí“ pro kolegy
+
+**4.2 — Prověřte chování agentů**
+
+- [ ] 4.2 Sondy chování na cvičném běhu
+- [ ] 4.2 Projděte jeden scénář z balíčku
+
+**4.3 — Měření a stav**
+
+- [ ] 4.3 Přečtěte výkon workflow
+
+**4.4 — Zpětná vazba Igorovi**
+
+- [ ] 4.4 Pošlete jeden nález
+
+**4.5 — Mentor a generálka**
+
+- [ ] 4.5 Generálka: celý běh bez nápovědy
+- [ ] 4.5 Proveďte kolegu úrovněmi 0 a 1
+
+- [ ] Kvíz: Úroveň 4: Superuser

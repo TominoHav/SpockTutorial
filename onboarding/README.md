@@ -1,26 +1,56 @@
-# SPOCK Builder Onboarding (do 17. 12. 2026)
+# SPOCK User Onboarding
 
-Šestitýdenní příprava na roli SPOCK buildera a vlastníka metodiky.
+Onboarding pro **uživatele** SPOCKu: Product Managera, Product Designera a Software Engineera. Vede od první instalace až na úroveň **superusera**, který SPOCK ovládá bez nápovědy, pozná, když se agent chová špatně, a provede jím kolegy.
 
-## Týdny
+Všechno tady vychází ze zdrojového repozitáře SPOCKu ([SPOCK-Workflow-1.0](https://github.com/TominoHav/SPOCK-Workflow-1.0), release 1.16.1). Kde lekce odkazuje na soubor jako `SETUP.md` nebo `specifications/…`, myslí se soubor ve vaší kopii SPOCKu.
 
-1. [Základy: jak fungují AI agenti](tyden-1.md) — 9.–15. 11. — LLM, agenti, psaní instrukcí, terminál, git a YAML.
-2. [SPOCK jako uživatel](tyden-2.md) — 16.–22. 11. — Celý běh od briefu po iniciativu a 4 testovací scénáře.
-3. [Jak je SPOCK postavený](tyden-3.md) — 23.–29. 11. — Agenti, skilly, know-how, registry, kontrakty, kontroly a hooks.
-4. [Měníte metodiku](tyden-4.md) — 30. 11.–6. 12. — Ověřovací sada, postup změny know-how, evaluace, první skutečná změna.
-5. [Stavíte nové](tyden-5.md) — 7.–13. 12. — Nový skill, evaluace, kontrola s negativním případem, hook a Claude Code.
-6. [Převzetí a generálka](tyden-6.md) — 14.–17. 12. — Co vlastníte, plán na Q1, generálka a ukázka Igorovi.
+> **Tohle není onboarding pro buildera.** Nic tady nemění soubory pod `.github/` ani `.vscode/`. Podle `SETUP.md` §9 jsou to soubory workflow a jejich změna by změnila chování každého agenta.
+
+## Cesta
+
+```
+Úroveň 0  Příprava        ─┐
+Úroveň 1  Základy          ├─ všichni
+                           │
+Úroveň 2  Vaše role       ─┼─ Product Manager  │ Product Designer │ Software Engineer
+                           │
+Úroveň 3  Pokročilý        ├─ všichni
+Úroveň 4  Superuser       ─┘
+```
+
+| Úroveň | Soubor | Pro koho | Čas | Na konci umíte |
+|---|---|---|---|---|
+| 0 | [Příprava](uroven-0-priprava.md) | všichni | 1–1,5 h | Mít SPOCK nainstalovaný, ověřený a znát pět pravidel, která se neporušují. |
+| 1 | [Základy](uroven-1-zaklady.md) | všichni | 3–4 h | Vysvětlit 7 fází, rozdíl mezi Q a G bránou, 6 agentů a přečíst hotový běh. |
+| 2 | [Product Manager](role-pm.md) | PM | 6–8 h | Projít vlastní běh od briefu po iniciativu a podepsat každé rozhodnutí. |
+| 2 | [Product Designer](role-designer.md) | Designer | 4–5 h | Dodat výzkum do fáze 2, posoudit příležitosti a přispět k řešení, MVP a PRD. |
+| 2 | [Software Engineer](role-engineer.md) | Engineer | 4–5 h | Posoudit proveditelnost před výběrem řešení, přečíst PRD a záznamy běhu. |
+| 3 | [Pokročilý](uroven-3-pokrocily.md) | všichni | 3–4 h | Vrátit fázi, vyřešit neprošlou bránu, předat běh kolegovi, aktualizovat kopii. |
+| 4 | [Superuser](uroven-4-superuser.md) | všichni | 4–6 h | Prověřit chování agentů, poslat použitelný nález a provést kolegu onboardingem. |
+
+**Doporučené pořadí:** 0 → 1 → vaše role → 3 → 4. Na úrovni 2 se vyplatí přečíst si i úvod ostatních dvou rolí, protože SPOCK počítá s **triem** PM, designer a engineer (`specifications/definitions/know-how/method/method-canon.md` §14.1).
+
+Tempo si určujete sami, pevná data tu nejsou.
 
 ## Podklady
 
-- [Pokrok](POKROK.md)
-- [Architektura: fáze a vrstvy](architektura.md)
-- [Tahák](tahak.md)
+- [Pokrok](POKROK.md): zaškrtávací seznam všech úkolů
+- [Tahák](tahak.md): všechny tasky, které jako uživatel spouštíte, a kdy
 - [Slovník](slovnik.md)
-- [Diagnostika](diagnostika.md)
-- [Principy a časté chyby](principy-a-chyby.md)
-- [Připravenost](pripravenost.md)
+- [Diagnostika](diagnostika.md): co vidím → co udělám
+- [Zásady](zasady.md): principy SPOCKu a časté chyby uživatelů
+- [Připravenost](pripravenost.md): sebehodnocení pro každou úroveň
 
 ## Jak s tím pracovat v Claude Code
 
-V terminálu ve složce repa spusťte `claude` a napište `/spock-onboarding`. Průvodce zjistí, který den podle plánu je, a provede vás lekcí, úkoly a kvízem.
+Ve složce tohoto repa spusťte `claude` a napište `/spock-onboarding`. Průvodce se zeptá na vaši roli, z `POKROK.md` zjistí, kde jste přestali, a provede vás lekcí, úkoly a kvízem.
+
+Aby průvodce mohl odpovídat podle skutečných souborů SPOCKu, přidejte mu jeho složku:
+
+```bash
+claude --add-dir ../SPOCK-Workflow-1.0
+```
+
+## Kde se SPOCK doopravdy používá
+
+Samotná práce v SPOCKu (agenti, tasky, běhy) probíhá ve **VS Code s GitHub Copilot Chat**, ne v Claude Code. Claude Code tu slouží jen jako průvodce onboardingem.

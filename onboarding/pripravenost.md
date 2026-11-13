@@ -1,31 +1,49 @@
-# Připravenost k 17. 12. 2026
+# Připravenost: sebehodnocení
 
-## Základy
+Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až máte zaškrtnuté všechno z té předchozí.
 
-- [ ] Vysvětlím kolegovi LLM, kontext, nástroj, agenta a workflow a proč se výstup modelu musí ověřovat.
-- [ ] Používám git: větev, commit, diff a pull request.
-- [ ] Přečtu YAML, JSON i skript .mjs a řeknu, co dělají.
+## Úroveň 0: Příprava
 
-## Ovládání
+- [ ] SPOCK mám nainstalovaný, `check my setup` mi projde a vidím šest agentů.
+- [ ] Znám pět pravidel z lekce 0.2 a umím říct, proč každé platí.
+- [ ] Poznám, který task spouštím jen já.
 
-- [ ] Projdu běh od fáze 1 do 7 bez nápovědy a vím, který task kdy spustit.
-- [ ] Umím aktualizovat svou kopii na novou verzi a ověřit ji.
-- [ ] Vysvětlím rozdíl mezi Q a G branou a proč agent nemůže schválit sám.
+## Úroveň 1: Základy
 
-## Architektura
+- [ ] Vysvětlím 7 fází a kdo v každé rozhoduje.
+- [ ] Vysvětlím rozdíl mezi Q a G bránou a proč agent nehodnotí sám sebe.
+- [ ] V hotovém běhu dohledám tvrzení z iniciativy zpět k materiálu.
+- [ ] Řeknu tři věci, které SPOCK nedělá.
 
-- [ ] U kteréhokoli agenta najdu jeho skilly, nástroje a know-how v registru.
-- [ ] Vysvětlím, co dělají hlídače kroků, a přečtu jejich záznam.
-- [ ] Přečtu výstup check.mjs --gates a dohledám kontrolu podle C-čísla.
+## Úroveň 2: Moje role
 
-## Změny a stavba
+**Product Manager**
+- [ ] Projdu běh od fáze 1 do 7 a vím, kdy spustit který task.
+- [ ] Rozpoznám, když agent rozhoduje místo mě (doporučení, skóre, vymyšlené pole).
+- [ ] Před G4 si vyžádám technické posouzení a před G6 projdu PRD s triem.
 
-- [ ] Provedl jsem změnu know-how podle KNOW-HOW-OWNERS.md §4 a Igor ji zrevidoval.
-- [ ] Přidal jsem skill, který prošel register.mjs --verify i repo-check.mjs, a mám k němu evaluaci.
-- [ ] Napsal jsem kontrolu i s negativním případem a vlastní hook.
-- [ ] Ve generálce jsem sám našel a opravil chybu.
+**Product Designer**
+- [ ] Připravím materiál, který SPOCK přečte, s daty a s odlišeným zdrojem z první ruky.
+- [ ] Posoudím rámované příležitosti a trust tag.
+- [ ] Zkontroluji uživatele, přístupnost a srozumitelnost textů v PRD.
 
-## Převzetí
+**Software Engineer**
+- [ ] Napíšu technické posouzení sady řešení před G4.
+- [ ] Přečtu PRD a iniciativu jako vstup pro delivery a najdu mezery.
+- [ ] Přečtu výstup brány a dohledám kontrolu podle C-čísla.
 
-- [ ] Mám celý git repozitář a všechny kontroly mi na něm projdou.
-- [ ] Mám domluvené oblasti, za které mě ČS jmenuje, a odsouhlasený plán na Q1 2027.
+## Úroveň 3: Pokročilý
+
+- [ ] Vrátím fázi a rozhodnu o stale fázích.
+- [ ] Vyřeším neprošlou bránu a rozliším chybu materiálu od chyby workflow.
+- [ ] Předám běh kolegovi a převezmu cizí běh.
+- [ ] Vím, kdy a jak použít free-roam a co ztrácím.
+- [ ] Aktualizuji kopii SPOCKu.
+
+## Úroveň 4: Superuser
+
+- [ ] Poctivě vysvětlím, co zelené brány dokazují a co ne.
+- [ ] Vyvolám a poznám typické odchylky agenta (sondy v 4.2).
+- [ ] Poslal(a) jsem Igorovi aspoň jeden úplný nález.
+- [ ] Prošel/prošla jsem generálku bez nápovědy.
+- [ ] Provedl(a) jsem kolegu úrovněmi 0 a 1.

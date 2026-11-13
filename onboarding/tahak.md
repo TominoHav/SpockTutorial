@@ -1,83 +1,80 @@
-# Tahák
+# Tahák pro uživatele SPOCKu
 
-## Terminál ve VS Code
+Task spustíte přes **Command Palette → `Tasks: Run Task`** (nebo Terminal → Run Task…) → název tasku. Celý seznam je v `specifications/onboarding/TASKS.md` ve vaší kopii SPOCKu.
 
-| Příkaz / zkratka | Co dělá | Ve VS Code |
+**Pravidlo:** task, který **otevírá políčka**, spouštíte jen **vy**. Task bez políček smí spustit i agent.
+
+## Začátek a nastavení
+
+| Task | Kdy | Políčka |
 |---|---|---|
-| `Terminal → New Terminal` | otevře terminál dole ve VS Code, rovnou ve složce projektu (jinak Cmd+Shift+P → Terminal: Create New Terminal) | — |
-| `Cmd+K (kurzor v terminálu)` | vyčistí obrazovku terminálu | — |
-| `Cmd+C / Cmd+V` | zkopíruje označený výstup / vloží příkaz | — |
-| `Enter` | spustí napsaný příkaz | — |
-| `ikona koše / + v panelu terminálu` | zavře terminál / otevře další | — |
+| `SPOCK: check my setup` | po instalaci a vždy, když něco nefunguje | nástroj (GitHub Copilot) |
+| `SPOCK: start a run` | na začátku běhu, když vás na něj pošle Product Manager | id běhu, jméno, role |
+| `SPOCK: update this copy to the latest release` | po dokončení běhu, se zavřenými chaty | update |
+| `SPOCK: what this build can say about itself` | když potřebujete aktuální čísla | — |
 
-## Kde jsem a co tu je
+## Během běhu
 
-| Příkaz / zkratka | Co dělá | Ve VS Code |
+| Task | Kdy | Políčka |
 |---|---|---|
-| `pwd` | vypíše, ve které složce terminál je | — |
-| `ls` | vypíše, co ve složce je | Explorer vlevo |
-| `cd složka / cd ..` | vejde do složky / o úroveň výš | Terminal → New Terminal otevře terminál rovnou ve složce projektu |
+| `SPOCK: continue` | posune běh k dalšímu místu, kde rozhodujete | — |
+| `SPOCK: approve what is in front of me` | schválení (G1, G2, G4, G5b, G6, G7) | jméno, role, odpovědi na otázky brány, co jste chtěli změnit |
+| `SPOCK: record a decision I made` | volba řešení (fáze 4) a varianty MVP (fáze 5) | druh, id, proč, jméno, role |
+| `SPOCK: record who owns this stage` | na začátku fáze, když práci dělá někdo jiný, než kdo ji schválí | jméno, role |
+| `SPOCK: mark the PRD agreed` | fáze 6, před schválením G6 | jméno |
+| `SPOCK: record the Jira key` | fáze 7 | klíč nebo `none yet` |
 
-## Git: stav a změny
+## Materiál
 
-| Příkaz / zkratka | Co dělá | Ve VS Code |
+| Task | Fáze | Políčka |
 |---|---|---|
-| `git status` | na jaké jsem větvi a co je změněné, ale neuložené | Source Control vlevo (ikona větvení) |
-| `git diff` | co přesně se změnilo (− staré, + nové; q = konec) | klik na soubor v Source Control |
-| `git restore .` | zahodí všechny neuložené změny (natrvalo) | Source Control → šipka Discard All Changes |
-| `git commit -am "proč"` | uloží změny jako verzi s popisem | Source Control → zpráva → Commit |
-| `git add soubor / git add .` | připraví změny k uložení (jeden soubor / všechny); commit -am to dělá za vás u už sledovaných souborů | Source Control → + u souboru |
-| `git restore soubor` | vrátí jeden soubor do stavu posledního commitu (stejné jako git checkout -- soubor) | Source Control → šipka Discard Changes u souboru |
-| `git stash / git stash pop` | odloží rozpracované změny stranou / vrátí je zpět, třeba když potřebujete rychle přepnout větev | Source Control → … → Stash |
+| `SPOCK: read in the problem material` | 2: první načtení souborů ze `supplied/` | — |
+| `SPOCK: date the material that arrived without dates` | 2: soubory bez data | období, jméno |
+| `SPOCK: add problem material` | 2: nový nebo změněný soubor | yes / no |
+| `SPOCK: add a problem in my own words` | 2 | problém |
+| `SPOCK: take in what I pasted in the chat` | 2 nebo 3: text zkopírovaný ve schránce | jméno |
+| `SPOCK: what market material has been supplied` | 3: váš seznam trhu v `supplied/` | yes / no |
 
-## Git: větve
+## Kontroly a stav
 
-| Příkaz / zkratka | Co dělá | Ve VS Code |
+| Task | Co udělá |
+|---|---|
+| `SPOCK: run one gate` | spustí bránu aktuální fáze: pass / fail / incomplete |
+| `SPOCK: explain what the gate failed` | ke každé neprošlé kontrole řekne, co a proč |
+| `SPOCK: check the whole run` | všechny kontroly nad celým během |
+| `SPOCK: which gates can run in full` | která polovina které brány proběhla |
+| `SPOCK: how the workflow performed` | přehled ze záznamů běhů |
+
+## Když něco nejde podle plánu
+
+| Task | Kdy | Políčka |
 |---|---|---|
-| `git checkout main` | přepne na hlavní větev | název větve vlevo dole ve VS Code → vybrat |
-| `git checkout -b pokus/nazev` | založí zkušební větev a přepne na ni | název větve vlevo dole → Create new branch |
-| `git log --oneline` | historie verzí, HEAD = kde jste | Source Control → Graph |
-| `git branch` | vypíše větve; hvězdička = ta, na které jste | — |
-| `git branch -d pokus/nazev` | smaže větev, jen pokud je už sloučená (bezpečné); u nesloučené odmítne a napíše „not fully merged“ | — |
-| `git branch -D pokus/nazev` | smaže větev i se změnami, které nikde jinde nejsou (natrvalo; pro zkušební větve) | — |
-| `git switch nazev` | novější a čitelnější varianta git checkout nazev; git switch -c nazev založí novou větev | — |
+| `SPOCK: send a stage back to be redone` | fázi je potřeba přepracovat | fáze, jméno, důvod, role |
+| `SPOCK: keep a later stage as it is` | stale fáze stále platí | fáze, jméno, důvod, role |
+| `SPOCK: sign off a check this run cannot meet` | kontrolu běh opravdu splnit nemůže | 6 políček |
+| `SPOCK: record that I edited a document` | dokument jste ručně upravili | cesta, co, proč, jméno |
+| `SPOCK: take something back` | soubor do běhu nepatří | soubor, důvod, jméno |
+| `SPOCK: replace a decision that no longer stands` | rozhodnutí už neplatí | 8 políček |
+| `SPOCK: correct a name on the record` | překlep ve jméně | 4 políčka |
+| `SPOCK: stop this run` | běh končí natrvalo | jméno, důvod, poznámka |
 
-## Git: GitHub a vzdálený repozitář
+## Agenti
 
-| Příkaz / zkratka | Co dělá | Ve VS Code |
-|---|---|---|
-| `git remote -v` | ukáže, kam vede origin (odkud jste repozitář stáhl a kam by šel push) | — |
-| `git pull` | stáhne novinky z origin do aktuální větve | Source Control → … → Pull |
-| `git push` | nahraje vaše commity do origin; nejdřív ověřte git remote -v, ať nepushujete do cizího repozitáře | Source Control → Sync Changes |
-| `git push -u moje nazev-vetve` | poprvé nahraje větev do vašeho vlastního remote (moje), další push už stačí bez parametrů | — |
+| Agent | Kdy |
+|---|---|
+| Product Manager | fáze 1, 4 a 5. Začátek: `Start a discovery run.` |
+| Opportunity Designer | fáze 2 |
+| Competitive Analysis | fáze 3 |
+| Business Analyst | fáze 6 a 7 |
+| Workflow Support | „Kde běh stojí a co mám udělat?“ |
+| Methodology Coach | otázky k metodě |
 
-## Soubory a složky
+## Zkratky ve VS Code
 
-| Příkaz / zkratka | Co dělá | Ve VS Code |
-|---|---|---|
-| `mkdir -p slozka` | založí složku (a s -p i chybějící nadřazené); když existuje, nic neudělá | Explorer → ikona nové složky |
-| `cp -R zdroj cil` | zkopíruje složku i s obsahem, např. ukázkový běh do runs/ | — |
-| `rm -rf slozka` | natrvalo smaže složku i s obsahem, bez koše; používejte jen na vlastní kopie (runs/test-…) | Explorer → Delete (jde do koše) |
-| `cat soubor / less soubor` | vypíše soubor / zobrazí ho po stránkách (q = konec) | Cmd+P → název souboru |
-| `open .` | otevře aktuální složku ve Finderu | Explorer → pravé tlačítko → Reveal in Finder |
-| `příkaz | grep text` | z výstupu příkazu vybere jen řádky s textem, např. check.mjs runs/x | grep C900 | — |
-| `příkaz | head -20` | ukáže jen prvních 20 řádků výstupu | — |
-
-## SPOCK
-
-| Příkaz / zkratka | Co dělá | Ve VS Code |
-|---|---|---|
-| `node .github/scripts/check.mjs runs/<běh>` | spustí kontroly nad během a vypíše PASS / FAIL | Tasks: Run Task → SPOCK: check the whole run |
-| `… --gates` | ukáže, které kontroly patří ke které bráně | — |
-| `node .github/scripts/repo-check.mjs` | ověří, že registry, wrappery a skilly spolu sedí | — |
-| `grep -rn "text" .github` | najde text ve všech souborech | Cmd+Shift+F |
-
-## Když se něco zasekne
-
-| Příkaz / zkratka | Co dělá | Ve VS Code |
-|---|---|---|
-| `:` | dlouhý výstup po stránkách: mezerník = dál, q = konec | — |
-| `šipka nahoru` | vrátí poslední příkaz, můžete ho opravit | — |
-| `Ctrl+C` | zastaví běžící příkaz | — |
-| `clear` | vyčistí obrazovku terminálu (stejně jako Cmd+K) | — |
-| `Tab` | doplní začátek názvu souboru nebo složky | — |
+| Co | Jak |
+|---|---|
+| Command Palette | View → Command Palette (Cmd+Shift+P / Ctrl+Shift+P) |
+| Nový chat | ikona **+** v Copilot Chatu |
+| Export chatu | Command Palette → `Chat: Export Chat...` |
+| Znovu načíst okno | Command Palette → `Developer: Reload Window` |
+| Celý text tasku | panel Terminal nebo `.github/last-task.md` |
