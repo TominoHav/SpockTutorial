@@ -40,6 +40,46 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 - [ ] Kvíz: Úroveň 1: Základy
 
+## Úroveň 1b: Fáze do hloubky
+
+**1F.0 — Co platí v každé fázi**
+
+- [ ] 1F.0 Přečtěte si titulní stránku a stav běhu
+- [ ] 1F.0 Sepište si, jak má agent mluvit
+
+**1F.1 — Fáze 1: brief do hloubky**
+
+- [ ] 1F.1 Rozeberte brief ukázkového běhu
+- [ ] 1F.1 Projděte Strategy Basis
+
+**1F.2 — Fáze 2: problémy a příležitosti do hloubky**
+
+- [ ] 1F.2 Projděte řetěz fáze 2 v ukázkovém běhu
+- [ ] 1F.2 Napište hypotézu, která neprojde testem tvaru
+
+**1F.3 — Fáze 3: trh do hloubky**
+
+- [ ] 1F.3 Zkontrolujte jednu kartu konkurenta
+
+**1F.4 — Fáze 4: řešení a compliance do hloubky**
+
+- [ ] 1F.4 Rozeberte jedno řešení a jeho compliance
+- [ ] 1F.4 Najděte důvod volby
+
+**1F.5 — Fáze 5: MVP do hloubky**
+
+- [ ] 1F.5 Posuďte varianty MVP
+
+**1F.6 — Fáze 6: PRD do hloubky**
+
+- [ ] 1F.6 Projděte PRD a jeho alignment statement
+
+**1F.7 — Fáze 7: iniciativa do hloubky**
+
+- [ ] 1F.7 Porovnejte iniciativu s PRD
+
+- [ ] Kvíz: Úroveň 1b: Fáze do hloubky
+
 ## Úroveň 2: Product Manager
 
 **2P.1 — Fáze 1: brief**
@@ -123,6 +163,10 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 **2E.4 — Záznamy a kontroly ve vlastním běhu**
 
 - [ ] 2E.4 Vysvětlete PM jednu neprošlou kontrolu
+
+**2E.5 — Compliance do hloubky**
+
+- [ ] 2E.5 Projděte ICT touchpointy jednoho řešení
 
 - [ ] Kvíz: Úroveň 2: Software Engineer
 

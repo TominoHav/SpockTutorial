@@ -4,7 +4,7 @@
 
 **Proč:** Kontroly SPOCKu hlídají, že dokumenty jsou mechanicky v pořádku. **Jestli je outcome dobře formulovaný a příležitosti jsou ty správné, neposuzuje žádná kontrola**: posuzovaná pravidla nečte žádný automatický soudce (`BUSINESS-LOGIC-OVERVIEW.md` §6). Know-how oblastí **Method** a **Product** vlastní Česká spořitelna a osoba v ČS, která je udržuje, zatím není jmenovaná (`specifications/onboarding/KNOW-HOW-OWNERS.md` §1). Šablona iniciativy Product Management Guildy je pro SPOCK závazná (`initiative-template.md`). Guild Master je člověk, který tohle drží pohromadě.
 
-**Než začnete:** Mějte hotové úrovně 0 a 1 a ideálně i [role-pm.md](role-pm.md). Metodiku nejde posuzovat bez vlastního běhu.
+**Než začnete:** Mějte hotové úrovně 0, 1 a 1b a ideálně i [role-pm.md](role-pm.md). Metodiku nejde posuzovat bez vlastního běhu.
 
 > Guild Master mění **zdroj** know-how v `specifications/definitions/know-how/`. Nikdy neupravuje `.github/`: kopii pro agenty generuje a ověřuje engineer (`KNOW-HOW-OWNERS.md` §3–4).
 
@@ -68,6 +68,8 @@
 
 - **Každá brána má mechanickou a posuzovanou polovinu.** Mechanickou spouští kód. **Posuzovanou nehodnotí žádný automat**, protože všechny agenty pilotu pohání jedna rodina modelů a kontrola stejnou rodinou by byla producent souhlasící sám se sebou.
 - **Kdo podepisuje bránu, může posuzovaná pravidla zodpovědět** ve třetím políčku `SPOCK: approve what is in front of me`: `y`, `n` nebo `?` s číslem otázky. Přeskočené se zapíše jako skipped a kontrola `C180` hlídá, že odpovědi mají jméno a roli.
+- **Kde posuzovaná polovina chybí nebo nikoho nemá:** Q6 posuzovanou polovinu nemá vůbec, každé pravidlo tu rozhoduje kontrola (STAGE-6 §8.2). Q3 posuzovanou polovinu má, ale fáze 3 nemá schválení, takže se na její otázky nikdo nezeptá (STAGE-3 §8.4). **Metodicky nejslabší místo běhu je proto trh**, a ten čte až člověk ve fázi 4.
+- **Co žádná specifikace neopraví** (konec každé STAGE-N-SPEC): špatný materiál dá dobře formulované špatné problémy, sebejistý a dobře ozdrojovaný špatný obraz trhu projde, tři varianty MVP mohou být jednou variantou popsanou třikrát a dobře formulovaná iniciativa pro špatný nápad projde. To jsou body vaší revize.
 - **Guild Master posuzuje kvalitu, ne formu:** jestli je outcome změna chování, jestli příležitost popisuje potřebu, a ne řešení, a jestli trust tag sedí s tím, co za ním je.
 
 ### Úkoly

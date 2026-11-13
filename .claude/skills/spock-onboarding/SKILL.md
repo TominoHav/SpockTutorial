@@ -14,16 +14,16 @@ Tohle **není** onboarding pro buildera. Nevysvětluj, jak se mění skilly, reg
 Ve složce `onboarding/` v kořeni repa:
 
 - `README.md`: cesta (úrovně 0–4 a čtyři role na úrovni 2)
-- `uroven-0-priprava.md`, `uroven-1-zaklady.md`, `role-pm.md`, `role-designer.md`, `role-engineer.md`, `role-guild-master.md`, `uroven-3-pokrocily.md`, `uroven-4-superuser.md`: lekce s materiály ke studiu, klíčovými myšlenkami, úkoly (pole *Proč*) a kvízem
+- `uroven-0-priprava.md`, `uroven-1-zaklady.md`, `uroven-1b-faze-do-hloubky.md` (sedm fází podle `specifications/stage-specs/`), `role-pm.md`, `role-designer.md`, `role-engineer.md`, `role-guild-master.md`, `uroven-3-pokrocily.md`, `uroven-4-superuser.md`: lekce s materiály ke studiu, klíčovými myšlenkami, úkoly (pole *Proč*) a kvízem
 - `POKROK.md`: zaškrtávací seznam a **jediný soubor, do kterého zapisuješ**
 - `tahak.md`, `slovnik.md`, `diagnostika.md`, `zasady.md`, `pripravenost.md`: referenční podklady
 
-Zdrojem pravdy je **repozitář SPOCKu** (`SPOCK-Workflow-1.0`). Hledej ho ve složce přidané přes `--add-dir` nebo ve vedlejší složce (např. `../SPOCK-Workflow-1.0`). Hlavní soubory: `SETUP.md`, `specifications/onboarding/TESTER-GUIDE.md`, `specifications/onboarding/TASKS.md`, `specifications/BUSINESS-LOGIC-OVERVIEW.md`, `specifications/definitions/know-how/method/method-canon.md` a ukázkové běhy ve `fixtures/`. **Před vysvětlováním si příslušnou pasáž přečti**, ať odpovídáš podle aktuální verze, ne podle paměti. Když repozitář SPOCKu dostupný není, řekni to a odpovídej jen z lekcí s upozorněním, že to nemůžeš ověřit.
+Zdrojem pravdy je **repozitář SPOCKu** (`SPOCK-Workflow-1.0`). Hledej ho ve složce přidané přes `--add-dir` nebo ve vedlejší složce (např. `../SPOCK-Workflow-1.0`). Hlavní soubory: `SETUP.md`, `specifications/stage-specs/STAGE-1-SPEC.md` až `STAGE-7-SPEC.md` (nejhlubší popis každé fáze), `specifications/onboarding/TESTER-GUIDE.md`, `specifications/onboarding/TASKS.md`, `specifications/BUSINESS-LOGIC-OVERVIEW.md`, `specifications/definitions/know-how/method/method-canon.md` a ukázkové běhy ve `fixtures/`. **Před vysvětlováním si příslušnou pasáž přečti**, ať odpovídáš podle aktuální verze, ne podle paměti. Když repozitář SPOCKu dostupný není, řekni to a odpovídej jen z lekcí s upozorněním, že to nemůžeš ověřit.
 
 ## Postup při spuštění
 
 1. Přečti `POKROK.md`. Když tam není vyplněná role, zeptej se: Product Manager, Product Designer, Software Engineer, nebo Guild Master? Po souhlasu ji tam zapiš.
-2. Najdi nejstarší nezaškrtnutý úkol na cestě uživatele: úroveň 0 → 1 → **jen sekce jeho role** na úrovni 2 → 3 → 4. Úkoly ostatních rolí přeskakuj a nepočítej je jako nesplněné.
+2. Najdi nejstarší nezaškrtnutý úkol na cestě uživatele: úroveň 0 → 1 → 1b → **jen sekce jeho role** na úrovni 2 → 3 → 4. Úkoly ostatních rolí přeskakuj a nepočítej je jako nesplněné.
 3. Krátce shrň, kde uživatel je: lekci, co nastudovat (s cestou k souboru), 2–3 klíčové myšlenky a úkoly s odhadem času.
 4. Zeptej se, čím chce začít.
 

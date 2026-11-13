@@ -15,6 +15,13 @@ Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až mát
 - [ ] V hotovém běhu dohledám tvrzení z iniciativy zpět k materiálu.
 - [ ] Řeknu tři věci, které SPOCK nedělá.
 
+## Úroveň 1b: Fáze do hloubky
+
+- [ ] U každé fáze řeknu, co čte, co vyrobí, kdo rozhoduje a co záměrně nedělá.
+- [ ] Vím, kam jde neprošlá kontrola a které kontroly nejde podepsat.
+- [ ] Vysvětlím trust tag, pravidlo nezávislých zdrojů, compliance sweep a proč fáze 4 nemá skóre.
+- [ ] U každé fáze znám, co její specifikace přiznává, že neopraví.
+
 ## Úroveň 2: Moje role
 
 **Product Manager**

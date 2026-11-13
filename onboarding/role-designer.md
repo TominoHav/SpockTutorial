@@ -67,6 +67,9 @@
 ### Klíčové myšlenky
 
 - **Dobře formulovaná příležitost** popisuje potřebu, bolest nebo touhu zákazníka, ne řešení (`method-canon.md` §10.4).
+- **Test tvaru: mohlo by tenhle problém vyřešit víc než jedna věc?** Když ne, „problém“ už si vybral řešení. *Poradci by používali samoobslužný nástroj* je řešení převlečené za problém (STAGE-2 §1.5, R3.2.2).
+- **Co materiál neřekne, odpovídáte vy, jako pořadí přes celou sadu:** které příležitosti zasáhnou nejvíc zákazníků a které je bolí nejvíc. Jako designer na to máte nejlepší data (STAGE-2 R3.3.6).
+- **Příležitost, kterou přinesete sami,** nepotřebuje hypotézu, dostane `origin: person` a v dokumentu je označená jako vaše (R3.3.7).
 - **Alternativy zůstávají prázdné s důvodem.** Řešení napsané ve fázi 2 by bylo o tři fáze dřív (`TESTER-GUIDE.md` §4, Stage 2).
 
 ### Úkoly
@@ -82,6 +85,8 @@
 ### Klíčové myšlenky
 
 - **Každé řešení je jiná kombinace příležitostí, ne varianta jednoho řešení.** Vlastní řešení, které řeší jen podmnožinu existujícího, SPOCK odmítne, a to správně (`TESTER-GUIDE.md` §4, Stage 4).
+- **Sekce řešení *How it does it* popisuje zážitek klienta a pracovníka, ne architekturu**, a *What it does* změnu chování klienta, ne obrazovky. Tady je váš pohled nejcennější (STAGE-4 §4.2).
+- **Varianta MVP nesmí změnit, kdo s řešením pracuje.** Smí zúžit kanál nebo skupinu klientů. Varování pro klienta přesunuté na obrazovku pracovníka je jiné řešení (STAGE-5 R3.1.4b).
 - **Varianty MVP se liší v tom, jak se řešení postaví**, ne v tom, co se staví. Překryv mezi nimi je tu v pořádku (`BUSINESS-LOGIC-OVERVIEW.md` §3, fáze 5).
 
 ### Úkoly
