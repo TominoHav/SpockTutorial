@@ -54,6 +54,7 @@
 - **Čtyři věci, nic dalšího:** VS Code (aktuální verze), GitHub Copilot a Copilot Chat, **Node.js 20 nebo 22** a Git. Všechno, co SPOCK spouští, je malý Node skript. Nic dalšího se neinstaluje (`SETUP.md` §1).
 - **Node.js volte verzi 22, LTS** (dlouhodobá podpora). SPOCK je testovaný na verzích 20 a 22. Jinou verzi kontrola nastavení ohlásí jako chybějící.
 - **Po instalaci Node.js nebo Gitu VS Code zavřete a znovu otevřete.** Jinak nástroj nenajde.
+- **Command Palette je ve VS Code vyhledávací řádek pro všechny příkazy.** Místo hledání v menu napíšete, co chcete udělat, a VS Code příkaz najde. Otevřete ji klávesovou zkratkou **Cmd+Shift+P** (Mac) nebo **Ctrl+Shift+P** (Windows), případně z menu **View → Command Palette**. Nahoře uprostřed okna se objeví řádek se znakem `>`. Napište část názvu příkazu (např. `git clone`), šipkami vyberte příkaz ze seznamu a potvrďte **Enter**. Zavřete ji klávesou **Esc**. SPOCK ji používá na všechno: klonování, spouštění tasků i znovunačtení okna.
 
 ### Úkoly
 
@@ -62,7 +63,9 @@
   1. Otevřete [code.visualstudio.com](https://code.visualstudio.com/) a stáhněte verzi pro svůj systém. Jde o **Visual Studio Code**, ne o „Visual Studio“ (to je jiný, velký program).
   2. **Mac:** rozbalte stažený soubor a aplikaci *Visual Studio Code* přetáhněte do složky *Aplikace*. Spusťte ji odtud.
   3. **Windows:** spusťte instalátor (User Installer) a nechte zaškrtnuté **Add to PATH**. Ostatní volby nechte výchozí.
-  4. Ověření: VS Code se otevře. Volitelně v Command Palette (View → Command Palette) na Macu spusťte `Shell Command: Install 'code' command in PATH`, abyste mohli VS Code otevírat i z terminálu.
+  4. Ověření: VS Code se otevře.
+  5. Vyzkoušejte si Command Palette: stiskněte **Cmd+Shift+P** (Mac) nebo **Ctrl+Shift+P** (Windows), napište `theme`, šipkami vyberte **Preferences: Color Theme**, potvrďte Enter a pak Esc. Tak budete spouštět všechny příkazy v dalších krocích.
+  6. Volitelně, jen na Macu: v Command Palette napište `shell command`, vyberte **Shell Command: Install 'code' command in PATH** a potvrďte Enter. Pak půjde VS Code otevřít i z terminálu příkazem `code`.
 - [ ] **Nainstalujte Node.js 22 LTS** (10 min)
   - *Proč:* Každý task SPOCKu (kontroly, zápisy, podpisy) spouští Node skript. Bez Node žádný task nefunguje.
   1. Otevřete [nodejs.org/en/download](https://nodejs.org/en/download) a zvolte **verzi 22, LTS**.
@@ -114,24 +117,29 @@
 
 - **SPOCK naklonujte, nestahujte jako ZIP.** Klon se později aktualizuje jedním taskem, ZIP by se musel stahovat znovu (`SETUP.md` §2 a §8).
 - **Ve VS Code otevírejte složku, která přímo obsahuje `.github` a `.vscode`,** a autorům složky důvěřujte. V restricted mode se tasky nespustí (`SETUP.md` §3).
-- **Všechno, co SPOCK dělá za vás, je task** a spouští se přes Command Palette → `Tasks: Run Task`.
+- **Všechno, co SPOCK dělá za vás, je task.** Task je předem připravený příkaz, který spustí skript SPOCKu, a jejich seznam je v souboru `.vscode/tasks.json` vaší kopie. Spustíte ho dvěma způsoby: buď **Command Palette → napíšete `run task` → vyberete `Tasks: Run Task` → Enter**, nebo z menu **Terminal → Run Task…**. Pak se ukáže seznam tasků. Napište část názvu (např. `check my setup`), vyberte task a potvrďte Enter.
+- **Když task něco potřebuje, otevře nahoře v okně políčko** (box). Vyplníte ho a potvrdíte Enterem. Esc task zruší a nic se nezapíše. Výpis tasku se ukáže dole v panelu Terminal a celý je i v souboru `.github/last-task.md`.
 - **Rozšíření pro webové vyhledávání nepotřebujete.** Fáze 3 funguje se seznamem konkurentů. Vyhledávání vyžaduje zvlášť instalované rozšíření a klíč a je jen pro testování (`SETUP.md` §6 krok 5).
 
 ### Úkoly
 
 - [ ] **Naklonujte SPOCK a otevřete ho** (15 min)
   - *Proč:* Jen ze správně otevřené složky najde VS Code agenty, tasky a nastavení SPOCKu.
-  1. Command Palette (View → Command Palette) → `Git: Clone` → vložte adresu repozitáře SPOCKu z lekce 0.1.
-  2. Zvolte místo na disku, kam kopii uložíte, ne do sdílené složky.
-  3. Až se VS Code zeptá, zvolte **Open**.
-  4. Na otázku, jestli důvěřujete autorům, odpovězte, že ano.
-  5. Ověření: v Exploreru vlevo vidíte přímo složky `.github` a `.vscode`.
+  1. Otevřete Command Palette (**Cmd+Shift+P** na Macu, **Ctrl+Shift+P** na Windows, nebo **View → Command Palette**).
+  2. Napište `git clone`, vyberte **Git: Clone** a potvrďte Enter.
+  3. Do políčka, které se objeví, vložte adresu repozitáře SPOCKu z lekce 0.1 (Cmd+V nebo Ctrl+V) a potvrďte Enter. Když VS Code nabídne přihlášení ke GitHubu, přihlaste se účtem ČS.
+  4. Zvolte místo na disku, kam kopii uložíte, ne do sdílené složky.
+  5. Až se VS Code zeptá, zvolte **Open**.
+  6. Na otázku, jestli důvěřujete autorům, odpovězte, že ano.
+  7. Ověření: v Exploreru vlevo vidíte přímo složky `.github` a `.vscode`.
 - [ ] **Spusťte SPOCK: check my setup** (15 min)
   - *Proč:* Kontrola ověří Node, Git, vaši kopii, agenty a model najednou. Dokud SPOCK neví, v jakém nástroji pracujete, nezaloží žádný běh (`SETUP.md` §4).
-  1. Terminal → Run Task… → `SPOCK: check my setup`.
-  2. Na otázku, jaký nástroj používáte, zvolte **GitHub Copilot**.
-  3. Projděte výpis řádek po řádku. Opravte, co je označené jako *missing*, a task spouštějte znovu, dokud poslední řádek nehlásí, že je vše na místě.
-  4. Když v seznamu tasků není nic, co začíná `SPOCK:`, máte otevřenou jinou složku nebo jste v restricted mode. Vraťte se k předchozímu úkolu.
+  1. Otevřete seznam tasků: z menu **Terminal → Run Task…**, nebo v Command Palette napište `run task` a vyberte **Tasks: Run Task**.
+  2. V seznamu napište `check my setup`, vyberte **SPOCK: check my setup** a potvrďte Enter.
+  3. Nahoře se objeví políčko s otázkou, jaký nástroj používáte. Vyberte **GitHub Copilot** a potvrďte Enter.
+  4. Dole se otevře panel Terminal s výpisem.
+  5. Projděte výpis řádek po řádku. Opravte, co je označené jako *missing*, a task spouštějte znovu, dokud poslední řádek nehlásí, že je vše na místě.
+  6. Když v seznamu tasků není nic, co začíná `SPOCK:`, máte otevřenou jinou složku nebo jste v restricted mode. Vraťte se k předchozímu úkolu.
 - [ ] **Zkontrolujte šest agentů** (5 min)
   - *Proč:* Agent navíc nebo chybějící agent znamená jinou konfiguraci, než SPOCK předpokládá, a výsledky by neplatily (`TESTER-GUIDE.md` §2.2).
   1. Otevřete výběr agenta v Copilot Chatu.

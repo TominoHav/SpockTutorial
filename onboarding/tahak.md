@@ -1,6 +1,6 @@
 # Tahák pro uživatele SPOCKu
 
-Task spustíte přes **Command Palette → `Tasks: Run Task`** (nebo Terminal → Run Task…) → název tasku. Celý seznam je v `specifications/onboarding/TASKS.md` ve vaší kopii SPOCKu.
+**Jak task spustit:** otevřete Command Palette (**Cmd+Shift+P** na Macu, **Ctrl+Shift+P** na Windows, nebo **View → Command Palette**), napište `run task`, vyberte **Tasks: Run Task** a potvrďte Enter. Stejný seznam otevře i menu **Terminal → Run Task…**. V seznamu napište část názvu tasku, vyberte ho a potvrďte Enter. Když task otevře nahoře políčko, vyplňte ho a potvrďte Enter. Esc ho zruší a nic se nezapíše. Celý seznam tasků je v `specifications/onboarding/TASKS.md` ve vaší kopii SPOCKu.
 
 **Pravidlo:** task, který **otevírá políčka**, spouštíte jen **vy**. Task bez políček smí spustit i agent.
 
