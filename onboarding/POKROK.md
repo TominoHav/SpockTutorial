@@ -6,17 +6,35 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 ## Úroveň 0: Příprava
 
-**0.1 — Instalace a kontrola nastavení**
+**0.1 — Přístupy a licence**
 
-- [ ] 0.1 Naklonujte SPOCK a otevřete ho
-- [ ] 0.1 Spusťte SPOCK: check my setup
-- [ ] 0.1 Zkontrolujte šest agentů
-- [ ] 0.1 Nastavte model
+- [ ] 0.1 Ověřte si GitHub účet ČS
+- [ ] 0.1 Požádejte o licenci GitHub Copilot pro VS Code
+- [ ] 0.1 Vyžádejte si přístup k repozitáři SPOCKu
+- [ ] 0.1 Ověřte, jestli smíte instalovat software
 
-**0.2 — Pět pravidel, která se neporušují**
+**0.2 — Instalace nástrojů**
 
-- [ ] 0.2 Najděte v `TASKS.md` tři tasky, které otevírají políčka
-- [ ] 0.2 Založte si deník
+- [ ] 0.2 Nainstalujte VS Code
+- [ ] 0.2 Nainstalujte Node.js 22 LTS
+- [ ] 0.2 Nainstalujte Git
+
+**0.3 — GitHub Copilot ve VS Code**
+
+- [ ] 0.3 Nainstalujte a přihlaste Copilota
+- [ ] 0.3 Ověřte agent mode a výběr modelu
+
+**0.4 — SPOCK ve vašem počítači**
+
+- [ ] 0.4 Naklonujte SPOCK a otevřete ho
+- [ ] 0.4 Spusťte SPOCK: check my setup
+- [ ] 0.4 Zkontrolujte šest agentů
+- [ ] 0.4 Nastavte model a zkontrolujte náhled dokumentů
+
+**0.5 — Pět pravidel, která se neporušují**
+
+- [ ] 0.5 Najděte v `TASKS.md` tři tasky, které otevírají políčka
+- [ ] 0.5 Založte si deník
 
 - [ ] Kvíz: Úroveň 0: Příprava
 

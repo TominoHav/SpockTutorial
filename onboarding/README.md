@@ -21,7 +21,7 @@ Všechno tady vychází ze zdrojového repozitáře SPOCKu ([SPOCK-Workflow-1.0]
 
 | Úroveň | Soubor | Pro koho | Čas | Na konci umíte |
 |---|---|---|---|---|
-| 0 | [Příprava](uroven-0-priprava.md) | všichni | 1–1,5 h | Mít SPOCK nainstalovaný, ověřený a znát pět pravidel, která se neporušují. |
+| 0 | [Příprava](uroven-0-priprava.md) | všichni | 2–3 h | Mít přístupy a licenci Copilota, nainstalované VS Code, Node.js a Git, SPOCK ověřený a znát pět pravidel, která se neporušují. |
 | 1 | [Základy](uroven-1-zaklady.md) | všichni | 3–4 h | Vysvětlit 7 fází, rozdíl mezi Q a G bránou, 6 agentů a přečíst hotový běh. |
 | 1b | [Fáze do hloubky](uroven-1b-faze-do-hloubky.md) | všichni | 8–10 h | U každé fáze vysvětlit kroky, pravidla, bránu, rozhodnutí a to, co fáze záměrně nedělá a neopraví. |
 | 2 | [Product Manager](role-pm.md) | PM | 6–8 h | Projít vlastní běh od briefu po iniciativu a podepsat každé rozhodnutí. |

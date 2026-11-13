@@ -4,7 +4,9 @@ Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až mát
 
 ## Úroveň 0: Příprava
 
-- [ ] SPOCK mám nainstalovaný, `check my setup` mi projde a vidím šest agentů.
+- [ ] Mám GitHub účet ČS, licenci Copilota a přístup k repozitáři SPOCKu.
+- [ ] Mám VS Code, Node.js 22 (nebo 20) a Git a v chatu vidím model Claude Sonnet 5.
+- [ ] SPOCK mám naklonovaný, `check my setup` mi projde a vidím šest agentů.
 - [ ] Znám pět pravidel z lekce 0.2 a umím říct, proč každé platí.
 - [ ] Poznám, který task spouštím jen já.
 

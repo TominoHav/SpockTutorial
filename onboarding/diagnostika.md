@@ -9,6 +9,10 @@ Postupujte shora dolů. **Než cokoli zkusíte znovu, uložte si stav**: export 
 | V seznamu tasků není nic `SPOCK:` | Otevřená je jiná složka nebo je VS Code v restricted mode. Otevřete složku s `.github` a `.vscode` a autorům důvěřujte (`SETUP.md` §3). |
 | Agent chybí nebo přebývá | Zastavte se a pošlete Igorovi jména agentů se screenshotem (`SETUP.md` §5). |
 | Běh nejde založit | Spusťte `SPOCK: check my setup` a zvolte GitHub Copilot. |
+| Chat hlásí, že nemáte Copilot | Licence ještě není přidělená nebo jste přihlášení jiným účtem. Ověřte [github.com/settings/copilot](https://github.com/settings/copilot) a přihlášení účtem ČS (úroveň 0, lekce 0.1 a 0.3). |
+| Ve výběru modelu chybí Claude Sonnet 5 | Firemní nastavení Copilota ho nepovoluje. Pošlete screenshot výběru IT nebo Igorovi. |
+| `check my setup`: Node.js missing | Nainstalujte Node.js 22 LTS z nodejs.org, zavřete a znovu otevřete VS Code a spusťte kontrolu znovu. |
+| `check my setup`: Git was not found | Nainstalujte Git z git-scm.com (na Macu i přes nabídku Command Line Tools). Bez Gitu nejde kopie aktualizovat. |
 | Dokumenty začínají tabulkou `[object Object]` | Vypněte rozšíření `bierner.markdown-yaml-preamble`. Soubor je v pořádku (`TESTER-GUIDE.md` §2.5). |
 | Po aktualizaci se agent chová postaru | Zavřete chaty a spusťte `Developer: Reload Window`. |
 
