@@ -32,6 +32,11 @@ Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až mát
 - [ ] Přečtu PRD a iniciativu jako vstup pro delivery a najdu mezery.
 - [ ] Přečtu výstup brány a dohledám kontrolu podle C-čísla.
 
+**Guild Master**
+- [ ] Vím, které know-how oblastí Method a Product existuje, v jaké je verzi a stavu.
+- [ ] Udělám metodickou revizi běhu a odliším slabý materiál od mezery v metodice.
+- [ ] Navrhnu a s engineerem provedu změnu know-how podle `KNOW-HOW-OWNERS.md` §4.
+
 ## Úroveň 3: Pokročilý
 
 - [ ] Vrátím fázi a rozhodnu o stale fázích.

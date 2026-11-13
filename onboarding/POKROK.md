@@ -2,7 +2,7 @@
 
 Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po vašem souhlasu ho aktualizuje.
 
-**Moje role:** _(PM / Product Designer / Software Engineer)_
+**Moje role:** _(PM / Product Designer / Software Engineer / Guild Master)_
 
 ## Úroveň 0: Příprava
 
@@ -125,6 +125,34 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 - [ ] 2E.4 Vysvětlete PM jednu neprošlou kontrolu
 
 - [ ] Kvíz: Úroveň 2: Software Engineer
+
+## Úroveň 2: Guild Master
+
+**2G.1 — Kde metodika ve SPOCKu žije**
+
+- [ ] 2G.1 Zmapujte know-how oblastí Method a Product
+- [ ] 2G.1 Najděte, které verze know-how běh četl
+
+**2G.2 — Šablona Guildy a co z ní SPOCK dělá**
+
+- [ ] 2G.2 Porovnejte šablonu Guildy se SPOCKem
+
+**2G.3 — Metodická revize běhu**
+
+- [ ] 2G.3 Udělejte metodickou revizi ukázkového běhu
+- [ ] 2G.3 Odpovězte na posuzovaná pravidla u vlastního podpisu
+
+**2G.4 — Změna know-how**
+
+- [ ] 2G.4 Napište návrh změny metodiky
+- [ ] 2G.4 Proveďte změnu s engineerem
+
+**2G.5 — Vedení komunity PM**
+
+- [ ] 2G.5 Najděte vzor ve zpětné vazbě
+- [ ] 2G.5 Připravte 30minutové intro pro Guildu
+
+- [ ] Kvíz: Úroveň 2: Guild Master
 
 ## Úroveň 3: Pokročilý
 
