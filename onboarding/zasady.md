@@ -9,6 +9,13 @@
 - **Nic se nemaže.** Vrácení, výjimka i oprava zůstávají v záznamu i s důvodem.
 - **Dokument, který vypadá dobře, sám nic nedokazuje.** Rozhoduje chování a výstup kontroly.
 
+## Čtyři zásady z bootcampu
+
+- **SPOCKem strukturujte práci.**
+- **Důkazy používejte ke zpochybnění výstupu.**
+- **Rozhodnutí dělá trio.**
+- **Repozitář uchovává zdůvodnění.** Je to sdílená paměť discovery.
+
 ## Časté chyby uživatelů
 
 - **Věří větě agenta.** „Kontrola prošla“ v chatu nic neznamená, pravdu ukazuje výstup tasku.
@@ -18,6 +25,9 @@
 - **Píše outcome jako řešení.** „Postavit kalkulačku“ není outcome.
 - **Vybírá řešení bez SWE.** SPOCK technickou složitost nehodnotí.
 - **Dává do fáze 2 materiál, který SPOCK nepřečte.** Miro, obrázky, sken PDF nebo grafy z Tableau.
+- **Vkládá data, která tam nepatří.** Jen C1 nebo C2, anonymizované nebo syntetické. Nikdy klientská data, osobní údaje ani hesla.
+- **Používá SPOCK jako stroj na odpovědi.** SPOCK je workflow, kterým trio dělá discovery, ne chat, který řekne výsledek.
+- **Dává obecnou zpětnou vazbu.** „Vylepši to“ nefunguje. Řekněte konkrétně, co změnit a proč.
 - **Přidá materiál po schválení fáze 2.** Nejdřív musí fázi vrátit.
 - **Má dva nedokončené běhy najednou.** Tasky pak odmítnou pracovat.
 - **Posílá screenshot místo exportu chatu.** Screenshot ukáže jen část, export celou konverzaci.

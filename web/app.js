@@ -472,8 +472,9 @@ function toolsBlock(title){
 }
 function contacts(){
   return `<section class="whohelp"><h3>Kdo vám pomůže</h3><ul>
-    <li><b>Tým CoE Product Management</b><span>Vlastník SPOCKu: Veronika Bedáňová, Tomáš Havlíček, Kate Coops, Lukáš Krolak. Přístup k repozitáři, chybějící agenti, nálezy a otázky k metodě.</span></li>
-    <li><b>IT České spořitelny</b><span>GitHub účet, licence GitHub Copilot a instalace programů na firemní počítač.</span></li>
+    <li><b>SPOCK core tým</b><span>Přístup k pilotu, materiály a data, obecné otázky: Veronika Bedáňová (vbedanova@csas.cz) a Ines Bamburać-Alibašić (ibamburac-alibasic@csas.cz).</span></li>
+    <li><b>Repozitář a prostředí</b><span>Ilya Shramov. Instalace a běžné potíže: nejdřív support engineer ve vašem týmu, pak IT podpora ČS.</span></li>
+    <li><b>Metodika</b><span>Tomáš Havlíček, Guild Master Product Management. SPOCK vlastní tým CoE Product Management a CoE Product Design.</span></li>
     <li><b>Spock</b><span>Průvodce v rohu stránky. Odpoví na otázky k lekcím onboardingu.</span><button class="linkbtn" type="button" data-open-spock>Zeptat se</button></li>
   </ul></section>`;
 }
@@ -612,7 +613,7 @@ function lessonPanel(w, di){
   const dn = d.todo.filter((_,ti) => S.todo[w.id+'.'+di+'.'+ti]).length, done = lessonDone(w, di);
   let step = 0;
   const learn = d.learn.length ? `<div class="blk"><h4><i>${++step}</i>Nauč se${d.learn.some(r => /`/.test(r.l)) ? ' · v kopii SPOCKu' : ''}${d.learnMin ? ' · ~' + fmtMin(d.learnMin) : ''}</h4><div class="res">${d.learn.map(r => `<div class="ritem"><span class="ty text">text</span><span>${fmt(r.l)}<small>${fmt(r.n||'')}</small></span></div>`).join('')}</div></div>` : '';
-  const key = (d.key.length || d.tables.length) ? `<div class="blk"><h4><i>${++step}</i>Co si odnést</h4>${w.id === 'gm' && d.d === '2G.6' ? archSvg() : ''}${(() => { const at = t => t.at === undefined ? 0 : t.at; let h = '', ul = []; const flush = () => { if (ul.length) { h += `<ul class="keys">${ul.join('')}</ul>`; ul = []; } }; d.key.forEach((k, i) => { d.tables.filter(t => at(t) === i).forEach(t => { flush(); h += tbl(t); }); ul.push(`<li><span>${fmt(k)}</span></li>`); }); flush(); d.tables.filter(t => at(t) >= d.key.length).forEach(t => { h += tbl(t); }); return h; })()}</div>` : '';
+  const key = (d.key.length || d.tables.length || (d.codes && d.codes.length)) ? `<div class="blk"><h4><i>${++step}</i>Co si odnést</h4>${w.id === 'gm' && d.d === '2G.6' ? archSvg() : ''}${(() => { const at = t => t.at === undefined ? 0 : t.at; let h = '', ul = []; const flush = () => { if (ul.length) { h += `<ul class="keys">${ul.join('')}</ul>`; ul = []; } }; const codes = d.codes || [], cb = c => `<div class="codeblk"><button type="button" class="btn sm codecopy" data-copy>Zkopírovat</button><pre><code>${esc(c.text)}</code></pre></div>`; d.key.forEach((k, i) => { d.tables.filter(t => at(t) === i).forEach(t => { flush(); h += tbl(t); }); codes.filter(c => c.at === i).forEach(c => { flush(); h += cb(c); }); ul.push(`<li><span>${fmt(k)}</span></li>`); }); flush(); d.tables.filter(t => at(t) >= d.key.length).forEach(t => { h += tbl(t); }); codes.filter(c => c.at >= d.key.length).forEach(c => { h += cb(c); }); return h; })()}</div>` : '';
   const todo = d.todo.length ? `<div class="blk"><h4><i>${++step}</i>Udělej${dayDo(d) ? ' · ~' + fmtMin(dayDo(d)) : ''}</h4><div class="todo">${d.todo.map((t,ti) => todoItem(w.id+'.'+di+'.'+ti, t)).join('')}</div></div>` : '';
   const xpLeft = d.todo.filter((_,ti) => !S.got['task.'+w.id+'.'+di+'.'+ti]).length * XP.task + (S.got['lesson.'+w.id+'.'+di] ? 0 : XP.lesson);
   const next = di + 1 < w.days.length

@@ -49,6 +49,8 @@
 - **Každé pozorování má blízkost ke zdroji:** `first_hand` (účastník o své zkušenosti), `relayed` (zprostředkovaně), `aggregated` (souhrn) nebo `unestablished` (nejde zjistit). **Trust tag *strong* potřebuje alespoň dva nezávislé zdroje a aspoň jeden z první ruky** (`BUSINESS-LOGIC-OVERVIEW.md` §3).
 - **Každý dokument je samostatný soubor.** Datum v materiálu pomáhá. Soubory bez data musí PM nebo vy datovat taskem.
 - **Karanténa:** agent bere pokyn schovaný v materiálu jako text, který někdo napsal, a nejedná podle něj.
+- **Dávejte surový materiál, ne jen hotové závěry:** poznámky a přepisy rozhovorů, zpětnou vazbu klientů, výsledky průzkumů, souhrny z analytiky, starší výzkum, podněty z klientského servisu. Pilot zkoumá, jak SPOCK pracuje s podkladovými důkazy. Ideální formát je `.md`. S převodem do `.md` vám pomůže SPOCK core tým (Veronika Bedáňová, Ines Bamburać-Alibašić).
+- **Jen povolená data:** pouze klasifikace C1 nebo C2, anonymizované nebo syntetické. Nikdy C3 a C4, produkční klientská data, osobní údaje, bankovní tajemství, hesla, tokeny ani API klíče. Když si nejste jistí, zeptejte se SPOCK core týmu dřív, než materiál vložíte.
 
 ### Úkoly
 

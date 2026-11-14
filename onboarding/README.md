@@ -23,8 +23,8 @@ Všechno tady vychází ze zdrojového repozitáře SPOCKu ([SPOCK-Workflow-1.0]
 
 | Úroveň | Soubor | Pro koho | Čas | Na konci umíte |
 |---|---|---|---|---|
-| 0 | [Příprava](uroven-0-priprava.md) | všichni | 2–3 h | Mít přístupy a licenci Copilota, nainstalované VS Code, Node.js a Git, SPOCK ověřený a znát pět pravidel, která se neporušují. |
-| 1 | [Základy](uroven-1-zaklady.md) | všichni | 3–4 h | Vysvětlit 7 fází, rozdíl mezi Q a G bránou, 6 agentů a přečíst hotový běh. |
+| 0 | [Příprava](uroven-0-priprava.md) | všichni | 2–3 h (plus čekání na role) | Mít schválené role v REDIMu, z firemního katalogu VS Code, Git, Node.js a SSH certifikát, SPOCK naklonovaný a ověřený a znát pět pravidel, která se neporušují. |
+| 1 | [Základy](uroven-1-zaklady.md) | všichni | 4–5 h | Vysvětlit, proč SPOCK vzniká, 7 fází, rozdíl mezi Q a G bránou, 6 agentů, přečíst hotový běh a pracovat se SPOCKem v každodenním rytmu. |
 | 1b | [Fáze do hloubky](uroven-1b-faze-do-hloubky.md) | všichni | 8–10 h | U každé fáze vysvětlit kroky, pravidla, bránu, rozhodnutí a to, co fáze záměrně nedělá a neopraví. |
 | 2 | [Product Manager](role-pm.md) | PM | 6–8 h | Projít vlastní běh od briefu po iniciativu a podepsat každé rozhodnutí. |
 | 2 | [Product Designer](role-designer.md) | PD | 4–5 h | Dodat výzkum do fáze 2, posoudit příležitosti a přispět k řešení, MVP a PRD. |
@@ -45,6 +45,7 @@ Tempo si určujete sami, pevná data tu nejsou.
 - [Diagnostika](diagnostika.md): co vidím → co udělám
 - [Zásady](zasady.md): principy SPOCKu a časté chyby uživatelů
 - [Připravenost](pripravenost.md): sebehodnocení pro každou úroveň
+- Materiály z bootcampu SPOCKu (PDF) ve složce [`materialy/bootcamp/`](../materialy/bootcamp/): technické nastavení, práce ve VS Code, uživatelský manuál, struktura briefu, soubor trhu, přehled produktu
 
 ## Jak s tím pracovat v Claude Code
 

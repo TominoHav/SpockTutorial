@@ -69,6 +69,7 @@ def main():
     # výslovně říká, že ve vydané kopii nejsou. Když přidáte výjimku, napište k ní důvod.
     generated = {'last-task.md', 'POKROK.md', 'denik.md',      # vzniká při běhu / soubor onboardingu
                  'rozhovory-2026-03.md', 'rozhovory.md',        # příklad v lekci PM
+                 'market.md',                                   # soubor trhu, který si uživatel vytvoří (lekce 2P.3)
                  'repo-check.mjs', 'check.test.mjs'}            # jen ve vývojovém repozitáři (lekce 2G.4)
     bad = []
     for f in LESSONS:

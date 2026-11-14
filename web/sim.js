@@ -118,6 +118,11 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && SIM) simCl
 /* ---------- vysvětlivky odborných slov přímo v textu lekce ---------- */
 const GL_DEF = n => { const g = GLOSS.find(x => x[0].toLowerCase().startsWith(n.toLowerCase())); return g ? plain(g[1]).replace(/`/g,'') : ''; };
 const TERMS = [
+  ['REDIM\\p{L}*','Interní systém ČS pro žádosti o oprávnění. Přístupy ke Copilotu, repozitáři i SSH certifikátu se objednávají jako role v REDIMu.'],
+  ['Solveo','Firemní katalog softwaru pro Windows. Programy objednáte jako v e-shopu.'],
+  ['Self Service\\+','Firemní katalog softwaru pro Mac (Catalog → vyhledat → nainstalovat).'],
+  ['caauth-cli','Program, který nainstaluje SSH certifikát pro připojení k firemnímu GitHubu.'],
+  ['surface','Soubor .github/surface říká SPOCKu, v jakém nástroji pracujete. Musí v něm být copilot.'],
   ['repozitář\\p{L}*','Místo na GitHubu, kde jsou uložené soubory projektu. Odtud si SPOCK stáhnete.'],
   ['naklon\\p{L}*|klon(?:ovat|ujte|u|em)','Stáhnout kopii repozitáře tak, aby se dala později jedním krokem aktualizovat.'],
   ['Git(?:u|em)?','Program, který hlídá verze souborů a umí repozitář stáhnout a aktualizovat.'],
@@ -180,3 +185,12 @@ document.addEventListener('click', e => {
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(out).then(ok, () => { prompt('Zkopírujte odpovědi:', out); ok(); }); else { prompt('Zkopírujte odpovědi:', out); ok(); }
 });
 document.addEventListener('input', e => { if (e.target.id === 'svy-txt') { S.survey = S.survey || {}; S.survey.txt = e.target.value; save(); } });
+
+/* kopírování ukázek kódu a promptů z lekcí */
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-copy]'); if (!b) return;
+  const pre = b.parentElement.querySelector('pre'); if (!pre) return;
+  const done = () => { b.textContent = 'Zkopírováno'; setTimeout(() => { b.textContent = 'Zkopírovat'; }, 1500); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(pre.innerText).then(done, () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+  else { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+});
