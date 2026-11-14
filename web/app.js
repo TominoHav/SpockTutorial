@@ -662,6 +662,8 @@ function lessonPanel(w, di){
     <div class="lp-foot">${di > 0 ? `<button class="btn" type="button" data-lesson="${di-1}">← ${esc(w.days[di-1].d)}</button>` : '<span></span>'}${next}</div>
   </section>`;
 }
+/* Po přechodu na jinou lekci skočit na její začátek (pod lištu nahoře) */
+function toLessonTop(){ const p = document.getElementById('lpanel'); if (p) p.scrollIntoView({block:'start', behavior:'auto'}); }
 document.addEventListener('click', e => {
   const l = e.target.closest('[data-lesson]'); if (!l || view.name !== 'week') return;
   view.lesson = +l.dataset.lesson; renderWeek(view.week); updatePills();
@@ -848,6 +850,7 @@ document.addEventListener('change', e => {
       }
       checkModuleDone(w);
     }
+    if (view.name === 'week' && view.lesson !== +t.dataset.todo.split('.')[1]) { renderWeek(view.week); toLessonTop(); return; }
     if (view.name === 'week') { const id = t.id, y = window.scrollY; renderWeek(view.week); window.scrollTo({top:y}); const el = id && document.getElementById(id); if (el && view.lesson === +t.dataset.todo.split('.')[1]) el.focus({preventScroll:true}); }
   }
   if (t.dataset.ready) { S.ready[t.dataset.ready] = t.checked; save(); if (t.checked) award('ready.' + t.dataset.ready, XP.ready); renderReady(); updatePills(); }

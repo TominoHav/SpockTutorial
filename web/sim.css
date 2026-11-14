@@ -213,3 +213,4 @@ body.noscroll{overflow:hidden}
 .lc-ol{margin:0;padding-left:22px;display:grid;gap:4px;line-height:1.5}
 .cards{grid-template-columns:minmax(0,1fr)}.lcard{min-width:0;grid-template-columns:minmax(0,1fr)}.lcard .tbl-wrap,.lcard table{max-width:100%}
 .vidov{position:fixed;inset:0;z-index:90;background:rgba(6,10,20,.82);display:grid;place-items:center;padding:16px}.vidov-in{position:relative;width:min(960px,100%)}.vidov-in video{width:100%;max-height:80vh;border-radius:14px;background:#000;display:block}.vidov-x{position:absolute;top:-44px;right:0;color:#fff}.vidbtn{vertical-align:middle;margin:0 2px}
+#lpanel{scroll-margin-top:calc(84px + env(safe-area-inset-top,0px))}

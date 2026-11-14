@@ -35,7 +35,8 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  ok(T('po výběru role „Vítejte zpět“'), (await p.locator('.hx .eyebrow').first().innerText()).toLowerCase().includes('zpět'));
  // lekce 0.1 – karty a úkoly
  const answerCards=async()=>{let g=0;while(g++<40){await dismiss();const n=await p.evaluate(()=>{const e=document.querySelector('.lpanel .lcard.cur .lc-opt:not([disabled])');if(!e)return 0;e.scrollIntoView({block:'center'});e.click();return 1;});if(!n)break;await p.waitForTimeout(90);}await dismiss();};
- const doLesson=async()=>{await answerCards();let guard=0;while(await p.locator('.lpanel input[data-todo]:not(:checked)').count() && guard++<12){await checkNext();}};
+ const lessonHead=()=>p.evaluate(()=>(document.querySelector('.lp-head')||{}).innerText||'');
+ const doLesson=async()=>{const h0=(await lessonHead()).slice(0,6);await answerCards();let guard=0;while((await lessonHead()).slice(0,6)===h0 && await p.locator('.lpanel input[data-todo]:not(:checked)').count() && guard++<12){await p.evaluate(()=>{const e=document.querySelector('.lpanel input[data-todo]:not(:checked)');if(e){e.scrollIntoView({block:'center'});e.click();}});await p.waitForTimeout(150);}await dismiss();};
  await p.locator('[data-golesson], [data-week=l0]').first().click();await p.waitForTimeout(250);
  ok(T('lekce 0.1 začíná první kartou, další jsou skryté'), await p.locator('.lpanel .lcard').count()===1 && await p.locator('.lpanel .lc-opt').count()>1);
  ok(T('úkol s videem má tlačítko, které video pustí v okně'), await (async()=>{const bt=p.locator('.lpanel [data-playvideo]');if(!(await bt.count()))return false;await bt.first().click();await p.waitForTimeout(200);const n=await p.locator('.vidov video').count();await p.locator('.vidov-x').click();return n===1 && !(await p.locator('.vidov').count());})());
@@ -46,6 +47,7 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  await doLesson();
  const s1=await st();ok(T(`lekce 0.1: karty zodpovězené, ${nb} úkoly odškrtnuté, lekce hotová`), s1.got['lesson.l0.0']===true, 'karet '+Object.keys(s1.cards||{}).length+', XP '+s1.xp);
  ok(T('po lekci se otevře lekce 0.2'), (await p.locator('.lp-head, .lpanel').first().innerText()).includes('0.2'));
+ ok(T('po dokončení lekce je vidět začátek další lekce'), await p.evaluate(()=>{const t=document.getElementById('lpanel').getBoundingClientRect().top;return t>=0 && t<200}), 'top '+await p.evaluate(()=>Math.round(document.getElementById('lpanel').getBoundingClientRect().top)));
  ok(T('vysvětlivky pojmů v lekci'), await p.locator('.lpanel .gl').count()>0);
  // dokončit celý modul l0
  for(let li=1;li<4;li++){await dismiss();await p.evaluate(li=>{const e=document.querySelector(`.pd-in-card [data-lesson="${li}"], .pd-mob-card [data-lesson="${li}"]`);e&&e.click()},li);await p.waitForTimeout(120);await doLesson();}
