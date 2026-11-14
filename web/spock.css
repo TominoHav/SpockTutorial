@@ -1,0 +1,81 @@
+/* ---------- úvodní banner se Spockem ---------- */
+.hx{position:relative;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px;align-items:center;margin:0 0 26px;padding:28px 30px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(120deg,color-mix(in srgb,var(--pink) 9%,var(--surface)),color-mix(in srgb,var(--purple) 7%,var(--surface)) 50%,color-mix(in srgb,var(--indigo) 9%,var(--surface)))}
+.hx-txt{display:grid;gap:14px;position:relative;z-index:1;min-width:0}
+.hx h1{font-size:clamp(28px,4.2vw,46px);font-weight:800;letter-spacing:-.035em;line-height:1.05}
+.hx h1 em{font-style:normal;background:linear-gradient(90deg,var(--pink),var(--purple),var(--indigo));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hx-lead{font-size:17px;color:var(--ink-2);max-width:56ch;line-height:1.5}
+.hx-lbl{font-size:12.5px;color:var(--ink-3);font-weight:600;margin-bottom:6px}
+.hx-cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.hx-facts{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 22px}
+.hx-facts li{display:flex;align-items:baseline;gap:6px;font-size:13.5px;color:var(--ink-2)}
+.hx-facts b{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+.hx-art{position:relative;justify-self:center;width:min(300px,100%);aspect-ratio:1;display:grid;place-items:center}
+.hx-art::before{content:"";position:absolute;inset:-18%;background:radial-gradient(closest-side,color-mix(in srgb,var(--purple) 18%,transparent),transparent);z-index:0}
+.hx-art .spock{position:relative;z-index:1;width:72%;height:auto;overflow:visible}
+.hx-chip{position:absolute;z-index:2;font-size:12px;font-weight:700;padding:6px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);box-shadow:0 6px 18px rgba(22,18,58,.10);white-space:nowrap;animation:hxFloat 5s ease-in-out infinite}
+.hx-chip.c1{top:6%;left:0;color:var(--pink)}.hx-chip.c2{top:42%;right:-6%;color:var(--purple);animation-delay:-1.6s}.hx-chip.c3{bottom:8%;left:2%;color:var(--indigo);animation-delay:-3.2s}
+.hx-hi{position:absolute;z-index:2;top:-2%;right:4%;font-size:13px;font-weight:800;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:14px 14px 14px 4px;padding:6px 11px;box-shadow:0 6px 18px rgba(22,18,58,.10);animation:hxFloat 4s ease-in-out infinite -0.8s}
+@keyframes hxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+.hp{grid-column:1/-1;margin:6px 0 0;padding-top:18px;border-top:1px solid color-mix(in srgb,var(--line) 70%,transparent);position:relative;z-index:1}
+.hp-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.hp-head h2{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.hp-head p{font-size:14px}
+.hp-path{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;position:relative}
+.hp-path::before{content:"";position:absolute;left:8%;right:8%;top:27px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--pink),var(--purple),var(--indigo),var(--blue-2))}
+.hp-st{position:relative;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center;padding:0 4px;min-width:0}
+.hp-dia{position:relative;display:grid;place-items:center;width:56px;height:56px;z-index:1;margin-bottom:4px;flex:none}
+.hp-dia::before{content:"";position:absolute;inset:9px;transform:rotate(45deg);border-radius:10px;background:var(--c);box-shadow:0 0 0 6px color-mix(in srgb,var(--surface) 90%,transparent)}
+.hp-dia span{position:relative;font-weight:800;color:#fff;font-size:16px}
+.hp-st.tbd .hp-dia::before{background:var(--surface);border:2px dashed var(--c)}.hp-st.tbd .hp-dia span{color:var(--c)}
+.hp-st h3{font-size:15.5px}
+.hp-st p{font-size:13px;color:var(--ink-2);line-height:1.45;max-width:26ch}
+.hp-gems{display:flex;gap:5px;margin:2px 0}.hp-gems i{width:10px;height:10px;transform:rotate(45deg);border-radius:2px;background:var(--line)}
+.hp-gems i.on{background:linear-gradient(135deg,var(--pink),var(--purple),var(--indigo))}
+.hp-a{margin-top:auto;padding-top:4px;font-size:13px}
+.linkbtn{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--c,var(--blue-2));cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+@media (max-width:980px){.hx{grid-template-columns:1fr;padding:22px 18px}.hx-art{width:210px;order:-1}.hx-chip,.hx-hi{display:none}
+  .hp-path{grid-template-columns:1fr;gap:10px}
+  .hp-path::before{left:27px;right:auto;top:20px;bottom:20px;width:3px;height:auto;background:linear-gradient(var(--pink),var(--purple),var(--indigo),var(--blue-2))}
+  .hp-st{display:grid;grid-template-columns:56px 1fr;justify-items:start;text-align:left;column-gap:12px;row-gap:2px}
+  .hp-st .hp-dia{grid-row:span 4;margin:0}.hp-st h3{margin-top:8px}.hp-st p{max-width:none}.hp-a{margin-top:0}}
+
+/* ---------- Spock: animace ---------- */
+.spock .sp-shadow{fill:rgba(12,27,42,.18);transform-origin:60px 133px}
+.spock .sp-legs line,.spock .sp-arm line{stroke:#372B91;stroke-width:7;stroke-linecap:round}
+.spock .sp-arm circle{fill:#A54CB2}
+.spock .sp-ant{stroke:#A54CB2;stroke-width:3.5;stroke-linecap:round}
+.spock .sp-tip{fill:#F07196}
+.spock .sp-eyes ellipse{fill:#7FE3FF}
+.spock .sp-smile{fill:none;stroke:#7FE3FF;stroke-width:2.6;stroke-linecap:round}
+.spock .sp-body{transform-origin:60px 128px}
+.spock .sp-eyes{transform-origin:60px 61px;animation:spBlink 4.2s infinite}
+.spock .sp-arm-l{transform-origin:28px 70px}.spock .sp-arm-r{transform-origin:92px 70px}
+.spock.big .sp-body{animation:spJump 1.5s cubic-bezier(.3,0,.4,1) infinite}
+.spock.big .sp-shadow{animation:spShadow 1.5s cubic-bezier(.3,0,.4,1) infinite}
+.spock.big .sp-arm-l{animation:spArmL 1.5s ease-in-out infinite}.spock.big .sp-arm-r{animation:spArmR 1.5s ease-in-out infinite}
+.spock.big .sp-tip{animation:spTip 1.5s ease-in-out infinite}
+.spock.fab .sp-body{animation:spHop 3.2s ease-in-out infinite}
+.spock.fab .sp-shadow{animation:spHopShadow 3.2s ease-in-out infinite}
+.spock.fab .sp-arm-r{animation:spWave 3.2s ease-in-out infinite}
+body.spock-busy .spock .sp-body{animation:spJump .7s cubic-bezier(.3,0,.4,1) infinite}
+body.spock-busy .spock .sp-shadow{animation:spShadow .7s cubic-bezier(.3,0,.4,1) infinite}
+@keyframes spJump{0%{transform:translateY(0) scale(1.08,.9)}12%{transform:translateY(0) scale(.94,1.06)}45%{transform:translateY(-30px) scale(1,1)}55%{transform:translateY(-32px) scale(1,1)}86%{transform:translateY(0) scale(1.03,.97)}100%{transform:translateY(0) scale(1.08,.9)}}
+@keyframes spShadow{0%,100%{transform:scale(1.08);opacity:1}45%,55%{transform:scale(.55);opacity:.45}}
+@keyframes spArmL{0%,100%{transform:rotate(18deg)}50%{transform:rotate(-22deg)}}
+@keyframes spArmR{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(22deg)}}
+@keyframes spTip{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes spHop{0%,70%,100%{transform:translateY(0) scale(1)}76%{transform:translateY(0) scale(1.06,.92)}86%{transform:translateY(-14px) scale(.97,1.03)}94%{transform:translateY(0) scale(1.03,.97)}}
+@keyframes spHopShadow{0%,70%,100%{transform:scale(1);opacity:1}86%{transform:scale(.7);opacity:.6}}
+@keyframes spWave{0%,30%,100%{transform:rotate(0)}38%{transform:rotate(-28deg)}46%{transform:rotate(6deg)}54%{transform:rotate(-24deg)}62%{transform:rotate(0)}}
+@keyframes spBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+
+/* ---------- Spock jako přetahovatelný pomocník ---------- */
+.g-fab{touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.g-fab.dragging{cursor:grabbing}
+.g-fab .spock{width:84px;height:auto;overflow:visible;filter:drop-shadow(0 8px 14px rgba(55,43,145,.3));transition:transform .15s}
+.g-fab.dragging .spock{transform:scale(1.08) rotate(-6deg)}
+.g-fab:focus-visible{outline:2px solid var(--focus);outline-offset:4px;border-radius:14px}
+.g-head .spock{width:44px;height:auto;flex:none;overflow:visible}
+.g-head .spock .sp-body{animation:spHop 3.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.spock *,.hx-chip,.hx-hi{animation:none!important}}
