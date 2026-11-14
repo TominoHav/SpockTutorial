@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 """Mechanická kontrola aktuálnosti onboardingu vůči repozitáři SPOCKu.
 
-Použití: python3 nastroje/kontrola-aktualnosti.py [cesta/ke/SPOCKu]
+Použití: python3 nastroje/kontrola-aktualnosti.py [cesta/ke/SPOCKu] [--zapis-otisk]
 
 Nic nemění. Vypíše zprávu v markdownu:
   1. verzi SPOCKu zapsanou v SPOCK-VERZE.md a verzi v dodané kopii,
   2. odkazy z lekcí, které ve SPOCKu neexistují (tasky, soubory, oddíly §),
-  3. soubory SPOCKu změněné od zapsaného commitu a lekce, které na ně odkazují.
+  3. soubory SPOCKu změněné od zapsané verze (podle otisku v nastroje/spock-otisk.json,
+     takže to funguje i tehdy, když SPOCK vyjde jako nový repozitář bez historie)
+     a lekce, které na ně odkazují.
+--zapis-otisk uloží otisk dodané kopie SPOCKu jako novou zapsanou verzi (po schválené aktualizaci).
 Návratový kód: 0 = vše sedí, 1 = něco k posouzení, 2 = chyba použití.
 """
-import glob, os, re, subprocess, sys
+import glob, hashlib, json, os, re, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -28,12 +31,25 @@ def spock_release(spock):
     m = re.search(r'^# SPOCK Workflow (\S+)', open(p, encoding='utf-8').read(), re.M)
     return m.group(1).rstrip(':') if m else None
 
+OTISK = os.path.join(HERE, 'spock-otisk.json')
+
+def fingerprint(spock):
+    """Otisk všech souborů SPOCKu (cesta → sha256), bez .git. Nezávisí na historii gitu."""
+    out = {}
+    for dp, dn, fn in os.walk(spock):
+        dn[:] = [d for d in dn if d not in ('.git', 'runs', '.guard')]
+        for f in fn:
+            full = os.path.join(dp, f)
+            out[os.path.relpath(full, spock).replace(os.sep, '/')] = hashlib.sha256(open(full, 'rb').read()).hexdigest()
+    return dict(sorted(out.items()))
+
 def git(spock, *args):
     try: return subprocess.run(['git', '-C', spock, *args], capture_output=True, text=True, check=True).stdout.strip()
     except Exception: return None
 
 def main():
-    spock = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, '..', 'SPOCK-Workflow-1.0')
+    args = [a for a in sys.argv[1:] if not a.startswith('--')]
+    spock = args[0] if args else os.path.join(ROOT, '..', 'SPOCK-Workflow-1.0')
     if not os.path.isdir(os.path.join(spock, '.github')):
         print(f'Nenašel jsem SPOCK v {spock}. Zadejte cestu: python3 nastroje/kontrola-aktualnosti.py <cesta>'); return 2
     rel_rec, com_rec, date_rec = recorded()
@@ -61,6 +77,7 @@ def main():
             if m not in tasks and '…' not in m: bad.append((rel(f), 'task', m))
         for m in sorted(set(re.findall(r'`([^`\s]+\.(?:md|mjs|json|yaml|yml))`', t))):
             p = m.strip('/')
+            if os.path.exists(os.path.join(ROOT, p)) or os.path.exists(os.path.join(ROOT, 'onboarding', p)): continue  # soubor tutoriálu
             if p.startswith('runs/') or 'SOLn' in p or '<' in p or '*' in p or '…' in p or os.path.basename(p) in generated: continue
             if not (os.path.exists(os.path.join(spock, p)) or os.path.basename(p) in names): bad.append((rel(f), 'soubor', m))
         for d, sec in sorted(set(re.findall(r'`([A-Z][A-Z0-9-]*\.md)` §([0-9]+(?:\.[0-9]+)?)', t))):
@@ -72,25 +89,34 @@ def main():
     out += [f'- `{f}`: {k} `{v}`' for f, k, v in bad] or ['Žádné. Všechny tasky, soubory a oddíly z lekcí ve SPOCKu existují.']
     out.append(''); issues += bool(bad)
 
-    # 3. změny od zapsaného commitu
+    # 3. změny od zapsané verze: podle otisku souborů (funguje i bez historie gitu)
     out += ['## Soubory SPOCKu změněné od zapsané verze', '']
-    changed = git(spock, 'diff', '--name-only', f'{com_rec}..HEAD') if com_rec and com_now and com_rec != com_now else ''
-    if changed is None:
-        out.append(f'Commit `{com_rec[:7]}` v této kopii SPOCKu není (mělký klon?). Spusťte `git -C {spock} fetch --unshallow` a kontrolu opakujte.'); issues += 1
-    elif not changed:
-        out.append('Žádné. Kopie SPOCKu je na stejném commitu jako onboarding.')
+    if '--zapis-otisk' in sys.argv:
+        json.dump({'release': rel_now, 'commit': com_now, 'files': fingerprint(spock)}, open(OTISK, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
+        out.append(f'Otisk SPOCKu {rel_now} uložen do `{rel(OTISK)}`. Nezapomeňte přepsat i `SPOCK-VERZE.md`.')
+    elif not os.path.exists(OTISK):
+        out.append('Otisk zapsané verze chybí. Na verzi, podle které je onboarding psaný, spusťte skript s `--zapis-otisk`.'); issues += 1
     else:
-        files = changed.split('\n'); issues += 1
-        texts = {f: open(f, encoding='utf-8').read() for f in LESSONS}
-        hit, other = [], 0
-        for c in files:
-            b = os.path.basename(c)
-            refs = [rel(f) for f, t in texts.items() if b in t or c in t]
-            if refs: hit.append(f'- `{c}` → {", ".join(refs)}')
-            else: other += 1
-        out.append(f'Změněno {len(files)} souborů. Na {len(hit)} z nich lekce přímo odkazují:'); out.append('')
-        out += hit or ['- žádný']
-        out += ['', f'Dalších {other} změněných souborů lekce nejmenují. I ty mohou změnit chování (agenti, skilly, kontroly), projděte je v `RELEASE-NOTES.md`.']
+        old = json.load(open(OTISK, encoding='utf-8'))['files']; now = fingerprint(spock)
+        added = sorted(set(now) - set(old)); removed = sorted(set(old) - set(now))
+        modified = sorted(k for k in set(old) & set(now) if old[k] != now[k])
+        files = modified + added + removed
+        if not files:
+            out.append('Žádné. Všechny soubory SPOCKu jsou stejné jako ve verzi, podle které je onboarding psaný.')
+        else:
+            issues += 1
+            out.append(f'Změněno {len(modified)}, přidáno {len(added)}, odebráno {len(removed)} souborů.'); out.append('')
+            texts = {f: open(f, encoding='utf-8').read() for f in LESSONS}
+            hit, other = [], 0
+            for c in files:
+                b = os.path.basename(c)
+                refs = [rel(f) for f, t in texts.items() if b in t or c in t]
+                kind = 'odebráno' if c in removed else 'přidáno' if c in added else 'změněno'
+                if refs: hit.append(f'- `{c}` ({kind}) → {", ".join(refs)}')
+                else: other += 1
+            out.append(f'Na {len(hit)} z nich lekce přímo odkazují:'); out.append('')
+            out += hit or ['- žádný']
+            out += ['', f'Dalších {other} souborů lekce nejmenují. I ty mohou změnit chování (agenti, skilly, kontroly), projděte je v `RELEASE-NOTES.md`.']
     print('\n'.join(out))
     return 1 if issues else 0
 
