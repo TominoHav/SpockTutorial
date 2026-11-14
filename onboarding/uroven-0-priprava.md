@@ -199,7 +199,7 @@
 
 1. **Rozhodnutí podepisujete vy, sami a svým jménem.** Task, který otevírá políčka na jméno, roli, důvod nebo rozhodnutí, spouštíte jen vy. Když se o to pokusí agent, odmítněte to (`SETUP.md` §6 krok 3–4).
 2. **Do chatu nepřikládejte soubory.** Jedinou výjimkou je brief ve fázi 1. Příloha se posílá s každou další zprávou, prodražuje ji a PDF může rozbít konverzaci. Materiál patří do složky `supplied/` dané fáze (`SETUP.md` §6 krok 8).
-3. **Běhy zůstávají u vás a obsahují jen povolená data.** Složka `runs/` je mimo git. Nikam ji nekopírujte. Celý běh se posílá jen týmu CoE Product Management a jen jako ZIP (`SETUP.md` §6 krok 6 a §10). Do Copilota a do SPOCKu vkládejte pouze obsah klasifikace **C1 nebo C2**. Nikdy C3 a C4, produkční klientská data, osobní údaje, bankovní tajemství, hesla, tokeny ani API klíče. Používejte anonymizované nebo syntetické vstupy. Když si nejste jistí, zeptejte se SPOCK core týmu.
+3. **Běhy zůstávají u vás a obsahují jen povolená data.** Složka `runs/` je mimo git. Nikam ji nekopírujte. Celý běh se posílá jen týmu CoE Product Management a jen jako ZIP (`SETUP.md` §6 krok 6 a §10). Do Copilota a do SPOCKu vkládejte pouze obsah klasifikace **C1**. Nikdy C2, C3 ani C4, produkční klientská data, osobní údaje, bankovní tajemství, hesla, tokeny ani API klíče. Používejte anonymizované nebo syntetické vstupy. Když si nejste jistí, zeptejte se SPOCK core týmu.
 4. **Nic pod `.github/` ani `.vscode/` neupravujte.** To je samotné workflow (`SETUP.md` §9).
 5. **Výchozí schvalování ve VS Code nechte zapnuté** a nevolte „Allow All“. Tasky `SPOCK:` bez políček agent spustit smí, cokoli mimo složku SPOCKu odmítněte (`SETUP.md` §6 krok 4).
 

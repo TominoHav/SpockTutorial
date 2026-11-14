@@ -27,7 +27,7 @@
 | **Solveo / Self Service+** | Firemní katalogy softwaru: Solveo pro Windows, Self Service+ pro Mac. |
 | **caauth-cli** | Program, který nainstaluje SSH certifikát pro přístup k firemnímu GitHubu. |
 | **CEN** | Vaše interní uživatelské označení v ČS. Používá se v cestách ke složce `.ssh`. |
-| **C1–C4** | Klasifikace dat. Do SPOCKu a Copilota patří jen C1 nebo C2. |
+| **C1–C4** | Klasifikace dat. Do SPOCKu a Copilota patří jen C1. C2, C3 ani C4 nikdy. |
 | **surface** | Soubor `.github/surface`: říká SPOCKu, v jakém nástroji pracujete. Pro práci musí obsahovat `copilot`. |
 | **AI kredity** | Množství práce, kterou vám Copilot povolí. Stav je u ikony Copilota vpravo dole ve VS Code. |
 | **Product Compass** | Rámec ČS pro produktovou práci. SPOCK pokrývá jeho discovery část. |
