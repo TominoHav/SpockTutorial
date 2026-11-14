@@ -209,3 +209,6 @@ body.noscroll{overflow:hidden}
 .tm.where.vsc{background:color-mix(in srgb,var(--blue-2) 14%,var(--surface));color:var(--blue-2)}
 .blk.extra summary{cursor:pointer;font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
 .blk.extra .res{margin-top:8px}
+.lc-more ul.keys{margin-top:6px;font-size:14.5px}
+.lc-ol{margin:0;padding-left:22px;display:grid;gap:4px;line-height:1.5}
+.cards{grid-template-columns:minmax(0,1fr)}.lcard{min-width:0;grid-template-columns:minmax(0,1fr)}.lcard .tbl-wrap,.lcard table{max-width:100%}

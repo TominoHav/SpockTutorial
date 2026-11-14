@@ -5,9 +5,9 @@ SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, '..', 'onboarding
 OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, 'dist', 'data.json')
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 MODS = [
- ('l0','uroven-0-priprava.md','pink',None,'Úroveň 0','Příprava','Přístupy a licence Copilota, instalace VS Code, Node.js a Gitu, kontrola nastavení a 5 pravidel.'),
- ('l1','uroven-1-zaklady.md','pink',None,'Úroveň 1','Základy','7 fází, Q a G brány, agenti, tasky a čtení hotového běhu.'),
- ('l1b','uroven-1b-faze-do-hloubky.md','pink',None,'Úroveň 1b','Fáze do hloubky','Sedm fází podle jejich specifikací: kroky, pravidla, brány, rozhodnutí a co fáze neopraví.'),
+ ('l0','uroven-0-poznejte-spock.md','pink',None,'Úroveň 0','Poznejte SPOCK','Jen na webu, nic neinstalujete: co SPOCK dělá, agenti, tasky, brány a pět pravidel.'),
+ ('l1','uroven-1-priprava.md','pink',None,'Úroveň 1','Příprava','Role v REDIMu, VS Code, Node.js, Git, Copilot, kontrola nastavení a hotový ukázkový běh.'),
+ ('l1b','uroven-1b-faze-do-hloubky.md','purple',None,'Příručka','Fáze do hloubky','Volitelná příručka: sedm fází podle specifikací. Hlavně pro GM a superusery.'),
  ('pm','role-pm.md','purple','pm','Úroveň 2 · PM','Product Manager','Vlastní běh od briefu po iniciativu a každý podpis.'),
  ('pd','role-designer.md','purple','pd','Úroveň 2 · PD','Product Designer','Výzkum do fáze 2, trust tag, řešení, MVP a uživatelská část PRD.'),
  ('se','role-engineer.md','purple','se','Úroveň 2 · SWE','Software Engineer','Proveditelnost před G4, PRD jako vstup pro delivery, čtení kontrol.'),
@@ -72,8 +72,19 @@ def parse_module(fn):
                 for cb in re.split(r'^#### ', sb, flags=re.M)[1:]:
                     ct, _, body = cb.partition('\n')
                     C={'t':inline(ct),'text':[],'more':'','q':'','o':[],'a':-1,'why':''}
+                    C['blocks']=[]
+                    body=re.sub(r'```.*?```', lambda m: m.group(0).replace('\n\n','\n\ue001\n'), body, flags=re.S)
                     for para in [x.strip() for x in body.strip().split('\n\n') if x.strip()]:
-                        if para.startswith('**Víc do hloubky:**'): C['more']=inline(para[len('**Víc do hloubky:**'):])
+                        if re.match(r'\d+\. ',para): C['blocks'].append({'olist':[inline(re.sub(r'^\d+\. ','',x)) for x in para.split('\n') if x.strip()]}); continue
+                        if para.strip()=='{{schema-architektury}}': C['blocks'].append({'svg':'arch'}); continue
+                        if para.startswith('|'): C['blocks'].append({'table':parse_table(para.split('\n'))}); continue
+                        if para.startswith('```'): C['blocks'].append({'code':'\n'.join(para.split('\n')[1:-1]).replace('\ue001','').replace('\ue000','#')}); continue
+                        if para.startswith('- ') and not para.startswith('- ['): C['blocks'].append({'list':[inline(x[2:]) for x in para.split('\n') if x.startswith('- ')]}); continue
+                        if para.startswith('**Víc do hloubky:**'):
+                            ls=para[len('**Víc do hloubky:**'):].split('\n')
+                            C['more']=inline(ls[0]) if ls[0].strip() else ''
+                            ml=[inline(x[2:]) for x in ls[1:] if x.startswith('- ')]
+                            if ml: C['moreList']=ml
                         elif para.startswith('**Otázka:**'):
                             lines=para.split('\n'); C['q']=inline(lines[0][len('**Otázka:**'):])
                             for ln in lines[1:]:
@@ -82,7 +93,7 @@ def parse_module(fn):
                                     if m.group(1)=='x': C['a']=len(C['o'])
                                     C['o'].append(inline(m.group(2)))
                         elif para.startswith('**Proč:**'): C['why']=inline(para[len('**Proč:**'):])
-                        else: C['text'].append(inline(' '.join(para.split('\n'))))
+                        else: t_=inline(' '.join(para.split('\n'))); C['text'].append(t_); C['blocks'].append({'p':t_})
                     cards.append(C)
                 L['cards']=cards
             elif sh.startswith('Pro zvídavé'):
@@ -150,10 +161,10 @@ PRINCIPLES = [inline(m.group(1)) for m in re.finditer(r'^- (.+)$', z1, flags=re.
 MISTAKES = [[m.group(1), inline(m.group(2))] for m in re.finditer(r'^- \*\*(.+?)\*\*\s*(.*)$', z2, flags=re.M)]
 rt = open(f'{SRC}/pripravenost.md',encoding='utf-8').read()
 READY=[]
-RC={'0':'pink','1':'pink','1b':'pink','2':'purple','3':'indigo','4':'blue'}
+RC={'0':'pink','1':'pink','1b':'purple','2':'purple','3':'indigo','4':'blue'}
 RR={'Product Manager':'pm','Product Designer':'pd','Software Engineer':'se','Guild Master':'gm'}
 for blk in re.split(r'^## ', rt, flags=re.M)[1:]:
-    h,_,b = blk.partition('\n'); lvl = re.search(r'Úroveň (\d\w?)',h).group(1)
+    h,_,b = blk.partition('\n'); mt = re.search(r'Úroveň (\d\w?)',h); lvl = mt.group(1) if mt else '1b'
     cur={'g':h,'c':RC[lvl],'role':None,'i':[]}; READY.append(cur)
     for ln in b.split('\n'):
         m = re.match(r'^\*\*(.+)\*\*$', ln.strip())

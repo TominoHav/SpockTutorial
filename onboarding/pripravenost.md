@@ -2,23 +2,23 @@
 
 Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až máte zaškrtnuté všechno z té předchozí.
 
-## Úroveň 0: Příprava
+## Úroveň 0: Poznejte SPOCK
+
+- [ ] Vysvětlím, proč SPOCK vzniká, 7 fází a kdo v každé rozhoduje.
+- [ ] Vysvětlím rozdíl mezi Q a G bránou a proč agent nehodnotí sám sebe.
+- [ ] Poznám, který task spouštím jen já.
+- [ ] Znám pět pravidel z lekce 0.3 a umím říct, proč každé platí, včetně toho, jaká data smím do SPOCKu vložit.
+- [ ] Řeknu tři věci, které SPOCK nedělá.
+
+## Úroveň 1: Příprava
 
 - [ ] Mám schválené role v REDIMu (`CSIN\vcs_github_copilot`, `CSIN\GHB_DEV_SPOCK_WRITE`, `CSIN\CAAUTH_USR`) a prošel/prošla jsem onboarding GitHubu v ČS.
 - [ ] Mám z firemního katalogu VS Code, Git, Node.js 22 a caauth-cli a SSH certifikát funguje.
 - [ ] V chatu vidím model Claude Sonnet 5 a mám dost AI kreditů.
 - [ ] SPOCK mám naklonovaný z `csas-dev/spock-pilot`, `surface` obsahuje `copilot`, `check my setup` mi projde a vidím šest agentů.
-- [ ] Znám pět pravidel z lekce 0.5 a umím říct, proč každé platí, včetně toho, jaká data smím do SPOCKu vložit.
-- [ ] Poznám, který task spouštím jen já.
-
-## Úroveň 1: Základy
-
-- [ ] Vysvětlím 7 fází a kdo v každé rozhoduje.
-- [ ] Vysvětlím rozdíl mezi Q a G bránou a proč agent nehodnotí sám sebe.
 - [ ] V hotovém běhu dohledám tvrzení z iniciativy zpět k materiálu.
-- [ ] Řeknu tři věci, které SPOCK nedělá.
 
-## Úroveň 1b: Fáze do hloubky
+## Příručka: Fáze do hloubky (volitelná)
 
 - [ ] U každé fáze řeknu, co čte, co vyrobí, kdo rozhoduje a co záměrně nedělá.
 - [ ] Vím, kam jde neprošlá kontrola a které kontroly nejde podepsat.

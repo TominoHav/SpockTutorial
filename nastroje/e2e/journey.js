@@ -32,17 +32,22 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  await p.locator('.startb [data-role=gm]').click();await p.waitForTimeout(200);
  ok(T('výběr role → upozornění na odznak Na palubě, bez překrytí obrazovky'), (await p.locator('.notice').allInnerTexts()).some(t=>t.includes('Na palubě')) && !(await p.locator('.cel').count()));await dismiss();
  ok(T('po výběru role „Vítejte zpět“'), (await p.locator('.hx .eyebrow').first().innerText()).toLowerCase().includes('zpět'));
- // lekce 0.1 – všechny úkoly
+ // lekce 0.1 – karty a úkoly
+ const answerCards=async()=>{let g=0;while(g++<40){await dismiss();const n=await p.evaluate(()=>{const e=document.querySelector('.lpanel .lcard.cur .lc-opt:not([disabled])');if(!e)return 0;e.scrollIntoView({block:'center'});e.click();return 1;});if(!n)break;await p.waitForTimeout(90);}await dismiss();};
+ const doLesson=async()=>{await answerCards();let guard=0;while(await p.locator('.lpanel input[data-todo]:not(:checked)').count() && guard++<12){await checkNext();}};
  await p.locator('[data-golesson], [data-week=l0]').first().click();await p.waitForTimeout(250);
- const boxes=p.locator('.lpanel input[data-todo]');const nb=await boxes.count();
- for(let i=0;i<nb;i++){ if(!(await p.locator('.lpanel input[data-todo]:not(:checked)').count())) break; await checkNext(); }
- const s1=await st();ok(T(`lekce 0.1: ${nb} úkolů odškrtnuto, lekce hotová`), s1.got['lesson.l0.0']===true, 'XP '+s1.xp);
+ ok(T('lekce 0.1 začíná první kartou, další jsou skryté'), await p.locator('.lpanel .lcard').count()===1 && await p.locator('.lpanel .lc-opt').count()>1);
+ ok(T('karta má štítek „jen na webu“'), (await p.locator('.lpanel').first().innerText()).toLowerCase().includes('jen na webu'));
+ const x0=(await st()).xp;await p.evaluate(()=>document.querySelector('.lpanel .lcard.cur .lc-opt').click());await p.waitForTimeout(150);await dismiss();
+ ok(T('odpověď ukáže vysvětlení a otevře další kartu'), await p.locator('.lpanel .lc-why').count()===1 && await p.locator('.lpanel .lcard').count()===2, 'XP '+x0+' → '+(await st()).xp);
+ const nb=await p.locator('.lpanel input[data-todo]').count();
+ await doLesson();
+ const s1=await st();ok(T(`lekce 0.1: karty zodpovězené, ${nb} úkoly odškrtnuté, lekce hotová`), s1.got['lesson.l0.0']===true, 'karet '+Object.keys(s1.cards||{}).length+', XP '+s1.xp);
  ok(T('po lekci se otevře lekce 0.2'), (await p.locator('.lp-head, .lpanel').first().innerText()).includes('0.2'));
  ok(T('vysvětlivky pojmů v lekci'), await p.locator('.lpanel .gl').count()>0);
  // dokončit celý modul l0
- const s0=await p.evaluate(()=>{const s=JSON.parse(localStorage.getItem('spock-user-onboarding-v1'));return s;});
- for(let li=1;li<6;li++){await dismiss();await p.evaluate(li=>{const e=document.querySelector(`.pd-in-card [data-lesson="${li}"], .pd-mob-card [data-lesson="${li}"]`);e&&e.click()},li);await p.waitForTimeout(120);
-   let guard=0;while(await p.locator('.lpanel input[data-todo]:not(:checked)').count() && guard++<12){await checkNext();}}
+ for(let li=1;li<4;li++){await dismiss();await p.evaluate(li=>{const e=document.querySelector(`.pd-in-card [data-lesson="${li}"], .pd-mob-card [data-lesson="${li}"]`);e&&e.click()},li);await p.waitForTimeout(120);await doLesson();}
+ const s1b=await st();ok(T('všechny 4 lekce úrovně 0 hotové jen na webu'), [0,1,2,3].every(i=>s1b.got['lesson.l0.'+i]), Object.keys(s1b.got).filter(k=>k.startsWith('lesson.l0')).join(','));
  // kvíz
  await dismiss();await p.locator('[data-quiz=l0]').last().click();await p.waitForTimeout(150);
  const known={};let g=0;
@@ -57,10 +62,10 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
    const nx=p.locator('[data-snext]');if(await nx.count())await nx.click();await p.waitForTimeout(60);}
  ok(T('kvíz modulu dokončen (chyby se vracejí, dokud nejsou správně)'), !(await p.locator('#ses').count()), g+' kroků');
  await dismiss();
- const s2=await st();ok(T('modul Příprava hotový (100 %) a odznaky'), s2.got['module.l0']===true, `XP ${s2.xp}, odznaky ${Object.keys(s2.badges).filter(k=>k.startsWith('got.')).length}`);
- ok(T('Základy se odemkly'), await p.evaluate(()=>!document.querySelector('.pd-s.c-pink:nth-child(2).st-lock')));
+ const s2=await st();ok(T('modul Poznejte SPOCK hotový (100 %) a odznaky'), s2.got['module.l0']===true, `XP ${s2.xp}, odznaky ${Object.keys(s2.badges).filter(k=>k.startsWith('got.')).length}`);
+ ok(T('Příprava se odemkla'), await p.evaluate(()=>!document.querySelector('.pd-s.c-pink:nth-child(2).st-lock')));
  // zamčený modul a skokový test
- await p.evaluate(()=>document.querySelector('[data-week=l1b]').click());await p.waitForTimeout(150);
+ await p.evaluate(()=>document.querySelector('[data-week=l3]').click());await p.waitForTimeout(150);
  ok(T('zamčený modul ukáže kartu se skokovým testem'), await p.locator('[data-jump]').count()>0);
  await p.locator('[data-peek]').first().click().catch(()=>{});await p.waitForTimeout(120);
  ok(T('náhled zamčeného modulu otevře lekce'), await p.locator('.lpanel').count()>0);
@@ -68,7 +73,10 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  await p.evaluate(()=>document.querySelector('[data-week=gm]').click());await p.waitForTimeout(150);
  await p.locator('[data-peek]').first().click().catch(()=>{});await p.waitForTimeout(120);
  await p.evaluate(()=>{const e=document.querySelector('.pd-in-card [data-lesson="5"], .pd-mob-card [data-lesson="5"]');e&&e.click()});await p.waitForTimeout(150);
- ok(T('GM 2G.6: schéma architektury'), await p.locator('.archfig svg').count()===1);
+ ok(T('GM 2G.6: schéma architektury v první kartě'), await p.locator('.lpanel .lcard .archfig svg').count()===1);
+ // volitelná příručka 1b se nezamyká
+ await p.evaluate(()=>document.querySelector('[data-week=l1b]').click());await p.waitForTimeout(150);
+ ok(T('příručka Fáze do hloubky je volitelná a otevřená'), !(await p.locator('[data-jump]').count()) && await p.locator('.lpanel .lcard').count()>0);
  // opora
  for(const v of ['map','diag','cheat','gloss','badges','ready']){await p.evaluate(v=>{const e=document.querySelector(`[data-go="${v}"]`);e&&e.click()},v);await p.waitForTimeout(100);ok(T('stránka '+v+' bez přetékání'), (await ov())<=0);}
  await p.evaluate(()=>document.querySelector('[data-go="gloss"]').click());await p.fill('#gloss-q','trust');await p.waitForTimeout(100);

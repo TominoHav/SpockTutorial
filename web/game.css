@@ -128,3 +128,4 @@
 .pc-next > div{display:grid;gap:3px;flex:1;min-width:0}.pc-next b{font-size:15px}.pc-next > div > span{font-size:13px;color:var(--ink-2)}
 .pc-np{display:flex;align-items:center;gap:8px;max-width:360px}.pc-np .bar{flex:1;height:8px}.pc-np .num{font-size:12px;font-weight:700;color:var(--ink-3)}
 @media (prefers-reduced-motion:reduce){.pc-b.on .bd{animation:none}}
+.hp-ref{margin:14px 0 0;font-size:14px}

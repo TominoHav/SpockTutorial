@@ -203,7 +203,10 @@ document.addEventListener('click', e => {
   S.cards = S.cards || {}; S.cards[k] = +o; save();
   if (+o === c.a) award('card.' + k, 5, 'karta');
   const d = w.days[+di];
-  if (lessonDone(w, +di) && award('lesson.' + wid + '.' + di, XP.lesson, 'lekce')) celebrate({kind:'lesson', title:'Lekce ' + d.d + ' hotová!', text:plain(d.t) + '.'});
+  if (lessonDone(w, +di) && award('lesson.' + wid + '.' + di, XP.lesson, 'lekce')) {
+    celebrate({kind:'lesson', title:'Lekce ' + d.d + ' hotová!', text:plain(d.t) + '. ' + (w.days[+di+1] ? 'Na řadě je lekce ' + w.days[+di+1].d + '.' : 'Na řadě je kvíz modulu.')});
+    if (w.days[+di+1]) view.lesson = +di + 1;
+  }
   checkModuleDone(w);
   const y = scrollY; renderWeek(view.week); updatePills(); scrollTo({top:y});
   const nx = document.getElementById('card-' + wid + '-' + di + '-' + (+ci + 1));
