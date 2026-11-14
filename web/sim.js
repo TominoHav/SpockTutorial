@@ -143,7 +143,7 @@ const TERMS = [
 ].map(([p, d]) => [new RegExp('(?<![\\p{L}\\d_.-])(?:' + p + ')(?![\\p{L}\\d_])', 'iu'), d]);
 function glossify(root){
   if (!root) return;
-  const used = new Set(), tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {acceptNode: n => n.parentElement.closest('code,a,button,h1,h2,h3,summary,label,table,.gl,.eyebrow,.ld,.ses,script,style') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT});
+  const used = new Set(), tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {acceptNode: n => n.parentElement.closest('code,a,button,h1,h2,h3,summary,label,table,svg,.gl,.eyebrow,.ld,.ses,script,style') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT});
   const nodes = []; while (tw.nextNode()) nodes.push(tw.currentNode);
   nodes.forEach(n => {
     let node = n;
