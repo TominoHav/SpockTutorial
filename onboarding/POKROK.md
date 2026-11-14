@@ -2,7 +2,7 @@
 
 Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po vašem souhlasu ho aktualizuje.
 
-**Moje role:** _(PM / Product Designer / Software Engineer / Guild Master)_
+**Moje role:** _(PM / PD / SWE / GM)_
 
 ## Úroveň 0: Příprava
 
@@ -138,9 +138,9 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 ## Úroveň 2: Product Designer
 
-**2D.1 — Kde designer do běhu vstupuje**
+**2D.1 — Kde PD do běhu vstupuje**
 
-- [ ] 2D.1 Najděte v ukázkovém běhu, kde by pomohl designer
+- [ ] 2D.1 Najděte v ukázkovém běhu, kde by pomohl PD
 - [ ] 2D.1 Zeptejte se Methodology Coache na trio
 
 **2D.2 — Materiál do fáze 2**
@@ -152,7 +152,7 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 - [ ] 2D.3 Projděte rámované příležitosti s PM před G2
 
-**2D.4 — Řešení a MVP z pohledu designera**
+**2D.4 — Řešení a MVP z pohledu PD**
 
 - [ ] 2D.4 Navrhněte řešení nebo variantu MVP
 
@@ -175,7 +175,7 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 **2E.3 — MVP a PRD jako vstup pro delivery**
 
-- [ ] 2E.3 Přečtěte PRD jako engineer
+- [ ] 2E.3 Přečtěte PRD jako SWE
 - [ ] 2E.3 Přečtěte iniciativu
 
 **2E.4 — Záznamy a kontroly ve vlastním běhu**
@@ -207,12 +207,18 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 **2G.4 — Změna know-how**
 
 - [ ] 2G.4 Napište návrh změny metodiky
-- [ ] 2G.4 Proveďte změnu s engineerem
+- [ ] 2G.4 Proveďte změnu se SWE
 
 **2G.5 — Vedení komunity PM**
 
 - [ ] 2G.5 Najděte vzor ve zpětné vazbě
 - [ ] 2G.5 Připravte 30minutové intro pro Guildu
+
+**2G.6 — Architektura pro správce metodiky**
+
+- [ ] 2G.6 Zmapujte dopad jedné změny
+- [ ] 2G.6 Projděte jeden tah ve vlastním běhu a určete, kdo co dělal
+- [ ] 2G.6 Vysvětlete kolegovi z PM komunity tři pojistky
 
 - [ ] Kvíz: Úroveň 2: Guild Master
 

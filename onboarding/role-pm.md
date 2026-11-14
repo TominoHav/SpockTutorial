@@ -57,7 +57,7 @@
 
 - [ ] **Dodejte materiál a načtěte ho** (20 min)
   - *Proč:* Materiál je jediná věc v běhu, kterou nenapsal ani systém, ani tým. Proto se načítá tímhle zvláštním způsobem.
-  1. Vložte 2–4 soubory (poznámky z rozhovorů, tikety, průzkum) do `2-problems/supplied/`. Ideálně si je připraví designer (viz [role-designer.md](role-designer.md)).
+  1. Vložte 2–4 soubory (poznámky z rozhovorů, tikety, průzkum) do `2-problems/supplied/`. Ideálně si je připraví PD (viz [role-designer.md](role-designer.md)).
   2. Nový chat → agent **Opportunity Designer**.
   3. Agent spustí `SPOCK: read in the problem material`. Když ohlásí soubory bez data, spusťte `SPOCK: date the material that arrived without dates` a období vyplňte sami. Do prvního políčka napište `as listed`, pokud souhlasíte s obdobími, která task vypsal. Opravu nebo doplnění přidejte za středník, např. `as listed; rozhovory.md: 2026-03; clanek.md: 2026-Q1`. Období je rok (`2026`), čtvrtletí (`2026-Q2`) nebo měsíc (`2026-04`). Tip: datum v názvu souboru (`rozhovory-2026-03.md`) SPOCK přečte jen jako rok, proto měsíc uveďte v políčku nebo přímo v textu souboru.
 - [ ] **Přidejte problém vlastními slovy** (10 min)
@@ -65,7 +65,7 @@
   1. Spusťte `SPOCK: add a problem in my own words` a napište jeden problém.
 - [ ] **Potvrďte a seřaďte příležitosti (G2)** (40 min)
   - *Proč:* Rozhodujete, které příležitosti tenhle běh sleduje. Na nich stojí všechno, co přijde potom.
-  1. Projděte rámované příležitosti s designerem, pokud ho máte. U každé zkontrolujte trust tag a ze kterých souborů vychází.
+  1. Projděte rámované příležitosti s PD, pokud ho máte. U každé zkontrolujte trust tag a ze kterých souborů vychází.
   2. Ověřte, že agent sám nic nepovýšil a nevyprázdnil odložené.
   3. Schvalte taskem `SPOCK: approve what is in front of me`.
 
@@ -102,7 +102,7 @@
 ### Klíčové myšlenky
 
 - **Fáze 4 nemá žádné skóre**, žádné pořadí ani číslo. Porovnáváte **seznam touchpointů a jejich počet** u každého řešení.
-- **Tříletá a třítýdenní stavba vypadají pro workflow stejně.** Na technickou složitost se proto před výběrem zeptejte engineera (viz [role-engineer.md](role-engineer.md)).
+- **Tříletá a třítýdenní stavba vypadají pro workflow stejně.** Na technickou složitost se proto před výběrem zeptejte SWE (viz [role-engineer.md](role-engineer.md)).
 - Výběr jsou dvě akce: nejdřív zapíšete volbu i s důvodem, pak schválíte. **Důvod se slovo od slova přepíše do vybraného řešení** pod „Why this one“ a je to jediné, co z rozhodnutí zbude pro fáze 5–7 (STAGE-4 R9.3).
 - Možnost „nic z toho“ neexistuje. Když se vám žádné řešení nelíbí, změňte některé nebo přidejte vlastní, až do deseti (STAGE-4 R9.7).
 
@@ -142,7 +142,7 @@
 
 - [ ] **Odsouhlaste PRD (G6)** (40 min)
   - *Proč:* Na PRD staví delivery. Musíte vědět, s čím souhlasíte.
-  1. Nový chat → **Business Analyst**. Projděte draft (`6-prd/1-prd-draft.md`) s engineerem a designerem.
+  1. Nový chat → **Business Analyst**. Projděte draft (`6-prd/1-prd-draft.md`) se SWE a PD.
   2. `SPOCK: mark the PRD agreed` → vaše jméno.
   3. `SPOCK: approve what is in front of me`.
 - [ ] **Schvalte iniciativu (G7)** (30 min)
@@ -192,7 +192,7 @@ b) Doporučením agent udělal rozhodnutí, kvůli kterému tam jste vy (`TESTER
 **3. Ve fázi 4 vám chybí informace o technické složitosti řešení. Kde ji najdete?**
 
    a) Ve skóre řešení
-   b) Nikde. SPOCK složitost nehodnotí, zeptejte se engineera před G4
+   b) Nikde. SPOCK složitost nehodnotí, zeptejte se SWE před G4
    c) V Q4
 
 <details><summary>Odpověď</summary>

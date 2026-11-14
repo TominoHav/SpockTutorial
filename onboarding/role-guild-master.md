@@ -1,4 +1,4 @@
-# Úroveň 2: Guild Master, správce PM metodiky (5–6 h)
+# Úroveň 2: Guild Master, správce PM metodiky (6–7 h)
 
 **Cíl:** Víte, kde ve SPOCKu žije produktová metodika a kdo ji vlastní. Umíte metodicky posoudit hotový běh (tu polovinu bran, kterou žádný automat nehodnotí), navrhnout a provést změnu know-how správným postupem a vést komunitu PM, kteří se SPOCKem pracují.
 
@@ -6,7 +6,7 @@
 
 **Než začnete:** Mějte hotové úrovně 0, 1 a 1b a ideálně i [role-pm.md](role-pm.md). Metodiku nejde posuzovat bez vlastního běhu.
 
-> Guild Master mění **zdroj** know-how v `specifications/definitions/know-how/`. Nikdy neupravuje `.github/`: kopii pro agenty generuje a ověřuje engineer (`KNOW-HOW-OWNERS.md` §3–4).
+> Guild Master mění **zdroj** know-how v `specifications/definitions/know-how/`. Nikdy neupravuje `.github/`: kopii pro agenty generuje a ověřuje SWE (`KNOW-HOW-OWNERS.md` §3–4).
 
 ## 2G.1 — Kde metodika ve SPOCKu žije
 
@@ -95,24 +95,24 @@
 
 ### Klíčové myšlenky
 
-- **Postup změny:** osoba v ČS rozhodne a upraví **zdroj** → zvýší **Version**, nastaví **Date** a do bloku historie připíše jeden řádek, co se změnilo a proč → **engineer** vygeneruje kopii pro agenty a spustí kontroly → teprve když projdou, se změna commitne.
+- **Postup změny:** osoba v ČS rozhodne a upraví **zdroj** → zvýší **Version**, nastaví **Date** a do bloku historie připíše jeden řádek, co se změnilo a proč → **SWE** vygeneruje kopii pro agenty a spustí kontroly → teprve když projdou, se změna commitne.
 - **Změna bez nové verze je chyba.** Běh si zapisuje verzi, kterou četl, a změnu pod stejným číslem by nešlo odlišit od toho, co bylo předtím. **Výjimka existuje a je vzácná:** Method Canon zapisuje úpravu jedné věty se zachovanou verzí 0.4, protože na tu verzi odkazují citace Methodology Coache a žádný oddíl se nepřesunul. I taková úprava má řádek v historii s důvodem. O výjimce nerozhodujete sami: projděte ji s Igorem Tadićem.
 - **Know-how se nikdy nemění ve vlastní pracovní kopii SPOCKu.** Vygenerovaná kopie v `.github/know-how/` patří k vydání. Jakákoli změna v ní, i ta provedená správným postupem, shodí v běhu kontrolu **`C189`** („soubory workflow se liší od vydání“). Tu nejde podepsat jako výjimku. Změna se dělá ve **vývojovém repozitáři pilotního týmu**, vyjde v **novém vydání** a k uživatelům se dostane taskem `SPOCK: update this copy to the latest release` po dokončení jejich běhů.
-- **Kontroly z `KNOW-HOW-OWNERS.md` §4 krok 4 ve vydané kopii nejsou.** `repo-check.mjs` a `check.test.mjs` má jen vývojový repozitář. Engineer, se kterým změnu děláte, k němu potřebuje přístup od pilotního týmu.
+- **Kontroly z `KNOW-HOW-OWNERS.md` §4 krok 4 ve vydané kopii nejsou.** `repo-check.mjs` a `check.test.mjs` má jen vývojový repozitář. SWE, se kterým změnu děláte, k němu potřebuje přístup od pilotního týmu.
 - **Status *Approved*** a vaše jméno v řádku Owner patří do hlavičky až po revizi **celého** dokumentu. Řádek *Written by* zůstává autorovi z pilotního týmu.
 - **Jedna změna najednou.** Pak víte, co způsobila.
 
 ### Úkoly
 
 - [ ] **Napište návrh změny metodiky** (45 min)
-  - *Proč:* Návrh vás donutí promyslet dopad dřív, než se cokoli změní, a dá Igorovi i engineerovi co revidovat.
+  - *Proč:* Návrh vás donutí promyslet dopad dřív, než se cokoli změní, a dá Igorovi i SWE co revidovat.
   1. Z revize v 2G.3 nebo z porovnání v 2G.2 vyberte jeden problém.
   2. Napište: problém, kterého dokumentu se týká, co přesně změníte, novou verzi a jak poznáte, že změna funguje (na kterém běhu ji ověříte).
   3. Projděte návrh s Igorem.
-- [ ] **Proveďte změnu s engineerem** (60 min, volitelné)
+- [ ] **Proveďte změnu se SWE** (60 min, volitelné)
   - *Proč:* Celý cyklus jednou projdete sami: od rozhodnutí po ověřený commit.
   1. Ve **vývojovém repozitáři pilotního týmu** (ne ve své pracovní kopii SPOCKu) založte zkušební větev a upravte **jen zdrojový** soubor ve `specifications/definitions/know-how/`: text, Version, Date a řádek historie.
-  2. Engineer spustí generování a kontroly z `KNOW-HOW-OWNERS.md` §4 krok 4.
+  2. SWE spustí generování a kontroly z `KNOW-HOW-OWNERS.md` §4 krok 4.
   3. Když kontroly projdou, změnu nechte zrevidovat a commitnout.
 
 ## 2G.5 — Vedení komunity PM
@@ -135,6 +135,103 @@
   1. Osnova: co SPOCK dělá (7 fází), kde rozhoduje člověk, co výstup dokazuje a co ne a kde je onboarding.
   2. Jako ukázku použijte vlastní revizi z 2G.3.
 
+## 2G.6 — Architektura pro správce metodiky
+
+### Ke studiu (asi 40 min)
+
+- 📄 **`.github/agents/*.agent.md`**: v každém souboru jen řádek `tools:`
+- 📄 **`.github/registry/skills.yaml`**: u každého skillu řádky `agent:`, `stage:` a `know_how:` (jen čtete, nic neměníte)
+- 📄 **Hlavičky know-how** ve `specifications/definitions/know-how/`: řádek **Read by**
+
+### Klíčové myšlenky
+
+- **Proč to Guild Master potřebuje:** agenti nesmějí číst kód kontrol a píší podle know-how. **Kvalita know-how je proto přímo kvalita výstupu.** A jedna změna know-how se projeví v každém skillu, který ho čte.
+- **SPOCK má devět vrstev.** Vy vlastníte jednu (know-how), ostatní mění SWE:
+
+| Vrstva | Kde žije | Co dělá |
+|---|---|---|
+| Pravidla pro všechny | `.github/copilot-instructions.md`, `.github/instructions/` | Pracovní řád: piš jen do běhu, nic nedomýšlej, sám nic neschvaluj |
+| Agenti (6) | `.github/agents/*.agent.md` | Kdo agent je a jaké má nástroje |
+| Skilly (17) | `.github/skills/*/SKILL.md` | Postup krok za krokem pro jeden dokument |
+| **Know-how (22 v 5 oblastech)** | zdroj `specifications/definitions/know-how/` | **Co znamená „dobře“: metodika, šablony, regulace. Vaše vrstva** |
+| Kontrakty | `.github/workflow-contracts/*.yaml` | Pořadí fází a kritéria bran |
+| Registry | `.github/registry/*.yaml` | Seznam všeho, co existuje: agenti, skilly, kontroly, povolený web |
+| Kontroly | `.github/scripts/check.mjs`, `gates.mjs` | Kód, který po agentovi ověří výstup (Q brány) |
+| Hlídače | `.github/hooks/step-guards.json` → `step-guard.mjs` | Za běhu zastaví špatný krok dřív, než se stane |
+| Tasky (46) | `.vscode/tasks.json` | Tlačítka `SPOCK: …`. Políčka pro jméno a roli vyplní jen člověk |
+
+- **Agenti a jejich nástroje.** Co agent nemá v `tools:`, to neudělá:
+
+| Agent | Fáze | Nástroje |
+|---|---|---|
+| Product Manager | 1, 4, 5 | čte, píše soubory, spouští tasky bez políček |
+| Opportunity Designer | 2 | totéž; čtení materiálu (`material-intake`) běží v karanténě |
+| Competitive Analysis | 3 | totéž a navíc **web** (`fetch`, `websearch`). Jediný agent s webem |
+| Business Analyst | 6, 7 | čte, píše soubory, spouští tasky bez políček |
+| Methodology Coach | radí | jen čte |
+| Workflow Support | radí | jen čte |
+
+- **Hlídače: co který zastaví.** Každé jejich rozhodnutí se zapisuje do `.github/.guard/decisions.jsonl` ve vaší kopii (soubor není v gitu):
+
+| Kdy | Hlídač | Co dělá |
+|---|---|---|
+| Start chatu | `SessionStart` | Dá agentovi poznámku o stavu běhu a o tom, co smí |
+| Vaše zpráva | `SG7` | Když jste mezitím spustili task, předá agentovi jeho výstup |
+| Před zápisem | `write` | Odmítne zápis mimo běžící fázi, do `.github/` a `.vscode/`, do schválené fáze, do `supplied/` a do souborů, které píše workflow |
+| Před zápisem | `SG3` | Odmítne zápis dokumentu, když agent v tomto chatu neotevřel jeho skill |
+| Před čtením | `checker` | Agent nesmí číst kód kontrol |
+| Před taskem | `SG1` | Agent nesmí spustit task s políčky pro člověka |
+| Před taskem | smyčka | Stejný task potřetí bez změny v běhu → zastaví |
+| Před webem | `SG4` | Ve fázi 3 nepustí hledání před úvodní zprávou fáze |
+| Po tasku | `SG2` | Dá agentovi celý výstup tasku: „jednej podle celého“ |
+| Konec tahu | `SG5`, `SG6` | Vrátí tah, když agent chce po člověku, co má udělat sám, nebo když žádosti o schválení chybí povinné věty |
+
+- **Jeden tah fáze 1, krok za krokem, a kdo ho dělá** (9 kroků níže).
+
+1. **Vy (task):** `SPOCK: start a run` založí běh a kostru briefu.
+2. **Hlídač:** při startu chatu s Product Managerem dá agentovi poznámku o běhu.
+3. **Agent:** otevře skill `brief-creation` a jeho know-how (Method Canon, Brief Fields, Stage 1 Shapes, Strategy Basis a další).
+4. **Agent:** vede rozhovor. Co nevíte, zapíše jako `unknown` s důvodem. Rozhovor má strop 40 výměn.
+5. **Hlídač:** před zápisem ověří, že soubor patří do běžící fáze a že agent otevřel skill.
+6. **Kód:** agent spustí kontrolu, Q1 projde mechanickou polovinu, výsledek jde do `.github/last-task.md`.
+7. **Hlídač:** předá agentovi celý výstup. Když něco neprošlo, agent opraví a kontrolu zopakuje.
+8. **Hlídač:** na konci tahu ověří, že žádost o schválení má povinné věty.
+9. **Vy (task):** `SPOCK: approve what is in front of me` zapíše podpis G1 a běh postoupí.
+
+- **Mapa dopadu: které skilly čtou které know-how** (`.github/registry/skills.yaml`):
+
+| Know-how | Kolik skillů | Které |
+|---|---|---|
+| Method Canon | 16 | všechny skilly kromě `workflow-support` |
+| Evidence Standards | 4 | `brief-creation`, `material-intake`, `hypothesis-authoring`, `methodology-guidance` |
+| Opportunity Framing | 3 | `opportunity-framing`, `prioritisation`, `methodology-guidance` |
+| Discovery Craft | 2 | `ideation`, `methodology-guidance` |
+| Strategy Basis | 4 | `brief-creation`, `ideation`, `mvp-expansion`, `prd` |
+| Brief Fields, Stage 1 Shapes | 1 | `brief-creation` |
+| Stage 3 Shapes | 3 | `landscape-mapping`, `deep-dive`, `synthesis` |
+| Stage 4 Shapes | 1 | `ideation` |
+| PRD Template | 1 | `prd` |
+| Initiative Template | 1 | `initiative-authoring` |
+
+- **Co z mapy plyne:** změna Method Canonu zasáhne celý běh od briefu po iniciativu, změna PRD Template jen fázi 6. Čím víc skillů know-how čte, tím pečlivěji změnu ověřujte a tím víc běhů ji uvidí. Methodology Coach (`methodology-guidance`) čte celou oblast Method, takže změnu Method uslyší PM i v odpovědích na otázky.
+
+### Úkoly
+
+- [ ] **Zmapujte dopad jedné změny** (20 min)
+  - *Proč:* Než navrhnete změnu know-how, musíte vědět, které fáze a skilly zasáhne.
+  1. Vezměte návrh změny z lekce 2G.4 nebo vyberte jedno know-how z oblasti Method.
+  2. V `.github/registry/skills.yaml` najděte všechny skilly, které ho čtou, a k nim fázi (`stage:`) a agenta (`agent:`).
+  3. Do návrhu změny dopište: kterých fází a agentů se změna týká a na kterém ukázkovém běhu ji ověříte.
+- [ ] **Projděte jeden tah ve vlastním běhu a určete, kdo co dělal** (30 min)
+  - *Proč:* Když umíte u každého kroku říct, jestli ho udělal agent, kód, hlídač, nebo člověk, poznáte, kde se metodika do výstupu dostala a kde ne.
+  1. Ve cvičném běhu projděte fázi 1 až po schválení G1.
+  2. Otevřete `.github/.guard/decisions.jsonl` a najděte rozhodnutí hlídačů z tohoto chatu (podle času).
+  3. K devíti krokům tahu výše si zapište, co jste u každého viděli.
+- [ ] **Vysvětlete kolegovi z PM komunity tři pojistky** (15 min)
+  - *Proč:* PM přicházejí s otázkou „proč agent tohle nechce udělat“. Odpověď má být krátká a bez techniky.
+  1. Připravte si tři věty: agent píše, kód kontroluje, člověk podepisuje; a hlídače zastaví špatný krok dřív, než se stane.
+  2. Ke každé větě dejte jeden příklad z vlastního běhu.
+
 ## Kvíz
 
 **1. Chcete upravit pravidlo v Brief Fields. Který soubor upravíte?**
@@ -145,7 +242,7 @@
 
 <details><summary>Odpověď</summary>
 
-b) Zdroj je jediná kopie, kterou kdo upravuje. Kopii v `.github/know-how/` generuje engineer. Ruční úprava kopie selže v `C41` a zmizí (`KNOW-HOW-OWNERS.md` §3).
+b) Zdroj je jediná kopie, kterou kdo upravuje. Kopii v `.github/know-how/` generuje SWE. Ruční úprava kopie selže v `C41` a zmizí (`KNOW-HOW-OWNERS.md` §3).
 
 </details>
 
@@ -169,5 +266,29 @@ b) Posuzovanou polovinu bran nečte žádný automat. Outcome formulovaný jako 
 <details><summary>Odpověď</summary>
 
 b) Kde se šablony liší, vyhrává Guilda. Kde mlčí, zůstávají převzaté sekce (`initiative-template.md`).
+
+</details>
+
+**4. Chcete upravit Method Canon. Proč to vyžaduje víc ověřování než změna PRD Template?**
+
+   a) Method Canon je delší
+   b) Method Canon čte 16 skillů v celém běhu, PRD Template jen skill `prd` ve fázi 6
+   c) PRD Template nemá verzi
+
+<details><summary>Odpověď</summary>
+
+b) Mapa v `.github/registry/skills.yaml` ukazuje, kolik skillů know-how čte. Změna Method Canonu se projeví od briefu po iniciativu i v odpovědích Methodology Coache.
+
+</details>
+
+**5. Proč agenti nesmějí číst kód kontrol a co to znamená pro vás?**
+
+   a) Kód je tajný
+   b) Mají psát podle know-how, ne „na test“. Kvalita know-how je proto přímo kvalita výstupu
+   c) Kód kontrol je moc dlouhý
+
+<details><summary>Odpověď</summary>
+
+b) Hlídač `checker` čtení kódu kontrol zastaví. Agent se tak řídí jen skillem a know-how, a to, co v know-how chybí nebo je nejasné, se projeví ve výstupu.
 
 </details>

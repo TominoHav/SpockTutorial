@@ -27,6 +27,9 @@ Postupujte shora dolů. **Než cokoli zkusíte znovu, uložte si stav**: export 
 | Brána neprošla | Nechte agenta opravovat. Po druhé neúspěšné opravě se zastaví, a to je správně. Pak `SPOCK: explain what the gate failed` a agent **Workflow Support**. |
 | Kontrolu běh opravdu splnit nemůže | `SPOCK: sign off a check this run cannot meet`, poslední políčko podle toho, jestli jde o materiál, nebo o workflow. |
 | Nevím, kde běh stojí | Titulní stránka `runs/<běh>/README.md`, nebo agent **Workflow Support**. |
+| Agent píše, že jeho zápis byl odmítnut | Hlídač ho zastavil: chtěl psát mimo svou fázi, do schválené fáze nebo do `supplied/`. Je to správně. Když se má schválená fáze změnit, vraťte ji (`SPOCK: send a stage back to be redone`). |
+| Agent se zastavil, že task běžel třikrát bez změny | Pojistka proti zacyklení. Zeptejte se agenta, co mu chybí, nebo použijte agenta Workflow Support. |
+| Agent odmítá číst kód kontrol | Záměr. Agent má psát podle know-how, ne „na kontrolu“. |
 | „A hook prevented chat from continuing“ | Není to chyba. Workflow zastavil krok agenta a agent vám řekne, co dělat místo toho (`SETUP.md` §9). |
 | Tasky odmítají pracovat | Máte dva nedokončené běhy. Jeden přesuňte mimo SPOCK (`SETUP.md` §7). |
 | `take something back` odmítne soubor ze `supplied/` | Dodaný materiál se tak nevrací. Přesuňte soubor ze `supplied/` a spusťte `SPOCK: add problem material` → `yes`. |

@@ -2,7 +2,7 @@
 
 **Cíl:** Rozumíte, jak SPOCK funguje technicky z pohledu uživatele. Posoudíte proveditelnost řešení před výběrem v G4, přečtete MVP, PRD a iniciativu jako vstup pro delivery a umíte číst záznamy a výsledky kontrol.
 
-**Proč:** V triu **vede engineer v otázkách proveditelnosti** (`method-canon.md` §14.1). SPOCK přitom **technickou složitost vůbec nehodnotí**: „a three-year build and a three-week build look the same to the workflow“ (`BUSINESS-LOGIC-OVERVIEW.md` §3, fáze 4). Jedinou pojistkou je člověk u G4, a ten potřebuje váš názor.
+**Proč:** V triu **vede SWE v otázkách proveditelnosti** (`method-canon.md` §14.1). SPOCK přitom **technickou složitost vůbec nehodnotí**: „a three-year build and a three-week build look the same to the workflow“ (`BUSINESS-LOGIC-OVERVIEW.md` §3, fáze 4). Jedinou pojistkou je člověk u G4, a ten potřebuje váš názor.
 
 **Než začnete:** Mějte hotové úrovně 0, 1 a 1b, hlavně lekce 1F.4 až 1F.6.
 
@@ -19,7 +19,7 @@
 - **Agenti jsou Copilot agenti** (`.github/agents/*.agent.md`) a každý má jen nástroje, které má povolené. **Tasky** (`.vscode/tasks.json`) spouštějí malé **Node skripty** v `.github/scripts/`. Kromě Node se nic dalšího neinstaluje (`SETUP.md` §1).
 - **Běh je složka v `runs/`**, mimo git. Artefakt je **záznam** v `records/` (pole, která čtou kontroly) a **dokument** pro člověka s front matter.
 - **Kontrola vrací `pass`, `fail` nebo `incomplete`, a `incomplete` není pass.** Zelená brána znamená, že prošla její **mechanická polovina**. Posuzovaná pravidla (judged rules) nehodnotí žádný automatický soudce (`BUSINESS-LOGIC-OVERVIEW.md` §6).
-- **Ani jako engineer neupravujte `.github/` ani `.vscode/`** (`SETUP.md` §9). Chybu ve workflow nahlaste (úroveň 4).
+- **Ani jako SWE neupravujte `.github/` ani `.vscode/`** (`SETUP.md` §9). Chybu ve workflow nahlaste (úroveň 4).
 
 ### Úkoly
 
@@ -63,7 +63,7 @@
 
 ### Úkoly
 
-- [ ] **Přečtěte PRD jako engineer** (40 min)
+- [ ] **Přečtěte PRD jako SWE** (40 min)
   - *Proč:* PRD je to, co dostanete do backlogu. Nejasnosti je levnější najít teď než ve sprintu.
   1. Otevřete `fixtures/2026-01-mortgage-onboarding/6-prd/1-prd-draft.md`.
   2. U tří požadavků ověřte, že akceptační kritérium je testovatelné.

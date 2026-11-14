@@ -2,11 +2,11 @@
 
 **Cíl:** Víte, kde do běhu SPOCKu vstupujete. Dodáte výzkum do fáze 2 tak, aby z něj vznikly dobře podložené příležitosti, posoudíte je a přispějete k řešení, MVP a PRD.
 
-**Proč:** SPOCK počítá s **triem** PM, designer a engineer. **Designer vede v otázkách použitelnosti a žádoucnosti**, ale za všechna rizika odpovídají všichni tři (`method-canon.md` §14.1). Většinu podpisů v SPOCKu sice dává PM, ale **kvalita příležitostí stojí na kvalitě materiálu**, a ten nejčastěji přinášíte vy.
+**Proč:** SPOCK počítá s **triem** PM, PD a SWE. **PD vede v otázkách použitelnosti a žádoucnosti**, ale za všechna rizika odpovídají všichni tři (`method-canon.md` §14.1). Většinu podpisů v SPOCKu sice dává PM, ale **kvalita příležitostí stojí na kvalitě materiálu**, a ten nejčastěji přinášíte vy.
 
 **Než začnete:** Mějte hotové úrovně 0 a 1. Ideálně procházejte lekci souběžně s PM, který dělá svůj první běh ([role-pm.md](role-pm.md)).
 
-## 2D.1 — Kde designer do běhu vstupuje
+## 2D.1 — Kde PD do běhu vstupuje
 
 ### Ke studiu (asi 30 min)
 
@@ -15,7 +15,7 @@
 
 ### Klíčové myšlenky
 
-| Fáze | Co tu jako designer děláte |
+| Fáze | Co tu jako PD děláte |
 |---|---|
 | 2 | **Dodáváte materiál** (rozhovory, testy použitelnosti, tikety). Posuzujete rámované příležitosti a trust tag. Fázi můžete i vést. |
 | 4 | Posuzujete, jestli řešení opravdu řeší problém pro daného uživatele. **Můžete přidat vlastní řešení**, které bude označené jako vaše. |
@@ -26,13 +26,13 @@
 
 ### Úkoly
 
-- [ ] **Najděte v ukázkovém běhu, kde by pomohl designer** (30 min)
+- [ ] **Najděte v ukázkovém běhu, kde by pomohl PD** (30 min)
   - *Proč:* Uvidíte, kde ve hotovém běhu leží uživatelské otázky a kde chybí.
   1. Otevřete `fixtures/2026-09-spending-insights/2-problems/4-framed-opportunities.md`.
   2. U dvou příležitostí si zapište, pro koho jsou, co by chtělo ověřit testem a jakým (podle `method-canon.md` §13.4).
 - [ ] **Zeptejte se Methodology Coache na trio** (10 min)
   - *Proč:* Naučíte se Coache používat na otázky k metodě, místo abyste hádali.
-  1. Agent **Methodology Coach** → „Co dělá designer v triu a co z toho pilot nedělá?“
+  1. Agent **Methodology Coach** → „Co dělá PD v triu a co z toho pilot nedělá?“
   2. Ověřte, že odpověď odkazuje na kánon metody.
 
 ## 2D.2 — Materiál do fáze 2
@@ -68,7 +68,7 @@
 
 - **Dobře formulovaná příležitost** popisuje potřebu, bolest nebo touhu zákazníka, ne řešení (`method-canon.md` §10.4).
 - **Test tvaru: mohlo by tenhle problém vyřešit víc než jedna věc?** Když ne, „problém“ už si vybral řešení. *Poradci by používali samoobslužný nástroj* je řešení převlečené za problém (STAGE-2 §1.5, R3.2.2).
-- **Co materiál neřekne, odpovídáte vy, jako pořadí přes celou sadu:** které příležitosti zasáhnou nejvíc zákazníků a které je bolí nejvíc. Jako designer na to máte nejlepší data (STAGE-2 R3.3.6).
+- **Co materiál neřekne, odpovídáte vy, jako pořadí přes celou sadu:** které příležitosti zasáhnou nejvíc zákazníků a které je bolí nejvíc. Jako PD na to máte nejlepší data (STAGE-2 R3.3.6).
 - **Příležitost, kterou přinesete sami,** nepotřebuje hypotézu, dostane `origin: person` a v dokumentu je označená jako vaše (R3.3.7).
 - **Alternativy zůstávají prázdné s důvodem.** Řešení napsané ve fázi 2 by bylo o tři fáze dřív (`TESTER-GUIDE.md` §4, Stage 2).
 
@@ -80,7 +80,7 @@
   2. Hledejte příležitosti, které jsou ve skutečnosti řešení („chybí tlačítko X“), a navrhněte PM přeformulování.
   3. Když agent shrnuje soubor, který nemohl přečíst, je to nález. Zapište si ho.
 
-## 2D.4 — Řešení a MVP z pohledu designera
+## 2D.4 — Řešení a MVP z pohledu PD
 
 ### Klíčové myšlenky
 

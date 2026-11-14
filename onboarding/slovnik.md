@@ -22,7 +22,8 @@
 | **Titulní stránka běhu** | `runs/<běh>/README.md`. Říká, kde běh stojí, a vede na hlavní dokumenty. |
 | **RUN-STATE.md** | Záznam běhu: stav fází, podpisy, verze know-how. |
 | **Free-roam** | Práce mimo běh, bez bran a bez záznamu. Zpráva musí začínat doslovně `free-roam:`. |
-| **Trio** | PM, designer a engineer dělající discovery spolu. Každý vede ve své oblasti, odpovídají společně. |
+| **PM, PD, SWE, GM** | Zkratky rolí: Product Manager, Product Designer, Software Engineer a Guild Master, správce PM metodiky. |
+| **Trio** | PM, PD a SWE dělající discovery spolu. Každý vede ve své oblasti, odpovídají společně. |
 | **Opportunity Solution Tree** | Metoda SPOCKu: outcome → příležitosti → řešení → artefakty. |
 | **Tvrdá zastávka (hard stop)** | Fáze odmítne běžet, např. bez materiálu nebo bez primární příležitosti. Není to neprošlá kontrola. |
 | **Univerzální kontroly** | 45 kontrol, které běží na každé bráně. Fáze nejčastěji padá právě na nich. |
