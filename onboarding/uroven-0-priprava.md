@@ -19,7 +19,7 @@
 - **SPOCK běží ve VS Code s GitHub Copilot a Copilot Chat, přihlášenými vaším GitHub účtem České spořitelny.** VS Code je program na práci se soubory, Copilot Chat je okno s AI asistentem uvnitř něj. Bez Copilota se agenti SPOCKu nespustí.
 - **Potřebujete čtyři přístupy:** GitHub účet ČS, licenci GitHub Copilot, přístup k repozitáři SPOCKu (místo na GitHubu, odkud si SPOCK stáhnete) a oprávnění instalovat software (nebo pomoc IT, která ho nainstaluje).
 - **Copilot musí ve vaší firemní konfiguraci povolit agent mode a vlastní agenty** (custom agents) a v nabídce modelů musí být **Claude Sonnet 5**. Agent mode znamená, že asistent smí pracovat se soubory, ne jen odpovídat. Vlastní agenti jsou asistenti, které si SPOCK přináší s sebou. Nemusíte to nastavovat, jen to uveďte v žádosti.
-- **Kdo vám pomůže:** **Igor Tadić**, autor a vlastník SPOCKu, zařídí přístup k repozitáři a poradí, kudy žádat o licenci. **IT ČS** řeší GitHub účet, licenci Copilota a instalaci programů.
+- **Kdo vám pomůže:** **CoE Product Managementu - Veronika Bedáňová, Tomáš Havlíček, Kate Coops, Lukáš Krolak**, vlastníci SPOCKu, zařídí přístup k repozitáři a poradí, kudy žádat o licenci. **IT ČS** řeší GitHub účet, licenci Copilota a instalaci programů.
 - **Testeři potřebují navíc** přístup k repozitáři AI Lab se složkou `SPOCK | Workflow Documentation` a testovacími scénáři.
 
 ### Úkoly
@@ -36,7 +36,7 @@
   3. Když je licence přidělená, na [github.com/settings/copilot](https://github.com/settings/copilot) uvidíte, že Copilot máte aktivní.
 - [ ] **Vyžádejte si přístup k repozitáři SPOCKu** (10 min)
   - *Proč:* SPOCK si do počítače naklonujete z repozitáře. Bez přístupu ho nestáhnete ani neaktualizujete.
-  1. Požádejte Igora Tadiće o adresu repozitáře SPOCKu a o přístup pro své GitHub jméno.
+  1. Požádejte CoE Product Managementu o adresu repozitáře SPOCKu a o přístup pro své GitHub jméno.
   2. Ověřte, že stránku repozitáře v prohlížeči otevřete.
   3. Testeři navíc požádají o přístup k repozitáři AI Lab se složkou `SPOCK | Workflow Documentation`.
 - [ ] **Ověřte, jestli smíte instalovat software** (5 min)
