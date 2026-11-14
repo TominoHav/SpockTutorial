@@ -10,7 +10,7 @@
 |---|---|---|
 | `SPOCK: check my setup` | po instalaci a vždy, když něco nefunguje | nástroj (GitHub Copilot) |
 | `SPOCK: start a run` | na začátku běhu, když vás na něj pošle Product Manager | id běhu, jméno, role |
-| `SPOCK: update this copy to the latest release` | po dokončení běhu, se zavřenými chaty | update |
+| `SPOCK: update this copy to the latest release` | po dokončení běhu, se zavřenými chaty | `update`, nebo `update, and set aside my changes to the workflow's own files`, když jste omylem upravili soubory SPOCKu (kontrola `C189`) |
 | `SPOCK: what this build can say about itself` | když potřebujete aktuální čísla | — |
 
 ## Během běhu
@@ -53,7 +53,8 @@
 | `SPOCK: keep a later stage as it is` | stale fáze stále platí | fáze, jméno, důvod, role |
 | `SPOCK: sign off a check this run cannot meet` | kontrolu běh opravdu splnit nemůže | 6 políček |
 | `SPOCK: record that I edited a document` | dokument jste ručně upravili | cesta, co, proč, jméno |
-| `SPOCK: take something back` | soubor do běhu nepatří | soubor, důvod, jméno |
+| `SPOCK: take something back` | dokument nebo soubor běhu do něj nepatří (ne dodaný materiál, viz další řádek) | soubor, důvod, jméno |
+| Špatný soubor v `supplied/` | dodaný materiál do běhu nepatří | přesuňte soubor ze složky `supplied/` a spusťte `SPOCK: add problem material` → `yes`. Když je fáze 2 ve schvalování nebo přijatá, nejdřív ji vraťte taskem `SPOCK: send a stage back to be redone` |
 | `SPOCK: replace a decision that no longer stands` | rozhodnutí už neplatí | 8 políček |
 | `SPOCK: correct a name on the record` | překlep ve jméně | 4 políčka |
 | `SPOCK: stop this run` | běh končí natrvalo | jméno, důvod (jen `low_value`, `small_impact`, `high_risk` nebo `out_of_boundary`), poznámka |
