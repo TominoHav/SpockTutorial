@@ -298,6 +298,17 @@ Artefakt jsou **dva soubory**: dokument pro čtenáře a záznam pro kontroly. T
 
 **Proč:** Soubor je v pořádku, jen ho jedno rozšíření špatně zobrazuje.
 
+#### Průvodce i ve VS Code
+
+Spocka, průvodce z tohoto webu, máte i jako agenta **Spock průvodce** v GitHub Copilotu. Naklonujte si repozitář tutoriálu a otevřete ho ve VS Code v **samostatném okně**. Průvodce odpovídá z lekcí, vede vás úkoly a kvízem a se souhlasem zaškrtává pokrok.
+
+**Otázka:** Otevřete tutoriál i SPOCK v jednom okně a ve výběru vidíte sedm agentů. Co uděláte?
+- [ ] Nahlásím nález, agentů má být šest
+- [x] Otevřu tutoriál v samostatném okně, sedmý je Spock průvodce z tutoriálu
+- [ ] Spock průvodce smažu
+
+**Proč:** Ve SPOCKu má být ve výběru přesně šest agentů. Spock průvodce k SPOCKu nepatří, jen se načetl z otevřeného tutoriálu.
+
 ### Úkoly
 
 - [ ] **Najděte v `TASKS.md` tři tasky, které otevírají políčka** (15 min, ve VS Code)
