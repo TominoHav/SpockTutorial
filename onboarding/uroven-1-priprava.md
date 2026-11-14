@@ -117,26 +117,24 @@ Na firemním počítači neinstalujete z internetu, ale z katalogu: **Solveo** n
 
 ### Úkoly
 
-- [ ] **Najděte firemní katalog softwaru** (5 min)
+- [ ] **Najděte firemní katalog softwaru** (5 min, z firemního katalogu)
   - *Proč:* Na firemním počítači se programy instalují z katalogu, ne z internetu. VS Code, Git, Node.js i caauth-cli najdete tam.
   1. **Windows:** otevřete v prohlížeči katalog **Solveo** (Instalovat software). Když se vám nezobrazí vaše zařízení, kontaktujte svého Delivery Managera.
   2. **Mac:** otevřete aplikaci **Self Service+** a v ní **Catalog**.
   3. Najděte v katalogu **Visual Studio Code**. Některé aplikace se ukážou až po schválení speciální role v REDIMu. Když aplikace chybí, najděte potřebnou roli na interní stránce Confluence k dané aplikaci.
-- [ ] **Nainstalujte VS Code** (10 min)
+- [ ] **Nainstalujte VS Code** (10 min, z firemního katalogu)
   - *Proč:* SPOCK běží uvnitř VS Code. Agenti, tasky i nastavení jsou soubory, které čte VS Code.
-  1. Jde o **Visual Studio Code**, ne o „Visual Studio“ (to je jiný, velký program). Na firemním počítači ho instalujete z katalogu, ne z internetu.
-  2. **Windows (Solveo):** vyberte Visual Studio Code, prostředí **Workstation**, pak **Moje zařízení**, klikněte do pole pod ním a vyberte svůj počítač. Přidejte objednávku do košíku vpravo a objednejte ji jako v běžném e-shopu.
-  3. **Mac (Self Service+):** Catalog → vyhledejte Visual Studio Code → nainstalujte.
-  4. Ověření: VS Code se otevře.
-  5. Vyzkoušejte si Command Palette: stiskněte **Cmd+Shift+P** (Mac) nebo **Ctrl+Shift+P** (Windows), napište `theme`, šipkami vyberte **Preferences: Color Theme**, potvrďte Enter a pak Esc. Tak budete spouštět všechny příkazy v dalších krocích.
-  6. Volitelně, jen na Macu: v Command Palette napište `shell command`, vyberte **Shell Command: Install 'code' command in PATH** a potvrďte Enter. Pak půjde VS Code otevřít i z terminálu příkazem `code`.
-- [ ] **Nainstalujte Git** (10 min)
+  1. Hledejte **Visual Studio Code**, ne „Visual Studio“ (jiný program).
+  2. **Windows (Solveo):** Visual Studio Code → prostředí **Workstation** → **Moje zařízení** → vyberte svůj počítač → košík → objednat.
+  3. **Mac (Self Service+):** Catalog → Visual Studio Code → nainstalovat.
+  4. Ověření: VS Code se otevře a **Cmd+Shift+P** (Mac) nebo **Ctrl+Shift+P** (Windows) otevře Command Palette. Esc ji zavře.
+- [ ] **Nainstalujte Git** (10 min, z firemního katalogu)
   - *Proč:* Gitem SPOCK naklonujete a později jedním taskem aktualizujete. Bez Gitu kontrola nastavení ohlásí, že kopii nejde aktualizovat (`SETUP.md` §2 a §8).
-  1. **Mac:** v Terminálu napište `git --version`. Git je na Macu obvykle k dispozici. Když chybí, najdete ho v Self Service+.
-  2. **Windows:** objednejte **Git** v Solveo. Potřebujete i **Git Bash**, který je jeho součástí.
-  3. Ověření: zavřete a znovu otevřete VS Code, v novém terminálu napište `git --version`. Musí vypsat číslo verze.
-  4. Doporučené: nastavte si jméno a e-mail pro Git, `git config --global user.name "Jméno Příjmení"` a `git config --global user.email "vas.email@…"` (firemní e-mail).
-- [ ] **Nainstalujte Node.js 22** (10 min)
+  1. **Mac:** Git obvykle už máte. Když chybí, je v Self Service+.
+  2. **Windows:** objednejte **Git** v Solveo (obsahuje i Git Bash).
+  3. Ověření: restartujte VS Code a v terminálu napište `git --version`. Musí vypsat číslo verze.
+  4. Doporučené: `git config --global user.name "Jméno Příjmení"` a `git config --global user.email "vas.email@…"` (firemní e-mail).
+- [ ] **Nainstalujte Node.js 22** (10 min, z firemního katalogu)
   - *Proč:* Každý task SPOCKu (kontroly, zápisy, podpisy) spouští Node skript. Bez Node žádný task nefunguje.
   1. Potřebujete **Node.js verze 22**.
   2. **Mac:** v REDIMu objednejte roli `APP_INSTALL_MACOS_NODEJS` (dlaždice Windows). Po schválení v Self Service+ klikněte u položky **Upload inventory to Yaml** na **Run**, počkejte na dokončení, pak vyhledejte **Node** a nainstalujte ho.
@@ -184,10 +182,9 @@ Copilot čerpá **AI kredity**. Stav vidíte vpravo dole ve VS Code u ikony Copi
 
 - [ ] **Nainstalujte a přihlaste Copilota** (15 min, ve VS Code)
   - *Proč:* Bez přihlášeného Copilota se okno chatu neotevře a agenti SPOCKu nejsou k dispozici.
-  1. Ve VS Code otevřete Extensions (ikona čtverečků vlevo), vyhledejte **GitHub Copilot** a **GitHub Copilot Chat** a nainstalujte je, pokud tam ještě nejsou.
-  2. VS Code vás vyzve k přihlášení. Zvolte **Sign in with GitHub** a přihlaste se **účtem ČS**. Pokud výzva nepřijde, klikněte na ikonu účtu vlevo dole (Accounts) a přihlaste se odtud.
-  3. Otevřete okno chatu (ikona Copilota nahoře nebo View → Chat).
-  4. Ověření: v chatu napište „ahoj“ a dostanete odpověď. Když chat hlásí, že nemáte licenci, ověřte, že máte schválenou roli `CSIN\vcs_github_copilot` (lekce 1.1).
+  1. Extensions (ikona čtverečků vlevo) → nainstalujte **GitHub Copilot** a **GitHub Copilot Chat**, pokud chybí.
+  2. **Sign in with GitHub** → přihlaste se **účtem ČS**. Bez výzvy: ikona účtu vlevo dole (Accounts).
+  3. Ověření: otevřete chat (View → Chat), napište „ahoj“ a dostanete odpověď. Hlášení o chybějící licenci znamená, že role `CSIN\vcs_github_copilot` ještě není schválená (lekce 1.1).
 - [ ] **Ověřte agent mode a výběr modelu** (5 min, ve VS Code)
   - *Proč:* SPOCK potřebuje agenty a konkrétní model. Když chybí, zjistíte to teď a ne uprostřed běhu.
   1. V okně chatu najděte výběr režimu nebo agenta a ověřte, že nabízí **Agent**.
@@ -238,13 +235,10 @@ Ve výběru agenta musí být **přesně šest agentů SPOCKu**. Vedle nich uvid
 
 - [ ] **Naklonujte SPOCK a otevřete ho** (15 min, ve VS Code)
   - *Proč:* Jen ze správně otevřené složky najde VS Code agenty, tasky a nastavení SPOCKu.
-  1. Nejjednodušší cesta: v Copilot Chatu ve VS Code napište „Přidej a naklonuj https://github.com/csas-dev/spock-pilot“. Copilot použije SSH a provede vás postupem. Pak pokračujte krokem 4.
-  2. Ručně: otevřete Command Palette (**Cmd+Shift+P** na Macu, **Ctrl+Shift+P** na Windows), napište `git clone`, vyberte **Git: Clone** a potvrďte Enter.
-  3. Do políčka vložte adresu `git@github.com:csas-dev/spock-pilot.git` (Cmd+V nebo Ctrl+V) a potvrďte Enter. Když se VS Code zeptá na přihlášení ke GitHubu, přihlaste se účtem ČS.
-  4. Zvolte místo na disku, kam kopii uložíte, ne do sdílené složky.
-  5. Až se VS Code zeptá, zvolte **Open**.
-  6. Na otázku, jestli důvěřujete autorům, odpovězte, že ano.
-  7. Ověření: v Exploreru vlevo vidíte přímo složky `.github` a `.vscode`.
+  1. Nejjednodušší: v Copilot Chatu napište „Přidej a naklonuj https://github.com/csas-dev/spock-pilot“ a postupujte podle něj.
+  2. Ručně: Command Palette → **Git: Clone** → vložte `git@github.com:csas-dev/spock-pilot.git` → přihlaste se účtem ČS, když se VS Code zeptá.
+  3. Uložte kopii na svůj disk, ne do sdílené složky. Pak zvolte **Open** a autorům důvěřujte.
+  4. Ověření: v Exploreru vlevo vidíte přímo složky `.github` a `.vscode`.
 - [ ] **Ověřte soubor surface** (5 min, ve VS Code)
   - *Proč:* Soubor `surface` říká SPOCKu, v jakém nástroji pracujete. Dokud v něm není `copilot`, SPOCK běh nezaloží.
   1. V Exploreru vlevo otevřete `.github/surface`.
@@ -252,12 +246,10 @@ Ve výběru agenta musí být **přesně šest agentů SPOCKu**. Vedle nich uvid
   3. Ověření: soubor obsahuje jen slovo `copilot`.
 - [ ] **Spusťte SPOCK: check my setup** (15 min, ve VS Code)
   - *Proč:* Kontrola ověří Node, Git, vaši kopii, agenty a model najednou. Dokud SPOCK neví, v jakém nástroji pracujete, nezaloží žádný běh (`SETUP.md` §4).
-  1. Otevřete seznam tasků: z menu **Terminal → Run Task…**, nebo v Command Palette napište `run task` a vyberte **Tasks: Run Task**.
-  2. V seznamu napište `check my setup`, vyberte **SPOCK: check my setup** a potvrďte Enter.
-  3. Nahoře se objeví políčko s otázkou, jaký nástroj používáte. Vyberte **GitHub Copilot** a potvrďte Enter.
-  4. Dole se otevře panel Terminal s výpisem.
-  5. Projděte výpis řádek po řádku. Opravte, co je označené jako *missing*, a task spouštějte znovu, dokud poslední řádek nehlásí, že je vše na místě.
-  6. Když v seznamu tasků není nic, co začíná `SPOCK:`, máte otevřenou jinou složku nebo jste v restricted mode. Vraťte se k předchozímu úkolu.
+  1. Command Palette → `run task` → **Tasks: Run Task** → `check my setup` → **SPOCK: check my setup**.
+  2. Na otázku, jaký nástroj používáte, vyberte **GitHub Copilot**.
+  3. Dole v panelu Terminal opravte vše, co je *missing*, a task spouštějte znovu, dokud poslední řádek nehlásí, že je vše na místě.
+  4. Žádný task `SPOCK:` v seznamu? Máte otevřenou jinou složku nebo jste autorům nedůvěřovali. Vraťte se k předchozímu úkolu.
 - [ ] **Zkontrolujte šest agentů** (5 min, ve VS Code)
   - *Proč:* Agent navíc nebo chybějící agent znamená jinou konfiguraci, než SPOCK předpokládá, a výsledky by neplatily (`TESTER-GUIDE.md` §2.2).
   1. Otevřete výběr agenta v Copilot Chatu.
