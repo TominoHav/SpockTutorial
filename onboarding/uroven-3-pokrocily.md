@@ -18,6 +18,7 @@
 - **Stale fázi** buď přepracujete, nebo ji ponecháte taskem `SPOCK: keep a later stage as it is`. Ten na ní znovu spustí bránu a fázi přijme, jen když projde.
 - **Ruční úprava dokumentu** během psaní nebo review se zapisuje taskem `SPOCK: record that I edited a document`. Jinak by záznam tvrdil, že dokument napsal agent.
 - **Nic se nemaže.** `SPOCK: take something back` přesune soubor do `superseded/` i s důvodem.
+- **Dodaný materiál tímto taskem nevrátíte.** Soubory ve složce `supplied/` jsou materiál zákazníka a task je odmítne. Špatný soubor přesuňte ze `supplied/` a spusťte `SPOCK: add problem material` → `yes`, který změnu zapíše: přesunutý soubor se přestane počítat a nic se nepřečísluje. Když je fáze 2 ve schvalování nebo už přijatá, nejdřív ji vraťte (`SPOCK: send a stage back to be redone`).
 
 ### Úkoly
 
@@ -96,7 +97,7 @@
 
 ### Klíčové myšlenky
 
-- **Běh dokončete na verzi, na které začal.** Pak zavřete chaty a spusťte `SPOCK: update this copy to the latest release` → `update`. Potom Command Palette → `Developer: Reload Window`.
+- **Běh dokončete na verzi, na které začal.** Pak zavřete chaty a spusťte `SPOCK: update this copy to the latest release` → `update`. Když kontrola `C189` hlásí, že se soubory SPOCKu liší od vydání (někdo je upravil), napište místo toho `update, and set aside my changes to the workflow's own files`: task si změněné soubory odloží a vrátí ty z vydání. Potom Command Palette → `Developer: Reload Window`.
 - **Když chcete začít znovu před koncem běhu**, nejdřív přesuňte složku `runs/<běh>/` mimo SPOCK na nesdílené místo.
 - **Ukončení běhu** taskem `SPOCK: stop this run` (důvod `low_value`, `small_impact`, `high_risk` nebo `out_of_boundary`) je trvalé. Dokumenty zůstanou čitelné, ale žádný task běh znovu nespustí.
 

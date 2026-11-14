@@ -15,6 +15,7 @@ Postupujte shora dolů. **Než cokoli zkusíte znovu, uložte si stav**: export 
 | `check my setup`: Git was not found | Nainstalujte Git z git-scm.com (na Macu i přes nabídku Command Line Tools). Bez Gitu nejde kopie aktualizovat. |
 | Dokumenty začínají tabulkou `[object Object]` | Vypněte rozšíření `bierner.markdown-yaml-preamble`. Soubor je v pořádku (`TESTER-GUIDE.md` §2.5). |
 | Po aktualizaci se agent chová postaru | Zavřete chaty a spusťte `Developer: Reload Window`. |
+| Kontrola `C189`: soubory workflow se liší od vydání | Někdo upravil soubory SPOCKu (např. know-how v `.github/`). Výjimku podepsat nejde. Spusťte `SPOCK: update this copy to the latest release` → `update, and set aside my changes to the workflow's own files`. Úpravy se odloží, nic se neztratí. |
 
 ## Během běhu
 
@@ -28,6 +29,7 @@ Postupujte shora dolů. **Než cokoli zkusíte znovu, uložte si stav**: export 
 | Nevím, kde běh stojí | Titulní stránka `runs/<běh>/README.md`, nebo agent **Workflow Support**. |
 | „A hook prevented chat from continuing“ | Není to chyba. Workflow zastavil krok agenta a agent vám řekne, co dělat místo toho (`SETUP.md` §9). |
 | Tasky odmítají pracovat | Máte dva nedokončené běhy. Jeden přesuňte mimo SPOCK (`SETUP.md` §7). |
+| `take something back` odmítne soubor ze `supplied/` | Dodaný materiál se tak nevrací. Přesuňte soubor ze `supplied/` a spusťte `SPOCK: add problem material` → `yes`. |
 | Chat zdraží nebo hlásí *Could not process PDF* | V chatu je příloha. Otevřete nový chat se stejným agentem a napište „continue the run <název>“ (`SETUP.md` §6 krok 8). |
 
 ## Nálezy, které hlásíte
