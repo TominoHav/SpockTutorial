@@ -44,35 +44,80 @@
 
 ## 1.2 — Agenti, tasky a brány
 
-### Ke studiu (asi 30 min)
+### Karty (asi 15 min, jen na webu)
 
-- 📄 **`specifications/onboarding/TESTER-GUIDE.md`** §3.1 a §3.2
-- 📄 **`BUSINESS-LOGIC-OVERVIEW.md`** §4 (kdo rozhoduje) a §8 (slovník)
+#### Šest agentů, každý má svou práci
 
-### Klíčové myšlenky
+Se SPOCKem mluvíte přes agenty v Copilot Chatu. **Čtyři vedou fáze:** Product Manager (fáze 1, 4 a 5), Opportunity Designer (2), Competitive Analysis (3) a Business Analyst (6 a 7). **Dva pomáhají a nic nepíší:** Workflow Support řekne, kde běh stojí a co dál, Methodology Coach odpovídá na otázky k metodě.
 
-- **Šest agentů.** Čtyři vedou fáze: Product Manager, Opportunity Designer, Competitive Analysis a Business Analyst. Dva pomáhají a nic nepíší: **Workflow Support** řekne, kde běh stojí a co dál, **Methodology Coach** odpovídá na otázky k metodě.
-- **Q brána (Q1–Q7)** je automatická kontrola kódem, kterou spouští někdo jiný než agent, který dokument napsal. **G brána (G1, G2, G4, G5b, G6, G7)** je vaše rozhodnutí, zapsané s vaším jménem, rolí a datem.
-- **Každá fáze má stejný rytmus:** agent ověří vstupy → pracuje a ptá se → zapíše → spustí kontrolu a sám opraví, co našla → teprve pak vás požádá o schválení → vy schválíte taskem → agent řekne, co přijde dál a kdo to povede (`TESTER-GUIDE.md` §3.2).
-- **Žádná fáze nezačne sama.** Další fázi spustíte tak, že vyberete jejího agenta.
-- **Kdo co hlídá: agent píše, kód kontroluje, člověk podepisuje.** Agentovi se nemusí věřit na slovo. Jeho výstup ověří kontrola v kódu (Q brána) a přijme ho až člověk svým podpisem (G brána). Navíc za běhu hlídají **hlídače**: zastaví špatný krok agenta dřív, než se stane, a agent vám řekne proč.
-- **Hlídač odmítl zápis:** agent chtěl psát mimo svou fázi, do už schválené fáze nebo do vašeho materiálu. Schválenou fázi změníte jen tak, že ji sami vrátíte.
-- **Agent nechce spustit task se schválením:** podpis dává jen člověk.
-- **Agent se zastaví, že task běžel třikrát bez změny:** pojistka proti zacyklení. Zeptejte se ho, co chybí, nebo použijte Workflow Support.
-- **Agent nečte kód kontrol:** záměr. Má psát podle metodiky, ne „na test“.
-- **VS Code ukáže „A hook prevented chat from continuing“:** není to chyba, agent vám řekne, co dělat místo toho.
+**Otázka:** Nevíte, který krok běh posune dál. Koho se zeptáte?
+- [ ] Methodology Coache
+- [x] Workflow Support
+- [ ] Product Managera
+
+**Proč:** Workflow Support přečte záznam běhu a řekne jeden task, který běh posune. Methodology Coach vysvětluje metodu, ne stav běhu.
+
+#### Dva druhy bran: Q a G
+
+Každá fáze končí branou. **Q brána** je automatická kontrola kódem a spouští ji někdo jiný než agent, který dokument napsal. **G brána** je vaše rozhodnutí, zapsané s vaším jménem, rolí a datem. Fáze 3 G bránu nemá.
+
+**Víc do hloubky:** G brány jsou G1, G2, G4, G5b, G6 a G7. Ve fázi 5 navíc vybíráte variantu MVP ještě před G5b. Q brány jsou Q1 až Q7 a hlídají formu a stopu ke zdroji, ne kvalitu myšlenek. Tu posuzujete vy.
+
+**Otázka:** Agent v chatu napíše „Brána prošla, schválil jsem brief.“ Platí to?
+- [ ] Ano, agent bránu schválil
+- [x] Ne. Schválení (G) dává jen člověk a o kontrole (Q) svědčí výstup tasku, ne věta agenta
+
+**Proč:** Agent nikdy neschvaluje a nehodnotí sám sebe. Kdyby tvrdil opak, je to nález, který hlásíte.
+
+#### Rytmus každé fáze
+
+Každá fáze běží stejně: agent **ověří vstupy** → **pracuje a ptá se** → **zapíše** dokument → **spustí kontrolu** a sám opraví, co našla → **teprve pak vás požádá o schválení** → vy schválíte taskem → agent řekne, co přijde dál a kdo to povede.
+
+**Otázka:** Agent vás žádá o schválení, ale kontrolu ještě nespustil. Co to je?
+- [ ] Normální zkratka
+- [x] Chyba v rytmu fáze, kterou si zapíšete a nahlásíte
+
+**Proč:** O schválení se žádá až po kontrole. Když agent krok přeskočí, porušuje rytmus fáze.
+
+#### Žádná fáze nezačne sama
+
+Po schválení se běh sám nepohne. **Další fázi spustíte tak, že otevřete nový chat a vyberete jejího agenta.** Nový chat začíná s know-how nové fáze a nenese nic z předchozí konverzace, takže posouzení další fáze je nezávislé.
+
+**Otázka:** Schválili jste fázi 2. Jak začne fáze 3?
+- [ ] Sama, hned po schválení
+- [ ] Napíšete stejnému agentovi „pokračuj“
+- [x] Otevřete nový chat a vyberete agenta Competitive Analysis
+
+**Proč:** Každá fáze má svého agenta a začíná v novém chatu.
+
+#### Kdo co hlídá
+
+**Agent píše, kód kontroluje, člověk podepisuje.** Navíc za běhu hlídají **hlídače**: zastaví špatný krok agenta dřív, než se stane, a agent vám řekne proč.
+
+**Víc do hloubky:** Co od hlídačů uvidíte: agent nesmí zapsat nic mimo svou fázi, do už schválené fáze ani do vašeho materiálu. Nespustí task s políčky pro vaše jméno. Po třetím stejném tasku bez změny se zastaví (pojistka proti zacyklení). Nečte kód kontrol, aby psal podle metodiky a ne „na test“. Hláška „A hook prevented chat from continuing“ není chyba.
+
+**Otázka:** Agent napíše, že jeho zápis do schváleného briefu byl odmítnut. Co se stalo?
+- [x] Hlídač zastavil krok, který agent nesmí udělat. Schválenou fázi změníte jen tak, že ji sami vrátíte
+- [ ] SPOCK je rozbitý a je potřeba volat podporu
+
+**Proč:** Schválená fáze se mění jen vrácením, které spouští člověk (`SPOCK: send a stage back to be redone`).
 
 ### Úkoly
 
-- [ ] **Nakreslete si rytmus jedné fáze** (15 min)
-  - *Proč:* Když víte, jaký krok má přijít, okamžitě poznáte, když agent nějaký přeskočí. Například když vás žádá o schválení dřív, než proběhla kontrola, je to chyba (`TESTER-GUIDE.md` §3.2).
-  1. Do deníku napište 7 kroků z §3.2 vlastními slovy.
-  2. U každého kroku poznamenejte, kdo ho dělá: agent, task, nebo vy.
-- [ ] **Zeptejte se Methodology Coache** (15 min)
+- [ ] **Nakreslete si rytmus jedné fáze** (10 min, stačí papír)
+  - *Proč:* Když víte, jaký krok má přijít, okamžitě poznáte, když agent nějaký přeskočí.
+  1. Napište 7 kroků rytmu z karty výše vlastními slovy.
+  2. U každého poznamenejte, kdo ho dělá: agent, task, nebo vy.
+- [ ] **Zeptejte se Methodology Coache** (10 min, ve VS Code, až máte hotovou Přípravu)
   - *Proč:* Coach odpovídá jen z psaného kánonu metody, ne z paměti, a má říct, odkud odpověď bere.
   1. Nový chat → agent **Methodology Coach**.
   2. Zeptejte se: „Proč fáze 3 nemá rozhodnutí člověka?“
-  3. Zkontrolujte, jestli odpověď odkazuje na konkrétní dokument. Zapište si to.
+  3. Zkontrolujte, jestli odpověď odkazuje na konkrétní dokument.
+
+### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
+
+- 📄 **`specifications/onboarding/TESTER-GUIDE.md`** §3.1 a §3.2: rytmus fáze podrobně
+- 📄 **`BUSINESS-LOGIC-OVERVIEW.md`** §4 (kdo rozhoduje) a §8 (slovník)
 
 ## 1.3 — Čtení hotového běhu
 

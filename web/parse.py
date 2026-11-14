@@ -66,7 +66,30 @@ def parse_module(fn):
         L = {'d':lid,'t':inline(ltitle),'learn':[],'learnMin':0,'key':[],'tables':[],'todo':[]}
         for sec in re.split(r'^### ', body, flags=re.M)[1:]:
             sh, _, sb = sec.partition('\n')
-            if sh.startswith('Ke studiu'):
+            if sh.startswith('Karty'):
+                L['learnMin'] = mins(sh)
+                cards=[]
+                for cb in re.split(r'^#### ', sb, flags=re.M)[1:]:
+                    ct, _, body = cb.partition('\n')
+                    C={'t':inline(ct),'text':[],'more':'','q':'','o':[],'a':-1,'why':''}
+                    for para in [x.strip() for x in body.strip().split('\n\n') if x.strip()]:
+                        if para.startswith('**Víc do hloubky:**'): C['more']=inline(para[len('**Víc do hloubky:**'):])
+                        elif para.startswith('**Otázka:**'):
+                            lines=para.split('\n'); C['q']=inline(lines[0][len('**Otázka:**'):])
+                            for ln in lines[1:]:
+                                m=re.match(r'^- \[( |x)\] (.+)$', ln.strip())
+                                if m:
+                                    if m.group(1)=='x': C['a']=len(C['o'])
+                                    C['o'].append(inline(m.group(2)))
+                        elif para.startswith('**Proč:**'): C['why']=inline(para[len('**Proč:**'):])
+                        else: C['text'].append(inline(' '.join(para.split('\n'))))
+                    cards.append(C)
+                L['cards']=cards
+            elif sh.startswith('Pro zvídavé'):
+                for m in re.finditer(r'^- 📄 (.+)$', sb, flags=re.M):
+                    mm = re.match(r'\*\*(.+?)\*\*[,:]?\s*(.*)', m.group(1))
+                    L.setdefault('extra',[]).append({'l':inline(mm.group(1)),'n':inline(mm.group(2).lstrip('— ').lstrip(', '))} if mm else {'l':inline(m.group(1)),'n':''})
+            elif sh.startswith('Ke studiu'):
                 L['learnMin'] = mins(sh)
                 for m in re.finditer(r'^- 📄 (.+)$', sb, flags=re.M):
                     s = m.group(1)

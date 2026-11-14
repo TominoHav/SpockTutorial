@@ -182,3 +182,30 @@ body.noscroll{overflow:hidden}
 .codeblk code{background:none;padding:0;font-size:inherit;overflow-wrap:normal}
 .codecopy{position:absolute;top:8px;right:8px}
 @media (min-width:761px){.whohelp ul{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* karty v lekci */
+.cards{display:grid;gap:12px}
+.lcard{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--surface);display:grid;gap:8px;max-width:72ch}
+.lcard.cur{border-color:var(--c);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 18%,transparent)}
+.lcard.done{opacity:.92}
+.lcard h3{margin:0;font-size:18px}
+.lcard p{margin:0;line-height:1.55}
+.lc-n{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--c)}
+.lc-more summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--blue-2)}
+.lc-more p{margin-top:6px;font-size:14.5px;color:var(--ink-2)}
+.lc-q{border-top:1px dashed var(--line);padding-top:10px;display:grid;gap:8px}
+.lc-opts{display:grid;gap:6px}
+.lc-opt{text-align:left;font:inherit;font-size:14.5px;padding:10px 12px;border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;background:var(--surface);color:var(--ink);cursor:pointer}
+.lc-opt:hover:not(:disabled){border-color:var(--c)}
+.lc-opt:disabled{cursor:default}
+.lc-opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.lc-opt.wrong{border-color:var(--err);background:color-mix(in srgb,var(--err) 10%,var(--surface))}
+.lc-why{font-size:14.5px;padding:8px 12px;border-radius:10px}
+.lc-why.ok{background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.lc-why.bad{background:color-mix(in srgb,var(--err) 10%,var(--surface))}
+.lc-left{font-size:13.5px}
+.where{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:none;padding:2px 8px;border-radius:99px;margin-left:6px;vertical-align:middle}
+.where.web{background:color-mix(in srgb,var(--ok) 14%,var(--surface));color:var(--ok)}
+.tm.where.vsc{background:color-mix(in srgb,var(--blue-2) 14%,var(--surface));color:var(--blue-2)}
+.blk.extra summary{cursor:pointer;font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.blk.extra .res{margin-top:8px}
