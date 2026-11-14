@@ -44,7 +44,8 @@ Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až mát
 **Guild Master**
 - [ ] Vím, které know-how oblastí Method a Product existuje, v jaké je verzi a stavu.
 - [ ] Udělám metodickou revizi běhu a odliším slabý materiál od mezery v metodice.
-- [ ] Navrhnu a s engineerem provedu změnu know-how podle `KNOW-HOW-OWNERS.md` §4.
+- [ ] Navrhnu a se SWE provedu změnu know-how podle `KNOW-HOW-OWNERS.md` §4.
+- [ ] U každé vrstvy SPOCKu řeknu, co dělá, a u změny know-how určím, které skilly a fáze zasáhne.
 
 ## Úroveň 3: Pokročilý
 

@@ -16,7 +16,7 @@
 - **Nechá agenta spustit task s políčky.** Podpis musí dát člověk.
 - **Zapne „Allow All“.** Pak neuvidíte, co agent otevírá a spouští.
 - **Píše outcome jako řešení.** „Postavit kalkulačku“ není outcome.
-- **Vybírá řešení bez engineera.** SPOCK technickou složitost nehodnotí.
+- **Vybírá řešení bez SWE.** SPOCK technickou složitost nehodnotí.
 - **Dává do fáze 2 materiál, který SPOCK nepřečte.** Miro, obrázky, sken PDF nebo grafy z Tableau.
 - **Přidá materiál po schválení fáze 2.** Nejdřív musí fázi vrátit.
 - **Má dva nedokončené běhy najednou.** Tasky pak odmítnou pracovat.

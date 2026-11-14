@@ -2,7 +2,7 @@
 
 **Cíl:** Umíte vysvětlit, co SPOCK dělá a co ne, znáte 7 fází, 6 agentů a rozdíl mezi Q a G bránou a přečtete hotový běh od iniciativy zpátky k materiálu.
 
-**Proč:** Bez téhle mapy nepoznáte, jestli se agent chová správně. Každá role, PM, designer i engineer, potřebuje vědět, v jaké fázi se nachází a kdo v ní rozhoduje.
+**Proč:** Bez téhle mapy nepoznáte, jestli se agent chová správně. Každá role, PM, PD i SWE, potřebuje vědět, v jaké fázi se nachází a kdo v ní rozhoduje.
 
 ## 1.1 — Co SPOCK dělá
 
@@ -51,6 +51,12 @@
 - **Q brána (Q1–Q7)** je automatická kontrola kódem, kterou spouští někdo jiný než agent, který dokument napsal. **G brána (G1, G2, G4, G5b, G6, G7)** je vaše rozhodnutí, zapsané s vaším jménem, rolí a datem.
 - **Každá fáze má stejný rytmus:** agent ověří vstupy → pracuje a ptá se → zapíše → spustí kontrolu a sám opraví, co našla → teprve pak vás požádá o schválení → vy schválíte taskem → agent řekne, co přijde dál a kdo to povede (`TESTER-GUIDE.md` §3.2).
 - **Žádná fáze nezačne sama.** Další fázi spustíte tak, že vyberete jejího agenta.
+- **Kdo co hlídá: agent píše, kód kontroluje, člověk podepisuje.** Agentovi se nemusí věřit na slovo. Jeho výstup ověří kontrola v kódu (Q brána) a přijme ho až člověk svým podpisem (G brána). Navíc za běhu hlídají **hlídače**: zastaví špatný krok agenta dřív, než se stane, a agent vám řekne proč.
+- **Hlídač odmítl zápis:** agent chtěl psát mimo svou fázi, do už schválené fáze nebo do vašeho materiálu. Schválenou fázi změníte jen tak, že ji sami vrátíte.
+- **Agent nechce spustit task se schválením:** podpis dává jen člověk.
+- **Agent se zastaví, že task běžel třikrát bez změny:** pojistka proti zacyklení. Zeptejte se ho, co chybí, nebo použijte Workflow Support.
+- **Agent nečte kód kontrol:** záměr. Má psát podle metodiky, ne „na test“.
+- **VS Code ukáže „A hook prevented chat from continuing“:** není to chyba, agent vám řekne, co dělat místo toho.
 
 ### Úkoly
 
@@ -85,7 +91,7 @@
   2. Otevírejte postupně dokumenty ve složkách `1-brief` až `7-initiative`. Ve `1-brief` najdete i `initiative-screen.md` (regulatorní screening, A1b). Ten vznikl podle starších pravidel: od 1. září 2026 fáze 1 screening nedělá a regulace se posuzuje až u konkrétních řešení ve fázi 4 (`STAGE-1-SPEC.md`). Ve svém běhu ho neuvidíte.
   3. U každé fáze si zapište jednou větou, co z ní vzešlo.
 - [ ] **Dohledejte jedno tvrzení zpět ke zdroji** (30 min)
-  - *Proč:* Dohledatelnost je hlavní slib SPOCKu. Každá role ji potřebuje: PM, aby obhájil rozhodnutí, designer, aby viděl, na jakém výzkumu řešení stojí, a engineer, aby věděl, odkud se vzal požadavek.
+  - *Proč:* Dohledatelnost je hlavní slib SPOCKu. Každá role ji potřebuje: PM, aby obhájil rozhodnutí, PD, aby viděl, na jakém výzkumu řešení stojí, a SWE, aby věděl, odkud se vzal požadavek.
   1. V `7-initiative/initiative.md` vyberte jedno kritérium úspěchu nebo jeden požadavek.
   2. Najděte ho v PRD (`6-prd/`), pak v rozpracovaném MVP (`5-mvp/`), ve vybraném řešení (soubor `…selected-solution.md` ve `4-solutions/`) a v příležitostech (`2-problems/`).
   3. Skončete u materiálu v `2-problems/1-problem-material.md`.
@@ -130,5 +136,17 @@ b) Výsledek brány se čte z výstupu tasku a z titulní stránky běhu. Produc
 <details><summary>Odpověď</summary>
 
 b) Automatické spouštění fází postavené není. Workflow jen oznámí další fázi a jejího agenta (`BUSINESS-LOGIC-OVERVIEW.md` §0).
+
+</details>
+
+**4. Agent vám napíše, že jeho zápis do schváleného briefu byl odmítnut. Co to znamená?**
+
+   a) SPOCK je rozbitý a je potřeba volat podporu
+   b) Hlídač zastavil krok, který agent nesmí udělat. Schválenou fázi změníte jen tak, že ji sami vrátíte
+   c) Agent musí zápis zkusit znovu
+
+<details><summary>Odpověď</summary>
+
+b) Agent píše, kód kontroluje, člověk podepisuje. Hlídače za běhu zastaví krok dřív, než se stane: schválená fáze se mění jen vrácením, které spouští člověk (`SPOCK: send a stage back to be redone`).
 
 </details>
