@@ -691,12 +691,45 @@ function lessonPath(w, sel){
   return `<ol class="lpath c-${w.c}">${nodes.join('')}</ol>`;
 }
 const TROPHY = `<svg class="trophy-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v3h3a3 3 0 0 1-3 5.2A5 5 0 0 1 13 15v2h3v3H8v-3h3v-2a5 5 0 0 1-4-3.8A3 3 0 0 1 4 6h3V3zm10 5v1.5A1.2 1.2 0 0 0 18 8zM7 8H6a1.2 1.2 0 0 0 1 1.5z"/></svg>`;
+
+/* Schéma architektury SPOCKu pro lekci GM 2G.6 */
+function archSvg(){
+  const box = (x,y,w,h,t,sub,cls) => `<g class="as-b ${cls||''}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10"/><text x="${x+w/2}" y="${y+(sub?h/2-4:h/2+5)}" class="as-t">${t}</text>${sub?`<text x="${x+w/2}" y="${y+h/2+14}" class="as-s">${sub}</text>`:''}</g>`;
+  const ar = (x1,y1,x2,y2,lbl,lx,ly) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="as-a" marker-end="url(#as-m)"/>${lbl?`<text x="${lx}" y="${ly}" class="as-l">${lbl}</text>`:''}`;
+  return `<figure class="archfig"><svg viewBox="0 0 760 430" role="img" aria-labelledby="as-ti as-de"><title id="as-ti">Architektura SPOCKu</title><desc id="as-de">Agent čte pravidla, skill a know-how, je obklopený hlídači, píše dokument, který ověří kontroly (Q brána), podepisuje člověk (G brána) a vše se zapíše do záznamu běhu.</desc>
+    <defs><marker id="as-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="as-mk"/></marker></defs>
+    <text x="20" y="22" class="as-h">1 · Co agent ví</text>
+    ${box(20,34,220,62,'Know-how','co znamená „dobře“ · vaše vrstva','gm')}
+    ${box(20,108,220,52,'Skill','postup pro jeden dokument')}
+    ${box(20,172,220,52,'Pravidla pro všechny','pracovní řád agentů')}
+    ${ar(240,65,300,110)}${ar(240,134,300,134)}${ar(240,198,300,158)}
+    <g class="as-guard"><rect x="290" y="44" width="200" height="190" rx="18"/><text x="390" y="62" class="as-gt">2 · Hlídače kolem agenta</text></g>
+    ${box(310,76,160,140,'Agent','smí jen nástroje ze seznamu','ag')}
+    <text x="580" y="22" class="as-h">3 · Kdo ověří</text>
+    ${box(540,34,200,52,'Dokument fáze','napsal agent')}
+    ${ar(470,120,540,64,'píše',500,84)}
+    ${box(540,112,200,52,'Kontroly · Q brána','kód, ne agent','chk')}
+    ${ar(640,86,640,112)}
+    <text x="580" y="196" class="as-h">4 · Kdo rozhoduje</text>
+    ${box(540,208,200,52,'Vy · G brána','podpis přes task s políčky','me')}
+    ${ar(640,164,640,208)}
+    ${box(540,290,200,62,'Záznam běhu','podpisy a verze know-how')}
+    ${ar(640,260,640,290)}
+    ${box(290,290,200,62,'Vy v chatu','zadání, odpovědi, materiál','me')}
+    ${ar(390,290,390,216,'',0,0)}
+    ${ar(540,321,490,321,'',0,0)}
+    <text x="515" y="300" class="as-l" text-anchor="middle">další fáze</text><text x="515" y="313" class="as-l" text-anchor="middle">nový chat</text>
+    <line x1="470" y1="150" x2="540" y2="150" class="as-x"/><text x="505" y="130" class="as-l" text-anchor="middle">kód kontrol</text><text x="505" y="143" class="as-l" text-anchor="middle">číst nesmí</text>
+    <text x="20" y="300" class="as-n">Cizí materiál čte krok</text><text x="20" y="318" class="as-n">material-intake bez nástrojů</text><text x="20" y="336" class="as-n">(karanténa ve fázi 2).</text>
+    <text x="20" y="384" class="as-n">Workflow se mění jen novým vydáním.</text><text x="20" y="402" class="as-n">Úprava v pracovní kopii shodí kontrolu C189.</text>
+  </svg><figcaption>Agent píše, kód kontroluje, člověk podepisuje. Hlídače zastaví špatný krok dřív, než se stane.</figcaption></figure>`;
+}
 function lessonPanel(w, di){
   const d = w.days[di]; if (!d) return '';
   const dn = d.todo.filter((_,ti) => S.todo[w.id+'.'+di+'.'+ti]).length, done = lessonDone(w, di);
   let step = 0;
   const learn = d.learn.length ? `<div class="blk"><h4><i>${++step}</i>Nauč se${d.learn.some(r => /`/.test(r.l)) ? ' · v kopii SPOCKu' : ''}${d.learnMin ? ' · ~' + fmtMin(d.learnMin) : ''}</h4><div class="res">${d.learn.map(r => `<div class="ritem"><span class="ty text">text</span><span>${fmt(r.l)}<small>${fmt(r.n||'')}</small></span></div>`).join('')}</div></div>` : '';
-  const key = (d.key.length || d.tables.length) ? `<div class="blk"><h4><i>${++step}</i>Co si odnést</h4>${(() => { const at = t => t.at === undefined ? 0 : t.at; let h = '', ul = []; const flush = () => { if (ul.length) { h += `<ul class="keys">${ul.join('')}</ul>`; ul = []; } }; d.key.forEach((k, i) => { d.tables.filter(t => at(t) === i).forEach(t => { flush(); h += tbl(t); }); ul.push(`<li><span>${fmt(k)}</span></li>`); }); flush(); d.tables.filter(t => at(t) >= d.key.length).forEach(t => { h += tbl(t); }); return h; })()}</div>` : '';
+  const key = (d.key.length || d.tables.length) ? `<div class="blk"><h4><i>${++step}</i>Co si odnést</h4>${w.id === 'gm' && d.d === '2G.6' ? archSvg() : ''}${(() => { const at = t => t.at === undefined ? 0 : t.at; let h = '', ul = []; const flush = () => { if (ul.length) { h += `<ul class="keys">${ul.join('')}</ul>`; ul = []; } }; d.key.forEach((k, i) => { d.tables.filter(t => at(t) === i).forEach(t => { flush(); h += tbl(t); }); ul.push(`<li><span>${fmt(k)}</span></li>`); }); flush(); d.tables.filter(t => at(t) >= d.key.length).forEach(t => { h += tbl(t); }); return h; })()}</div>` : '';
   const todo = d.todo.length ? `<div class="blk"><h4><i>${++step}</i>Udělej${dayDo(d) ? ' · ~' + fmtMin(dayDo(d)) : ''}</h4><div class="todo">${d.todo.map((t,ti) => todoItem(w.id+'.'+di+'.'+ti, t)).join('')}</div></div>` : '';
   const xpLeft = d.todo.filter((_,ti) => !S.got['task.'+w.id+'.'+di+'.'+ti]).length * XP.task + (S.got['lesson.'+w.id+'.'+di] ? 0 : XP.lesson);
   const next = di + 1 < w.days.length

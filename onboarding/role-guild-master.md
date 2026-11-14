@@ -146,6 +146,18 @@
 ### Klíčové myšlenky
 
 - **Proč to Guild Master potřebuje:** agenti nesmějí číst kód kontrol a píší podle know-how. **Kvalita know-how je proto přímo kvalita výstupu.** A jedna změna know-how se projeví v každém skillu, který ho čte.
+- **Jak do sebe SPOCK zapadá: čtyři otázky.** Celou architekturu pochopíte, když u každé části víte, na kterou z nich odpovídá:
+- **1. Co agent ví?** Jen tři věci: pravidla pro všechny (pracovní řád), **skill** (postup pro jeden dokument) a **know-how** (co znamená „dobře“). Jinou paměť nemá. Kód kontrol číst nesmí, takže kvalita jeho práce stojí na skillu a know-how.
+- **2. Co agent smí?** Jen to, co má ve svém seznamu nástrojů. Za běhu ho navíc hlídají **hlídače**: zastaví zápis mimo jeho fázi, do schválené fáze nebo do vašeho materiálu a nepustí ho k tasku, kde se podepisuje člověk.
+- **3. Kdo ověří, co agent napsal?** **Kód kontrol** (Q brána), ne agent sám. Které kontroly patří ke které bráně, určují kontrakty a registry. Kontrola hlídá formu a stopu ke zdroji, kvalitu metodiky posuzuje člověk.
+- **4. Kdo rozhoduje?** **Člověk**, podpisem přes task s políčky (G brána). Podpis, jméno, role a verze každého know-how, které agent četl, se zapíšou do záznamu běhu (`RUN-STATE.md`).
+- **Proč je to postavené právě takhle:**
+- **Psaní a kontrola jsou oddělené.** Kdo dokument píše, ten ho neschvaluje. Agent nemůže prohlásit, že prošel.
+- **Každá fáze začíná v novém chatu.** Chat začíná s know-how fáze, do které vstupujete, a nenese nic z předchozí konverzace. Posouzení další fáze je tak nezávislé.
+- **Cizí materiál čte agent bez nástrojů.** Krok čtení materiálu ve fázi 2 (`material-intake`) běží v karanténě. Pokyn schovaný v rozhovoru nebo dokumentu nemůže proměnit v akci.
+- **Běh si pamatuje, podle čeho vznikl.** Protože se zapisuje verze každého know-how, víte u každého běhu, podle jaké metodiky byl napsaný. Proto musí mít každá změna know-how novou verzi.
+- **Workflow se mění jen novým vydáním.** Úprava souborů SPOCKu v pracovní kopii shodí kontrolu C189. Vaše změny metodiky se k lidem dostanou až s vydáním.
+- **Co z toho plyne pro vás jako GM:** nejsilnější páka na kvalitu výstupu je know-how. Když běhy opakovaně produkují stejnou metodickou chybu, hledejte příčinu nejdřív v know-how a ve skillu, který ho čte, ne v agentovi.
 - **SPOCK má devět vrstev.** Vy vlastníte jednu (know-how), ostatní mění SWE:
 
 | Vrstva | Kde žije | Co dělá |

@@ -139,3 +139,23 @@ body.noscroll{overflow:hidden}
 
 .sim-guard{border-left:4px solid #B57A00;background:var(--warn-bg);border-color:color-mix(in srgb,#B57A00 40%,transparent)}
 .sim-guard b::before{content:'🛡 '}
+
+/* schéma architektury (GM 2G.6) */
+.archfig{margin:4px 0 14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow-x:auto}
+.archfig svg{display:block;width:100%;min-width:620px;height:auto}
+.archfig figcaption{margin-top:8px;font-size:13.5px;font-weight:700;color:var(--ink-2)}
+.as-b rect{fill:var(--surface-2);stroke:var(--line);stroke-width:1.5}
+.as-b.gm rect{fill:color-mix(in srgb,#A54CB2 16%,var(--surface));stroke:#A54CB2;stroke-width:2.5}
+.as-b.ag rect{fill:color-mix(in srgb,#E15079 12%,var(--surface));stroke:#E15079;stroke-width:2}
+.as-b.chk rect{fill:color-mix(in srgb,var(--blue-2) 14%,var(--surface));stroke:var(--blue-2)}
+.as-b.me rect{fill:color-mix(in srgb,var(--ok) 14%,var(--surface));stroke:var(--ok)}
+.as-t{font:700 14px var(--font);fill:var(--ink);text-anchor:middle}
+.as-s{font:500 11.5px var(--font);fill:var(--ink-2);text-anchor:middle}
+.as-h{font:800 11px var(--font);letter-spacing:.06em;text-transform:uppercase;fill:var(--ink-3)}
+.as-a{stroke:var(--ink-3);stroke-width:1.6}
+.as-mk{fill:var(--ink-3)}
+.as-l{font:600 11px var(--font);fill:var(--ink-2)}
+.as-n{font:500 12px var(--font);fill:var(--ink-2)}
+.as-guard rect{fill:none;stroke:#B57A00;stroke-width:2;stroke-dasharray:6 5}
+.as-gt{font:800 11px var(--font);fill:#B57A00;text-anchor:middle;letter-spacing:.04em;text-transform:uppercase}
+.as-x{stroke:var(--err);stroke-width:2;stroke-dasharray:4 4}
