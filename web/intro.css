@@ -8,7 +8,6 @@
 .cv-lock{display:flex;gap:12px;align-items:center}
 .cv-lock b{display:block;font-size:22px;font-weight:800;letter-spacing:.08em}
 .cv-lock span{font-size:13.5px;color:var(--ink-2);font-weight:600}
-
 /* sdílený obsah kapitol */
 .cv-list,.cv-chain,.cv-road,.cv-checks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .cv-list li{display:flex;gap:10px;align-items:baseline;font-size:14.5px;border-top:1px solid var(--line);padding-top:8px}
@@ -37,22 +36,8 @@
 .cv-quote{margin:0;border-left:3px solid var(--c);padding:2px 0 2px 12px;font-size:14.5px;line-height:1.55;color:var(--ink)}
 .cv-quote b{color:#1068D2}
 [class*="cv"] .eyebrow{color:var(--c)}
-
 /* A · kapitoly */
-.cvA{margin:6px 0 30px}
-.cvA-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
-.cvA-left{display:grid;gap:14px}
-.cvA-right{display:grid;gap:12px;min-width:0}
-.cvA-tabs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
-.cvA-tab{width:100%;display:grid;gap:1px;text-align:left;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);padding:7px 9px;cursor:pointer;font:inherit;color:var(--ink)}
-.cvA-tab:hover{border-color:var(--c)}
-.cvA-tab.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--surface));box-shadow:0 3px 0 var(--c)}
-.cvA-t{font-size:11px;font-weight:800;color:var(--c)}.cvA-k{font-size:12.5px;font-weight:700;line-height:1.25}
-.cvA-panel{display:grid;gap:10px;border-left:4px solid var(--c);border-radius:0 12px 12px 0;background:linear-gradient(120deg,color-mix(in srgb,var(--c) 7%,var(--surface)),var(--surface));padding:14px 16px;min-height:220px;align-content:start}
-.cvA-panel h3{font-size:19px;font-weight:800;letter-spacing:-.01em}
-@media (max-width:980px){.cvA-grid{grid-template-columns:1fr}}
-@media (max-width:560px){.cvA-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.cv-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
+@media (max-width:560px){.cv-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 /* B · kino a karusel */
 .cvB{margin:6px 0 30px;display:grid;gap:14px}
 .cvB-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:24px;align-items:center;border-radius:18px;padding:22px 24px;border:1px solid var(--line);background:linear-gradient(120deg,color-mix(in srgb,#1068D2 9%,var(--surface)),color-mix(in srgb,var(--purple) 6%,var(--surface)))}
@@ -71,20 +56,5 @@
 .cvB-card .cv-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
 .cvB-card .cv-ben{grid-template-columns:1fr}
 @media (max-width:900px){.cvB-top{grid-template-columns:1fr}.cvB-film{transform:none}.cvB-strip{grid-auto-columns:85%}}
-
 /* C · bento */
-.cvC{margin:6px 0 30px}
-.cvC-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.cvC-t{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:10px;align-content:start;min-width:0}
-.cvC-t h3{font-size:16.5px;font-weight:800;letter-spacing:-.01em}
-.cvC-video{grid-column:span 2;grid-row:span 2;padding:10px;background:linear-gradient(135deg,color-mix(in srgb,#1068D2 10%,var(--surface)),var(--surface))}
-.cvC-vcap{display:flex;align-items:center;gap:10px;padding:2px 4px}.cvC-vcap b{font-size:15px}.cvC-vcap span{font-size:12.5px;color:var(--ink-3)}
-.cvC-hero{grid-column:span 2;background:linear-gradient(120deg,color-mix(in srgb,var(--pink) 10%,var(--surface)),color-mix(in srgb,var(--purple) 10%,var(--surface)))}
-.cvC-hero .cv-big{font-size:clamp(36px,5vw,56px)}
-.cvC-wide{grid-column:span 2}
-.cvC-quote{grid-column:span 2;display:flex;gap:16px;align-items:center}
-.cvC-quote>div{display:grid;gap:8px}
-.cvC-t:not(.cvC-video):not(.cvC-hero){border-top:4px solid var(--c)}
-.cvC-wide .cv-steps{grid-template-columns:repeat(4,minmax(0,1fr))}
-@media (max-width:1000px){.cvC-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cvC-wide .cv-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:640px){.cvC-grid{grid-template-columns:1fr}.cvC-video,.cvC-hero,.cvC-wide,.cvC-quote{grid-column:auto;grid-row:auto}.cv-ben{grid-template-columns:1fr}.cvC-quote{flex-direction:column;align-items:flex-start}}
+@media (max-width:640px){.cv-ben{grid-template-columns:1fr}}

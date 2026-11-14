@@ -336,15 +336,6 @@ function spockSVG(cls){
 function roleBtns(){
   return `<div class="roles" role="group" aria-label="Vaše role">${Object.keys(ROLES).map(r => `<button type="button" class="rolebtn ${S.role===r?'on':''}" data-role="${r}" aria-pressed="${S.role===r}" title="${esc(ROLE_WHO[r])}">${ROLES[r]}</button>`).join('')}</div>`;
 }
-function card(w){
-  const t = weekTotals(w), p = t.tot ? Math.round(t.done / t.tot * 100) : 0, other = w.role && S.role && w.role !== S.role;
-  const lk = isLocked(w);
-  return `<button class="jstep c-${w.c} ${other?'other':''} ${lk?'locked':''}" type="button" data-week="${w.id}">
-    <span class="n"><span>${lk ? LOCK + ' ' : ''}${esc(w.lab)}</span>${p === 100 ? '<span class="done-tag">HOTOVO</span>' : `<span class="num">${fmtH(weekTime(w).total)}</span>`}</span>
-    <h3>${esc(w.title)}</h3><p>${esc(w.short)}</p>
-    ${other ? '<span class="mini">Jiná role · nepočítá se do pokroku</span>' : `<span class="mini"><span class="bar"><i style="width:${p}%"></i></span><span class="num">${t.done}/${t.tot}</span></span>`}
-  </button>`;
-}
 function pathStep(no, c, title, text, ids, btn){
   const mods = ids.map(id => W.find(w => w.id === id)).filter(Boolean);
   let tot = 0, done = 0; mods.forEach(w => { const t = weekTotals(w); tot += t.tot; done += t.done; });
@@ -386,7 +377,6 @@ function profileCard(){
 const HAND = 'M55.1 20.4 C54.5 20.1 53.9 20.1 53.3 20.4 C52.7 20.6 52.0 21.3 51.5 21.9 C51.0 22.5 51.2 19.9 50.6 24.1 C50.0 28.3 48.6 42.7 47.9 46.9 C47.2 51.1 46.8 48.8 46.3 49.1 C45.8 49.5 45.2 49.3 44.8 49.0 C44.3 48.7 44.6 50.8 43.6 47.5 C42.6 44.2 39.8 32.6 38.8 29.2 C37.8 25.8 37.9 27.6 37.4 27.1 C36.9 26.6 36.6 26.3 36.0 26.2 C35.4 26.1 34.1 26.2 33.5 26.6 C32.9 27.1 32.3 28.0 32.1 28.9 C31.9 29.8 32.0 30.6 32.3 32.1 C32.6 33.6 33.6 36.8 33.8 37.8 C34.0 38.8 33.5 38.1 33.3 38.2 C33.0 38.3 32.7 38.3 32.3 38.2 C31.9 38.1 31.5 37.5 31.1 37.4 C30.7 37.3 30.3 37.3 29.8 37.5 C29.3 37.7 28.6 38.4 28.3 38.8 C28.0 39.2 27.9 39.5 27.8 40.0 C27.7 40.5 27.2 39.2 27.8 41.7 C28.4 44.2 30.3 51.1 31.1 55.1 C31.9 59.1 32.2 63.3 32.6 65.9 C33.0 68.5 33.4 69.3 33.8 70.5 C34.2 71.7 34.4 72.3 35.0 73.2 C35.6 74.1 36.5 75.2 37.4 76.0 C38.3 76.8 39.2 77.5 40.3 78.1 C41.4 78.6 42.0 79.1 44.2 79.3 C46.4 79.5 51.5 79.5 53.7 79.3 C55.9 79.1 56.2 78.7 57.3 78.3 C58.3 77.9 58.9 77.7 60.0 76.8 C61.1 75.9 62.1 75.5 63.7 73.1 C65.4 70.7 68.3 64.9 69.9 62.6 C71.5 60.3 72.3 60.1 73.5 59.2 C74.7 58.3 76.2 57.6 77.1 57.1 C78.0 56.6 78.4 56.8 79.0 56.5 C79.6 56.2 80.5 55.7 80.7 55.1 C81.0 54.5 80.7 53.7 80.5 53.1 C80.3 52.5 80.0 52.1 79.5 51.6 C79.0 51.1 78.1 50.6 77.4 50.3 C76.8 50.0 76.5 50.0 75.6 50.0 C74.7 50.0 73.4 49.6 72.0 50.4 C70.6 51.2 68.0 54.0 67.0 54.8 C66.0 55.6 66.4 55.2 65.8 55.2 C65.2 55.2 64.0 55.3 63.5 55.1 C63.0 54.9 62.8 54.5 62.5 54.0 C62.2 53.5 61.8 53.2 61.6 52.1 C61.4 51.0 61.1 50.9 61.5 47.6 C61.9 44.3 63.6 35.8 64.0 32.4 C64.4 29.0 64.1 28.2 64.1 27.1 C64.0 26.0 64.1 26.4 63.7 26.0 C63.3 25.6 62.4 24.9 61.9 24.7 C61.4 24.5 61.5 24.4 61.0 24.6 C60.5 24.8 59.1 25.5 58.6 25.7 C58.1 25.9 58.0 26.2 57.7 25.6 C57.4 25.0 57.2 22.8 56.8 21.9 C56.4 21.0 55.7 20.6 55.1 20.4Z';
 function spockLogo(cls){ return `<svg class="sp-logo ${cls||''}" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect width="100" height="100" rx="22" fill="#1068D2"/><path d="${HAND}" fill="#fff"/></svg>`; }
 /* ---------- Co je SPOCK: kapitoly videa a tři varianty ---------- */
-const INTRO_VARIANT = 'B';
 const CH = [
  {id:'vyzva', t:0, c:'pink', k:'Výzva', h:'Každý nový produkt nebo změna začíná nápadem', short:'Dnes to trvá týdny a každý tým to dělá jinak.',
   body:`<ol class="cv-list"><li><span>01</span>Dnes to trvá týdny</li><li><span>02</span>Každý tým to dělá jinak</li><li><span>03</span>Rozhodnutí se těžko dohledávají</li></ol>`},
@@ -408,23 +398,9 @@ const CH = [
 const fmtT = s => Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
 const VIDEO = `<video class="cv-video" controls preload="metadata" playsinline poster="spock-intro-poster.jpg" aria-label="Video: Co je SPOCK"><source src="spock-intro.mp4" type="video/mp4">Váš prohlížeč video neumí přehrát.</video>`;
 const BRAND = () => `<div class="cv-lock">${spockLogo('md')}<div><b>SPOCK</b><span>Lepší produktová rozhodnutí, rychleji.</span></div></div>`;
-let CV_SEL = 'vyzva';
-function introSection(){ return INTRO_VARIANT === 'B' ? introB() : INTRO_VARIANT === 'C' ? introC() : introA(); }
+function introSection(){ return introB(); }
 
 /* A · Kapitoly synchronizované s videem */
-function introA(){
-  const c = CH.find(x => x.id === CV_SEL) || CH[0];
-  return `<section class="cvA" aria-labelledby="cv-h">
-    <div class="sec-h"><h2 id="cv-h">Co je SPOCK</h2><p>Video za 2,5 minuty. Klikněte na kapitolu a video skočí na její začátek.</p></div>
-    <div class="cvA-grid">
-      <div class="cvA-left">${VIDEO}${BRAND()}</div>
-      <div class="cvA-right">
-        <ol class="cvA-tabs">${CH.map(x => `<li><button type="button" class="cvA-tab c-${x.c} ${x.id === c.id ? 'on' : ''}" data-ch="${x.id}"><span class="cvA-t num">${fmtT(x.t)}</span><span class="cvA-k">${x.k}</span></button></li>`).join('')}</ol>
-        <article class="cvA-panel c-${c.c}"><span class="eyebrow">${c.k}</span><h3>${c.h}</h3>${c.body}</article>
-      </div>
-    </div>
-  </section>`;
-}
 /* B · Kino a karusel slajdů */
 function introB(){
   return `<section class="cvB" aria-labelledby="cv-h">
@@ -436,40 +412,12 @@ function introB(){
     <ol class="cvB-strip">${CH.map((x,i) => `<li class="cvB-card c-${x.c}"><span class="cvB-no">${String(i+1).padStart(2,'0')}</span><span class="eyebrow">${x.k}</span><h3>${x.h}</h3>${x.body}</li>`).join('')}</ol>
   </section>`;
 }
-/* C · Bento mozaika */
-function introC(){
-  const g = id => CH.find(x => x.id === id);
-  return `<section class="cvC" aria-labelledby="cv-h">
-    <div class="sec-h"><h2 id="cv-h">Co je SPOCK</h2><p>Lepší produktová rozhodnutí, rychleji.</p></div>
-    <div class="cvC-grid">
-      <div class="cvC-t cvC-video">${VIDEO}<div class="cvC-vcap">${spockLogo('sm')}<b>SPOCK za 2,5 minuty</b><span>anglicky s komentářem</span></div></div>
-      <div class="cvC-t cvC-hero c-pink"><span class="eyebrow">Výsledek pilotu</span><p class="cv-big"><s>Týdny</s><span>→</span>1 den</p><p>Co trvalo týdny, zabralo v pilotu jeden den.</p></div>
-      <div class="cvC-t c-purple cvC-wide"><span class="eyebrow">${g('jak').k}</span><h3>${g('jak').h}</h3>${g('jak').body}</div>
-      <div class="cvC-t c-pink"><span class="eyebrow">${g('vyzva').k}</span><h3>${g('vyzva').h}</h3>${g('vyzva').body}</div>
-      <div class="cvC-t c-blue cvC-wide"><span class="eyebrow">${g('prinosy').k}</span><h3>${g('prinosy').h}</h3>${g('prinosy').body}</div>
-      <div class="cvC-t c-indigo"><span class="eyebrow">${g('strategie').k}</span><h3>${g('strategie').h}</h3>${g('strategie').body}</div>
-      <div class="cvC-t c-pink"><span class="eyebrow">${g('kontrola').k}</span><h3>${g('kontrola').h}</h3>${g('kontrola').body}</div>
-      <div class="cvC-t c-indigo"><span class="eyebrow">${g('dal').k}</span><h3>${g('dal').h}</h3>${g('dal').body}</div>
-      <div class="cvC-t c-blue cvC-quote">${spockLogo('md')}<div><span class="eyebrow">${g('proc').k}</span><h3>${g('proc').h}</h3>${g('proc').body}</div></div>
-    </div>
-  </section>`;
-}
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-ch]');
-  if (t) { CV_SEL = t.dataset.ch; const c = CH.find(x => x.id === CV_SEL); const sec = document.querySelector('.cvA'); if (sec) { sec.outerHTML = introA(); }
-    const v = document.querySelector('.cvA .cv-video'); if (v && c) { try { v.currentTime = c.t; } catch(err) {} } return; }
   const s = e.target.closest('[data-cvscroll]');
   if (s) { const st = document.querySelector('.cvB-strip'); if (st) st.scrollBy({left: +s.dataset.cvscroll * st.clientWidth * .8, behavior:'smooth'}); }
 });
-/* A: kapitola se sama přepíná podle času videa */
-document.addEventListener('timeupdate', e => {
-  if (!e.target.matches || !e.target.matches('.cvA .cv-video')) return;
-  const t = e.target.currentTime; let cur = CH[0]; CH.forEach(x => { if (t >= x.t) cur = x; });
-  if (cur.id !== CV_SEL) { CV_SEL = cur.id; document.querySelectorAll('.cvA-tab').forEach(b => b.classList.toggle('on', b.dataset.ch === cur.id)); const p = document.querySelector('.cvA-panel'); if (p) { p.className = 'cvA-panel c-' + cur.c; p.innerHTML = `<span class="eyebrow">${cur.k}</span><h3>${cur.h}</h3>${cur.body}`; } }
-}, true);
 
-/* ---------- úvodní stránka: stavební bloky a tři struktury ---------- */
-const HOME_VARIANT = '4';
+/* ---------- úvodní stránka ---------- */
 const isFirst = () => !S.role;
 function heroArt(hi){ return `<div class="hx-art" aria-hidden="true">${spockSVG('big')}<span class="hx-chip c1">Fáze 1–7</span><span class="hx-chip c2">Q a G brány</span><span class="hx-chip c3">Váš podpis</span><span class="hx-hi">${hi}</span></div>`; }
 function miniStats(){ return `<ul class="hx-facts"><li class="fl ${todayXP() ? 'lit' : ''}">${FLAME}<b class="num">${streak()}</b><span>dní v sérii</span></li><li><b class="num">${S.xp}</b><span>XP · ${esc(rank().name)}</span></li><li><span class="ring" style="--p:${Math.min(100, todayXP()/S.goal*100)}"></span><b class="num">${todayXP()}/${S.goal}</b><span>dnešní cíl</span></li><li><button class="linkbtn" type="button" data-go="badges">Odznaky ${BADGES.filter(b => S.badges['got.' + b[0]]).length}/${BADGES.length}</button></li></ul>`; }
@@ -480,24 +428,6 @@ function nextLessonInfo(){
 function continueBtn(cls){
   const n = nextLessonInfo(); if (!n) return `<button class="btn primary ${cls||''}" type="button" data-go="badges">Celá cesta hotová · profil</button>`;
   return n.d ? `<button class="btn primary ${cls||''}" type="button" data-golesson="${n.w.id}:${n.li}">Pokračovat: lekce ${esc(n.d.d)} →</button>` : `<button class="btn primary ${cls||''}" type="button" data-quiz="${n.w.id}">Pokračovat: kvíz modulu ${esc(n.w.title)} →</button>`;
-}
-function heroWelcome(){
-  return `<section class="hx hx-first"><div class="hx-txt">
-    <span class="eyebrow">Vítejte v onboardingu SPOCKu</span>
-    <h1>Od první instalace <em>k superuserovi</em></h1>
-    <p class="hx-lead">Pro Product Managera, Product Designera, Software Engineera a Guild Mastera. Naučí vás, jak SPOCK funguje uvnitř každé fáze, provede vás vlastním během a ukáže, čemu výstupu věřit a čemu ne.</p>
-    <div class="hx-cta"><button class="btn primary" type="button" data-scrollto="kroky">Jak začít · 3 kroky</button><button class="btn" type="button" data-open-spock>Zeptat se Spocka</button></div>
-  </div>${heroArt('Ahoj, jsem Spock')}</section>`;
-}
-function heroBack(){
-  const n = nextLessonInfo(), w = n && n.w, p = w ? Math.round(modPct(w)*100) : 100;
-  return `<section class="hx hx-back"><div class="hx-txt">
-    <span class="eyebrow">Vítejte zpět${S.role ? ' · ' + esc(ROLES[S.role]) : ''}</span>
-    <h1>${n ? (n.d ? `Na řadě: <em>${esc(plain(n.d.t))}</em>` : `Na řadě: <em>kvíz modulu</em>`) : 'Cesta je <em>hotová</em>'}</h1>
-    ${w ? `<p class="hx-lead">${esc(w.lab)} · ${esc(w.title)} · hotovo ${p} %${n.d ? ` · lekce ${esc(n.d.d)}, ~${fmtMin(dayLearn(n.d) + dayDo(n.d))}` : ''}</p><div class="cont-bar"><span class="bar"><i style="width:${p}%"></i></span></div>` : ''}
-    <div class="hx-cta">${continueBtn()}<button class="btn" type="button" data-open-spock>Zeptat se Spocka</button></div>
-    ${miniStats()}
-  </div>${heroArt(streak() ? `Série ${streak()} ${streak() === 1 ? 'den' : streak() < 5 ? 'dny' : 'dní'}!` : 'Vítejte zpět')}</section>`;
 }
 function pathBlock(title){
   const mine = S.role ? W.find(w => w.role === S.role) : null;
@@ -516,16 +446,6 @@ function pathBlock(title){
 function roleCards(){
   return `<div class="rcards">${W.filter(w => w.role).map(w => `<button type="button" class="rcard c-${w.c} ${S.role === w.role ? 'on' : ''}" data-role="${w.role}" aria-pressed="${S.role === w.role}"><span class="rc-dia"><span>${S.role === w.role ? '✓' : ROLE_SHORT[w.role]}</span></span><b>${esc(ROLES[w.role])}</b><span>${esc(ROLE_WHO[w.role])}</span></button>`).join('')}</div>`;
 }
-function firstSteps(){
-  const vid = !!S.seenVideo, role = !!S.role, l0 = W.find(w => w.id === 'l0'), started = l0 && modPct(l0) > 0;
-  const st = (ok, n) => `<span class="fs-n ${ok ? 'ok' : ''}">${ok ? '✓' : n}</span>`;
-  return `<section class="fsteps" id="kroky"><div class="sec-h"><h2>Jak začít</h2><p>Tři kroky, asi 10 minut.</p></div><ol class="fs-list">
-    <li class="${vid ? 'done' : ''}">${st(vid,1)}<div><b>Podívejte se, co je SPOCK</b><span>Video 2 min 26 s a 8 hlavních myšlenek.</span></div><button class="btn sm" type="button" data-scrollto="cv-h">Pustit video</button></li>
-    <li class="${role ? 'done' : ''}">${st(role,2)}<div><b>Vyberte svou roli</b><span>${role ? 'Role: ' + esc(ROLES[S.role]) : 'Podle ní se vám ukáže úroveň 2.'}</span></div><button class="btn sm" type="button" data-scrollto="role-h">${role ? 'Změnit' : 'Vybrat roli'}</button></li>
-    <li class="${started ? 'done' : ''}">${st(started,3)}<div><b>Začněte úrovní 0: Příprava</b><span>Přístupy, licence Copilota a instalace. Některá schválení trvají dny, tak začněte hned.</span></div><button class="btn sm primary" type="button" data-week="l0">Začít</button></li>
-  </ol></section>`;
-}
-function roleSection(){ return `<section class="rsec"><div class="sec-h"><h2 id="role-h">Vaše role</h2><p>Úrovně 0, 1 a 1b jsou společné. Role určí modul na úrovni 2.</p></div>${roleCards()}</section>`; }
 function toolsBlock(title){
   return `<div class="sec-h"><h2>${title || 'Opora'}</h2></div><div class="journey four">
     <button class="jstep c-pink" type="button" data-simstart><span class="n">5 minut · interaktivně</span><h3>SPOCK nanečisto</h3><p>Zkrácený běh od nápadu po iniciativu. Vy rozhodujete na každé bráně.</p></button>
@@ -560,36 +480,10 @@ function startBlock(){
     <div class="startb-go"><button class="btn primary" type="button" data-week="l0" ${S.role ? '' : 'disabled'}>Začít úrovní 0: Příprava →</button><span class="muted">${S.role ? 'Role: ' + esc(ROLES[S.role]) : 'Nejdřív vyberte roli.'}</span></div></section>`;
 }
 function introCollapsed(){ return `<details class="introfold"><summary>${spockLogo('sm')}<b>O SPOCKu</b><span>Video 2 min 26 s a 8 hlavních myšlenek</span></summary>${introSection()}</details>`; }
-const secNo = (n, t, sub, id) => `<div class="secno"><span class="sn">${n}</span><div><h2 ${id ? `id="${id}"` : ''}>${t}</h2>${sub ? `<p>${sub}</p>` : ''}</div></div>`;
 
 /* 1 · Dvě tváře: jiná stránka pro nováčka a pro vracejícího se */
-function homeV1(){
-  if (isFirst()) return heroWelcome() + firstSteps() + introSection() + roleSection() + pathBlock('Co vás čeká') + toolsBlock();
-  return heroBack() + pathBlock() + `<div class="sec-h"><h2>Profil a odznaky</h2></div>` + profileCard() + toolsBlock() + `<div style="margin-top:22px">${introCollapsed()}</div>`;
-}
 /* 2 · Jeden příběh shora dolů, číslované kroky; po návratu se hotové kroky sbalí */
-function homeV2(){
-  const first = isFirst(), back = !first;
-  const contBar = back ? `<div class="contbar">${spockSVG('fab')}<div><b>${nextLessonInfo() && nextLessonInfo().d ? 'Na řadě: ' + esc(plain(nextLessonInfo().d.t)) : 'Na řadě: kvíz modulu'}</b><span>${FLAME} ${streak()} · ${S.xp} XP · dnes ${todayXP()}/${S.goal}</span></div>${continueBtn()}</div>` : '';
-  const s1 = back && S.seenVideo ? `<div class="sumrow">${secNo('1','Co je SPOCK')}<span class="sum-ok">✓ Video zhlédnuto</span><button class="btn sm" type="button" data-expand="intro">Znovu ukázat</button></div><div id="intro-x" hidden>${introSection()}</div>`
-    : secNo('1','Co je SPOCK','Začněte dvouminutovým videem.') + introSection();
-  const s2 = back && S.role ? `<div class="sumrow">${secNo('2','Vaše role')}<span class="sum-ok">✓ ${esc(ROLES[S.role])}</span><button class="btn sm" type="button" data-expand="role">Změnit</button></div><div id="role-x" hidden>${roleCards()}</div>`
-    : secNo('2','Vyberte svou roli','Úrovně 0, 1 a 1b jsou společné, role určí úroveň 2.','role-h') + roleCards();
-  return (first ? heroWelcome() : '') + contBar + `<div class="story">${s1}${s2}${secNo('3','Vaše cesta')}${pathBlock(' ').replace('<h2> </h2>','')}${secNo('4','Profil a odznaky')}${profileCard()}${secNo('5','Opora','Když potřebujete něco dohledat.')}${toolsBlock(' ').replace('<div class="sec-h"><h2> </h2></div>','')}</div>`;
-}
 /* 3 · Záložky: výchozí záložka podle toho, jestli jste tu poprvé */
-let HTAB = null;
-function homeV3(){
-  const tabs = [['start','Začínám'],['cesta','Moje cesta'],['profil','Profil'],['opora','O SPOCKu a opora']];
-  const cur = HTAB || (isFirst() ? 'start' : 'cesta');
-  const head = isFirst() ? heroWelcome() : heroBack();
-  let body = '';
-  if (cur === 'start') body = firstSteps() + `<div class="vidsolo">${VIDEO}</div>` + roleSection();
-  if (cur === 'cesta') body = pathBlock();
-  if (cur === 'profil') body = profileCard();
-  if (cur === 'opora') body = introSection() + toolsBlock();
-  return head + `<nav class="htabs" role="tablist" aria-label="Části úvodní stránky">${tabs.map(([id,l]) => `<button type="button" role="tab" aria-selected="${cur === id}" class="htab ${cur === id ? 'on' : ''}" data-htab="${id}">${l}</button>`).join('')}</nav><div class="htab-body" role="tabpanel">${body}</div>`;
-}
 /* 4 · Jedna stálá stránka, mění se jen akční blok banneru, sbalení videa a prázdný stav profilu */
 function heroStable(){
   const first = isFirst(), n = nextLessonInfo(), w = n && n.w, p = w ? Math.round(modPct(w)*100) : 100;
@@ -617,13 +511,11 @@ function homeV4(){
   const l1 = W.find(w => w.id === 'l1'), showSvy = l1 && modPct(l1) === 1 && !(S.survey && S.survey.at);
   return heroStable() + (showSvy ? surveyCard(true) : '') + pathBlock() + (S.seenVideo ? `<div class="v4-gap">${introCollapsed()}</div>` : introSection()) + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard() + toolsBlock();
 }
-function renderHome(){ app.innerHTML = HOME_VARIANT === '4' ? homeV4() : HOME_VARIANT === '2' ? homeV2() : HOME_VARIANT === '3' ? homeV3() : homeV1(); }
+function renderHome(){ app.innerHTML = homeV4(); }
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-golesson],[data-scrollto],[data-expand],[data-htab],[data-rolepick]'); if (!t) return;
+  const t = e.target.closest('[data-golesson],[data-scrollto],[data-rolepick]'); if (!t) return;
   if (t.dataset.golesson) { const [id, li] = t.dataset.golesson.split(':'); view.lesson = +li; view.lessonOf = id; return go('week', {week:id}); }
   if (t.dataset.scrollto) { const el = document.getElementById(t.dataset.scrollto); if (el) el.scrollIntoView({behavior:'smooth', block:'start'}); return; }
-  if (t.dataset.expand) { const x = document.getElementById(t.dataset.expand + '-x'); if (x) { x.hidden = !x.hidden; } return; }
-  if (t.dataset.htab) { HTAB = t.dataset.htab; renderHome(); }
   if (t.hasAttribute('data-rolepick')) { const r = document.querySelector('.hx-rolepick'); if (r) r.hidden = !r.hidden; }
 });
 document.addEventListener('play', e => { if (e.target.matches && e.target.matches('.cv-video') && !S.seenVideo) { S.seenVideo = true; save(); } }, true);
@@ -661,35 +553,9 @@ function tbl(t){
   return `<div class="tw"><table><thead><tr>${t.head.map(h => `<th>${fmt(h)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${fmt(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
 /* ---------- cesta jako v Duolingu ---------- */
-const ZIG = [0, 38, 58, 38, 0, -38, -58, -38];
-const ZIG_S = [0, 26, 40, 26, 0, -26, -40, -26];
 const lessonDone = (w, di) => w.days[di].todo.length > 0 && w.days[di].todo.every((_,ti) => S.todo[w.id+'.'+di+'.'+ti]);
 const lessonPct = (w, di) => { const d = w.days[di]; return d.todo.length ? d.todo.filter((_,ti) => S.todo[w.id+'.'+di+'.'+ti]).length / d.todo.length : 0; };
 function curLesson(w){ const i = w.days.findIndex((_,di) => !lessonDone(w, di)); return i; }
-function lessonPath(w, sel){
-  const cur = curLesson(w), qd = qDone(w), quizAll = qd === w.quiz.length && w.quiz.length > 0;
-  const nodes = w.days.map((d,di) => {
-    const done = lessonDone(w, di), here = di === cur, p = lessonPct(w, di);
-    const st = done ? 'done' : here ? 'here' : p > 0 ? 'part' : 'todo';
-    return `<li class="lp-item" style="--dx:${ZIG[di % ZIG.length]}px">
-      ${here ? `<span class="lp-start">${p > 0 ? 'Pokračovat' : 'Start'}</span>` : ''}
-      <button type="button" class="lp-node st-${st} ${sel === di ? 'sel' : ''}" data-lesson="${di}" aria-label="Lekce ${esc(d.d)}: ${esc(plain(d.t))}${done ? ', hotová' : ''}" aria-pressed="${sel === di}" style="--p:${Math.round(p*100)}">
-        <span class="lp-dia"><span>${done ? '✓' : esc(d.d)}</span></span>
-      </button>
-      <span class="lp-l">${fmt(d.t)}</span>
-      ${here ? `<span class="lp-spock" aria-hidden="true">${spockSVG('fab')}</span>` : ''}
-    </li>`;
-  });
-  const qi = w.days.length;
-  nodes.push(`<li class="lp-item" style="--dx:${ZIG[qi % ZIG.length]}px">
-      ${cur === -1 && !quizAll ? '<span class="lp-start">Kvíz</span>' : ''}
-      <button type="button" class="lp-node trophy ${quizAll ? 'st-done' : cur === -1 ? 'st-here' : 'st-todo'}" data-quiz="${w.id}" aria-label="Kvíz modulu, ${qd} z ${w.quiz.length} správně">
-        <span class="lp-dia"><span>${TROPHY}</span></span>
-      </button>
-      <span class="lp-l">Kvíz modulu · ${qd}/${w.quiz.length}</span>
-    </li>`);
-  return `<ol class="lpath c-${w.c}">${nodes.join('')}</ol>`;
-}
 const TROPHY = `<svg class="trophy-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v3h3a3 3 0 0 1-3 5.2A5 5 0 0 1 13 15v2h3v3H8v-3h3v-2a5 5 0 0 1-4-3.8A3 3 0 0 1 4 6h3V3zm10 5v1.5A1.2 1.2 0 0 0 18 8zM7 8H6a1.2 1.2 0 0 0 1 1.5z"/></svg>`;
 
 /* Schéma architektury SPOCKu pro lekci GM 2G.6 */
@@ -745,39 +611,6 @@ function lessonPanel(w, di){
     <div class="lp-foot">${di > 0 ? `<button class="btn" type="button" data-lesson="${di-1}">← ${esc(w.days[di-1].d)}</button>` : '<span></span>'}${next}</div>
   </section>`;
 }
-function railLessons(w, mi){
-  const cur = curLesson(w), sel = view.lessonOf === w.id ? view.lesson : (cur >= 0 ? cur : 0), qd = qDone(w), quizAll = qd === w.quiz.length && w.quiz.length > 0;
-  const base = ZIG_S[mi % ZIG_S.length];
-  const items = w.days.map((d,di) => {
-    const done = lessonDone(w, di), here = di === cur, p = lessonPct(w, di);
-    const st = done ? 'done' : here ? 'here' : p > 0 ? 'part' : 'todo';
-    return `<li class="rl-item" style="--dx:${base + ZIG_S[(di+1) % ZIG_S.length] * .7}px">
-      <button type="button" class="rl-node st-${st} c-${w.c} ${sel === di ? 'on' : ''}" data-lesson="${di}" aria-label="Lekce ${esc(d.d)}: ${esc(plain(d.t))}${done ? ', hotová' : ''}" aria-pressed="${sel === di}" style="--p:${Math.round(p*100)}"><span class="rl-dia"><span>${done ? '✓' : esc(d.d)}</span></span>${here ? '<span class="rl-start">' + (p > 0 ? 'Dál' : 'Start') + '</span>' : ''}</button>
-      <span class="rl-l ${sel === di ? 'on' : ''}">${fmt(d.t)}</span></li>`;
-  });
-  items.push(`<li class="rl-item" style="--dx:${base + ZIG_S[(w.days.length+1) % ZIG_S.length] * .7}px">
-      <button type="button" class="rl-node trophy ${quizAll ? 'st-done' : cur === -1 ? 'st-here' : 'st-todo'} c-${w.c}" data-quiz="${w.id}" aria-label="Kvíz modulu, ${qd} z ${w.quiz.length} správně"><span class="rl-dia"><span>${TROPHY}</span></span></button>
-      <span class="rl-l">Kvíz · ${qd}/${w.quiz.length}</span></li>`);
-  return `<li class="rp-sub"><ol class="rlpath c-${w.c}">${items.join('')}</ol></li>`;
-}
-function railPath(active){
-  const ids = pathIds(), here = nextOnPath();
-  const nodes = ids.map((id, i) => {
-    const w = W.find(x => x.id === id); if (!w) return '';
-    const lk = isLocked(w), p = modPct(w), done = p === 1, isHere = here && here.id === id && !lk;
-    const st = lk ? 'lock' : done ? 'done' : isHere ? 'here' : p > 0 ? 'part' : 'todo';
-    const lab = w.role ? '2' : w.lab.replace('Úroveň ','');
-    return `<li class="rp-item" style="--dx:${ZIG_S[i % ZIG_S.length]}px">
-      <button type="button" class="rp-node st-${st} c-${w.c} ${active === id ? 'on' : ''}" data-week="${id}" aria-label="${esc(w.lab + ': ' + w.title)}${lk ? ', zamčeno' : done ? ', hotovo' : ''}" style="--p:${Math.round(p*100)}">
-        <span class="rp-dia"><span>${lk ? LOCK : done ? '✓' : esc(lab)}</span></span>
-        ${isHere ? `<span class="rp-spock" aria-hidden="true">${spockSVG('fab')}</span>` : ''}
-      </button>
-      <span class="rp-l ${active === id ? 'on' : ''}">${esc(w.title)}</span>
-    </li>${active === id && view.name === 'week' && !(isLocked(w) && view.peek !== w.id) ? railLessons(w, i) : ''}`;
-  }).join('');
-  const others = W.filter(w => w.role && w.role !== S.role).map(w => `<button type="button" class="${active===w.id?'on':''} dim c-${w.c}" data-week="${w.id}"><span class="dm"></span><span class="rl">${esc(w.title)}</span></button>`).join('');
-  return `<span class="grp">Cesta</span><ol class="rpath">${nodes}</ol>${others ? `<span class="grp">${S.role ? 'Jiné role' : 'Role (vyberte svou)'}</span>${others}` : ''}`;
-}
 document.addEventListener('click', e => {
   const l = e.target.closest('[data-lesson]'); if (!l || view.name !== 'week') return;
   view.lesson = +l.dataset.lesson; renderWeek(view.week); updatePills();
@@ -812,9 +645,8 @@ function renderWeek(id){
       <div class="tdays">${w.days.map(d => `<span><b>${esc(d.d)}</b> ${fmtMin(dayLearn(d) + dayDo(d))}</span>`).join('')}</div>
     </div>`;
   app.innerHTML = shell(w.id, `
-    ${PATH_VARIANT === 'B' ? topTrack(w) : ''}
-    <div class="unit c-${w.c}"><div class="unit-t"><span class="eyebrow">${esc(w.lab)}${w.role ? '' : ' · všichni'}</span><h1>${esc(w.title)}</h1><p>${fmt(w.goal)}</p>${PATH_VARIANT === 'D' ? '<button type="button" class="unit-more" aria-expanded="false">Více</button>' : ''}</div>
-      ${PATH_VARIANT === 'D' ? '' : `<div class="unit-s"><span class="unit-pct num">${Math.round(modPct(w)*100)} %</span><span>${w.days.filter((_,di) => lessonDone(w, di)).length}/${w.days.length} lekcí</span></div>`}</div>
+    <div class="unit c-${w.c}"><div class="unit-t"><span class="eyebrow">${esc(w.lab)}${w.role ? '' : ' · všichni'}</span><h1>${esc(w.title)}</h1><p>${fmt(w.goal)}</p><button type="button" class="unit-more" aria-expanded="false">Více</button></div>
+      </div>
     ${other ? `<p class="goal" style="background:var(--warn-bg)"><b>Tohle je lekce pro roli ${ROLES[w.role]}.</b> Čtěte ji pro kontext tria, do vašeho pokroku se nepočítá.</p>` : ''}
     <details class="unit-guide"><summary>Průvodce modulem: proč, kolik času a co mít připravené</summary><div class="mh c-${w.c}">${tsum}<p class="why"><b>Proč:</b> ${fmt(w.why)}</p>${w.before ? `<p class="why"><b>Než začnete:</b> ${fmt(w.before)}</p>` : ''}</div></details>
     ${lessonPanel(w, sel)}
@@ -876,7 +708,6 @@ function renderReady(){
 
 /* ---------- shell s railem ---------- */
 /* ---------- cesta na stránce modulu: tři varianty ---------- */
-const PATH_VARIANT = 'D';
 const modState = w => { const lk = isLocked(w), p = modPct(w), here = nextOnPath(); return lk ? 'lock' : p === 1 ? 'done' : (here && here.id === w.id) ? 'here' : p > 0 ? 'part' : 'todo'; };
 const lesState = (w, di) => { const cur = curLesson(w), p = lessonPct(w, di); return lessonDone(w, di) ? 'done' : di === cur ? 'here' : p > 0 ? 'part' : 'todo'; };
 const selLesson = w => view.lessonOf === w.id ? view.lesson : (curLesson(w) >= 0 ? curLesson(w) : 0);
@@ -886,54 +717,12 @@ const ringSvg = (p, c) => `<svg class="pv-ring" viewBox="0 0 36 36" aria-hidden=
 const otherRoles = active => { const o = W.filter(w => w.role && w.role !== S.role); return o.length ? `<span class="grp">${S.role ? 'Jiné role' : 'Role'}</span>` + o.map(w => `<button type="button" class="${active===w.id?'on':''} dim c-${w.c}" data-week="${w.id}"><span class="dm"></span><span class="rl">${esc(w.title)}</span></button>`).join('') : ''; };
 
 /* A · Časová osa: moduly pod sebou na svislé lince, aktivní modul rozbalí lekce */
-function railPathA(active){
-  const items = pathMods().map(w => {
-    const st = modState(w), on = active === w.id, p = modPct(w);
-    const lessons = on && view.name === 'week' && !(isLocked(w) && view.peek !== w.id) ? `<ol class="pa-les">${w.days.map((d,di) => { const ls = lesState(w, di), sel = selLesson(w) === di; return `<li><button type="button" class="pa-l st-${ls} ${sel?'sel':''}" data-lesson="${di}"><span class="pa-dot">${ls === 'done' ? '✓' : ''}</span><span class="pa-lt"><small>${esc(d.d)}</small>${fmt(d.t)}</span></button></li>`; }).join('')}<li><button type="button" class="pa-l trophy ${qDone(w) === w.quiz.length && w.quiz.length ? 'st-done' : 'st-todo'}" data-quiz="${w.id}"><span class="pa-dot">${TROPHY}</span><span class="pa-lt"><small>Kvíz</small>${qDone(w)}/${w.quiz.length} správně</span></button></li></ol>` : '';
-    return `<li class="pa-m st-${st} c-${w.c} ${on?'on':''}"><button type="button" class="pa-mb" data-week="${w.id}"><span class="pa-node">${st === 'lock' ? LOCK : st === 'done' ? '✓' : esc(shortLab(w))}</span><span class="pa-mt"><b>${esc(w.title)}</b><small>${st === 'lock' ? 'Zamčeno' : Math.round(p*100) + ' % · ' + w.days.filter((_,di) => lessonDone(w, di)).length + '/' + w.days.length + ' lekcí'}</small></span></button>${lessons}</li>`;
-  }).join('');
-  return `<span class="grp">Cesta</span><ol class="pa">${items}</ol>${otherRoles(active)}`;
-}
 
 /* C · Karty modulů: každý modul je karta s barevnou hlavičkou, lekce jako řada uzlů */
-function railPathC(active){
-  const cards = pathMods().map(w => {
-    const st = modState(w), on = active === w.id, p = modPct(w);
-    const nodes = `<div class="pc-nodes">${w.days.map((d,di) => { const ls = lesState(w, di); return `<button type="button" class="pc-n st-${ls} ${on && selLesson(w) === di ? 'sel' : ''}" ${on ? `data-lesson="${di}"` : `data-week="${w.id}"`} title="${esc(d.d + ' ' + plain(d.t))}"><span>${ls === 'done' ? '✓' : esc(d.d.split('.').pop())}</span></button>`; }).join('')}<button type="button" class="pc-n trophy ${qDone(w) === w.quiz.length && w.quiz.length ? 'st-done' : ''}" data-quiz="${w.id}" title="Kvíz modulu">${TROPHY}</button></div>`;
-    return `<li class="pcm st-${st} c-${w.c} ${on?'on':''}"><button type="button" class="pcm-h" data-week="${w.id}"><span class="pcm-lab">${esc(w.lab)}</span><b>${st === 'lock' ? LOCK + ' ' : ''}${esc(w.title)}</b>${ringSvg(p, 'currentColor')}</button>${st === 'lock' ? '' : nodes}${on && view.name === 'week' ? `<span class="pcm-cur">${(() => { const d = w.days[selLesson(w)]; return d ? esc(d.d) + ' · ' + fmt(d.t) : ''; })()}</span>` : ''}</li>`;
-  }).join('');
-  return `<span class="grp">Cesta</span><ol class="pcmods">${cards}</ol>${otherRoles(active)}`;
-}
 
 /* B · Mapa nahoře: cesta jako vodorovná linka metra přes celou šířku, levý sloupec jen na oporu */
-function railPathB(active){ return otherRoles(active); }
-function topTrack(w){
-  const mods = pathMods();
-  const stations = mods.map(m => {
-    const st = modState(m), on = m.id === w.id;
-    const inner = on ? `<div class="pb-les">${m.days.map((d,di) => { const ls = lesState(m, di), sel = selLesson(m) === di; return `<button type="button" class="pb-l st-${ls} ${sel?'sel':''}" data-lesson="${di}" title="${esc(d.d + ' ' + plain(d.t))}"><span class="pb-ld">${ls === 'done' ? '✓' : ''}</span><small>${esc(d.d)}</small></button>`; }).join('')}<button type="button" class="pb-l trophy" data-quiz="${m.id}" title="Kvíz modulu"><span class="pb-ld">${TROPHY}</span><small>Kvíz</small></button></div>` : '';
-    return `<li class="pb-s st-${st} c-${m.c} ${on?'on':''}"><button type="button" class="pb-sb" data-week="${m.id}"><span class="pb-st">${st === 'lock' ? LOCK : st === 'done' ? '✓' : esc(shortLab(m))}</span><span class="pb-sn">${esc(m.title)}</span></button>${inner}</li>`;
-  }).join('');
-  return `<nav class="pb" aria-label="Cesta">${spockSVG('fab')}<ol class="pb-line">${stations}</ol></nav>`;
-}
 
 /* D · B+C: metro nahoře se stanicemi s prstencem pokroku, pod ním karta aktivního modulu s očíslovanými lekcemi */
-function topTrackD(w){
-  const mods = pathMods();
-  const stations = mods.map(m => {
-    const st = modState(m), on = m.id === w.id, p = modPct(m);
-    return `<li class="pd-s st-${st} c-${m.c} ${on?'on':''}"><button type="button" class="pd-sb" data-week="${m.id}" ${on?'aria-current="step"':''}><span class="pd-node">${st === 'done' ? '' : ringSvg(p, 'var(--c)')}<span class="pd-in">${st === 'lock' ? LOCK : st === 'done' ? '✓' : esc(shortLab(m))}</span></span><span class="pd-sn">${esc(m.title)}</span></button></li>`;
-  }).join('');
-  const nd = w.days.filter((_,di) => lessonDone(w, di)).length, sl = selLesson(w), qd = qDone(w), qa = w.quiz.length && qd === w.quiz.length;
-  const steps = w.days.map((d,di) => { const ls = lesState(w, di); return `<li class="pd-l st-${ls} ${sl === di ? 'sel' : ''}"><button type="button" data-lesson="${di}" ${sl === di ? 'aria-current="true"' : ''}><span class="pd-ld">${ls === 'done' ? '✓' : esc(d.d.split('.').pop())}</span><span class="pd-lt"><small>${esc(d.d)}</small>${fmt(d.t)}</span></button></li>`; }).join('')
-    + `<li class="pd-l trophy ${qa ? 'st-done' : ''}"><button type="button" data-quiz="${w.id}"><span class="pd-ld">${TROPHY}</span><span class="pd-lt"><small>Kvíz</small>${qd}/${w.quiz.length} správně</span></button></li>`;
-  const cur = w.days[sl];
-  return `<nav class="pd c-${w.c}" aria-label="Cesta">
-    <div class="pd-top">${spockSVG('fab')}<ol class="pd-line">${stations}</ol></div>
-    <div class="pd-card"><div class="pd-ch"><span><b>${esc(w.lab)} · ${esc(w.title)}</b></span><span class="pd-cnt num">${nd}/${w.days.length} lekcí</span></div>
-      <ol class="pd-les ${w.days.length > 5 ? 'many' : ''}">${steps}</ol>
-      ${cur ? `<p class="pd-cur"><small>Lekce ${esc(cur.d)}</small> ${fmt(cur.t)}</p>` : ''}</div></nav>`;
-}
 
 /* D (v levém sloupci) · Spock + cesta modulů s prstencem, aktivní modul rozbalí kartu s očíslovanými lekcemi */
 function pdCard(w){
@@ -954,7 +743,6 @@ function railPathD(active){
   const mob = aw && pathMods().some(m => m.id === aw.id) ? `<div class="pd-mob-card">${pdCard(aw)}</div>` : '';
   return `<div class="pdr"><span class="grp">Cesta</span><ol class="pd-line">${items}</ol>${mob}</div>`;
 }
-function railPathX(active){ return PATH_VARIANT === 'D' ? railPathD(active) : PATH_VARIANT === 'B' ? railPathB(active) : PATH_VARIANT === 'C' ? railPathC(active) : railPathA(active); }
 
 function shell(active, body){
   const wk0 = W.map(w => {
@@ -965,7 +753,7 @@ function shell(active, body){
   }).join('');
   const ex = [['badges','Odznaky a profil','indigo'],['map','SPOCK v kostce','blue'],['diag','Diagnostika','purple'],['gloss','Slovníček','blue'],['cheat','Tahák tasků','blue'],['ready','Připravenost','indigo']]
     .map(x => `<button type="button" class="${active===x[0]?'on':''} c-${x[2]}" data-go="${x[0]}"><span class="dm"></span>${x[1]}</button>`).join('');
-  return `<div class="ed"><nav class="rail" aria-label="Navigace">${PATH_VARIANT === 'D' ? railPathD(active) + `<div class="rail-more">${otherRoles(active)}<span class="grp">Opora</span>${ex}</div>` : railPathX(active) + '<span class="grp">Opora</span>' + ex}</nav><section class="main">${body}</section></div>`;
+  return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more">${otherRoles(active)}<span class="grp">Opora</span>${ex}</div>`}</nav><section class="main">${body}</section></div>`;
 }
 
 function nextWeek(){
