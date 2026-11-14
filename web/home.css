@@ -1,5 +1,5 @@
 /* ---------- struktury úvodní stránky ---------- */
-.hx-first{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
+@media (min-width:981px){.hx-first{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}}
 .cont-bar{max-width:520px}.cont-bar .bar{height:12px;border-radius:99px}.cont-bar .bar i{border-radius:99px}
 .hpcard{border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:6px 22px 22px;margin:0 0 26px}
 .hpcard .hp{border-top:0;padding-top:12px;margin:0}
@@ -27,3 +27,4 @@
 .hx-role{font-size:13.5px;color:var(--ink-2)}
 .v4-gap{margin:0 0 26px}
 .hp-st.locked h3{opacity:1;color:var(--ink-2)}.hp-st.locked p{opacity:1;color:var(--ink-3)}
+@media (max-width:600px){.hx-first{padding:18px 16px;gap:12px}.hx-first .hx-art{width:120px;margin:-4px auto -8px}.hx-first .hx-art::before{inset:-6%}.hx-first .hx-cta{display:grid;grid-template-columns:1fr;width:100%}.hx-first .hx-cta .btn{width:100%;justify-content:center}}
