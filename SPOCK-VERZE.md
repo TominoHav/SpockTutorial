@@ -7,7 +7,13 @@ commit: d39b0145d5c0fee0b3490d1360ec6d07da8fb494
 repozitar: https://github.com/TominoHav/SPOCK-Workflow-1.0
 overeno: 2026-11-14
 
-Řádky výše čte `nastroje/kontrola-aktualnosti.py`. Po každé schválené aktualizaci onboardingu je přepište na novou verzi SPOCKu a dnešní datum.
+Řádky výše čte `nastroje/kontrola-aktualnosti.py`. Vedle nich je v `nastroje/spock-otisk.json` **otisk všech souborů SPOCKu** v této verzi (cesta a kontrolní součet). Díky otisku skript pozná, co se ve SPOCKu změnilo, i když nová verze vyjde jako nový repozitář bez společné historie gitu (dnešní repozitář SPOCKu má jediný commit).
+
+Po každé schválené aktualizaci onboardingu přepište řádky výše na novou verzi SPOCKu a dnešní datum a uložte nový otisk:
+
+```bash
+python3 nastroje/kontrola-aktualnosti.py ../SPOCK-Workflow-1.0 --zapis-otisk
+```
 
 ## Údržba
 
