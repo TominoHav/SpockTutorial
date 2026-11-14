@@ -4,7 +4,7 @@
 
 **Proč:** SPOCK je postavený kolem PM. Pět ze šesti rozhodovacích bran podepisuje Product Manager (`BUSINESS-LOGIC-OVERVIEW.md` §4) a u G2 je to PM, nebo Researcher. Bez vás se běh nepohne.
 
-**Než začnete:** Mějte hotové úrovně 0 a 1. Zvolte si **téma, které znáte**, a připravte si k němu **vymyšlený nebo anonymizovaný** materiál. V cvičném běhu nepoužívejte skutečná klientská data (`TESTER-GUIDE.md` §2). Mějte otevřenou tabulku „Should happen“ z `TESTER-GUIDE.md` §4. Ta říká, co je správné chování.
+**Než začnete:** Mějte hotové úrovně 0, 1 a [1b](uroven-1b-faze-do-hloubky.md). Před každou fází si zopakujte její lekci z úrovně 1b (1F.1 až 1F.7): u G-bran podepisujete věci, které podrobně popisují specifikace fází. Zvolte si **téma, které znáte**, a připravte si k němu **vymyšlený nebo anonymizovaný** materiál. V cvičném běhu nepoužívejte skutečná klientská data (`TESTER-GUIDE.md` §2). Mějte otevřenou tabulku „Should happen“ z `TESTER-GUIDE.md` §4. Ta říká, co je správné chování.
 
 ## 2P.1 — Fáze 1: brief
 
@@ -16,6 +16,7 @@
 ### Klíčové myšlenky
 
 - Běh založíte povelem **`Start a discovery run.`** u agenta Product Manager. Název běhu, své jméno a roli zadáváte v tasku `SPOCK: start a run`, ne v chatu.
+- Když přinesete vlastní dokument, agent ho **vyslýchá, ne přepisuje**: začne tím, co je slabé nebo chybí, a u každého pole řekne, odkud je (STAGE-1 R3.0.1–R3.0.4).
 - Agent se ptá **po jednom poli**, ne formulářem. Jako první se zeptá na jazyk. Když jazyk neuvedete, zapíše `cs` a řekne vám to.
 - Co nedodáte, označí jako **unknown s důvodem**. Pole si nikdy nevymýšlí. Agent také **nikdy nenapíše větu, která spojuje vaši metriku s key resultem**. To je vaše práce (`TESTER-GUIDE.md` §4).
 
@@ -102,7 +103,8 @@
 
 - **Fáze 4 nemá žádné skóre**, žádné pořadí ani číslo. Porovnáváte **seznam touchpointů a jejich počet** u každého řešení.
 - **Tříletá a třítýdenní stavba vypadají pro workflow stejně.** Na technickou složitost se proto před výběrem zeptejte engineera (viz [role-engineer.md](role-engineer.md)).
-- Výběr jsou dvě akce: nejdřív zapíšete volbu i s důvodem, pak schválíte.
+- Výběr jsou dvě akce: nejdřív zapíšete volbu i s důvodem, pak schválíte. **Důvod se slovo od slova přepíše do vybraného řešení** pod „Why this one“ a je to jediné, co z rozhodnutí zbude pro fáze 5–7 (STAGE-4 R9.3).
+- Možnost „nic z toho“ neexistuje. Když se vám žádné řešení nelíbí, změňte některé nebo přidejte vlastní, až do deseti (STAGE-4 R9.7).
 
 ### Úkoly
 

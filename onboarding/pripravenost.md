@@ -4,7 +4,9 @@ Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až mát
 
 ## Úroveň 0: Příprava
 
-- [ ] SPOCK mám nainstalovaný, `check my setup` mi projde a vidím šest agentů.
+- [ ] Mám GitHub účet ČS, licenci Copilota a přístup k repozitáři SPOCKu.
+- [ ] Mám VS Code, Node.js 22 (nebo 20) a Git a v chatu vidím model Claude Sonnet 5.
+- [ ] SPOCK mám naklonovaný, `check my setup` mi projde a vidím šest agentů.
 - [ ] Znám pět pravidel z lekce 0.2 a umím říct, proč každé platí.
 - [ ] Poznám, který task spouštím jen já.
 
@@ -14,6 +16,13 @@ Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až mát
 - [ ] Vysvětlím rozdíl mezi Q a G bránou a proč agent nehodnotí sám sebe.
 - [ ] V hotovém běhu dohledám tvrzení z iniciativy zpět k materiálu.
 - [ ] Řeknu tři věci, které SPOCK nedělá.
+
+## Úroveň 1b: Fáze do hloubky
+
+- [ ] U každé fáze řeknu, co čte, co vyrobí, kdo rozhoduje a co záměrně nedělá.
+- [ ] Vím, kam jde neprošlá kontrola a které kontroly nejde podepsat.
+- [ ] Vysvětlím trust tag, pravidlo nezávislých zdrojů, compliance sweep a proč fáze 4 nemá skóre.
+- [ ] U každé fáze znám, co její specifikace přiznává, že neopraví.
 
 ## Úroveň 2: Moje role
 
@@ -31,6 +40,11 @@ Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až mát
 - [ ] Napíšu technické posouzení sady řešení před G4.
 - [ ] Přečtu PRD a iniciativu jako vstup pro delivery a najdu mezery.
 - [ ] Přečtu výstup brány a dohledám kontrolu podle C-čísla.
+
+**Guild Master**
+- [ ] Vím, které know-how oblastí Method a Product existuje, v jaké je verzi a stavu.
+- [ ] Udělám metodickou revizi běhu a odliším slabý materiál od mezery v metodice.
+- [ ] Navrhnu a s engineerem provedu změnu know-how podle `KNOW-HOW-OWNERS.md` §4.
 
 ## Úroveň 3: Pokročilý
 

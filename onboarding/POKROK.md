@@ -2,21 +2,39 @@
 
 Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po vašem souhlasu ho aktualizuje.
 
-**Moje role:** _(PM / Product Designer / Software Engineer)_
+**Moje role:** _(PM / Product Designer / Software Engineer / Guild Master)_
 
 ## Úroveň 0: Příprava
 
-**0.1 — Instalace a kontrola nastavení**
+**0.1 — Přístupy a licence**
 
-- [ ] 0.1 Naklonujte SPOCK a otevřete ho
-- [ ] 0.1 Spusťte SPOCK: check my setup
-- [ ] 0.1 Zkontrolujte šest agentů
-- [ ] 0.1 Nastavte model
+- [ ] 0.1 Ověřte si GitHub účet ČS
+- [ ] 0.1 Požádejte o licenci GitHub Copilot pro VS Code
+- [ ] 0.1 Vyžádejte si přístup k repozitáři SPOCKu
+- [ ] 0.1 Ověřte, jestli smíte instalovat software
 
-**0.2 — Pět pravidel, která se neporušují**
+**0.2 — Instalace nástrojů**
 
-- [ ] 0.2 Najděte v `TASKS.md` tři tasky, které otevírají políčka
-- [ ] 0.2 Založte si deník
+- [ ] 0.2 Nainstalujte VS Code
+- [ ] 0.2 Nainstalujte Node.js 22 LTS
+- [ ] 0.2 Nainstalujte Git
+
+**0.3 — GitHub Copilot ve VS Code**
+
+- [ ] 0.3 Nainstalujte a přihlaste Copilota
+- [ ] 0.3 Ověřte agent mode a výběr modelu
+
+**0.4 — SPOCK ve vašem počítači**
+
+- [ ] 0.4 Naklonujte SPOCK a otevřete ho
+- [ ] 0.4 Spusťte SPOCK: check my setup
+- [ ] 0.4 Zkontrolujte šest agentů
+- [ ] 0.4 Nastavte model a zkontrolujte náhled dokumentů
+
+**0.5 — Pět pravidel, která se neporušují**
+
+- [ ] 0.5 Najděte v `TASKS.md` tři tasky, které otevírají políčka
+- [ ] 0.5 Založte si deník
 
 - [ ] Kvíz: Úroveň 0: Příprava
 
@@ -39,6 +57,46 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 - [ ] 1.3 Najděte v běhu podpisy
 
 - [ ] Kvíz: Úroveň 1: Základy
+
+## Úroveň 1b: Fáze do hloubky
+
+**1F.0 — Co platí v každé fázi**
+
+- [ ] 1F.0 Přečtěte si titulní stránku a stav běhu
+- [ ] 1F.0 Sepište si, jak má agent mluvit
+
+**1F.1 — Fáze 1: brief do hloubky**
+
+- [ ] 1F.1 Rozeberte brief ukázkového běhu
+- [ ] 1F.1 Projděte Strategy Basis
+
+**1F.2 — Fáze 2: problémy a příležitosti do hloubky**
+
+- [ ] 1F.2 Projděte řetěz fáze 2 v ukázkovém běhu
+- [ ] 1F.2 Napište hypotézu, která neprojde testem tvaru
+
+**1F.3 — Fáze 3: trh do hloubky**
+
+- [ ] 1F.3 Zkontrolujte jednu kartu konkurenta
+
+**1F.4 — Fáze 4: řešení a compliance do hloubky**
+
+- [ ] 1F.4 Rozeberte jedno řešení a jeho compliance
+- [ ] 1F.4 Najděte důvod volby
+
+**1F.5 — Fáze 5: MVP do hloubky**
+
+- [ ] 1F.5 Posuďte varianty MVP
+
+**1F.6 — Fáze 6: PRD do hloubky**
+
+- [ ] 1F.6 Projděte PRD a jeho alignment statement
+
+**1F.7 — Fáze 7: iniciativa do hloubky**
+
+- [ ] 1F.7 Porovnejte iniciativu s PRD
+
+- [ ] Kvíz: Úroveň 1b: Fáze do hloubky
 
 ## Úroveň 2: Product Manager
 
@@ -124,7 +182,39 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 - [ ] 2E.4 Vysvětlete PM jednu neprošlou kontrolu
 
+**2E.5 — Compliance do hloubky**
+
+- [ ] 2E.5 Projděte ICT touchpointy jednoho řešení
+
 - [ ] Kvíz: Úroveň 2: Software Engineer
+
+## Úroveň 2: Guild Master
+
+**2G.1 — Kde metodika ve SPOCKu žije**
+
+- [ ] 2G.1 Zmapujte know-how oblastí Method a Product
+- [ ] 2G.1 Najděte, které verze know-how běh četl
+
+**2G.2 — Šablona Guildy a co z ní SPOCK dělá**
+
+- [ ] 2G.2 Porovnejte šablonu Guildy se SPOCKem
+
+**2G.3 — Metodická revize běhu**
+
+- [ ] 2G.3 Udělejte metodickou revizi ukázkového běhu
+- [ ] 2G.3 Odpovězte na posuzovaná pravidla u vlastního podpisu
+
+**2G.4 — Změna know-how**
+
+- [ ] 2G.4 Napište návrh změny metodiky
+- [ ] 2G.4 Proveďte změnu s engineerem
+
+**2G.5 — Vedení komunity PM**
+
+- [ ] 2G.5 Najděte vzor ve zpětné vazbě
+- [ ] 2G.5 Připravte 30minutové intro pro Guildu
+
+- [ ] Kvíz: Úroveň 2: Guild Master
 
 ## Úroveň 3: Pokročilý
 

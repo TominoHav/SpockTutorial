@@ -1,0 +1,358 @@
+# Úroveň 1b: Fáze do hloubky (všichni, 8–10 h)
+
+**Cíl:** Rozumíte každé ze sedmi fází tak, jak je popisuje její specifikace: co fáze čte, jaké kroky dělá, co přesně vyrobí, co hlídá brána, o čem rozhodujete vy, co fáze záměrně nedělá a co se stane, když se vracíte. Poznáte správné chování agenta podle pravidel, ne podle pocitu.
+
+**Proč:** Úroveň 1 vám dala mapu. Tady se učíte, jak SPOCK doopravdy funguje uvnitř každé fáze. Kdo zná pravidla fáze, pozná, kdy agent rozhoduje za vás, kdy si vymýšlí a kdy brána zezelená, i když je výsledek špatný. Každá specifikace má na konci část „What this spec does not fix“. Ta je pro uživatele nejdůležitější, protože říká, čemu výstup věřit nelze.
+
+**Než začnete:** Mějte hotové úrovně 0 a 1. Podklady jsou ve vaší kopii SPOCKu v `specifications/stage-specs/`. Každá specifikace má stejných 13 částí (`stage-specs/README.md`): účel, vstupy, kroky, výstupy, compliance, skóre, artefakty, brány, rozhodnutí, návraty, limity, co ještě není postavené a otevřené otázky.
+
+> Ukázkové běhy ve `fixtures/` jsou starší a některé vznikly podle dřívějších pravidel. Starší běh se čte jen proti kontrolám, které na něj dosáhnou svým datem (`fixtures/README.md`). Nejbližší současnému tvaru je `fixtures/2026-09-digital-onboarding-dropoff/`. Podle `BUSINESS-LOGIC-OVERVIEW.md` §0 obsahuje skutečný materiál ČS, takže z něj nic nekopírujte mimo svou kopii SPOCKu.
+
+## 1F.0 — Co platí v každé fázi
+
+### Ke studiu (asi 45 min)
+
+- 📄 **`specifications/stage-specs/README.md`**: 13 částí každé specifikace
+- 📄 **`stage-specs/STAGE-1-SPEC.md`** krok 8 (R3.8.1–R3.8.4): pořadí zapsat, zkontrolovat, posunout, zeptat se
+- 📄 **`specifications/definitions/cross-cutting/run-state.md`** §4–6: stavy fáze, zastarání a verze know-how
+- 📄 **`specifications/definitions/know-how/writing/agent-interaction.md`** §1–11: jak s vámi má agent mluvit
+
+### Klíčové myšlenky
+
+- **Pořadí v každé fázi je vždy stejné: zapsat, zkontrolovat, posunout, teprve pak se zeptat.** Agent spustí `SPOCK: check what is written, then continue`, přečte výsledek a opraví, co kontrola našla. Teprve potom vás požádá o rozhodnutí (STAGE-1 R3.8.1–2).
+- **Kam jde neprošlá kontrola, záleží na tom, čeho se týká.** Co může agent opravit, vrací se agentovi a vás se nikdo na nic neptá. Selhání týkající se už přijaté fáze jde k vám jako výjimka k podpisu. Chybějící označení PRD jako odsouhlaseného jde vždy k vám (STAGE-1 R3.8.2).
+- **Osm kontrol nejde podepsat nikdy:** `C14`, `C32`, `C38`, `C51`, `C143`, `C168`, `C189` a `C190`. Drží poctivost záznamu a souborů workflow (STAGE-1 R3.8.2).
+- **Spustit kontrolu neznamená ji vyhodnotit.** Agent kontrolu jen spustí jako samostatný proces. Kdyby výsledek zapsal sám, porušil by pravidlo. Zapisovač navíc odmítne záznam brány se jménem agenta (R3.8.4).
+- **Každá brána má kromě vlastních kontrol i 45 univerzálních.** Fáze nejčastěji padá právě na univerzálních: chybějící sekce, chybějící závěrečné sekce „What we could not establish“ a „How this was produced“, nebo mezera bez záznamu, že se agent zeptal (`C98`, `C100`, `C163`).
+- **Stavy fáze:** `pending`, `running`, `produced`, `q_failed`, `in_review`, `refined`, `accepted`, `stale` a `superseded`. Fáze je `accepted` jen tehdy, když prošla kvalitní branou (nebo jsou podepsané všechny výjimky) a existuje rozhodnutí člověka (`run-state.md` §4).
+- **Zastarání (stale):** když se fáze vrátí nebo spustí znovu, každá pozdější fáze s výsledkem brány nebo s přijetím se označí `stale`. Nic se nesmaže. Přes zastaralý vstup se běh posune jen s vaším zapsaným přijetím (`run-state.md` §5).
+- **Každý běh si zapisuje verzi každého know-how, které přečetl.** Dva běhy, které se chovaly jinak, tak jde vysvětlit (`run-state.md` §6).
+- **Workflow připraví kostru dokumentu dřív, než agent píše.** Místa, která má vyplnit agent, jsou označená `[[fill: …]]` a dokument s neodstraněnou značkou nikdo nečte (STAGE-2 část 4).
+- **Pole `could_not_verify` na každém dokumentu** vypisuje pravidla, která žádná kontrola nerozhodne. Je určené pro vás, kdo o dokumentu rozhoduje (STAGE-1 §4.4).
+- **Jak má agent mluvit:** jako kolega, který podává zprávu. Na začátku řekne, co fáze vyrobí, ptá se v dávkách, nabízí možnosti, o pokroku hlásí výsledky a ne postup a končí shrnutím (co zapsal, kde to je, na co čeká, co se nepodařilo zjistit). Nikdy neřekne, že fáze prošla, nikdy vám nedá příkaz k napsání ani hodnotu do políčka a nikdy nenavrhuje měnit build (`agent-interaction.md` §1–11).
+- **Když nástroj nic nevrátí, agent to tak řekne a nevymýšlí důvod** (§9a). Vymyšlený důvod prázdného výsledku je nález.
+- **Role u podpisu:** když podepíšete pod jinou rolí, než kterou bráně dává Pilot Definition, zapíše se to, jak jste napsali, s upozorněním (heads-up). Role, která vypadá jako překlep, se odmítne (STAGE-1 část 9).
+
+### Úkoly
+
+- [ ] **Přečtěte si titulní stránku a stav běhu** (20 min)
+  - *Proč:* Stav fáze a její výsledek brány musíte umět přečíst bez agenta.
+  1. Otevřete `fixtures/2026-09-savings-goals/RUN-STATE.md`.
+  2. U dvou fází najděte stav, výsledek brány, kdo fázi vlastní a které know-how a v jaké verzi četla.
+  3. Ve `fixtures/2026-09-savings-goals/1-brief/initiative-brief.md` najděte v hlavičce `could_not_verify` a `decision`.
+- [ ] **Sepište si, jak má agent mluvit** (20 min)
+  - *Proč:* Většinu odchylek poznáte podle toho, jak agent mluví, dřív než podle výstupu.
+  1. Z `agent-interaction.md` §7 a §11 si vypište, co agent nikdy nedělá.
+  2. Nechte si na vedlejší straně papíru místo pro příklady z vašeho cvičného běhu.
+
+## 1F.1 — Fáze 1: brief do hloubky
+
+### Ke studiu (asi 50 min)
+
+- 📄 **`stage-specs/STAGE-1-SPEC.md`**, celé
+- 📄 **`definitions/know-how/product/strategy-basis.md`** §2.1 a §3
+- 📄 **`definitions/know-how/method/method-canon.md`** §9.2: osm způsobů, jak se outcome formuluje špatně
+
+### Klíčové myšlenky
+
+- **Fáze 1 je jediná, která nic nečte z workflow.** Zavazuje běh k outcome a všechno další čte tenhle závazek, místo aby ho odvozovalo znovu (§1.1).
+- **Je to rozhovor, ne formulář.** Pevný počet otázek neexistuje. Limit 40 výměn je zastávka, ne cíl (§1.1, část 11).
+- **Krok 0: když přinesete dokument, agent ho vyslýchá, ne přepisuje.** Začne tím, co je slabé nebo chybí, ne potvrzením, že dokument dostal. U každého pole řekne, odkud je: z vašeho dokumentu, z rozhovoru, nebo stále chybí. Co v dokumentu stojí, je vaše. Co z něj agent jen vyvodí, smí nabídnout jen jako návrh (R3.0.1–R3.0.4).
+- **Jako první se ptá na jazyk**, jako uzavřenou volbu `cs` nebo `en`. Jazyk se pak už nemění a řídí se jím všechny dokumenty i všichni agenti. Názvy polí, id a hodnoty záznamů zůstávají anglicky, aby český i anglický běh prošel stejnými branami (R3.1.3–R3.1.4).
+- **Ptá se na problémový prostor, ne na produkt.** Otázka, která jmenuje produkt, si produkt přivolá (R3.1.1). Ptá se taky, jaké konkurenty už znáte. Prázdný seznam je běžná odpověď a agent ho nedohledává (R3.1.5).
+- **Outcome:** když odpovíte řešením, agent navrhne přeformulování, nejvýš dvakrát. Pomoc s formulací, o kterou si řeknete, se do limitu nepočítá (R3.2.1–R3.2.3).
+- **Cíl má čtyři části:** produktový cíl (North Star), metrika, key result ze Strategy Basis a písemná vazba mezi nimi. Produktový cíl se ptá jednou. Když ho nemáte, je to unknown a agent ho nikdy nenapíše za vás (R3.4.1–R3.4.2).
+- **Key result se vyhledá, nevybírá ho agent.** Strategy Basis má 25 key resultů pod šesti cíli. Agent vám je ukáže všechny, seskupené podle cíle, řekne, na které dva nebo tři by se podíval nejdřív a proč, a vybíráte vy (R3.4.3). Tohle je jediný krok, kde agent vysvětluje i bez vyzvání (R3.4.4).
+- **Vazbu agent nikdy nenapíše.** Když ji nedokážete říct, cíl je neúplný a označí se jako unknown. Částečný cíl by se dál četl jako dodaný (R3.4.7). Je to **největší nehlídaný úsudek celého workflow** a jedinou pojistkou je, že ho čtete u G1 (konec specifikace).
+- **Pravidlo ČS:** metrika produktu nikdy nesmí být key result banky. „Víc klientů obsloužených digitálně“ je metrika banky. Otázka zní, co pohne tento běh (R3.4.8, `strategy-basis.md` §3).
+- **Love Brand** nemá žádný key result, takže se zapíše `key_result: unavailable` a cíl se neoznačí jako unknown (R3.4.10).
+- **Unknown je záznam s důvodem:** `not_known`, `not_yet_available`, `not_applicable` nebo `declined`, a záznam, že se agent zeptal (§4.3, `C163`). „Declined“ znamená rozhodnutí, „unknown“ mezeru (§2.3).
+- **Fáze 1 nedělá compliance.** Regulatorní screening proběhne až ve fázi 4 u konkrétního řešení (část 5).
+- **Brief se čtyřmi poli unknown s důvodem je dobrý brief.** Brief napsaný jako souvislý text spadne na třech kontrolách naráz (§1.4–1.5).
+
+### Úkoly
+
+- [ ] **Rozeberte brief ukázkového běhu** (30 min)
+  - *Proč:* Uvidíte, jak vypadá cíl o čtyřech částech a záznam unknown.
+  1. Otevřete `fixtures/2026-09-savings-goals/1-brief/initiative-brief.md`.
+  2. Najděte produktový cíl, metriku, key result a vazbu. Je vazba mechanismus, nebo jen tvrzení?
+  3. Najděte sekci „What we could not establish“ a důvody unknown.
+- [ ] **Projděte Strategy Basis** (20 min)
+  - *Proč:* U G1 budete vybírat key result z tohoto seznamu.
+  1. Otevřete `strategy-basis.md` §2 a projděte cíle a key resulty.
+  2. Ke svému tématu z cvičného běhu najděte dva možné key resulty a napište vazbu vlastními slovy.
+
+## 1F.2 — Fáze 2: problémy a příležitosti do hloubky
+
+### Ke studiu (asi 50 min)
+
+- 📄 **`stage-specs/STAGE-2-SPEC.md`**, celé
+- 📄 **`definitions/know-how/method/evidence-standards.md`** §4 (původ a blízkost zdroje)
+
+### Klíčové myšlenky
+
+- **Čtyři kroky v jedné fázi s jedním agentem:** příjem materiálu, hypotézy, rámování příležitostí a prioritizace (§1.1).
+- **Každý krok je o krok dál od surového textu.** Příjem čte materiál, hypotézy čtou jen záznam příjmu (A2b), rámování ani materiál, ani A2b. **Tuhle hranici drží jen instrukce**: jeden agent nese všechny čtyři kroky a smí číst soubory (§2.1).
+- **Karanténa:** příjem nemá žádné nástroje ven. Pokyn v materiálu je informace o jeho autorovi, nikdy příkaz. Kontrola `C151` hledá pokyn, který prošel, ale **nevidí agenta, který pokyn poslechl a nezanechal stopu** (část 5).
+- **Materiál jde do `2-problems/supplied/`.** Uvolněný materiál v `2-problems/` agent žádá přesunout, nikdy smazat (§2.2). Od brány fáze 3 musí být každý soubor ve `supplied/` načtený a nezměněný, a to je kontrola, kterou nejde podepsat (`C190`).
+- **Test tvaru hypotézy: mohlo by tohle vyřešit víc než jedna věc?** Když ne, hypotéza už si vybrala řešení (R3.2.2).
+- **Trust tag:** *strong* znamená dva nebo víc různých původů s úplnou provenienci a aspoň jeden z první ruky. *Weak* znamená, že důkaz je, ale tohle neplatí. *Unrated* znamená žádné odkazy. Kontrola tag přepočítá, takže ho agent nemůže nafouknout (R3.2.3, R3.2.5).
+- **Hypotéza se nikdy nezahodí kvůli slabému tagu.** Sada se čtyřmi slabými tagy a seznamem odložených je dobrý výstup (R3.2.4, §1.4).
+- **Rozpor:** když důkaz odporuje dřívějšímu dokumentu fáze, agent ho zapíše a fáze čeká na vaše rozhodnutí. Buď se tvrzení opraví, nebo se ponechá s podepsanou výjimkou (R3.2.6, `C193`).
+- **Rámování: jedna příležitost na hypotézu, přesně jednou.** Tržní faktory jsou *deferred*, ne unknown, protože trh se ještě nezkoumal. Alternativy zůstávají prázdné s důvodem (R3.3.1, R3.3.4, R3.3.5).
+- **Co materiál neřekne, se ptá jako pořadí přes celou sadu:** které příležitosti zasáhnou nejvíc zákazníků a které bolí nejvíc. Shody v pořadí jsou povolené. Když pořadí určit nemůžete, je to unknown s vaším důvodem (R3.3.6).
+- **Příležitost, kterou přinesete vy,** nepotřebuje hypotézu, má `origin: person` a v dokumentu je označená jako vaše (R3.3.7). Id je `O1` a nadpis říká, z čeho vychází: `O1 (H1)`, nebo `O15 (vaše)` (R3.3.8).
+- **Prioritizace:** 1–3 primární, 0–5 sekundárních, zbytek odložené. Bez primární příležitosti fáze nepokračuje (`no_primary_problem`). Agent pořadí jen navrhuje a povýšení je vaše u G2 (R3.4.1–R3.4.4).
+- **Pět tvrdých zastávek:** chybí materiál, materiál napsal agent, není primární příležitost, chybí stopa, chybí lidský podpis. Tvrdá zastávka zatím nezapisuje žádný záznam (§8.2).
+- **G2 má dvě otázky:** Researcher se ptá na důkazy, PM na rozsah. Podepisuje ale jeden člověk (část 9).
+- **Limity:** 50 položek nebo 500 stran materiálu, 5 doptávacích kol, 20 hypotéz, 3 kola rámování (část 11).
+- **Co fáze neopraví:** tým, který dodá špatný materiál, dostane dobře formulovanou sadu špatných problémů. Trust tag měří důkazy, ne problém (konec specifikace).
+
+### Úkoly
+
+- [ ] **Projděte řetěz fáze 2 v ukázkovém běhu** (40 min)
+  - *Proč:* Uvidíte, jak se z materiálu stane příležitost a kde se drží stopa.
+  1. Ve `fixtures/2026-09-savings-goals/2-problems/` projděte soubory 1 až 5 v tomto pořadí.
+  2. U jedné příležitosti z `5-prioritised-opportunities.md` dohledejte hypotézu, pozorování a položku materiálu.
+  3. Ověřte trust tag ručně: kolik různých původů, kolik z první ruky?
+- [ ] **Napište hypotézu, která neprojde testem tvaru** (10 min)
+  - *Proč:* Naučíte se poznat řešení převlečené za problém.
+  1. Napište dvě věty o svém tématu: jednu, kterou by vyřešila jen jedna věc, a jednu, kterou by mohlo vyřešit víc věcí.
+
+## 1F.3 — Fáze 3: trh do hloubky
+
+### Ke studiu (asi 40 min)
+
+- 📄 **`stage-specs/STAGE-3-SPEC.md`**, celé
+- 📄 **`definitions/know-how/market/competitive-analysis-standards.md`** §3.2 (nezávislé zdroje) a §5 (čerstvost)
+
+### Klíčové myšlenky
+
+- **Fáze 3 zjišťuje, co trh už dělá s těmito příležitostmi**, aby fáze 4 nevymýšlela naslepo. Je to jediná fáze, která sahá mimo repozitář (§1.1).
+- **Nikdo ji nepodepisuje, a to je rozhodnutí.** Brána Q3 je celé její přijetí a další, kdo výsledek čte, jste vy ve fázi 4 (§1.2, část 9).
+- **Režim určuje složka `3-competitive-analysis/supplied/`.** Soubor v ní znamená, že agent má pracovat jen z vašeho seznamu. Že nebude hledat, ale není záruka, pokud je nainstalované rozšíření pro vyhledávání. Prázdná složka znamená, že agent hledá sám (§2.1).
+- **Než začne psát karty, agent se jednou zeptá, jestli je něco ze `supplied/` interní nebo neveřejné.** Karty na takovém materiálu dostanou `confidential: yes` a při uchování konkurentů zůstanou v běhu (R3.3.9).
+- **Agent píše jen z výtahu, nikdy ze stažené stránky.** Stránka se nejdřív zredukuje na fakta. Tohle pravidlo nehlídá žádná kontrola (R3.1.1, §8.2).
+- **Trendy:** business, technology a regulatory, 3 až 5 v každé třídě. Pět je strop, ne cíl. Regulatorní trend jmenuje předpis a datum účinnosti (R3.1.4–R3.1.5).
+- **Zdroje karty:** aspoň čtyři nezávislé, dva když seznam dodal člověk, a aspoň jeden primární (co o sobě zveřejnil sám účastník). **Tisková zpráva a tři média, která o ní píšou, jsou jeden zdroj.** Nezávislost se určuje podle vydavatele, ne podle podobnosti textu (R3.3.4, §1.5).
+- **Na dodaném trhu musí každý zdroj být stránka, kterou agent opravdu otevřel**, ze seznamu nebo pod adresou ze seznamu. Od buildu 1.16 se odmítne i titulní stránka webu jako zdroj (R3.3.10, `C184`).
+- **Čerstvost:** 180 dní pro přímého konkurenta, 365 pro sousedního nebo náhradního. Zastaralá karta se zkoumá znovu, nikdy se neupravuje (R3.3.6).
+- **Důvěryhodnost (confidence) se přepočítá**, agent ji nemůže napsat (R3.3.7).
+- **Počet karet:** cílem je 10. Na dodaném trhu je cílem počet položek seznamu, mezi 3 a 10. Seznam tří projde bez podpisu, seznam dvou na bráně neprojde (`C75`).
+- **Úložiště konkurentů (store)** je jediná věc, která přežije běh, ale **opakované použití je pozastavené**: agent zkoumá každého účastníka znovu, protože karta odpovídá na otázku svého běhu (§7.1).
+- **Limity:** 25 zmapovaných účastníků, 8 kol hledání, 10 zkoumaných na jedno spuštění, 90 minut (část 11). Druhé kolo hledání je běžné.
+- **Co fáze neopraví:** sebejistý, dobře ozdrojovaný, ale špatný obraz trhu projde Q3 (konec specifikace).
+
+### Úkoly
+
+- [ ] **Zkontrolujte jednu kartu konkurenta** (30 min)
+  - *Proč:* Fázi 3 nikdo nepodepisuje. Jediným čtenářem karet jste vy ve fázi 4.
+  1. Otevřete `fixtures/2026-09-savings-goals/3-competitive-analysis/2-competitor-cards.md`.
+  2. U jedné karty spočítejte nezávislé vydavatele a najděte primární zdroj.
+  3. Najděte datum výzkumu. Byla by karta dnes ještě čerstvá?
+
+## 1F.4 — Fáze 4: řešení a compliance do hloubky
+
+### Ke studiu (asi 60 min)
+
+- 📄 **`stage-specs/STAGE-4-SPEC.md`** části 1–6 a 9–11
+- 📄 **`specifications/COMPLIANCE-REQUIREMENTS.md`** §1 (čtyři oblasti a co je mimo rozsah)
+- 📄 **`definitions/know-how/method/discovery-craft.md`** §6 a §8
+
+### Klíčové myšlenky
+
+- **Teprve tady je řešení legitimní.** Řešení se generují proti příležitostem, několik na každou, aby vybrané bylo vybrané z alternativ a ne obhajované zpětně (R1.2).
+- **Osm kroků:** slate (jen jména sady, žádný obsah) → napsání každého řešení → compliance sweep → odvození (skript) → strategický soulad → sestavení (skript) → představení → výběr a podpis. **Člověk je potřeba jen v krocích 7 a 8** (část 3).
+- **Agent generuje 5 řešení, minimum 3, strop 10.** Strop je pro vás: řešení nad pět přidáváte vy, když je sada představená. Každé řešení navíc znamená sedm sekcí a další průchod čtyřmi kartami (R3.1.4).
+- **Aritmetika omezuje počet odlišných řešení.** Se třemi příležitostmi jsou nejvýš tři kombinace, z nichž žádná není podmnožinou jiné. Se čtyřmi šest, s pěti deset. Když aritmetika pět neunese, agent to řekne (R3.1.4a).
+- **Pravidlo pokrytí:** když jsou dvě nebo víc primárních příležitostí, sada musí řešit aspoň dvě různé. Není to cíl rozložení: čtyři silná řešení na O1 a jedno na O2 projdou (R3.1.5).
+- **Stejný seznam příležitostí smí sdílet nejvýš tři řešení.** Čtyři řešení na přesně stejné příležitosti jsou jedna sázka ve čtyřech kostýmech (část 11, `C103`).
+- **Každé řešení má osm sekcí** a každá má délku, povinnou citaci a to, co obsahovat nesmí: *What it is*, *What it does* (změna chování klienta, ne mechanismus), *How it does it* (zážitek klienta a pracovníka, ne architektura), *The problem it solves, and for whom*, *Opportunities it is built on*, *Against the market* (prvky syntézy podle id), *Strategic alignment* a *Compliance* (generovaná) (§4.2).
+- **Compliance sweep:** agent u každého řešení odpoví na všech 128 otázek čtyř karet (39 compliance, 32 GDPR, 27 ICT security, 30 legal) jako `yes`, `no` nebo `cannot_tell`. U `cannot_tell` jmenuje vstup, který by to rozhodl (R3.3.2–R3.3.3, část 11).
+- **Odpovědi zůstávají v záznamu, k vám jdou jen touchpointy s `yes`, a to doslovně z karty.** Doslovnost dovoluje skriptu je porovnat s kartou. Parafráze se porovnat nedá (R3.3.5–R3.3.7).
+- **Skript, ne model, odvodí** oblasti ve hře, eskalační příznak, otevřené položky a **počet touchpointů**. Oblast bez ničeho ve hře je napsaná jako prázdná, nikdy nechybí (R3.4.1–R3.4.3).
+- **Žádné skóre.** Počet touchpointů je jen počet. Nezodpovězené otázky počet nemění: řešení s 18 otevřenými otázkami není složitější, jen **méně známé** (R6.3–R6.4).
+- **Strategický soulad je věta, ne číslo:** pilíř ze Strategy Basis, key result s řetězem, nebo důvod, proč žádný nesedí (R6.6).
+- **Výběr jsou dva tasky:** `SPOCK: record a decision I made` s důvodem, pak `SPOCK: approve what is in front of me`. **Důvod je povinný**, slovo od slova se přepíše do vybraného řešení (A9) pod „Why this one“. A9 nepíše žádný agent (část 9).
+- **Možnost „nic z toho“ neexistuje.** Když se vám nelíbí žádné řešení, změníte nějaké nebo přidáte vlastní (R9.7).
+- **Změna řešení po kontrole:** přepíše se jen to řešení a Q4 se při schválení spustí znovu. Změněné řešení potřebuje znovu zodpovědět compliance otázky (R10.1–R10.2).
+- **Volbu lze nahradit i po schválení**, bez vracení fáze, taskem `SPOCK: replace a decision that no longer stands`. Fáze 5 a dál se pak označí jako zastaralé (R10.4a).
+- **Compliance má hranice:** AI regulace ani outsourcing a DORA nejsou v žádné ze čtyř oblastí. AI se jen přesměruje na specialistu. Tři ze čtyř karet napsal pilotní tým a nikdo z banky je nerevidoval (`COMPLIANCE-REQUIREMENTS.md` §1).
+- **Co fáze neopraví:** nic neřekne, jak těžké je řešení postavit. Tříletá a třítýdenní stavba vypadají stejně (konec specifikace).
+
+### Úkoly
+
+- [ ] **Rozeberte jedno řešení a jeho compliance** (45 min)
+  - *Proč:* Sada řešení je jediný dokument, který u G4 čtete, a musíte v něm najít podstatné.
+  1. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/4-solutions/1-solution-set.md`.
+  2. U jednoho řešení projděte osm sekcí. Dodržuje *What it does*, že popisuje změnu chování, a ne mechanismus?
+  3. V sekci *Compliance* najděte počet touchpointů, oblasti ve hře a eskalační příznak.
+  4. Porovnejte `4-solutions/parts/SOL1.md` a `SOL1.compliance.md` se sestaveným dokumentem: kdo napsal kterou část?
+- [ ] **Najděte důvod volby** (10 min)
+  - *Proč:* Důvod je to, co z rozhodnutí zbude za dva roky.
+  1. Otevřete `4-solutions/2-selected-solution.md` téhož běhu a najděte „Why this one“.
+
+## 1F.5 — Fáze 5: MVP do hloubky
+
+### Ke studiu (asi 30 min)
+
+- 📄 **`stage-specs/STAGE-5-SPEC.md`**, celé
+- 📄 **`definitions/know-how/method/discovery-craft.md`** §9
+
+### Klíčové myšlenky
+
+- **Fáze 5 zmenšuje jedno vybrané řešení na něco, co jde pilotovat, a pak to definuje.** Má dvě poloviny a dvě rozhodnutí: zapsanou volbu varianty a G5b nad rozpracováním (§1.1).
+- **Volba varianty není brána, ale zapsané rozhodnutí.** G5b přijímá rozpracování, takže rozpracování nemůže na G5b čekat. Volba se proto dělá za běhu fáze (§1.5).
+- **Varianty se liší v tom, jak se řešení postaví, ne v tom, které řešení to je.** Pravidlo odlišnosti z fáze 4 tu záměrně neplatí. Velký překryv je poctivý tvar volby. Každá varianta ale musí říct, čím se liší (`C58`) (§1.2).
+- **Tři zákazy:** žádná varianta není preferovaná, žádná není seřazená („nejdřív tohle, pak tamto“) a žádná není podmnožinou nebo fází jiné. Každý zákaz selže jinak: preference bere volbu, řazení z ní dělá plán a podmnožina dělá z varianty fázi jiné (R3.1.4).
+- **Každou variantu jde pilotovat v časovém horizontu briefu.** Co by trvalo déle, patří do sekce „Later, beyond the brief's horizon“ a do minima variant se nepočítá (R3.1.4a).
+- **Varianta nemění, kdo s řešením pracuje.** Smí zúžit kanál, skupinu klientů nebo rozsah. Kdo řešení vidí, používá nebo podle něj rozhoduje, ale zůstává. Varování pro klienta přesunuté na obrazovku pracovníka není varianta, ale jiné řešení (R3.1.4b).
+- **Agent navrhne 3 varianty, vy přidáte až 3 vlastní, hotová sada má 2–6** (část 11). Vaše má `origin: person`.
+- **Rozpracovává se přesně jedna varianta**, ta zvolená. Rozpracování nepřidává nic, co varianta nenesla, a ostatní varianty nekomentuje. Metriky se berou z rámovaných příležitostí, nevymýšlejí se tady (R3.2.1–R3.2.4).
+- **Touchpointy vybraného řešení se nesmí ztratit.** Každý je v rozpracování jmenovaný identifikátorem a sekce *What has to be handled* má tři bloky: vyřešené, zúžené mimo rozsah a otevřené (R3.2.5, `C171`, `C185`).
+- **Co fáze neopraví:** tři varianty, které jsou jednou variantou popsanou třikrát, projdou každou kontrolou. Odhad nákladů nikde v běhu není (konec specifikace).
+
+### Úkoly
+
+- [ ] **Posuďte varianty MVP** (30 min)
+  - *Proč:* Jen vy poznáte, jestli jsou varianty opravdu různé způsoby, jak řešení postavit.
+  1. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/5-mvp/1-mvp-options.md`.
+  2. U každé varianty najděte, čím se liší. Je to skutečný rozdíl, nebo jen jiná míra?
+  3. V `2-expanded-mvp.md` najděte *What has to be handled* a jeho tři bloky.
+
+## 1F.6 — Fáze 6: PRD do hloubky
+
+### Ke studiu (asi 30 min)
+
+- 📄 **`stage-specs/STAGE-6-SPEC.md`**, celé
+- 📄 **`definitions/know-how/product/prd-template.md`**: osm sekcí
+
+### Klíčové myšlenky
+
+- **Fáze 6 je největší syntéza běhu: šest vstupů do jednoho dokumentu.** Proto má nejvyšší deklarované úsilí (`effort: high`) (§1.1, část 2).
+- **Dva artefakty:** A12 je draft, **A13 je jiný dokument**, ne stav draftu. Vznikne doslovně z draftu až ve chvíli, kdy ho označíte taskem `SPOCK: mark the PRD agreed`. Dokument, se kterým jste souhlasili, a dokument, který čte fáze 7, je tak stejný text (§1.2).
+- **Agent nikdy nepíše do bloku souhlasu.** Draft, který se po souhlasu změní, se označí znovu a A13 se napíše znovu (R3.3.1–R3.3.3).
+- **Každý požadavek jmenuje měřítko, kterému slouží**, a PRD má **alignment statement**. Požadavek, který nic neslouží, je tak vidět, místo aby se předpokládal (§1.5, R3.1.2–R3.1.3).
+- **Měřítka se přenášejí, neodvozují se znovu.** Měřítko vymyšlené ve fázi 6 by nikdo u G2 ani G5b neviděl (R2.1).
+- **Touchpointy se dědí z rozpracovaného MVP.** Každý je řešený v pojmenovaném požadavku, jako přijatá otevřená položka s vlastníkem a termínem rozhodnutí, nebo s důvodem, proč ho zúžení rozsahu vyřadilo. Vyřazení potřebuje důvod a jméno toho, kdo rozhodl (R3.1.4, `C130`, `C131`).
+- **G6 jsou dva úkony:** označit PRD jako odsouhlasené (jedno políčko, vaše jméno) a pak schválit (část 9).
+- **Opravy:** agent opravuje tvar nejvýš ve třech cyklech, pak vrací problém vám. Po pěti kolech úprav, o které požádáte, eskaluje na PM. Nic tyto cykly nepočítá, jde jen o instrukce (část 10–11).
+- **Q6 nemá posuzovanou polovinu.** Každé pravidlo kvality tady rozhoduje kontrola (§8.2).
+- **Co fáze neopraví:** nic neříká, jestli jde požadavek postavit nebo zaplatit. Otázku, kterou delivery tým položí jako první, nemá nikde v běhu odpověď. Otevřené compliance položky se do PRD zatím nepřenášejí (část 12, konec specifikace).
+
+### Úkoly
+
+- [ ] **Projděte PRD a jeho alignment statement** (30 min)
+  - *Proč:* U G6 souhlasíte s tím, podle čeho se bude stavět.
+  1. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/6-prd/1-prd-draft.md` a `2-prd-agreed.md`.
+  2. Najděte rozdíl mezi nimi: blok souhlasu.
+  3. U tří požadavků najděte měřítko, kterému slouží, a touchpointy, které nesou.
+
+## 1F.7 — Fáze 7: iniciativa do hloubky
+
+### Ke studiu (asi 25 min)
+
+- 📄 **`stage-specs/STAGE-7-SPEC.md`**, celé
+- 📄 **`definitions/know-how/product/initiative-template.md`**: šablona Guildy
+
+### Klíčové myšlenky
+
+- **Fáze 7 píše dokument, který Česká spořitelna skutečně dostane**, podle 13sekční šablony Product Management Guildy. Je to jediná fáze, jejíž formát patří zákazníkovi (§1.1).
+- **Čte jediný dokument: odsouhlasené PRD.** Plus jazyk z briefu a Jira klíč ze záznamu běhu. Před začátkem ověří souhlas, protože PRD bez bloku souhlasu není A13 (část 2, R2.1).
+- **Každé tvrzení pochází z odsouhlaseného PRD, nebo je označené jako předpoklad.** Fáze nic nového nesyntetizuje (R3.1.3). **Žádná kontrola ale nesrovnává obsah iniciativy s PRD**, takže iniciativa může projít Q7 s tvrzením, které PRD nepodporuje (§8.1–8.2).
+- **Nadpisy píše systém v jazyce běhu.** Agent by šablonu zkopíroval v jejím jazyce a všechny kontroly by prošly (§1.5, část 4).
+- **Jira klíč nikdy nevymýšlí agent.** Zadáte ho taskem `SPOCK: record the Jira key`, nebo napíšete `none yet`. Nový klíč zapíšete stejným taskem znovu (R3.1.5, část 10).
+- **Čitelná kopie bez strojového záznamu** vzniká taskem `SPOCK: stage 7 — the reading copy` ve složce `read/`. Iniciativa upravená po vzniku kopie neprojde bránou, dokud se kopie nevytvoří znovu (R3.1.7).
+- **Žádný rozpad na epiky.** Pilot ho odstranil, protože by to byl delivery krok udělaný v discovery (§1.3).
+- **Jira iniciativa (A15) je zaparkovaná** a nikdy nevznikla. Čeká se na rozhodnutí, která instance Jiry je ta správná. Neznamená to „pokus se nepovedl“, ale „nezkoušelo se a není napojené“ (§1.2).
+- **G7 je poslední rozhodnutí a označí běh jako hotový.** Kdo podepisuje G7, podepisuje práci, jejíž tvar možná nevidí. Proto musí mít každé dřívější rozhodnutí v záznamu jméno a roli (část 9).
+- **Co fáze neopraví:** dobře formulovaná iniciativa pro špatný nápad projde Q7. Nic si nevšimne, když Guilda změní svou šablonu (konec specifikace).
+
+### Úkoly
+
+- [ ] **Porovnejte iniciativu s PRD** (25 min)
+  - *Proč:* Tohle žádná kontrola nedělá a u G7 to musíte udělat vy.
+  1. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/7-initiative/initiative.md` a `6-prd/2-prd-agreed.md`.
+  2. U tří tvrzení v iniciativě najděte oporu v PRD.
+  3. Najděte Jira klíč a porovnejte iniciativu s její čitelnou kopií v `read/7-initiative/`.
+
+## Kvíz
+
+**1. Agent v briefu sám vybral key result „nejbližší tématu“ a zapsal ho. Je to v pořádku?**
+
+   a) Ano, ušetřil čas
+   b) Ne. Key result se vyhledá ve Strategy Basis, agent ukáže všech 25 a vybíráte vy
+   c) Ano, pokud ho uvedl v sekci „What we could not establish“
+
+<details><summary>Odpověď</summary>
+
+b) STAGE-1 R3.4.3: agent ukáže všechny key resulty seskupené podle cíle, řekne, na které by se podíval nejdřív, a nikdy seznam nezúží na svůj výběr. Zapsat volbu, kterou jste neudělali, je zakázaná inference (R3.4.6).
+
+</details>
+
+**2. Příležitost stojí na dvou pozorováních od dvou různých lidí, ale jedno nemá úplnou provenienci. Jaký bude tag?**
+
+   a) *strong*, protože má dva původy
+   b) *weak*, protože pozorování bez úplné provenience se nepočítá
+   c) *unrated*
+
+<details><summary>Odpověď</summary>
+
+b) Do počtu se počítají jen pozorování s `provenance_complete: true`. Po jeho vyřazení zbude jeden původ a výsledek je *weak* (STAGE-2 R3.2.3).
+
+</details>
+
+**3. Karta konkurenta cituje jeho tiskovou zprávu a tři články, které o ní napsala média. Kolik je to nezávislých zdrojů?**
+
+   a) Čtyři
+   b) Dva
+   c) Jeden
+
+<details><summary>Odpověď</summary>
+
+c) Tisková zpráva a tři média, která o ní píšou, jsou jeden zdroj. Nezávislost se určuje podle vydavatele původního tvrzení (STAGE-3 R3.3.4).
+
+</details>
+
+**4. Řešení A má 12 touchpointů a všechny otázky zodpovězené. Řešení B má 12 touchpointů a 18 otázek `cannot_tell`. Které je složitější?**
+
+   a) B, má víc práce
+   b) Ani jedno, počet je stejný. B je jen méně známé, a to je jiný fakt
+   c) A
+
+<details><summary>Odpověď</summary>
+
+b) Nezodpovězené otázky počet nemění. Spojit je by znamenalo vydávat nejistotu za velikost (STAGE-4 R6.4).
+
+</details>
+
+**5. Ve fázi 5 jsou varianty „mobilní aplikace pro všechny klienty“ a „nejdřív web, potom aplikace“. Co je špatně?**
+
+   a) Nic
+   b) Druhá varianta je řazení. Z volby dělá plán a první část je fází jiné varianty
+
+<details><summary>Odpověď</summary>
+
+b) Varianty nesmí používat řazení a žádná nesmí být fází jiné (STAGE-5 §1.3, R3.1.4).
+
+</details>
+
+**6. Po souhlasu s PRD jste v draftu opravili jednu větu. Co platí?**
+
+   a) Odsouhlasené PRD se aktualizuje samo
+   b) Draft je třeba označit jako odsouhlasený znovu a A13 se napíše znovu z draftu
+   c) Nic, změna je drobná
+
+<details><summary>Odpověď</summary>
+
+b) Odsouhlasené PRD je draft slovo od slova. Když se draft změní, označí se znovu a brána proběhne znovu, než se zapíše G6 (STAGE-6 R3.3.3, část 10).
+
+</details>
+
+**7. Která kontrola v Q7 porovnává tvrzení iniciativy s odsouhlaseným PRD?**
+
+<details><summary>Odpověď</summary>
+
+Žádná. `C12` čte deklarovanou linii původu a `C13` souhlas, ne obsah vět. Iniciativa tak může projít s tvrzením, které PRD nepodporuje, a ověřit to musíte vy u G7 (STAGE-7 §8.1–8.2).
+
+</details>

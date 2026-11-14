@@ -1,6 +1,6 @@
 # SPOCK User Onboarding
 
-Onboarding pro **uživatele** SPOCKu: Product Managera, Product Designera a Software Engineera. Vede od první instalace až na úroveň **superusera**, který SPOCK ovládá bez nápovědy, pozná, když se agent chová špatně, a provede jím kolegy.
+Onboarding pro **uživatele** SPOCKu: Product Managera, Product Designera, Software Engineera a Guild Mastera, správce PM metodiky. Vede od první instalace až na úroveň **superusera**, který SPOCK ovládá bez nápovědy, pozná, když se agent chová špatně, a provede jím kolegy.
 
 Všechno tady vychází ze zdrojového repozitáře SPOCKu ([SPOCK-Workflow-1.0](https://github.com/TominoHav/SPOCK-Workflow-1.0), release 1.16.1). Kde lekce odkazuje na soubor jako `SETUP.md` nebo `specifications/…`, myslí se soubor ve vaší kopii SPOCKu.
 
@@ -11,8 +11,9 @@ Všechno tady vychází ze zdrojového repozitáře SPOCKu ([SPOCK-Workflow-1.0]
 ```
 Úroveň 0  Příprava        ─┐
 Úroveň 1  Základy          ├─ všichni
+Úroveň 1b Fáze do hloubky  │
                            │
-Úroveň 2  Vaše role       ─┼─ Product Manager  │ Product Designer │ Software Engineer
+Úroveň 2  Vaše role       ─┼─ Product Manager │ Product Designer │ Software Engineer │ Guild Master
                            │
 Úroveň 3  Pokročilý        ├─ všichni
 Úroveň 4  Superuser       ─┘
@@ -20,15 +21,17 @@ Všechno tady vychází ze zdrojového repozitáře SPOCKu ([SPOCK-Workflow-1.0]
 
 | Úroveň | Soubor | Pro koho | Čas | Na konci umíte |
 |---|---|---|---|---|
-| 0 | [Příprava](uroven-0-priprava.md) | všichni | 1–1,5 h | Mít SPOCK nainstalovaný, ověřený a znát pět pravidel, která se neporušují. |
+| 0 | [Příprava](uroven-0-priprava.md) | všichni | 2–3 h | Mít přístupy a licenci Copilota, nainstalované VS Code, Node.js a Git, SPOCK ověřený a znát pět pravidel, která se neporušují. |
 | 1 | [Základy](uroven-1-zaklady.md) | všichni | 3–4 h | Vysvětlit 7 fází, rozdíl mezi Q a G bránou, 6 agentů a přečíst hotový běh. |
+| 1b | [Fáze do hloubky](uroven-1b-faze-do-hloubky.md) | všichni | 8–10 h | U každé fáze vysvětlit kroky, pravidla, bránu, rozhodnutí a to, co fáze záměrně nedělá a neopraví. |
 | 2 | [Product Manager](role-pm.md) | PM | 6–8 h | Projít vlastní běh od briefu po iniciativu a podepsat každé rozhodnutí. |
 | 2 | [Product Designer](role-designer.md) | Designer | 4–5 h | Dodat výzkum do fáze 2, posoudit příležitosti a přispět k řešení, MVP a PRD. |
 | 2 | [Software Engineer](role-engineer.md) | Engineer | 4–5 h | Posoudit proveditelnost před výběrem řešení, přečíst PRD a záznamy běhu. |
+| 2 | [Guild Master](role-guild-master.md) | správce PM metodiky | 5–6 h | Metodicky posoudit běh, změnit know-how správným postupem a vést komunitu PM. |
 | 3 | [Pokročilý](uroven-3-pokrocily.md) | všichni | 3–4 h | Vrátit fázi, vyřešit neprošlou bránu, předat běh kolegovi, aktualizovat kopii. |
 | 4 | [Superuser](uroven-4-superuser.md) | všichni | 4–6 h | Prověřit chování agentů, poslat použitelný nález a provést kolegu onboardingem. |
 
-**Doporučené pořadí:** 0 → 1 → vaše role → 3 → 4. Na úrovni 2 se vyplatí přečíst si i úvod ostatních dvou rolí, protože SPOCK počítá s **triem** PM, designer a engineer (`specifications/definitions/know-how/method/method-canon.md` §14.1).
+**Doporučené pořadí:** 0 → 1 → 1b → vaše role → 3 → 4. Úroveň 1b stojí na specifikacích fází ve `specifications/stage-specs/` a je to nejhlubší část onboardingu. Na úrovni 2 se vyplatí přečíst si i úvod ostatních rolí, protože SPOCK počítá s **triem** PM, designer a engineer (`specifications/definitions/know-how/method/method-canon.md` §14.1). Guild Master by měl mít za sebou i modul Product Manager.
 
 Tempo si určujete sami, pevná data tu nejsou.
 

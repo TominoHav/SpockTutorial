@@ -4,7 +4,7 @@
 
 **Proč:** V triu **vede engineer v otázkách proveditelnosti** (`method-canon.md` §14.1). SPOCK přitom **technickou složitost vůbec nehodnotí**: „a three-year build and a three-week build look the same to the workflow“ (`BUSINESS-LOGIC-OVERVIEW.md` §3, fáze 4). Jedinou pojistkou je člověk u G4, a ten potřebuje váš názor.
 
-**Než začnete:** Mějte hotové úrovně 0 a 1.
+**Než začnete:** Mějte hotové úrovně 0, 1 a 1b, hlavně lekce 1F.4 až 1F.6.
 
 ## 2E.1 — Jak SPOCK funguje uvnitř (pro uživatele)
 
@@ -88,6 +88,32 @@
   1. Ve vlastním (cvičném) běhu, až některá brána neprojde, spusťte `SPOCK: explain what the gate failed`.
   2. Najděte C-číslo kontroly v `.github/COVERAGE-CHECKS.md` a přečtěte, k čemu slouží.
   3. Řekněte PM, jestli jde o materiál, nebo o chybu workflow. Jak se s tím dál zachází, popisuje úroveň 3.
+
+## 2E.5 — Compliance do hloubky
+
+### Ke studiu (asi 45 min)
+
+- 📄 **`specifications/stage-specs/STAGE-4-SPEC.md`** kroky 3 a 4 a části 5 a 6
+- 📄 **`specifications/COMPLIANCE-REQUIREMENTS.md`** §1 a §8
+- 📄 **`specifications/definitions/know-how/compliance/area-ict-security.md`**: karta vaší oblasti
+
+### Klíčové myšlenky
+
+- **Čtyři oblasti:** Compliance, conduct and product regulation (karta od ČS), GDPR and privacy, Legal and contracts a ICT and security. **Poslední tři napsal pilotní tým z veřejného práva a ČS je nepotvrdila.** AI regulace ani outsourcing a DORA nejsou v žádné oblasti. AI se jen přesměruje na specialistu (`COMPLIANCE-REQUIREMENTS.md` §1).
+- **U každého řešení agent odpoví na 128 otázek:** 39 compliance, 32 GDPR, 27 ICT security a 30 legal. Odpověď je `yes`, `no` nebo `cannot_tell`. `cannot_tell` jmenuje vstup, který by otázku rozhodl (STAGE-4 R3.3.2–R3.3.3).
+- **Odpovědi zůstávají v záznamu řešení v `records/4-solutions/`.** Do dokumentu jdou jen touchpointy s `yes`, a to **doslovně z karty**, aby je skript mohl porovnat s originálem (R3.3.5–R3.3.7).
+- **Tři soubory na řešení, každý s jedním autorem:** `parts/SOLn.md` (sekce 1–7, píše agent), záznam se 128 odpověďmi (píše agent, do dokumentu nejde) a `parts/SOLn.compliance.md` (píše skript). Sestavení skládá první a třetí soubor slovo od slova a odvozený soubor nese hash řešení, takže zastaralá compliance neprojde (R3.4.4–R3.4.5).
+- **Eskalační příznak se spustí, jen když karta jmenuje oblast, kterou odpovědi nechaly nevyřešenou.** Spuštěný trigger jmenuje roli, na kterou se má přesměrovat, ale **workflow nic nepřesměrovává ani nikoho neupozorní** (`COMPLIANCE-REQUIREMENTS.md` §8).
+- **Odpovědi producenta žádná kontrola neověřuje.** Odpověď „ne“ tam, kde poctivá odpověď zní „ano“, projde (`BUSINESS-LOGIC-OVERVIEW.md` §7).
+- **Otevřené compliance položky se zatím nepřenášejí do PRD** (STAGE-4 část 12, STAGE-6 část 12). Hlídejte je sami, až budete PRD číst.
+
+### Úkoly
+
+- [ ] **Projděte ICT touchpointy jednoho řešení** (40 min)
+  - *Proč:* Jste jediný v triu, kdo pozná, jestli odpovědi na ICT otázky odpovídají skutečným systémům.
+  1. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/4-solutions/parts/SOL1.compliance.md` a příslušnou sekci *ICT and security* v `1-solution-set.md`.
+  2. U každého touchpointu se zeptejte: platí to pro naše systémy? Chybí něco, co by mělo odpovědět `yes`?
+  3. Zapište si otevřené položky a ověřte, jestli se objevují v PRD (`6-prd/1-prd-draft.md`).
 
 ## Kvíz
 
