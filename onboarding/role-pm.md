@@ -59,7 +59,7 @@
   - *Proč:* Materiál je jediná věc v běhu, kterou nenapsal ani systém, ani tým. Proto se načítá tímhle zvláštním způsobem.
   1. Vložte 2–4 soubory (poznámky z rozhovorů, tikety, průzkum) do `2-problems/supplied/`. Ideálně si je připraví designer (viz [role-designer.md](role-designer.md)).
   2. Nový chat → agent **Opportunity Designer**.
-  3. Agent spustí `SPOCK: read in the problem material`. Když ohlásí soubory bez data, spusťte `SPOCK: date the material that arrived without dates` a období vyplňte sami.
+  3. Agent spustí `SPOCK: read in the problem material`. Když ohlásí soubory bez data, spusťte `SPOCK: date the material that arrived without dates` a období vyplňte sami. Do prvního políčka napište `as listed`, pokud souhlasíte s obdobími, která task vypsal. Opravu nebo doplnění přidejte za středník, např. `as listed; rozhovory.md: 2026-03; clanek.md: 2026-Q1`. Období je rok (`2026`), čtvrtletí (`2026-Q2`) nebo měsíc (`2026-04`). Tip: datum v názvu souboru (`rozhovory-2026-03.md`) SPOCK přečte jen jako rok, proto měsíc uveďte v políčku nebo přímo v textu souboru.
 - [ ] **Přidejte problém vlastními slovy** (10 min)
   - *Proč:* Některé věci víte, ale nemáte je napsané. Takhle se dostanou do materiálu jako váš výrok.
   1. Spusťte `SPOCK: add a problem in my own words` a napište jeden problém.

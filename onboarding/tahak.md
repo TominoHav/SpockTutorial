@@ -29,7 +29,7 @@
 | Task | Fáze | Políčka |
 |---|---|---|
 | `SPOCK: read in the problem material` | 2: první načtení souborů ze `supplied/` | — |
-| `SPOCK: date the material that arrived without dates` | 2: soubory bez data | období, jméno |
+| `SPOCK: date the material that arrived without dates` | 2: soubory bez data | období (`as listed`, opravy za středník: `as listed; soubor.md: 2026-Q2`; období je `2026`, `2026-Q2` nebo `2026-04`), jméno |
 | `SPOCK: add problem material` | 2: nový nebo změněný soubor | yes / no |
 | `SPOCK: add a problem in my own words` | 2 | problém |
 | `SPOCK: take in what I pasted in the chat` | 2 nebo 3: text zkopírovaný ve schránce | jméno |
@@ -56,7 +56,7 @@
 | `SPOCK: take something back` | soubor do běhu nepatří | soubor, důvod, jméno |
 | `SPOCK: replace a decision that no longer stands` | rozhodnutí už neplatí | 8 políček |
 | `SPOCK: correct a name on the record` | překlep ve jméně | 4 políčka |
-| `SPOCK: stop this run` | běh končí natrvalo | jméno, důvod, poznámka |
+| `SPOCK: stop this run` | běh končí natrvalo | jméno, důvod (jen `low_value`, `small_impact`, `high_risk` nebo `out_of_boundary`), poznámka |
 
 ## Agenti
 

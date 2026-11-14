@@ -96,7 +96,9 @@
 ### Klíčové myšlenky
 
 - **Postup změny:** osoba v ČS rozhodne a upraví **zdroj** → zvýší **Version**, nastaví **Date** a do bloku historie připíše jeden řádek, co se změnilo a proč → **engineer** vygeneruje kopii pro agenty a spustí kontroly → teprve když projdou, se změna commitne.
-- **Změna bez nové verze je chyba.** Běh si zapisuje verzi, kterou četl, a změnu pod stejným číslem by nešlo odlišit od toho, co bylo předtím.
+- **Změna bez nové verze je chyba.** Běh si zapisuje verzi, kterou četl, a změnu pod stejným číslem by nešlo odlišit od toho, co bylo předtím. **Výjimka existuje a je vzácná:** Method Canon zapisuje úpravu jedné věty se zachovanou verzí 0.4, protože na tu verzi odkazují citace Methodology Coache a žádný oddíl se nepřesunul. I taková úprava má řádek v historii s důvodem. O výjimce nerozhodujete sami: projděte ji s Igorem Tadićem.
+- **Know-how se nikdy nemění ve vlastní pracovní kopii SPOCKu.** Vygenerovaná kopie v `.github/know-how/` patří k vydání. Jakákoli změna v ní, i ta provedená správným postupem, shodí v běhu kontrolu **`C189`** („soubory workflow se liší od vydání“). Tu nejde podepsat jako výjimku. Změna se dělá ve **vývojovém repozitáři pilotního týmu**, vyjde v **novém vydání** a k uživatelům se dostane taskem `SPOCK: update this copy to the latest release` po dokončení jejich běhů.
+- **Kontroly z `KNOW-HOW-OWNERS.md` §4 krok 4 ve vydané kopii nejsou.** `repo-check.mjs` a `check.test.mjs` má jen vývojový repozitář. Engineer, se kterým změnu děláte, k němu potřebuje přístup od pilotního týmu.
 - **Status *Approved*** a vaše jméno v řádku Owner patří do hlavičky až po revizi **celého** dokumentu. Řádek *Written by* zůstává autorovi z pilotního týmu.
 - **Jedna změna najednou.** Pak víte, co způsobila.
 
@@ -109,7 +111,7 @@
   3. Projděte návrh s Igorem.
 - [ ] **Proveďte změnu s engineerem** (60 min, volitelné)
   - *Proč:* Celý cyklus jednou projdete sami: od rozhodnutí po ověřený commit.
-  1. Na zkušební větvi upravte **jen zdrojový** soubor ve `specifications/definitions/know-how/`: text, Version, Date a řádek historie.
+  1. Ve **vývojovém repozitáři pilotního týmu** (ne ve své pracovní kopii SPOCKu) založte zkušební větev a upravte **jen zdrojový** soubor ve `specifications/definitions/know-how/`: text, Version, Date a řádek historie.
   2. Engineer spustí generování a kontroly z `KNOW-HOW-OWNERS.md` §4 krok 4.
   3. Když kontroly projdou, změnu nechte zrevidovat a commitnout.
 
