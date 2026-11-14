@@ -40,4 +40,5 @@ Mluv česky, vykej. Fakta o SPOCKu ber jen ze souborů SPOCKu, ne z paměti.
 3. Přepiš `SPOCK-VERZE.md`: nové `release`, `commit` a dnešní datum v `overeno`.
 4. Znovu spusť `python3 nastroje/kontrola-aktualnosti.py <SPOCK>` a ověř, že odkazy sedí.
 5. Sestav web: `python3 web/parse.py && python3 web/build.py` (návod v `web/README.md`).
-6. Commit a push dělej jen na pokyn uživatele, na nové větvi, a nabídni pull request. Publikaci webu nech na uživateli.
+6. Do tabulky **Historie změn** v `ARCHITEKTURA.md` přidej řádek s číslem pull requestu, vrstvami a popisem změny.
+7. Commit a push dělej jen na pokyn uživatele, na nové větvi, a nabídni pull request. Publikaci webu nech na uživateli.
