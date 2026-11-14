@@ -209,6 +209,7 @@ document.addEventListener('click', e => {
   }
   if (quizReady(w) && !quizPassed(w)) celebrate({kind:'quiz', title:'Kvíz modulu je odemčený', text:'Zodpověděli jste všechny karty modulu ' + w.title + '. Kvíz vylosuje ' + Math.min(QN, w.quiz.length) + ' otázek a ověří, že látku umíte použít v praxi. Úkoly můžete dodělat i potom.', quiz:w.id});
   checkModuleDone(w);
+  if (view.lesson !== +di) { renderWeek(view.week); updatePills(); toLessonTop(); return; }
   const y = scrollY; renderWeek(view.week); updatePills(); scrollTo({top:y});
   const nx = document.getElementById('card-' + wid + '-' + di + '-' + (+ci + 1));
   if (nx) nx.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center'});
