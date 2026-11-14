@@ -329,62 +329,100 @@ Hodnoťte dvě věci: **chování systému** (správná fáze a agent, vznikly s
 
 ## Kvíz
 
-**1. Proč fáze 3 nemá rozhodnutí člověka?**
+Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při každém spuštění zamíchá.
 
-   a) Zapomnělo se na ni
-   b) Vyrábí jen podklady o trhu a přijímá ji automatická kontrola Q3
-   c) Rozhoduje v ní agent
+**1. Kolega říká: „Fáze 3 nemá schválení, takže ji nikdo nekontroluje.“ Co je pravda?**
+
+   a) Má pravdu, fáze 3 se nijak neověřuje
+   b) Fázi 3 přijímá brána Q3. Výsledek pak čte člověk ve fázi 4
+   c) Fázi 3 schvaluje Methodology Coach
 
 <details><summary>Odpověď</summary>
 
-b) Výstupy fáze 3 jsou pracovní podklady. Člověk se s nimi setká až při výběru řešení ve fázi 4.
+b) Fáze 3 nemá G bránu, ale má Q bránu. Trh pak posuzujete vy při výběru řešení ve fázi 4.
 
 </details>
 
 **2. Agent napíše „Brána Q2 prošla“. Co to dokazuje?**
 
-   a) Že dokument je v pořádku
-   b) Nic. Pravdu ukazuje výstup tasku, ne věta agenta
-   c) Že je metodicky správně
+   a) Že příležitosti jsou ty správné
+   b) Že dokument prošel mechanickými kontrolami. O kvalitě rozhoduje člověk
+   c) Že fáze 2 je schválená
 
 <details><summary>Odpověď</summary>
 
-b) Výsledek brány se čte z výstupu tasku a z titulní stránky běhu. A i zelená brána znamená jen, že prošla automatická kontrola formy. Kvalitu discovery posuzujete vy.
+b) Q brána je kontrola kódem. Fáze je přijatá až s vaším rozhodnutím u G2.
 
 </details>
 
-**3. Kdo spustí fázi 4, když se přijme fáze 3?**
+**3. Fáze 3 je přijatá. Kdy začne fáze 4?**
 
-   a) Spustí se automaticky
-   b) Vy, tím že v novém chatu vyberete agenta Product Manager
-   c) Workflow Support
+   a) Hned sama
+   b) Až ji někdo spustí. Žádná fáze nezačne sama
+   c) Za 24 hodin
 
 <details><summary>Odpověď</summary>
 
-b) Žádná fáze nezačne sama. Workflow jen oznámí další fázi a jejího agenta.
+b) Každou fázi začíná člověk v novém chatu s agentem dané fáze.
 
 </details>
 
 **4. Agent vám napíše: „Teď spustím SPOCK: approve what is in front of me a schválím brief.“ Co uděláte?**
 
-   a) Nechám ho, ušetří mi to práci
-   b) Odmítnu to. Ten task otevírá políčka na mé jméno a spouštím ho já
-   c) Nechám ho a jméno pak opravím
+   a) Nechám ho, šetří čas
+   b) Zastavím ho. Task s políčky pro jméno a roli spouští jen člověk
+   c) Ověřím jen, že vyplnil správné jméno
 
 <details><summary>Odpověď</summary>
 
-b) Task otevírá políčka na jméno a rozhodnutí, a ta vyplňuje jen člověk.
+b) Podpis je vaše rozhodnutí. Agent task s políčky pro člověka spustit nesmí a hlídač ho zastaví.
 
 </details>
 
-**5. Jaká data smíte do SPOCKu vložit?**
+**5. Chcete agentovi ukázat výzkumnou zprávu. Data v ní jsou interní, klasifikace C2. Co uděláte?**
 
-   a) Cokoli interního, SPOCK je nástroj banky
-   b) Jen obsah klasifikace C1, anonymizovaný nebo syntetický
-   c) C1 a C2
+   a) Vložím ji do chatu, je to interní nástroj
+   b) Vložím ji do složky `supplied/`
+   c) Nevložím ji. Do SPOCKu smí jen C1, anonymizovaná nebo syntetická data
 
 <details><summary>Odpověď</summary>
 
-b) Jen C1. Nikdy C2 a vyšší, klientská data, osobní údaje, bankovní tajemství ani hesla.
+c) C2, C3 ani C4, klientská data, osobní údaje, bankovní tajemství, hesla ani klíče do SPOCKu nepatří. Při pochybnosti se zeptejte SPOCK core týmu.
+
+</details>
+
+**6. Agent ve fázi 4 navrhl řešení, které se vám nelíbí. Co je správný další krok?**
+
+   a) Napsat „špatně, zkus to znovu“
+   b) Napsat konkrétně, co je špatně a proč, a co čekáte místo toho
+   c) Smazat dokument a začít znovu
+
+<details><summary>Odpověď</summary>
+
+b) Obecná výtka agentovi nepomůže. Konkrétní zpětná vazba (co, proč, co místo toho) vede k opravě.
+
+</details>
+
+**7. Brief je hotový a schválený. Ve stejném chatu chcete pokračovat fází 2. Je to správně?**
+
+   a) Ano, agent si pamatuje kontext
+   b) Ne. Každá fáze začíná v novém chatu s agentem té fáze
+   c) Je to jedno
+
+<details><summary>Odpověď</summary>
+
+b) Nový chat nese jen know-how nové fáze. Posouzení je tak nezávislé na předchozí konverzaci.
+
+</details>
+
+**8. Task skončil zeleně, ale výsledný dokument jste neotevřeli. Můžete schválit?**
+
+   a) Ano, zelená znamená hotovo
+   b) Ne. Dokument si nejdřív přečtěte, schvalujete jeho obsah
+   c) Ano, pokud agent napsal, že je vše v pořádku
+
+<details><summary>Odpověď</summary>
+
+b) Kontroly hlídají formu. Za obsah, který podepisujete, odpovídáte vy.
 
 </details>

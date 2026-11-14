@@ -218,36 +218,100 @@
 
 ## Kvíz
 
+Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při každém spuštění zamíchá.
+
 **1. Máte výsledky testu použitelnosti jako desku v Miro a pár screenshotů. Co s nimi?**
 
-   a) Vložím je do `supplied/`
-   b) Přepíšu zjištění do textového souboru (nebo Wordu) s datem a ten vložím do `supplied/`
-   c) Přiložím je do chatu
+   a) Přiložím je, SPOCK je přečte
+   b) Podstatné přepíšu do textového souboru. Desky ani obrázky SPOCK nečte
+   c) Pošlu je agentovi do chatu
 
 <details><summary>Odpověď</summary>
 
-b) Desky z Miro ani obrázky SPOCK nečte (`TESTER-GUIDE.md` §2.3). Přílohy v chatu se kromě briefu nepoužívají.
+b) SPOCK přečte text, tabulky a dokumenty, ale ne desky z Mira ani obrázky.
 
 </details>
 
 **2. Za příležitostí stojí jeden přepis rozhovoru z první ruky a jeden souhrn tiketů. Agent dal *weak*. Je to chyba?**
 
-   a) Ano, mělo být *strong*
-   b) Záleží na tom, jestli jsou zdroje nezávislé a mají úplnou provenienci. *Weak* je u slabší evidence správný výsledek
+   a) Ano, má být strong
+   b) Záleží na provenienci. Jsou-li oba zdroje nezávislé a úplně doložené, mělo by to být strong
+   c) Ne, tikety se nepočítají
 
 <details><summary>Odpověď</summary>
 
-b) *Strong* potřebuje dva nebo více nezávislých zdrojů s úplnou provenienci a aspoň jeden z první ruky. *Weak* není chyba, kterou by se mělo „obejít“ (`evidence-standards.md`).
+b) Strong chce dva nezávislé původy s úplnou proveniencí a aspoň jeden z první ruky. Kontrola tag přepočítá.
 
 </details>
 
 **3. Řekne SPOCK, jestli uživatelé o řešení stojí?**
 
    a) Ano, ve fázi 5
-   b) Ne. SPOCK nic netestuje, žádoucnost se ověřuje až v Execution
+   b) Ne. Výstup je definice, ne důkaz. Žádoucnost se ověří až v Execution
+   c) Ano, trust tag to měří
 
 <details><summary>Odpověď</summary>
 
-b) `method-canon.md` §3: varianta MVP je nejblíž experimentu, ale experiment to není. Liší se a vybírá se na papíře.
+b) SPOCK nic netestuje (`method-canon.md` §3).
+
+</details>
+
+**4. Export z Tableau do PowerPointu obsahuje graf konverze, na kterém závisí příležitost. Co uděláte?**
+
+   a) Nic, PowerPoint SPOCK přečte
+   b) Čísla z grafu přepíšu do textového souboru vedle prezentace
+   c) Udělám z grafu obrázek
+
+<details><summary>Odpověď</summary>
+
+b) Z PowerPointu se čte jen text a poznámky. Grafy ne.
+
+</details>
+
+**5. PM navrhuje příležitost „Chceme chatbota v aplikaci“. Co namítnete?**
+
+   a) Nic, je to jasná potřeba
+   b) Je to řešení, ne potřeba. Přeformulujte ji na potřebu, kterou by šlo vyřešit víc způsoby
+   c) Je moc široká
+
+<details><summary>Odpověď</summary>
+
+b) Test tvaru: mohlo by problém vyřešit víc než jedna věc?
+
+</details>
+
+**6. V rozhovoru klient zmínil své rodné číslo. Chcete přepis dát do fáze 2. Co uděláte?**
+
+   a) Vložím přepis, je to cvičný běh
+   b) Osobní údaje odstraním a do SPOCKu dám jen anonymizovanou verzi
+   c) Vložím ho, ale soubor pojmenuji „citlivé“
+
+<details><summary>Odpověď</summary>
+
+b) Do SPOCKu jdou jen data C1, anonymizovaná nebo syntetická. Osobní údaje nikdy.
+
+</details>
+
+**7. Ve fázi 5 chcete přidat vlastní variantu MVP. Kolik jich smíte přidat?**
+
+   a) Žádnou
+   b) Až tři
+   c) Neomezeně
+
+<details><summary>Odpověď</summary>
+
+b) Agent navrhne tři, vy přidáte až tři vlastní. Hotová sada má 2–6 variant.
+
+</details>
+
+**8. V sekci *What it does* řešení stojí „nová obrazovka se třemi záložkami“. Co je špatně?**
+
+   a) Nic
+   b) Sekce má popisovat změnu chování klienta, ne obrazovky
+   c) Chybí architektura
+
+<details><summary>Odpověď</summary>
+
+b) *What it does* je změna chování, *How it does it* zážitek klienta a pracovníka.
 
 </details>

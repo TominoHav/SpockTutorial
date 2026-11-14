@@ -207,6 +207,7 @@ document.addEventListener('click', e => {
     celebrate({kind:'lesson', title:'Lekce ' + d.d + ' hotová!', text:plain(d.t) + '. ' + (w.days[+di+1] ? 'Na řadě je lekce ' + w.days[+di+1].d + '.' : 'Na řadě je kvíz modulu.')});
     if (w.days[+di+1]) view.lesson = +di + 1;
   }
+  if (quizReady(w) && !quizPassed(w)) celebrate({kind:'quiz', title:'Kvíz modulu je odemčený', text:'Zodpověděli jste všechny karty modulu ' + w.title + '. Kvíz vylosuje ' + Math.min(QN, w.quiz.length) + ' otázek a ověří, že látku umíte použít v praxi. Úkoly můžete dodělat i potom.', quiz:w.id});
   checkModuleDone(w);
   const y = scrollY; renderWeek(view.week); updatePills(); scrollTo({top:y});
   const nx = document.getElementById('card-' + wid + '-' + di + '-' + (+ci + 1));

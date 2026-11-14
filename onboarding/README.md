@@ -36,7 +36,9 @@ Příručka  Fáze do hloubky    volitelně, hlavně GM a superuser
 
 **Doporučené pořadí:** 0 → 1 → vaše role → 3 → 4. Úroveň 0 projdete celou na webu, a mezitím si objednejte role v REDIMu pro Přípravu. Příručka Fáze do hloubky stojí na specifikacích fází ve `specifications/stage-specs/`. Je to nejhlubší část onboardingu, nic nezamyká a vracíte se k ní podle potřeby.
 
-**Jak lekce vypadají:** Každá lekce začíná krátkými **kartami** (asi 60–80 slov a jedna otázka s okamžitou odpovědí). Další karta se otevře, až odpovíte. Delší vysvětlení je pod „Víc do hloubky“, anglické podklady pod „Pro zvídavé“. U každého úkolu je napsané, kde ho děláte: **jen na webu**, **stačí papír**, nebo **ve VS Code**. Na úrovni 2 se vyplatí přečíst si i úvod ostatních rolí, protože SPOCK počítá s **triem** PM, PD a SWE (`specifications/definitions/know-how/method/method-canon.md` §14.1). Guild Master by měl mít za sebou i modul Product Manager.
+**Jak lekce vypadají:** Každá lekce začíná krátkými **kartami** (asi 60–80 slov a jedna otázka s okamžitou odpovědí). Další karta se otevře, až odpovíte. Delší vysvětlení je pod „Víc do hloubky“, anglické podklady pod „Pro zvídavé“. U každého úkolu je napsané, kde ho děláte: **jen na webu**, **stačí papír**, nebo **ve VS Code**.
+
+**Kvíz modulu** se odemkne, až zodpovíte všechny karty modulu (úkoly můžete dodělat i potom). Losuje 5 otázek ze zásoby 8 a pořadí otázek i možností se při každém spuštění zamíchá. Otázky nejsou opakováním karet, ale situacemi z praxe. Splněný je při 4 z 5 správně napoprvé. **Skokový test** zamčeného modulu losuje 5 otázek z kvízu i z karet modulu a chce aspoň 4 správně. Na úrovni 2 se vyplatí přečíst si i úvod ostatních rolí, protože SPOCK počítá s **triem** PM, PD a SWE (`specifications/definitions/know-how/method/method-canon.md` §14.1). Guild Master by měl mít za sebou i modul Product Manager.
 
 Tempo si určujete sami, pevná data tu nejsou.
 

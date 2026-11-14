@@ -186,29 +186,100 @@
 
 ## Kvíz
 
+Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při každém spuštění zamíchá.
+
 **1. Někdo z týmu říká: „Všechny brány jsou zelené, takže iniciativa je dobrá.“ Co odpovíte?**
+
+   a) Souhlasím
+   b) Zelená znamená mechanickou polovinu. Kvalitu discovery žádná kontrola neposuzuje
+   c) Záleží na počtu touchpointů
 
 <details><summary>Odpověď</summary>
 
-Zelené brány říkají, že dokumenty jsou mechanicky v pořádku: pole jsou vyplněná, odkazy sedí a struktura odpovídá. Jestli jsou příležitosti ty správné a jestli by banka iniciativu financovala, žádná kontrola nehodnotí. Posuzovaná pravidla nečte žádný automatický soudce (`TESTER-GUIDE.md` §1.2, `BUSINESS-LOGIC-OVERVIEW.md` §6).
+b) Kvalita discovery je otázka pro uživatelské akceptační testování.
 
 </details>
 
 **2. Agent ve fázi 2 vyplnil segment zákazníka, který v materiálu ani v briefu nebyl. Co uděláte?**
 
-   a) Zapíšu to na result sheet a pošlu na konci
-   b) Pošlu to týmu CoE Product Management hned, je to případ, kdy agent doplnil informaci, kterou jste mu nedali
+   a) Nechám to, segment sedí
+   b) Pošlu nález hned, agent doplnil informaci, kterou nedostal
+   c) Opravím segment ručně a dál to neřeším
 
 <details><summary>Odpověď</summary>
 
-b) Patří to mezi věci, které se posílají ještě tu hodinu (`TESTER-GUIDE.md` §8).
+b) Doplnění nedodané informace patří mezi nálezy, které se posílají okamžitě.
 
 </details>
 
-**3. Nejste si jistí, jestli se agent zachoval správně. Jaký výsledek zapíšete?**
+**3. Nejste si jistí, jestli se agent ve scénáři zachoval správně. Jaký výsledek zapíšete?**
+
+   a) `pass`
+   b) `unclear`
+   c) `fail`
 
 <details><summary>Odpověď</summary>
 
-`unclear`. Je to platný výsledek a zároveň nález o instrukcích, ne mezera ve vašem testování (`TESTER-GUIDE.md` §6).
+b) `unclear` je platný výsledek. Nejistý `pass` stojí víc.
+
+</details>
+
+**4. Kolega chce poslat nález jako screenshot chatu. Co mu poradíte?**
+
+   a) Stačí to
+   b) Přiložit celou složku běhu jako ZIP a exportovaný chat každé fáze
+   c) Popsat to agentovi, ať napíše zprávu
+
+<details><summary>Odpověď</summary>
+
+b) Screenshot nenahradí soubor a zprávu píšete sami.
+
+</details>
+
+**5. Kam rozbalíte balíček testovacích scénářů?**
+
+   a) Do složky SPOCKu, ať je po ruce
+   b) Mimo složku SPOCKu, aby ho žádný agent nepřečetl
+   c) Do `runs/`
+
+<details><summary>Odpověď</summary>
+
+b) Kdyby agent mohl odpovědní list přečíst, test by nic neměřil.
+
+</details>
+
+**6. Kontrola ve scénáři selhala, ale agent se zachoval přesně podle tabulky „Should happen“. Co zapíšete?**
+
+   a) Scénář fail
+   b) Obojí zvlášť: neprošlou kontrolu i chování agenta
+   c) Nic
+
+<details><summary>Odpověď</summary>
+
+b) Neprošlá kontrola ještě neznamená neprošlý scénář.
+
+</details>
+
+**7. Kolega se ptá, zda SPOCK posoudil regulaci AI v jeho řešení. Co odpovíte?**
+
+   a) Ano, ve fázi 4
+   b) Ne. AI regulace není v žádné ze čtyř oblastí. Rozhodnutí patří compliance týmu
+   c) Ano, pokud je touchpoint `yes`
+
+<details><summary>Odpověď</summary>
+
+b) Compliance sweep má hranice a tři ze čtyř karet nikdo z banky nerevidoval.
+
+</details>
+
+**8. Provádíte kolegu Přípravou. Co děláte vy?**
+
+   a) Nainstaluji to za něj, je to rychlejší
+   b) Do ničeho nesahám, jen se ptám a vysvětluji
+   c) Pošlu mu odkaz a nechám ho
+
+<details><summary>Odpověď</summary>
+
+b) Kolega se naučí jen tím, že to udělá sám.
 
 </details>

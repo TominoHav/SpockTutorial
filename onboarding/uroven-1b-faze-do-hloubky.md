@@ -674,81 +674,100 @@
 
 ## Kvíz
 
+Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při každém spuštění zamíchá.
+
 **1. Agent v briefu sám vybral key result „nejbližší tématu“ a zapsal ho. Je to v pořádku?**
 
-   a) Ano, ušetřil čas
-   b) Ne. Key result se vyhledá ve Strategy Basis, agent ukáže všech 25 a vybíráte vy
-   c) Ano, pokud ho uvedl v sekci „What we could not establish“
+   a) Ano, šetří čas
+   b) Ne. Agent key resulty ukáže a doporučí, na které se podívat, ale vybíráte vy
+   c) Ano, pokud je ze Strategy Basis
 
 <details><summary>Odpověď</summary>
 
-b) STAGE-1 R3.4.3: agent ukáže všechny key resulty seskupené podle cíle, řekne, na které by se podíval nejdřív, a nikdy seznam nezúží na svůj výběr. Zapsat volbu, kterou jste neudělali, je zakázaná inference (R3.4.6).
+b) Key result se ve fázi 1 vyhledává, nevybírá ho agent (STAGE-1 R3.4.3).
 
 </details>
 
 **2. Příležitost stojí na dvou pozorováních od dvou různých lidí, ale jedno nemá úplnou provenienci. Jaký bude tag?**
 
-   a) *strong*, protože má dva původy
-   b) *weak*, protože pozorování bez úplné provenience se nepočítá
-   c) *unrated*
+   a) strong
+   b) weak
+   c) unrated
 
 <details><summary>Odpověď</summary>
 
-b) Do počtu se počítají jen pozorování s `provenance_complete: true`. Po jeho vyřazení zbude jeden původ a výsledek je *weak* (STAGE-2 R3.2.3).
+b) Strong chce dva a víc různých původů s úplnou proveniencí a aspoň jeden z první ruky. Jinak je důkaz weak.
 
 </details>
 
-**3. Karta konkurenta cituje jeho tiskovou zprávu a tři články, které o ní napsala média. Kolik je to nezávislých zdrojů?**
+**3. Řešení A má 12 touchpointů a všechny otázky zodpovězené. Řešení B má 12 touchpointů a 18 otázek `cannot_tell`. Co platí?**
 
-   a) Čtyři
-   b) Dva
-   c) Jeden
+   a) B je složitější
+   b) Počet je stejný, B je jen méně známé
+   c) B je jednodušší, má méně odpovědí
 
 <details><summary>Odpověď</summary>
 
-c) Tisková zpráva a tři média, která o ní píšou, jsou jeden zdroj. Nezávislost se určuje podle vydavatele původního tvrzení (STAGE-3 R3.3.4).
+b) Nezodpovězené otázky počet touchpointů nemění. Řešení je jen méně známé.
 
 </details>
 
-**4. Řešení A má 12 touchpointů a všechny otázky zodpovězené. Řešení B má 12 touchpointů a 18 otázek `cannot_tell`. Které je složitější?**
-
-   a) B, má víc práce
-   b) Ani jedno, počet je stejný. B je jen méně známé, a to je jiný fakt
-   c) A
-
-<details><summary>Odpověď</summary>
-
-b) Nezodpovězené otázky počet nemění. Spojit je by znamenalo vydávat nejistotu za velikost (STAGE-4 R6.4).
-
-</details>
-
-**5. Ve fázi 5 jsou varianty „mobilní aplikace pro všechny klienty“ a „nejdřív web, potom aplikace“. Co je špatně?**
+**4. Ve fázi 5 jsou varianty „mobilní aplikace pro všechny klienty“ a „nejdřív web, potom aplikace“. Co je špatně?**
 
    a) Nic
-   b) Druhá varianta je řazení. Z volby dělá plán a první část je fází jiné varianty
+   b) Druhá varianta je seřazená. Varianta nesmí být plán „nejdřív, potom“
+   c) Varianty se překrývají
 
 <details><summary>Odpověď</summary>
 
-b) Varianty nesmí používat řazení a žádná nesmí být fází jiné (STAGE-5 §1.3, R3.1.4).
+b) Varianty nesmí být preferované, seřazené ani podmnožinou jiné. Překryv je naopak v pořádku.
 
 </details>
 
-**6. Po souhlasu s PRD jste v draftu opravili jednu větu. Co platí?**
+**5. Po souhlasu s PRD jste v draftu opravili jednu větu. Co platí?**
 
-   a) Odsouhlasené PRD se aktualizuje samo
-   b) Draft je třeba označit jako odsouhlasený znovu a A13 se napíše znovu z draftu
-   c) Nic, změna je drobná
+   a) Nic, odsouhlasené PRD se aktualizuje samo
+   b) Draft se musí znovu označit jako odsouhlasený a odsouhlasené PRD se napíše znovu
+   c) Oprava je zakázaná
 
 <details><summary>Odpověď</summary>
 
-b) Odsouhlasené PRD je draft slovo od slova. Když se draft změní, označí se znovu a brána proběhne znovu, než se zapíše G6 (STAGE-6 R3.3.3, část 10).
+b) Odsouhlasené PRD vzniká doslovně z draftu. Po změně draftu ho musíte označit znovu.
 
 </details>
 
-**7. Která kontrola v Q7 porovnává tvrzení iniciativy s odsouhlaseným PRD?**
+**6. Která kontrola v Q7 porovnává tvrzení iniciativy s odsouhlaseným PRD?**
+
+   a) `C130`
+   b) `C189`
+   c) Žádná
 
 <details><summary>Odpověď</summary>
 
-Žádná. `C12` čte deklarovanou linii původu a `C13` souhlas, ne obsah vět. Iniciativa tak může projít s tvrzením, které PRD nepodporuje, a ověřit to musíte vy u G7 (STAGE-7 §8.1–8.2).
+c) Obsah iniciativy s PRD nesrovnává žádná kontrola. Porovnat je musíte sami.
+
+</details>
+
+**7. Kontrola ve fázi 2 selhala na věci, kterou agent může opravit. Kdo se to dozví první?**
+
+   a) Agent. Opraví ji a vás se zeptá až potom
+   b) Vy, jako výjimka k podpisu
+   c) Workflow Support
+
+<details><summary>Odpověď</summary>
+
+a) Co může opravit agent, jde k agentovi. K vám jde jen selhání přijaté fáze nebo chybějící souhlas s PRD.
+
+</details>
+
+**8. Vrátili jste fázi 2. Fáze 3 a 4 už prošly bránou. V jakém jsou stavu?**
+
+   a) `accepted`
+   b) `stale`
+   c) `superseded`
+
+<details><summary>Odpověď</summary>
+
+b) Každá pozdější fáze s výsledkem brány se označí jako zastaralá. Nic se nemaže.
 
 </details>

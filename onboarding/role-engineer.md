@@ -229,33 +229,100 @@ Užitečné tasky bez políček: **`SPOCK: check the whole run`**, **`SPOCK: run
 
 ## Kvíz
 
-**1. Brána vrátila `incomplete`. Můžete pokračovat?**
+Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při každém spuštění zamíchá.
 
-   a) Ano, nic neselhalo
-   b) Ne. `incomplete` znamená, že brána jmenuje kontrolu, kterou zatím nikdo nenapsal, takže není známo, jestli je fáze v pořádku
+**1. Brána vrátila `incomplete`. Můžete pokračovat, jako by prošla?**
+
+   a) Ano, není to fail
+   b) Ne. `incomplete` není pass
+   c) Ano, pokud ji podepíše PM
 
 <details><summary>Odpověď</summary>
 
-b) „Treating an incomplete as a pass is the mistake this repository exists to prevent“ (`BUSINESS-LOGIC-OVERVIEW.md` §6).
+b) Kontrola vrací `pass`, `fail` nebo `incomplete`, a jen `pass` znamená průchod mechanické poloviny.
 
 </details>
 
 **2. Compliance sekce řešení neuvádí žádný ICT touchpoint, ale vy víte, že řešení mění autentizaci. Co uděláte?**
 
-   a) Opravím dokument ručně
-   b) Řeknu to PM před G4. Odpovědi producenta žádná kontrola neověřuje a compliance rozhodnutí patří compliance týmu
-   c) Nic, brána prošla
+   a) Nic, compliance prošla
+   b) Upozorním PM před G4. Odpovědi agenta žádná kontrola neověřuje
+   c) Opravím záznam řešení ručně
 
 <details><summary>Odpověď</summary>
 
-b) Odpověď „ne“ tam, kde je poctivá odpověď „ano“, projde a nic ji nezachytí (`BUSINESS-LOGIC-OVERVIEW.md` §7).
+b) Odpověď „ne“ tam, kde poctivá odpověď zní „ano“, projde. Pojistkou je člověk.
 
 </details>
 
-**3. Kde najdete celý text tasku, který selhal?**
+**3. Task selhal a v chatu je jen zkrácená hláška. Kde najdete celý výstup?**
+
+   a) Nikde
+   b) V panelu Terminal a v `.github/last-task.md`
+   c) V `RUN-STATE.md`
 
 <details><summary>Odpověď</summary>
 
-V panelu Terminal ve VS Code a v `.github/last-task.md` (`SETUP.md` §6 krok 3).
+b) Celý text selhaného tasku je v terminálu i v souboru `.github/last-task.md`.
+
+</details>
+
+**4. PM se ptá, která polovina brány Q4 vlastně proběhla. Který task spustíte?**
+
+   a) `SPOCK: check the whole run`
+   b) `SPOCK: which gates can run in full`
+   c) `SPOCK: explain what the gate failed`
+
+<details><summary>Odpověď</summary>
+
+b) Tenhle task řekne, která polovina které brány proběhla a proč ta druhá ne.
+
+</details>
+
+**5. Řešení používá AI model pro doporučení klientům. Pokryje regulaci AI compliance sweep SPOCKu?**
+
+   a) Ano, v oblasti ICT and security
+   b) Ne. AI regulace není v žádné oblasti, jen se přesměruje na specialistu
+   c) Ano, v oblasti Legal
+
+<details><summary>Odpověď</summary>
+
+b) AI regulace, outsourcing ani DORA nejsou v žádné ze čtyř oblastí.
+
+</details>
+
+**6. Ve fázi 4 vyšla otevřená ICT položka. Najdete ji v PRD?**
+
+   a) Ano, přenáší se automaticky
+   b) Zatím ne. Otevřené compliance položky se do PRD nepřenášejí, hlídejte je sami
+   c) Ano, v sekci Out of scope
+
+<details><summary>Odpověď</summary>
+
+b) STAGE-4 a STAGE-6 část 12: přenos otevřených položek zatím není postavený.
+
+</details>
+
+**7. Chcete vědět, odkud se vzal požadavek R3 v PRD. Co v PRD hledáte?**
+
+   a) Měřítko, kterému požadavek slouží, a vazbu na rozpracované MVP
+   b) Jméno autora požadavku
+   c) Odhad pracnosti
+
+<details><summary>Odpověď</summary>
+
+a) Každý požadavek jmenuje měřítko a měřítka se přenášejí z dřívějších fází.
+
+</details>
+
+**8. Odsouhlasené PRD existuje dřív než draft. Co to je?**
+
+   a) Běžný stav
+   b) Nález. Odsouhlasené PRD vzniká doslovně z draftu až po označení
+   c) Chyba Gitu
+
+<details><summary>Odpověď</summary>
+
+b) Odsouhlasené PRD, které existuje dřív nebo říká něco jiného než draft, je nález.
 
 </details>

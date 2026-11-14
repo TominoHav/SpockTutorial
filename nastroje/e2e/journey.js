@@ -48,25 +48,34 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  // dokončit celý modul l0
  for(let li=1;li<4;li++){await dismiss();await p.evaluate(li=>{const e=document.querySelector(`.pd-in-card [data-lesson="${li}"], .pd-mob-card [data-lesson="${li}"]`);e&&e.click()},li);await p.waitForTimeout(120);await doLesson();}
  const s1b=await st();ok(T('všechny 4 lekce úrovně 0 hotové jen na webu'), [0,1,2,3].every(i=>s1b.got['lesson.l0.'+i]), Object.keys(s1b.got).filter(k=>k.startsWith('lesson.l0')).join(','));
- // kvíz
- await dismiss();await p.locator('[data-quiz=l0]').last().click();await p.waitForTimeout(150);
- const known={};let g=0;
- while(await p.locator('#ses').count() && g++<40){
-   const q=await p.locator('.ses-q').innerText();
-   const opts=p.locator('.ses-opt');
-   if(await opts.count()){
-     let pick=0; if(known[q]){const texts=await opts.allInnerTexts();const k=texts.findIndex(t=>t.includes(known[q]));if(k>=0)pick=k;}
-     await opts.nth(pick).click();}
-   const chk=p.locator('[data-scheck]');if(await chk.count())await chk.click();await p.waitForTimeout(60);
-   const bad=p.locator('.fb-bad .ses-fb b');if(await bad.count()){known[q]=(await bad.innerText()).replace('Správná odpověď: ','').trim();}
-   const nx=p.locator('[data-snext]');if(await nx.count())await nx.click();await p.waitForTimeout(60);}
- ok(T('kvíz modulu dokončen (chyby se vracejí, dokud nejsou správně)'), !(await p.locator('#ses').count()), g+' kroků');
+ // kvíz: před kartami zamčený (ověřeno na modulu Příprava), po kartách losuje 5 otázek
+ const runQuiz=async(wid,good)=>{await dismiss();await p.evaluate(w=>document.querySelector(`.qlaunch [data-quiz="${w}"]`).click(),wid);await p.waitForTimeout(100);let g=0,seen=[];
+   while(await p.locator('#ses').count() && g++<40){
+     const key=await p.evaluate(()=>(S=>S.items[S.qs[S.i]])(__kviz.ses()).key);const bad=!good && !seen.includes(key);seen.push(key);
+     const pick=await p.evaluate(bad=>{const it=(S=>S.items[S.qs[S.i]])(__kviz.ses());return bad?(it.a+1)%it.o.length:it.a},bad);
+     await p.locator('.ses-opt').nth(pick).click();await p.locator('[data-scheck]').click();await p.waitForTimeout(40);
+     await p.locator('[data-snext]').click();await p.waitForTimeout(40);}
+   return seen;};
+ const sz=await p.evaluate(()=>__kviz.pool('l0'));
+ const k1=await runQuiz('l0',false);
+ ok(T('kvíz losuje 5 otázek ze zásoby '+sz+', špatné odpovědi se opakují'), new Set(k1).size===5 && k1.length>5, k1.length+' kroků');
+ ok(T('s chybami kvíz nesplněný'), !(await st()).qpass?.l0 && (await p.locator('.cel-card').innerText()).includes('nesplněný'));
+ await dismiss();
+ const k2=await runQuiz('l0',true);
+ ok(T('opakovaný kvíz má jiný výběr nebo pořadí'), k1.slice(0,5).join()!==k2.join(), k2.join(' '));
+ ok(T('kvíz modulu dokončen (správně napoprvé)'), !!(await st()).qpass?.l0, JSON.stringify((await st()).qpass||{}));
  await dismiss();
  const s2=await st();ok(T('modul Poznejte SPOCK hotový (100 %) a odznaky'), s2.got['module.l0']===true, `XP ${s2.xp}, odznaky ${Object.keys(s2.badges).filter(k=>k.startsWith('got.')).length}`);
+ await p.evaluate(()=>document.querySelector('[data-week=l1]').click());await p.waitForTimeout(150);
+ ok(T('kvíz Přípravy je před kartami zamčený'), await p.locator('.qlaunch [data-quiz][disabled]').count()===1);
  ok(T('Příprava se odemkla'), await p.evaluate(()=>!document.querySelector('.pd-s.c-pink:nth-child(2).st-lock')));
  // zamčený modul a skokový test
  await p.evaluate(()=>document.querySelector('[data-week=l3]').click());await p.waitForTimeout(150);
  ok(T('zamčený modul ukáže kartu se skokovým testem'), await p.locator('[data-jump]').count()>0);
+ await p.locator('[data-jump]').first().click();await p.waitForTimeout(100);
+ for(let g=0;g<6 && await p.locator('#ses').count();g++){const pick=await p.evaluate(()=>{const it=(S=>S.items[S.qs[S.i]])(__kviz.ses());return (it.a+1)%it.o.length});await p.locator('.ses-opt').nth(pick).click();await p.locator('[data-scheck]').click();await p.locator('[data-snext]').click();await p.waitForTimeout(40);}
+ ok(T('skokový test: dvě chyby a konec, modul zůstane zamčený'), (await p.locator('.cel-card').innerText()).includes('nevyšel') && !(await st()).unlocked?.l3);
+ await dismiss();
  await p.locator('[data-peek]').first().click().catch(()=>{});await p.waitForTimeout(120);
  ok(T('náhled zamčeného modulu otevře lekce'), await p.locator('.lpanel').count()>0);
  // GM lekce 2G.6 se schématem

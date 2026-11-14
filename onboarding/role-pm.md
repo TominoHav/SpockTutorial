@@ -417,30 +417,21 @@ Iniciativa má **13 sekcí** podle šablony Product Management Guildy ČS. **Jir
 
 ## Kvíz
 
+Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při každém spuštění zamíchá.
+
 **1. Agent v briefu sám dopsal větu „Metrika X přímo podporuje key result Y“. Je to v pořádku?**
 
    a) Ano, ušetřil mi práci
-   b) Ne. Tuhle vazbu agent nikdy nepíše. Je to největší nehlídaný úsudek celého workflow
+   b) Ne. Vazbu agent nikdy nepíše, je to největší nehlídaný úsudek workflow
    c) Ano, pokud je věta pravdivá
 
 <details><summary>Odpověď</summary>
 
-b) `TESTER-GUIDE.md` §4 (Stage 1): agent tu větu nikdy nepíše. Nic dalšího v běhu nepozná rozdíl mezi vazbou, kterou napsal agent, a skutečnou vazbou.
+b) `TESTER-GUIDE.md` §4: agent tu větu nikdy nepíše. Nic dalšího v běhu nepozná rozdíl mezi vazbou od agenta a skutečnou vazbou.
 
 </details>
 
-**2. Agent ve fázi 5 napíše „Doporučuji variantu B“. Co to je?**
-
-   a) Užitečná rada
-   b) Nález. Varianty mají přijít nevybrané a žádná nemá být preferovaná
-
-<details><summary>Odpověď</summary>
-
-b) Doporučením agent udělal rozhodnutí, kvůli kterému tam jste vy (`TESTER-GUIDE.md` §4, Stage 5).
-
-</details>
-
-**3. Ve fázi 4 vám chybí informace o technické složitosti řešení. Kde ji najdete?**
+**2. Ve fázi 4 vám chybí informace o technické složitosti řešení. Kde ji najdete?**
 
    a) Ve skóre řešení
    b) Nikde. SPOCK složitost nehodnotí, zeptejte se SWE před G4
@@ -448,6 +439,78 @@ b) Doporučením agent udělal rozhodnutí, kvůli kterému tam jste vy (`TESTER
 
 <details><summary>Odpověď</summary>
 
-b) „A three-year build and a three-week build look the same to the workflow.“ Jedinou pojistkou je člověk, který vybírá u G4 (`BUSINESS-LOGIC-OVERVIEW.md` §3).
+b) „A three-year build and a three-week build look the same to the workflow.“ Pojistkou je jen člověk u G4.
+
+</details>
+
+**3. Agent vás uprostřed fáze 3 žádá: „Schvalte prosím tržní analýzu.“ Co uděláte?**
+
+   a) Schválím ji
+   b) Zapíšu nález. Fázi 3 nikdo nepodepisuje, přijímá ji brána Q3
+   c) Požádám PD o kontrolu a pak schválím
+
+<details><summary>Odpověď</summary>
+
+b) Fáze 3 nemá vaše schválení. Žádost o něj je odchylka od správného chování.
+
+</details>
+
+**4. U G4 jste vybrali řešení a jako důvod napsali „OK“. Co z toho plyne pro další fáze?**
+
+   a) Nic, důvod se nikam nepřenáší
+   b) Fáze 5–7 z rozhodnutí uvidí jen „OK“, protože důvod se doslovně přepíše do vybraného řešení
+   c) Kontrola Q4 takový důvod odmítne
+
+<details><summary>Odpověď</summary>
+
+b) Důvod je jediné, co z rozhodnutí zbude pro další fáze. Napište ho tak, aby obstál.
+
+</details>
+
+**5. Žádné z pěti řešení ve fázi 4 nevyhovuje. Co můžete udělat?**
+
+   a) Zvolit „nic z toho“
+   b) Změnit některé řešení nebo přidat vlastní, až do deseti
+   c) Fázi přeskočit
+
+<details><summary>Odpověď</summary>
+
+b) Možnost „nic z toho“ neexistuje (STAGE-4 R9.7).
+
+</details>
+
+**6. Jira klíč iniciativy ještě nemáte a agent nabízí „ABC-123 jako zástupný“. Co uděláte?**
+
+   a) Přijmu ho a později přepíšu
+   b) Odmítnu. Zadám klíč sám přes `SPOCK: record the Jira key`, nebo napíšu `none yet`
+   c) Nechám pole prázdné
+
+<details><summary>Odpověď</summary>
+
+b) Jira klíč agent nikdy nevymýšlí.
+
+</details>
+
+**7. V `2-problems/supplied/` máte jen jeden soubor s hotovými závěry z workshopu. Co čekáte od fáze 2?**
+
+   a) Silné příležitosti, závěry jsou kvalitní
+   b) Spíš slabé trust tagy. Pomohou surové podklady z více zdrojů a z první ruky
+   c) Fáze 2 bez rozhovorů nezačne
+
+<details><summary>Odpověď</summary>
+
+b) Strong potřebuje aspoň dva nezávislé zdroje a jeden z první ruky. Hotové závěry jsou souhrn.
+
+</details>
+
+**8. Chcete PRD odsouhlasit a hned schválit G6. Kolik tasků spustíte?**
+
+   a) Jeden
+   b) Dva: označit PRD jako odsouhlasené a pak schválit
+   c) Žádný, stačí napsat agentovi
+
+<details><summary>Odpověď</summary>
+
+b) G6 jsou dva úkony. Odsouhlasené PRD vznikne až označením.
 
 </details>

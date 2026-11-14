@@ -231,33 +231,100 @@ Nový vlastník otevře nový chat s agentem dané fáze, spustí `SPOCK: record
 
 ## Kvíz
 
+Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při každém spuštění zamíchá.
+
 **1. Fáze 4 je schválená a přijde nový výzkum, který mění příležitosti. Co uděláte?**
 
-   a) Vložím ho do `supplied/` a pokračuji
-   b) Vrátím fázi 2 (`send a stage back to be redone`), přidám materiál a pak rozhodnu o stale fázích 3 a 4
-   c) Upravím ručně dokument příležitostí
+   a) Upravím příležitosti ručně
+   b) Vrátím fázi 2 taskem `SPOCK: send a stage back to be redone`, pozdější fáze se označí jako stale
+   c) Založím nový běh
 
 <details><summary>Odpověď</summary>
 
-b) Po review fáze 2 by nový materiál změnil to, o čem se rozhodovalo. Proto se fáze vrací a pozdější fáze se stanou stale (`SETUP.md` §6 krok 5, `TASKS.md`).
+b) Vrácení zapíše důvod a nic nesmaže. Stale fáze pak přepracujete nebo ponecháte.
 
 </details>
 
-**2. Podepsal(a) jste výjimku ke kontrole. Jakou barvu má teď brána?**
+**2. Fáze 5 je stale, ale vrácení ji podle vás neovlivnilo. Co uděláte?**
 
-   a) Zelenou
-   b) Pořád `fail`, s podepsanou výjimkou vedle
+   a) Nic, stale nevadí
+   b) Spustím `SPOCK: keep a later stage as it is`. Přijme se, jen když znovu projde bránou
+   c) Smažu příznak stale v záznamu
 
 <details><summary>Odpověď</summary>
 
-b) „A gate turning green on an exception would be the defect“ (`TESTER-GUIDE.md` §7).
+b) Ponechání není zkratka kolem brány.
 
 </details>
 
 **3. V `runs/` máte dva nedokončené běhy. Co se stane?**
 
+   a) Tasky pracují s novějším
+   b) Tasky odmítnou pracovat, protože nepoznají, který myslíte
+   c) Nic
+
 <details><summary>Odpověď</summary>
 
-Každý task, který pracuje s během, odmítne, protože nepozná, který myslíte. Jeden běh přesuňte ven (`SETUP.md` §7).
+b) Proto kdo běh přebírá, nesmí mít jiný nedokončený běh.
+
+</details>
+
+**4. Přepsali jste ručně dva odstavce v PRD a nic jste nezapsali. Co je problém?**
+
+   a) Žádný
+   b) Záznam tvrdí, že dokument napsal agent. Spusťte `SPOCK: record that I edited a document`
+   c) Brána Q6 úpravu odmítne
+
+<details><summary>Odpověď</summary>
+
+b) Ruční úprava se zapisuje taskem, jinak záznam neodpovídá skutečnosti.
+
+</details>
+
+**5. Chcete s agentem promyslet nápad mimo běh. Jak začnete zprávu?**
+
+   a) „Jen mimo záznam:“
+   b) Doslovně `free-roam:`
+   c) Stačí, když to napíšete srozumitelně
+
+<details><summary>Odpověď</summary>
+
+b) Agent free-roam nikdy neodvozuje z formulace. Práce pak nemá záznam ani bránu.
+
+</details>
+
+**6. Vyšla nová verze SPOCKu a jste uprostřed fáze 4. Co uděláte?**
+
+   a) Hned aktualizuji
+   b) Dokončím běh na verzi, na které začal, a pak aktualizuji
+   c) Zkopíruji si nové soubory ručně
+
+<details><summary>Odpověď</summary>
+
+b) Běh se dokončuje na verzi, na které začal (`SETUP.md` §8).
+
+</details>
+
+**7. Kontrolu nejde v tomto běhu splnit, protože materiál prostě neexistuje. Co zvolíte v posledním políčku výjimky?**
+
+   a) „the workflow looks wrong“
+   b) „the material cannot meet it“
+   c) Nechám prázdné
+
+<details><summary>Odpověď</summary>
+
+b) „the workflow looks wrong“ je jen pro podezření na chybu workflow.
+
+</details>
+
+**8. Projekt byl zrušen a chcete běh ukončit. Co platí po `SPOCK: stop this run`?**
+
+   a) Běh jde později obnovit
+   b) Je to trvalé. Dokumenty zůstanou čitelné, ale žádný task běh znovu nespustí
+   c) Běh se smaže
+
+<details><summary>Odpověď</summary>
+
+b) Ukončení se zapíše s důvodem a je trvalé.
 
 </details>
