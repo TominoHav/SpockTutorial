@@ -62,6 +62,16 @@ Aby průvodce mohl odpovídat podle skutečných souborů SPOCKu, přidejte mu j
 claude --add-dir ../SPOCK-Workflow-1.0
 ```
 
+## Jak s tím pracovat v GitHub Copilotu
+
+Stejného průvodce máte i jako agenta v GitHub Copilotu: **Spock průvodce**.
+
+1. Naklonujte si tento repozitář tutoriálu a otevřete ho ve VS Code v **samostatném okně**, ne ve stejném okně jako SPOCK.
+2. V Copilot Chatu vyberte ve výběru agentů **Spock průvodce** a napište třeba „Co mám dělat dál?“.
+3. Průvodce odpovídá z lekcí, provede vás úkoly a kvízem a se souhlasem zaškrtává pokrok v `POKROK.md`. Nic jiného nemění.
+
+> **Proč samostatné okno:** ve SPOCKu musí být ve výběru přesně šest agentů. Kdybyste měli tutoriál i SPOCK v jednom okně, uvidíte sedm a to vypadá jako nález.
+
 ## Kde se SPOCK doopravdy používá
 
 Samotná práce v SPOCKu (agenti, tasky, běhy) probíhá ve **VS Code s GitHub Copilot Chat**, ne v Claude Code. Claude Code tu slouží jen jako průvodce onboardingem.

@@ -4,6 +4,7 @@ Uživatelský onboarding do SPOCKu pro **Product Managera, Product Designera, So
 
 - `onboarding/`: lekce podle úrovní a rolí, tahák, slovník, diagnostika, pokrok
 - `.claude/skills/spock-onboarding/`: průvodce, v Claude Code se spouští příkazem `/spock-onboarding`
+- `.github/agents/spock-pruvodce.agent.md`: stejný průvodce jako agent **Spock průvodce** v GitHub Copilotu ve VS Code (tutoriál otevírejte v samostatném okně, ne se SPOCKem)
 - `materialy/bootcamp/`: původní materiály z bootcampu SPOCKu (PDF), ze kterých lekce čerpají interní postup ČS
 - [ARCHITEKTURA.md](ARCHITEKTURA.md): jak tutoriál funguje, kudy jde která změna a historie změn
 - `web/`: interaktivní web sestavený z lekcí (návod v [web/README.md](web/README.md))
