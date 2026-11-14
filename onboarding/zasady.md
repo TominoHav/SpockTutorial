@@ -25,7 +25,7 @@
 - **Píše outcome jako řešení.** „Postavit kalkulačku“ není outcome.
 - **Vybírá řešení bez SWE.** SPOCK technickou složitost nehodnotí.
 - **Dává do fáze 2 materiál, který SPOCK nepřečte.** Miro, obrázky, sken PDF nebo grafy z Tableau.
-- **Vkládá data, která tam nepatří.** Jen C1 nebo C2, anonymizované nebo syntetické. Nikdy klientská data, osobní údaje ani hesla.
+- **Vkládá data, která tam nepatří.** Jen C1, anonymizovaná nebo syntetická. Nikdy C2 a vyšší. Nikdy klientská data, osobní údaje ani hesla.
 - **Používá SPOCK jako stroj na odpovědi.** SPOCK je workflow, kterým trio dělá discovery, ne chat, který řekne výsledek.
 - **Dává obecnou zpětnou vazbu.** „Vylepši to“ nefunguje. Řekněte konkrétně, co změnit a proč.
 - **Přidá materiál po schválení fáze 2.** Nejdřív musí fázi vrátit.
