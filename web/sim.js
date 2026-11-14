@@ -194,3 +194,21 @@ document.addEventListener('click', e => {
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(pre.innerText).then(done, () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
   else { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
 });
+
+/* karty v lekci: odpověď otevře další kartu */
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-card]'); if (!b) return;
+  const [k, o] = b.dataset.card.split(':'), [wid, di, ci] = k.split('.');
+  const w = W.find(x => x.id === wid), c = w && w.days[+di].cards[+ci]; if (!c || (S.cards || {})[k] !== undefined) return;
+  S.cards = S.cards || {}; S.cards[k] = +o; save();
+  if (+o === c.a) award('card.' + k, 5, 'karta');
+  const d = w.days[+di];
+  if (lessonDone(w, +di) && award('lesson.' + wid + '.' + di, XP.lesson, 'lekce')) {
+    celebrate({kind:'lesson', title:'Lekce ' + d.d + ' hotová!', text:plain(d.t) + '. ' + (w.days[+di+1] ? 'Na řadě je lekce ' + w.days[+di+1].d + '.' : 'Na řadě je kvíz modulu.')});
+    if (w.days[+di+1]) view.lesson = +di + 1;
+  }
+  checkModuleDone(w);
+  const y = scrollY; renderWeek(view.week); updatePills(); scrollTo({top:y});
+  const nx = document.getElementById('card-' + wid + '-' + di + '-' + (+ci + 1));
+  if (nx) nx.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center'});
+});

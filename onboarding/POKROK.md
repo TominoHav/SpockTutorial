@@ -4,68 +4,67 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 **Moje role:** _(PM / PD / SWE / GM)_
 
-## Úroveň 0: Příprava
+## Úroveň 0: Poznejte SPOCK
 
-**0.1 — Přístupy a role v REDIMu**
+**0.1 — Co SPOCK dělá a proč**
 
-- [ ] 0.1 Projděte onboarding GitHubu v ČS
-- [ ] 0.1 Objednejte roli pro GitHub Copilot
-- [ ] 0.1 Objednejte přístup k repozitáři SPOCKu a SSH certifikátu
+- [ ] 0.1 Pusťte si video o SPOCKu
+- [ ] 0.1 Vyzkoušejte SPOCK nanečisto
 
-**0.2 — Instalace nástrojů a SSH certifikát**
+**0.2 — Agenti, tasky a brány**
 
-- [ ] 0.2 Najděte firemní katalog softwaru
-- [ ] 0.2 Nainstalujte VS Code
-- [ ] 0.2 Nainstalujte Git
-- [ ] 0.2 Nainstalujte Node.js 22
-- [ ] 0.2 Nainstalujte caauth-cli a ověřte SSH certifikát
+- [ ] 0.2 Nakreslete si rytmus jedné fáze
 
-**0.3 — GitHub Copilot ve VS Code**
+**0.3 — Pět pravidel, která se neporušují**
 
-- [ ] 0.3 Nainstalujte a přihlaste Copilota
-- [ ] 0.3 Ověřte agent mode a výběr modelu
 
-**0.4 — SPOCK ve vašem počítači**
+**0.4 — Jak se SPOCKem pracovat**
 
-- [ ] 0.4 Naklonujte SPOCK a otevřete ho
-- [ ] 0.4 Ověřte soubor surface
-- [ ] 0.4 Spusťte SPOCK: check my setup
-- [ ] 0.4 Zkontrolujte šest agentů
-- [ ] 0.4 Nastavte model a zkontrolujte náhled dokumentů
+- [ ] 0.4 Napište tři věty zpětné vazby
 
-**0.5 — Pět pravidel, která se neporušují**
+- [ ] Kvíz: Úroveň 0: Poznejte SPOCK
 
-- [ ] 0.5 Najděte v TASKS.md tři tasky, které otevírají políčka
-- [ ] 0.5 Založte si deník
+## Úroveň 1: Příprava
 
-- [ ] Kvíz: Úroveň 0: Příprava
+**1.1 — Přístupy a role v REDIMu**
 
-## Úroveň 1: Základy
+- [ ] 1.1 Projděte onboarding GitHubu v ČS
+- [ ] 1.1 Objednejte roli pro GitHub Copilot
+- [ ] 1.1 Objednejte přístup k repozitáři SPOCKu a SSH certifikátu
 
-**1.1 — Co SPOCK dělá**
+**1.2 — Instalace nástrojů a SSH certifikát**
 
-- [ ] 1.1 Nechte SPOCK popsat sám sebe
-- [ ] 1.1 Pojmenujte, co SPOCK neumí
+- [ ] 1.2 Najděte firemní katalog softwaru
+- [ ] 1.2 Nainstalujte VS Code
+- [ ] 1.2 Nainstalujte Git
+- [ ] 1.2 Nainstalujte Node.js 22
+- [ ] 1.2 Nainstalujte caauth-cli a ověřte SSH certifikát
 
-**1.2 — Agenti, tasky a brány**
+**1.3 — GitHub Copilot ve VS Code**
 
-- [ ] 1.2 Nakreslete si rytmus jedné fáze
-- [ ] 1.2 Zeptejte se Methodology Coache
+- [ ] 1.3 Nainstalujte a přihlaste Copilota
+- [ ] 1.3 Ověřte agent mode a výběr modelu
 
-**1.3 — Čtení hotového běhu**
+**1.4 — SPOCK ve vašem počítači**
 
-- [ ] 1.3 Projděte ukázkový běh
-- [ ] 1.3 Dohledejte jedno tvrzení zpět ke zdroji
-- [ ] 1.3 Najděte v běhu podpisy
+- [ ] 1.4 Naklonujte SPOCK a otevřete ho
+- [ ] 1.4 Ověřte soubor surface
+- [ ] 1.4 Spusťte SPOCK: check my setup
+- [ ] 1.4 Zkontrolujte šest agentů
+- [ ] 1.4 Nastavte model a zkontrolujte náhled dokumentů
 
-**1.4 — Jak se SPOCKem pracovat**
+**1.5 — První kroky ve SPOCKu**
 
-- [ ] 1.4 Připravte si tři věty zpětné vazby
-- [ ] 1.4 Připravte si šablonu záznamu o selhání
+- [ ] 1.5 Najděte v TASKS.md tři tasky, které otevírají políčka
+- [ ] 1.5 Založte si deník
+- [ ] 1.5 Projděte ukázkový běh
+- [ ] 1.5 Dohledejte jedno tvrzení zpět ke zdroji
+- [ ] 1.5 Najděte v běhu podpisy
+- [ ] 1.5 Zeptejte se Methodology Coache
 
-- [ ] Kvíz: Úroveň 1: Základy
+- [ ] Kvíz: Úroveň 1: Příprava
 
-## Úroveň 1b: Fáze do hloubky
+## Příručka: Fáze do hloubky
 
 **1F.0 — Co platí v každé fázi**
 
@@ -103,7 +102,7 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 - [ ] 1F.7 Porovnejte iniciativu s PRD
 
-- [ ] Kvíz: Úroveň 1b: Fáze do hloubky
+- [ ] Kvíz: Příručka: Fáze do hloubky
 
 ## Úroveň 2: Product Manager
 

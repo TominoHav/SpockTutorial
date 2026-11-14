@@ -11,29 +11,32 @@ Všechno tady vychází ze zdrojového repozitáře SPOCKu ([SPOCK-Workflow-1.0]
 ## Cesta
 
 ```
-Úroveň 0  Příprava        ─┐
-Úroveň 1  Základy          ├─ všichni
-Úroveň 1b Fáze do hloubky  │
+Úroveň 0  Poznejte SPOCK  ─┐  jen na webu, nic neinstalujete
+Úroveň 1  Příprava         ├─ všichni
                            │
 Úroveň 2  Vaše role       ─┼─ Product Manager │ Product Designer │ Software Engineer │ Guild Master
                            │
 Úroveň 3  Pokročilý        ├─ všichni
 Úroveň 4  Superuser       ─┘
+
+Příručka  Fáze do hloubky    volitelně, hlavně GM a superuser
 ```
 
 | Úroveň | Soubor | Pro koho | Čas | Na konci umíte |
 |---|---|---|---|---|
-| 0 | [Příprava](uroven-0-priprava.md) | všichni | 2–3 h (plus čekání na role) | Mít schválené role v REDIMu, z firemního katalogu VS Code, Git, Node.js a SSH certifikát, SPOCK naklonovaný a ověřený a znát pět pravidel, která se neporušují. |
-| 1 | [Základy](uroven-1-zaklady.md) | všichni | 4–5 h | Vysvětlit, proč SPOCK vzniká, 7 fází, rozdíl mezi Q a G bránou, 6 agentů, přečíst hotový běh a pracovat se SPOCKem v každodenním rytmu. |
-| 1b | [Fáze do hloubky](uroven-1b-faze-do-hloubky.md) | všichni | 8–10 h | U každé fáze vysvětlit kroky, pravidla, bránu, rozhodnutí a to, co fáze záměrně nedělá a neopraví. |
+| 0 | [Poznejte SPOCK](uroven-0-poznejte-spock.md) | všichni | asi 1,5 h, jen na webu | Vysvětlit, proč SPOCK vzniká, 7 fází, 6 agentů, co je task, rozdíl mezi Q a G bránou a pět pravidel, která se neporušují. |
+| 1 | [Příprava](uroven-1-priprava.md) | všichni | 2–3 h (plus čekání na role) | Mít schválené role v REDIMu, z firemního katalogu VS Code, Git, Node.js a SSH certifikát, SPOCK naklonovaný a ověřený a jednou projít hotový ukázkový běh. |
 | 2 | [Product Manager](role-pm.md) | PM | 6–8 h | Projít vlastní běh od briefu po iniciativu a podepsat každé rozhodnutí. |
 | 2 | [Product Designer](role-designer.md) | PD | 4–5 h | Dodat výzkum do fáze 2, posoudit příležitosti a přispět k řešení, MVP a PRD. |
 | 2 | [Software Engineer](role-engineer.md) | SWE | 4–5 h | Posoudit proveditelnost před výběrem řešení, přečíst PRD a záznamy běhu. |
 | 2 | [Guild Master](role-guild-master.md) | GM, správce PM metodiky | 6–7 h | Metodicky posoudit běh, změnit know-how správným postupem, odhadnout dopad změny na architekturu SPOCKu a vést komunitu PM. |
 | 3 | [Pokročilý](uroven-3-pokrocily.md) | všichni | 3–4 h | Vrátit fázi, vyřešit neprošlou bránu, předat běh kolegovi, aktualizovat kopii. |
 | 4 | [Superuser](uroven-4-superuser.md) | všichni | 4–6 h | Prověřit chování agentů, poslat použitelný nález a provést kolegu onboardingem. |
+| Příručka | [Fáze do hloubky](uroven-1b-faze-do-hloubky.md) | volitelně, hlavně GM a superuser | 8–10 h | U každé fáze vysvětlit kroky, pravidla, bránu, rozhodnutí a to, co fáze záměrně nedělá a neopraví. |
 
-**Doporučené pořadí:** 0 → 1 → 1b → vaše role → 3 → 4. Úroveň 1b stojí na specifikacích fází ve `specifications/stage-specs/` a je to nejhlubší část onboardingu. Na úrovni 2 se vyplatí přečíst si i úvod ostatních rolí, protože SPOCK počítá s **triem** PM, PD a SWE (`specifications/definitions/know-how/method/method-canon.md` §14.1). Guild Master by měl mít za sebou i modul Product Manager.
+**Doporučené pořadí:** 0 → 1 → vaše role → 3 → 4. Úroveň 0 projdete celou na webu, a mezitím si objednejte role v REDIMu pro Přípravu. Příručka Fáze do hloubky stojí na specifikacích fází ve `specifications/stage-specs/`. Je to nejhlubší část onboardingu, nic nezamyká a vracíte se k ní podle potřeby.
+
+**Jak lekce vypadají:** Každá lekce začíná krátkými **kartami** (asi 60–80 slov a jedna otázka s okamžitou odpovědí). Další karta se otevře, až odpovíte. Delší vysvětlení je pod „Víc do hloubky“, anglické podklady pod „Pro zvídavé“. U každého úkolu je napsané, kde ho děláte: **jen na webu**, **stačí papír**, nebo **ve VS Code**. Na úrovni 2 se vyplatí přečíst si i úvod ostatních rolí, protože SPOCK počítá s **triem** PM, PD a SWE (`specifications/definitions/know-how/method/method-canon.md` §14.1). Guild Master by měl mít za sebou i modul Product Manager.
 
 Tempo si určujete sami, pevná data tu nejsou.
 
