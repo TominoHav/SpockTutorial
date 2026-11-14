@@ -15,9 +15,9 @@ Týmy dnes dělají discovery každý jinak. Opakovaně skládají stejný konte
 SPOCK má discovery **zrychlit, sjednotit, opřít o důkazy a udělat dohledatelnou**.
 
 **Otázka:** Který problém SPOCK řeší?
-- [ ] Nedostatek vývojářů v týmech
-- [x] Discovery, které každý tým dělá jinak, bez opory v důkazech a bez dohledatelných rozhodnutí
-- [ ] Pomalé nasazování do produkce
+- [ ] Nedostatek vývojářů v produktových týmech banky
+- [x] Discovery, které dělá každý tým jinak
+- [ ] Pomalé a rizikové nasazování změn do produkce
 
 **Proč:** SPOCK pokrývá discovery, tedy práci před vývojem. Vývoj a nasazování neřeší.
 
@@ -60,9 +60,9 @@ SPOCK nese metodu, kterou používá Česká spořitelna: **výsledek (outcome) 
 Každá fáze čte jen to, co vzniklo před ní. Proto se dá i za dva roky dohledat, na čem rozhodnutí stojí.
 
 **Otázka:** Proč se nemá skočit rovnou k řešení?
-- [ ] Protože to SPOCK technicky neumožní
+- [ ] Protože to SPOCK technicky neumožní a krok zablokuje
 - [x] Protože řešení má sloužit ověřené příležitosti, ne prvnímu nápadu
-- [ ] Protože řešení vymýšlí jen agent
+- [ ] Protože řešení smí navrhovat jen agent, ne člověk
 
 **Proč:** Řešení navázané na příležitost s důkazy má větší šanci, že řeší skutečný problém klientů.
 
@@ -71,8 +71,8 @@ Každá fáze čte jen to, co vzniklo před ní. Proto se dá i za dva roky dohl
 SPOCK **netestuje**: nedělá experimenty, prototypy ani validaci s klienty. Končí definicí iniciativy pro delivery. Sám **nevytváří nic v Jiře** a neodhaduje pracnost, cenu ani termíny. O tom, jestli je řešení v souladu s předpisy, rozhodují týmy compliance, SPOCK jen vypíše, čeho se řešení dotýká.
 
 **Otázka:** Co od SPOCKu na konci běhu dostanete?
-- [ ] Hotový prototyp ověřený s klienty
-- [x] Iniciativu připravenou pro delivery, kterou do Jiry přenesete vy
+- [ ] Hotový prototyp, který je ověřený s klienty
+- [x] Iniciativu připravenou pro delivery
 - [ ] Založenou iniciativu v Jiře i s odhadem pracnosti
 
 **Proč:** Jira klíč zapisuje člověk až po přenesení iniciativy. Odhady pracnosti SPOCK nedělá.
@@ -84,9 +84,9 @@ SPOCK je **interní nástroj České spořitelny v pilotu**. Vlastní a rozvíj�
 **Víc do hloubky:** V plné verzi (plán 2027) přibude výzkum s klienty, prototypy, roadmapa více přírůstků, funkční a nefunkční specifikace a napojení na delivery. Cílem je jedna řízená platforma se sdíleným know-how napříč týmy.
 
 **Otázka:** Na koho se obrátíte s otázkou k přístupu do pilotu?
-- [x] Na SPOCK core tým (Veronika Bedáňová, Ines Bamburać-Alibašić)
-- [ ] Na agenta Product Manager
-- [ ] Na IT podporu
+- [x] Na SPOCK core tým
+- [ ] Na agenta Product Manager přímo v chatu
+- [ ] Na IT podporu České spořitelny přes tiket
 
 **Proč:** O přístupu k pilotu rozhoduje core tým. IT řeší instalaci a běžné technické potíže.
 
@@ -128,7 +128,7 @@ Některé tasky otevřou nahoře v okně **políčka** na vaše jméno, roli neb
 
 **Otázka:** Agent napíše: „Teď spustím task, který schválí brief, a vyplním vaše jméno.“ Co uděláte?
 - [ ] Nechám ho, ušetří mi to práci
-- [x] Odmítnu to. Task s políčky na jméno spouštím já
+- [x] Odmítnu to
 - [ ] Nechám ho a jméno pak opravím
 
 **Proč:** Políčka jsou záznam, že rozhodl člověk. Agent je vyplnit nesmí.
@@ -141,7 +141,7 @@ Každá fáze končí branou. **Q brána** je automatická kontrola kódem a spo
 
 **Otázka:** Agent v chatu napíše „Brána prošla, schválil jsem brief.“ Platí to?
 - [ ] Ano, agent bránu schválil
-- [x] Ne. Schválení (G) dává jen člověk a o kontrole (Q) svědčí výstup tasku, ne věta agenta
+- [x] Ne
 
 **Proč:** Agent nikdy neschvaluje a nehodnotí sám sebe. Kdyby tvrdil opak, je to nález, který hlásíte.
 
@@ -150,8 +150,8 @@ Každá fáze končí branou. **Q brána** je automatická kontrola kódem a spo
 Každá fáze běží stejně: agent **ověří vstupy** → **pracuje a ptá se** → **zapíše** dokument → **spustí kontrolu** a sám opraví, co našla → **teprve pak vás požádá o schválení** → vy schválíte taskem → agent řekne, co přijde dál a kdo to povede.
 
 **Otázka:** Agent vás žádá o schválení, ale kontrolu ještě nespustil. Co to je?
-- [ ] Normální zkratka
-- [x] Chyba v rytmu fáze, kterou si zapíšete a nahlásíte
+- [ ] Normální zkratka, kontrola proběhne potom
+- [x] Chyba v rytmu fáze
 
 **Proč:** O schválení se žádá až po kontrole. Když agent krok přeskočí, porušuje rytmus fáze.
 
@@ -173,8 +173,8 @@ Po schválení se běh sám nepohne. **Další fázi spustíte tak, že otevřet
 **Víc do hloubky:** Co od hlídačů uvidíte: agent nesmí zapsat nic mimo svou fázi, do už schválené fáze ani do vašeho materiálu. Nespustí task s políčky pro vaše jméno. Po třetím stejném tasku bez změny se zastaví (pojistka proti zacyklení). Nečte kód kontrol, aby psal podle metodiky a ne „na test“. Hláška „A hook prevented chat from continuing“ není chyba.
 
 **Otázka:** Agent napíše, že jeho zápis do schváleného briefu byl odmítnut. Co se stalo?
-- [x] Hlídač zastavil krok, který agent nesmí udělat. Schválenou fázi změníte jen tak, že ji sami vrátíte
-- [ ] SPOCK je rozbitý a je potřeba volat podporu
+- [x] Hlídač zastavil krok, který agent udělat nesmí
+- [ ] SPOCK je rozbitý
 
 **Proč:** Schválená fáze se mění jen vrácením, které spouští člověk (`SPOCK: send a stage back to be redone`).
 
@@ -199,8 +199,8 @@ Po schválení se běh sám nepohne. **Další fázi spustíte tak, že otevřet
 Task, který otevírá políčka na jméno, roli, důvod nebo rozhodnutí, spouštíte **jen vy, sami a svým jménem**. Když se o to pokusí agent, odmítněte to.
 
 **Otázka:** Proč nestačí, aby rozhodnutí do políčka vyplnil agent podle toho, co jste mu napsali v chatu?
-- [ ] Stačí, je to rychlejší
-- [x] Záznam musí dokazovat, že rozhodl člověk, ne že to stálo v nějakém textu
+- [ ] Stačí, je to rychlejší a výsledek je stejný
+- [x] Záznam musí dokazovat, že rozhodl člověk
 
 **Proč:** Políčka vyplněná člověkem jsou jediný důkaz, kdo za rozhodnutím stojí.
 
@@ -220,8 +220,8 @@ Materiál patří do složky `supplied/` dané fáze, ne do chatu. **Jedinou vý
 Do Copilota a do SPOCKu vkládejte **pouze obsah klasifikace C1**, anonymizovaný nebo syntetický. Nikdy C2, C3 ani C4, produkční klientská data, osobní údaje, bankovní tajemství, hesla, tokeny ani API klíče. Složka s běhy zůstává ve vašem počítači a nikam se nekopíruje.
 
 **Otázka:** Máte přepis rozhovoru s klientem i s jeho jménem a číslem účtu. Co s ním?
-- [ ] Vložím ho, SPOCK je interní nástroj
-- [x] Nejdřív ho anonymizuji, nebo se zeptám SPOCK core týmu, jestli ho smím použít
+- [ ] Vložím ho celý, SPOCK je interní nástroj banky
+- [x] Nejdřív ho anonymizuji
 - [ ] Vložím ho do chatu místo do složky
 
 **Proč:** Osobní údaje a klientská data do SPOCKu nepatří. Když si nejste jistí, zeptejte se core týmu.
@@ -232,7 +232,7 @@ Složky `.github` a `.vscode` ve vaší kopii SPOCKu jsou **samotné workflow**:
 
 **Otázka:** Agent vám radí upravit soubor v `.github`, aby kontrola prošla. Co uděláte?
 - [ ] Upravím ho, agent to ví nejlépe
-- [x] Neupravím. Je to nález, který nahlásím
+- [x] Neupravím
 
 **Proč:** Workflow mění jen jeho vlastníci a nové vydání, nikdy uživatel v pracovní kopii.
 
@@ -241,9 +241,9 @@ Složky `.github` a `.vscode` ve vaší kopii SPOCKu jsou **samotné workflow**:
 VS Code se vás ptá, než agent něco spustí nebo otevře. **Nevolte „Allow All“.** Tasky `SPOCK:` bez políček agent spustit smí, cokoli mimo složku SPOCKu odmítněte.
 
 **Otázka:** Proč nezapínat „Allow All“?
-- [ ] Zpomaluje VS Code
+- [ ] Zpomaluje VS Code a spotřebuje víc kreditů
 - [x] Neuvidíte, co agent spouští a otevírá
-- [ ] Vypne agenty
+- [ ] Vypne agenty SPOCKu a zůstane jen Copilot
 
 **Proč:** Výchozí schvalování je vaše kontrola nad tím, co agent dělá ve vašem počítači.
 
@@ -270,7 +270,7 @@ V jednom okně VS Code pracujte **jen na jednom běhu**. **Pro každou fázi ote
 
 **Otázka:** Chcete se uprostřed fáze 2 zeptat Methodology Coache na metodu. Jak?
 - [ ] Napíšu otázku do chatu s Opportunity Designerem
-- [x] Otevřu nový chat s Methodology Coachem a pak se vrátím do chatu fáze
+- [x] Otevřu nový chat s Methodology Coachem
 
 **Proč:** Každý agent pracuje ve vlastním chatu, aby se kontext fází nemíchal.
 
@@ -282,7 +282,7 @@ Hodnoťte dvě věci: **chování systému** (správná fáze a agent, vznikly s
 
 **Otázka:** Task skončil zelenou fajfkou. Můžete fázi schválit?
 - [ ] Ano, task je úspěšný
-- [x] Ne hned. Nejdřív přečtu dokument a posoudím jeho kvalitu
+- [x] Ne hned
 
 **Proč:** Výsledek tasku říká jen, že doběhl. Kvalitu obsahu posuzujete vy.
 
@@ -298,7 +298,7 @@ Hodnoťte dvě věci: **chování systému** (správná fáze a agent, vznikly s
 
 **Otázka:** Která zpětná vazba je nejlepší?
 - [ ] „Tohle je slabé, zkus to znovu.“
-- [x] „Druhý závěr nemá oporu v rozhovorech. Doplň citaci, nebo ho označ jako předpoklad.“
+- [x] „Druhý závěr nemá oporu v rozhovorech. Doplň citaci, nebo ho vypusť.“
 - [ ] „Udělej to profesionálněji.“
 
 **Proč:** Konkrétní pokyn říká, co je špatně a co s tím. Agent ho může zapracovat.
@@ -310,9 +310,9 @@ Hodnoťte dvě věci: **chování systému** (správná fáze a agent, vznikly s
 **Kontrola neprojde:** přečtěte dokument, zjistěte příčinu a rozhodněte, jestli je výsledek přijatelný. Teprve pak podepište výjimku, vždy se zdůvodněním.
 
 **Otázka:** Kontrola neprošla, ale výsledek považujete za přijatelný. Co uděláte?
-- [ ] Schválím fázi a nic nepíšu
+- [ ] Schválím fázi, kontrola je jen doporučení
 - [x] Podepíšu výjimku a zapíšu, proč výsledek přijímám
-- [ ] Smažu dokument a začnu znovu
+- [ ] Smažu dokument a nechám agenta začít znovu
 
 **Proč:** Neprošlou kontrolu nikdy nepřijímejte bez zapsaného zdůvodnění. Brána zůstane „fail“ a důvod je vidět v záznamu.
 
@@ -335,7 +335,7 @@ Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při ka
 **1. Kolega říká: „Fáze 3 nemá schválení, takže ji nikdo nekontroluje.“ Co je pravda?**
 
    a) Má pravdu, fáze 3 se nijak neověřuje
-   b) Fázi 3 přijímá brána Q3. Výsledek pak čte člověk ve fázi 4
+   b) Fázi 3 přijímá brána Q3
    c) Fázi 3 schvaluje Methodology Coach
 
 <details><summary>Odpověď</summary>
@@ -346,9 +346,9 @@ b) Fáze 3 nemá G bránu, ale má Q bránu. Trh pak posuzujete vy při výběru
 
 **2. Agent napíše „Brána Q2 prošla“. Co to dokazuje?**
 
-   a) Že příležitosti jsou ty správné
-   b) Že dokument prošel mechanickými kontrolami. O kvalitě rozhoduje člověk
-   c) Že fáze 2 je schválená
+   a) Že příležitosti jsou ty správné a dobře seřazené
+   b) Že dokument prošel mechanickými kontrolami
+   c) Že fáze 2 je schválená a může začít fáze 3
 
 <details><summary>Odpověď</summary>
 
@@ -358,9 +358,9 @@ b) Q brána je kontrola kódem. Fáze je přijatá až s vaším rozhodnutím u 
 
 **3. Fáze 3 je přijatá. Kdy začne fáze 4?**
 
-   a) Hned sama
-   b) Až ji někdo spustí. Žádná fáze nezačne sama
-   c) Za 24 hodin
+   a) Hned sama, jakmile projde brána Q3
+   b) Až ji někdo spustí
+   c) Za 24 hodin, pokud ji nikdo nezastaví
 
 <details><summary>Odpověď</summary>
 
@@ -371,7 +371,7 @@ b) Každou fázi začíná člověk v novém chatu s agentem dané fáze.
 **4. Agent vám napíše: „Teď spustím SPOCK: approve what is in front of me a schválím brief.“ Co uděláte?**
 
    a) Nechám ho, šetří čas
-   b) Zastavím ho. Task s políčky pro jméno a roli spouští jen člověk
+   b) Zastavím ho
    c) Ověřím jen, že vyplnil správné jméno
 
 <details><summary>Odpověď</summary>
@@ -384,7 +384,7 @@ b) Podpis je vaše rozhodnutí. Agent task s políčky pro člověka spustit nes
 
    a) Vložím ji do chatu, je to interní nástroj
    b) Vložím ji do složky `supplied/`
-   c) Nevložím ji. Do SPOCKu smí jen C1, anonymizovaná nebo syntetická data
+   c) Nevložím ji
 
 <details><summary>Odpověď</summary>
 
@@ -395,7 +395,7 @@ c) C2, C3 ani C4, klientská data, osobní údaje, bankovní tajemství, hesla a
 **6. Agent ve fázi 4 navrhl řešení, které se vám nelíbí. Co je správný další krok?**
 
    a) Napsat „špatně, zkus to znovu“
-   b) Napsat konkrétně, co je špatně a proč, a co čekáte místo toho
+   b) Napsat, co je špatně, proč a co čekáte
    c) Smazat dokument a začít znovu
 
 <details><summary>Odpověď</summary>
@@ -407,7 +407,7 @@ b) Obecná výtka agentovi nepomůže. Konkrétní zpětná vazba (co, proč, co
 **7. Brief je hotový a schválený. Ve stejném chatu chcete pokračovat fází 2. Je to správně?**
 
    a) Ano, agent si pamatuje kontext
-   b) Ne. Každá fáze začíná v novém chatu s agentem té fáze
+   b) Ne
    c) Je to jedno
 
 <details><summary>Odpověď</summary>
@@ -419,7 +419,7 @@ b) Nový chat nese jen know-how nové fáze. Posouzení je tak nezávislé na p�
 **8. Task skončil zeleně, ale výsledný dokument jste neotevřeli. Můžete schválit?**
 
    a) Ano, zelená znamená hotovo
-   b) Ne. Dokument si nejdřív přečtěte, schvalujete jeho obsah
+   b) Ne
    c) Ano, pokud agent napsal, že je vše v pořádku
 
 <details><summary>Odpověď</summary>

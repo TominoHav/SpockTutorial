@@ -191,7 +191,7 @@ Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při ka
 **1. Někdo z týmu říká: „Všechny brány jsou zelené, takže iniciativa je dobrá.“ Co odpovíte?**
 
    a) Souhlasím
-   b) Zelená znamená mechanickou polovinu. Kvalitu discovery žádná kontrola neposuzuje
+   b) Zelená znamená mechanickou polovinu
    c) Záleží na počtu touchpointů
 
 <details><summary>Odpověď</summary>
@@ -263,7 +263,7 @@ b) Neprošlá kontrola ještě neznamená neprošlý scénář.
 **7. Kolega se ptá, zda SPOCK posoudil regulaci AI v jeho řešení. Co odpovíte?**
 
    a) Ano, ve fázi 4
-   b) Ne. AI regulace není v žádné ze čtyř oblastí. Rozhodnutí patří compliance týmu
+   b) Ne
    c) Ano, pokud je touchpoint `yes`
 
 <details><summary>Odpověď</summary>

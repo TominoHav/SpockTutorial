@@ -17,7 +17,7 @@
 **Know-how je to, co agenti čtou a nikdy nepíší**: co je důkaz, co musí obsahovat brief, PRD a iniciativa, jak se mluví s člověkem. Mění se jen rukou člověka, mimo jakýkoli běh (`KNOW-HOW-OWNERS.md` úvod).
 
 **Otázka:** Kdo smí měnit know-how?
-- [ ] Agent, když najde chybu
+- [ ] Agent, když v know-how najde chybu
 - [x] Jen člověk, mimo jakýkoli běh
 
 **Proč:** Know-how agenti čtou a nikdy nepíší.
@@ -29,8 +29,8 @@
 **Zdroj je jen jeden:** `specifications/definitions/know-how/`. Kopie v `.github/know-how/` se generuje. Úprava kopie selže v kontrole `C41` a při dalším generování zmizí.
 
 **Otázka:** Upravíte soubor v `.github/know-how/`. Co se stane?
-- [ ] Změna začne platit
-- [x] Selže kontrola `C41` a při dalším generování změna zmizí
+- [ ] Změna začne platit pro všechny další běhy
+- [x] Selže kontrola a změna zmizí
 
 **Proč:** `.github/know-how/` je generovaná kopie. Zdroj je jen `specifications/definitions/know-how/`.
 
@@ -39,8 +39,8 @@
 **Každý běh si zapisuje verzi každého know-how, které přečetl.** Proto má každá změna novou verzi.
 
 **Otázka:** Proč musí mít každá změna know-how novou verzi?
-- [x] Běh si zapisuje verzi, kterou četl, a jinak by nešlo poznat, podle čeho vznikl
-- [ ] Kvůli gitu
+- [x] Běh si zapisuje verzi, kterou četl
+- [ ] Kvůli historii změn v gitu
 
 **Proč:** Verze dovoluje vysvětlit, proč se dva běhy chovaly jinak.
 
@@ -51,9 +51,9 @@
 **Za kvalitu výstupů SPOCKu odpovídají hlavně Guild Masteři** CoE Product Management a CoE Product Design. SPOCK vlastní a řídí oba CoE: produkt, metodiku, workflow, šíření i roadmapu.
 
 **Otázka:** Kdo odpovídá hlavně za kvalitu výstupů SPOCKu?
-- [ ] Agenti
+- [ ] Agenti, kteří dokumenty píší
 - [x] Guild Masteři CoE Product Management a CoE Product Design
-- [ ] IT podpora
+- [ ] IT podpora, která SPOCK provozuje
 
 **Proč:** SPOCK vlastní a řídí oba CoE, kvalitu výstupů hlídají jejich Guild Masteři.
 
@@ -84,7 +84,7 @@
 **ČS má pro jeden Jira objekt dvě šablony.** Stakeholder rozhodl, že platí šablona **Product Management Guildy**. Kde se šablony liší, vyhrává Guilda. **Kde Guilda mlčí, zůstávají převzaté sekce**, protože mlčení není nesouhlas (`initiative-template.md`).
 
 **Otázka:** Šablona Guildy o jedné sekci mlčí. Co s ní?
-- [ ] Vypustí se
+- [ ] Vypustí se, platí jen sekce Guildy
 - [x] Zůstává převzatá, mlčení není nesouhlas
 
 **Proč:** Kde se šablony liší, vyhrává Guilda. Kde Guilda mlčí, zůstávají převzaté sekce.
@@ -96,8 +96,8 @@
 **Brief je sada polí.** Co nikdo nedodal, je unknown s důvodem, a cíl jsou čtyři věci: produktový cíl, metrika, key result a písemná vazba mezi nimi (`STAGE-1-SPEC.md`, krok 4).
 
 **Otázka:** Kolik částí má cíl v briefu?
-- [ ] Jednu
-- [x] Čtyři: produktový cíl, metrika, key result a písemná vazba
+- [ ] Jednu: produktový cíl
+- [x] Čtyři, včetně písemné vazby
 
 **Proč:** Bez písemné vazby je cíl neúplný.
 
@@ -123,8 +123,8 @@
 **Každá brána má mechanickou a posuzovanou polovinu.** Mechanickou spouští kód. **Posuzovanou nehodnotí žádný automat**, protože všechny agenty pilotu pohání jedna rodina modelů a kontrola stejnou rodinou by byla producent souhlasící sám se sebou.
 
 **Otázka:** Proč posuzovanou polovinu brány nehodnotí automat?
-- [ ] Ještě není hotový
-- [x] Všechny agenty pohání jedna rodina modelů a producent by souhlasil sám se sebou
+- [ ] Automatický soudce ještě není hotový
+- [x] Producent by souhlasil sám se sebou
 
 **Proč:** Posouzení kvality proto zůstává na člověku.
 
@@ -133,8 +133,8 @@
 **Kdo podepisuje bránu, může posuzovaná pravidla zodpovědět** ve třetím políčku `SPOCK: approve what is in front of me`: `y`, `n` nebo `?` s číslem otázky. Přeskočené se zapíše jako skipped a kontrola `C180` hlídá, že odpovědi mají jméno a roli.
 
 **Otázka:** Jak odpovíte na posuzovaná pravidla?
-- [x] Ve třetím políčku `SPOCK: approve what is in front of me`, např. `1y 2n`
-- [ ] V chatu agentovi
+- [x] Ve třetím políčku tasku pro schválení, např. `1y 2n`
+- [ ] Napíšu je agentovi do chatu a on je zapíše do záznamu
 
 **Proč:** Odpovědi se zapíšou se jménem a rolí a hlídá je kontrola `C180`.
 
@@ -145,7 +145,7 @@
 **Otázka:** Kde je metodicky nejslabší místo běhu?
 - [ ] V briefu
 - [x] V trhu, fázi 3 nikdo neschvaluje
-- [ ] V iniciativě
+- [ ] V iniciativě, tu čte jen BA
 
 **Proč:** Q3 se na posuzované otázky nikoho nezeptá. Výsledek čte až člověk ve fázi 4.
 
@@ -156,8 +156,8 @@
 **Guild Master posuzuje kvalitu, ne formu:** jestli je outcome změna chování, jestli příležitost popisuje potřebu, a ne řešení, a jestli trust tag sedí s tím, co za ním je.
 
 **Otázka:** Co jako GM posuzujete?
-- [ ] Formu: nadpisy a pole
-- [x] Kvalitu: outcome jako změna chování, příležitost jako potřeba, trust tag podle důkazů
+- [ ] Formu: nadpisy, pole a povinné sekce dokumentů
+- [x] Kvalitu: outcome, příležitosti a trust tag
 
 **Proč:** Formu hlídají kontroly. Kvalitu nehlídá nikdo jiný.
 
@@ -208,8 +208,8 @@
 **Kontroly z `KNOW-HOW-OWNERS.md` §4 krok 4 ve vydané kopii nejsou.** `repo-check.mjs` a `check.test.mjs` má jen vývojový repozitář. SWE, se kterým změnu děláte, k němu potřebuje přístup od pilotního týmu.
 
 **Otázka:** Upravíte know-how ve své pracovní kopii SPOCKu správným postupem. Projde to?
-- [ ] Ano, postup byl správný
-- [x] Ne, kontrola `C189` selže a nejde podepsat jako výjimka
+- [ ] Ano, správný postup stačí
+- [x] Ne, selže kontrola `C189`
 
 **Proč:** Změna patří do vývojového repozitáře a k lidem se dostane novým vydáním.
 
@@ -219,7 +219,7 @@
 
 **Otázka:** Proč dělat změny po jedné?
 - [x] Pak víte, co která změna způsobila
-- [ ] Kvůli kreditům
+- [ ] Kvůli spotřebě AI kreditů
 
 **Proč:** Víc změn najednou nejde od sebe odlišit.
 
@@ -249,8 +249,8 @@
 **Methodology Coach** odpovídá jen z Method Canonu. Co v kánonu není, neřekne. Mezery, na které PM narážejí, jsou pro vás signál ke změně.
 
 **Otázka:** PM se opakovaně ptají Methodology Coache na věc, kterou neumí odpovědět. Co to pro vás je?
-- [ ] Chyba agenta
-- [x] Signál, že v kánonu chybí, a podnět ke změně
+- [ ] Chyba agenta, kterou nahlásím
+- [x] Podnět ke změně kánonu
 
 **Proč:** Coach odpovídá jen z Method Canonu.
 
@@ -259,8 +259,8 @@
 **Co pilot z metody vynechává** (`method-canon.md` §15: průběžné rozhovory, strukturovaný strom příležitostí, testování) musí Guilda říkat na rovinu, aby PM nebrali výstup SPOCKu jako ověřený.
 
 **Otázka:** Co musí Guilda říkat na rovinu?
-- [x] Že pilot nedělá průběžné rozhovory ani testování a výstup není ověřený
-- [ ] Že SPOCK nahrazuje metodiku banky
+- [x] Že výstup pilotu není ověřený
+- [ ] Že SPOCK plně nahrazuje produktovou metodiku banky
 
 **Proč:** Jinak by PM brali výstup SPOCKu jako ověřený.
 
@@ -269,7 +269,7 @@
 **Výjimky označené „the workflow looks wrong“** se sčítají v `SPOCK: how the workflow performed`. Opakující se výjimka u stejné kontroly je podnět k revizi metodiky nebo kontroly.
 
 **Otázka:** Tři PM podepsali výjimku u stejné kontroly s „the workflow looks wrong“. Co uděláte?
-- [ ] Nic, výjimky jsou běžné
+- [ ] Nic, podepsané výjimky jsou běžná věc
 - [x] Projdu, jestli nejde o chybu metodiky nebo kontroly
 
 **Proč:** Opakující se výjimka je podnět k revizi.
@@ -303,17 +303,37 @@
 
 **Proč:** Agenti píší podle know-how a kód kontrol číst nesmějí.
 
-#### Čtyři otázky architektury
+#### Co agent ví a co smí
 
-**Jak do sebe SPOCK zapadá: čtyři otázky.** Celou architekturu pochopíte, když u každé části víte, na kterou z nich odpovídá:
+Celou architekturu pochopíte přes čtyři otázky. První dvě se týkají agenta:
 
-- **1. Co agent ví?** Jen tři věci: pravidla pro všechny (pracovní řád), **skill** (postup pro jeden dokument) a **know-how** (co znamená „dobře“). Jinou paměť nemá. Kód kontrol číst nesmí, takže kvalita jeho práce stojí na skillu a know-how.
-- **2. Co agent smí?** Jen to, co má ve svém seznamu nástrojů. Za běhu ho navíc hlídají **hlídače**: zastaví zápis mimo jeho fázi, do schválené fáze nebo do vašeho materiálu a nepustí ho k tasku, kde se podepisuje člověk.
-- **3. Kdo ověří, co agent napsal?** **Kód kontrol** (Q brána), ne agent sám. Které kontroly patří ke které bráně, určují kontrakty a registry. Kontrola hlídá formu a stopu ke zdroji, kvalitu metodiky posuzuje člověk.
-- **4. Kdo rozhoduje?** **Člověk**, podpisem přes task s políčky (G brána). Podpis, jméno, role a verze každého know-how, které agent četl, se zapíšou do záznamu běhu (`RUN-STATE.md`).
+- **1. Co agent ví?** Jen tři věci: pravidla pro všechny (pracovní řád), **skill** (postup pro jeden dokument) a **know-how** (co znamená „dobře“). Jinou paměť nemá a kód kontrol číst nesmí.
+- **2. Co agent smí?** Jen to, co má ve svém seznamu nástrojů. Za běhu ho navíc hlídají **hlídače**.
+
+**Víc do hloubky:**
+- Kvalita práce agenta stojí na skillu a know-how, protože kód kontrol nezná.
+- Hlídače zastaví zápis mimo jeho fázi, do schválené fáze nebo do vašeho materiálu a nepustí agenta k tasku, kde se podepisuje člověk.
+
+**Otázka:** Na čem stojí kvalita toho, co agent napíše?
+- [ ] Na kódu kontrol, který si agent předem přečte
+- [x] Na skillu a know-how
+- [ ] Na paměti z předchozích běhů
+
+**Proč:** Agent zná jen pravidla, skill a know-how. Kód kontrol číst nesmí a jinou paměť nemá.
+
+#### Kdo ověřuje a kdo rozhoduje
+
+Druhé dvě otázky se týkají toho, co se s výstupem agenta stane:
+
+- **3. Kdo ověří, co agent napsal?** **Kód kontrol** (Q brána), ne agent sám. Kontrola hlídá formu a stopu ke zdroji, kvalitu metodiky posuzuje člověk.
+- **4. Kdo rozhoduje?** **Člověk**, podpisem přes task s políčky (G brána).
+
+**Víc do hloubky:**
+- Které kontroly patří ke které bráně, určují kontrakty a registry.
+- Podpis, jméno, role a verze každého know-how, které agent četl, se zapíšou do záznamu běhu (`RUN-STATE.md`).
 
 **Otázka:** Kdo ověří, co agent napsal?
-- [ ] Agent sám
+- [ ] Agent sám, než požádá o schválení
 - [x] Kód kontrol, kvalitu metodiky pak člověk
 - [ ] Methodology Coach
 
@@ -321,19 +341,31 @@
 
 #### Proč je to postavené takhle
 
-**Proč je to postavené právě takhle:**
+Tři pojistky drží agenta a kontrolu od sebe:
 
-- **Psaní a kontrola jsou oddělené.** Kdo dokument píše, ten ho neschvaluje. Agent nemůže prohlásit, že prošel.
-- **Každá fáze začíná v novém chatu.** Chat začíná s know-how fáze, do které vstupujete, a nenese nic z předchozí konverzace. Posouzení další fáze je tak nezávislé.
-- **Cizí materiál čte agent bez nástrojů.** Krok čtení materiálu ve fázi 2 (`material-intake`) běží v karanténě. Pokyn schovaný v rozhovoru nebo dokumentu nemůže proměnit v akci.
-- **Běh si pamatuje, podle čeho vznikl.** Protože se zapisuje verze každého know-how, víte u každého běhu, podle jaké metodiky byl napsaný. Proto musí mít každá změna know-how novou verzi.
-- **Workflow se mění jen novým vydáním.** Úprava souborů SPOCKu v pracovní kopii shodí kontrolu C189. Vaše změny metodiky se k lidem dostanou až s vydáním.
+- **Psaní a kontrola jsou oddělené.** Kdo dokument píše, ten ho neschvaluje.
+- **Každá fáze začíná v novém chatu.** Chat nese jen know-how nové fáze, nic z předchozí konverzace.
+- **Cizí materiál čte agent bez nástrojů.** Čtení materiálu ve fázi 2 (`material-intake`) běží v karanténě.
 
 **Otázka:** Proč čte agent cizí materiál bez nástrojů?
-- [x] Aby pokyn schovaný v materiálu nemohl proměnit v akci
-- [ ] Aby byl rychlejší
+- [x] Aby pokyn z materiálu nemohl provést
+- [ ] Aby četl rychleji a spotřeboval méně kreditů
 
-**Proč:** Krok `material-intake` běží v karanténě.
+**Proč:** Pokyn schovaný v rozhovoru nebo dokumentu se v karanténě nemůže proměnit v akci.
+
+#### Běh si pamatuje, workflow se mění vydáním
+
+Dvě pravidla, která se přímo týkají vašich změn metodiky:
+
+- **Běh si pamatuje, podle čeho vznikl.** Zapisuje verzi každého know-how, které agent četl. Proto musí mít každá změna know-how novou verzi.
+- **Workflow se mění jen novým vydáním.** Úprava souborů SPOCKu v pracovní kopii shodí kontrolu C189.
+
+**Otázka:** Kdy se vaše změna metodiky dostane k uživatelům?
+- [ ] Hned po uložení souboru
+- [x] Až s novým vydáním SPOCKu
+- [ ] Po restartu VS Code
+
+**Proč:** Know-how v pracovní kopii patří k vydání. Uživatelé změnu dostanou aktualizací po dokončení svých běhů.
 
 #### Devět vrstev, vaše je jedna
 
@@ -408,9 +440,9 @@
 9. **Vy (task):** `SPOCK: approve what is in front of me` zapíše podpis G1 a běh postoupí.
 
 **Otázka:** Kdo zapíše podpis G1?
-- [ ] Agent po kontrole
-- [x] Vy, taskem `SPOCK: approve what is in front of me`
-- [ ] Hlídač na konci tahu
+- [ ] Agent, hned jak projde kontrola Q1
+- [x] Vy, taskem pro schválení
+- [ ] Hlídač, když ověří povinné věty
 
 **Proč:** Task s políčky pro člověka agent spustit nesmí.
 
@@ -470,7 +502,7 @@ Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při ka
 **1. Chcete upravit pravidlo v Brief Fields. Který soubor upravíte?**
 
    a) `.github/know-how/product/brief-fields.md`
-   b) Zdroj ve `specifications/definitions/know-how/product/`, ve vývojovém repozitáři
+   b) Zdroj ve vývojovém repozitáři
    c) Skill `brief-creation`
 
 <details><summary>Odpověď</summary>
@@ -481,9 +513,9 @@ b) Zdroj je jen jeden. Kopie v `.github/know-how/` se generuje a její úprava s
 
 **2. Všechny brány běhu jsou zelené, ale outcome v briefu je „spustit nový onboarding“. Co z toho plyne?**
 
-   a) Běh je v pořádku
-   b) Outcome je řešení, ne změna chování. Kontroly to neposoudí, posoudí to člověk
-   c) Brána Q1 je rozbitá
+   a) Běh je v pořádku, brány by chybu našly
+   b) Outcome je řešení, ne změna chování
+   c) Brána Q1 je rozbitá a je potřeba ji nahlásit
 
 <details><summary>Odpověď</summary>
 
@@ -494,7 +526,7 @@ b) Zelená brána je jen mechanická polovina. Kvalitu outcome hlídá GM.
 **3. Opravili jste v know-how překlep a verzi jste nezměnili. Je to v pořádku?**
 
    a) Ano, je to drobnost
-   b) Obvykle ne. Každá změna má novou verzi a řádek v historii. Výjimku projděte s týmem CoE Product Management
+   b) Obvykle ne
    c) Ano, pokud to schválí SWE
 
 <details><summary>Odpověď</summary>
@@ -505,9 +537,9 @@ b) Běh si zapisuje verzi know-how. Změnu pod stejným číslem by nešlo odli�
 
 **4. Chcete upravit Method Canon. Proč to vyžaduje víc ověřování než změna PRD Template?**
 
-   a) Method Canon je delší
-   b) Čte ho 16 skillů, takže změna zasáhne celý běh. PRD Template čte jen jeden
-   c) PRD Template se nemění
+   a) Method Canon je delší a hůř se čte
+   b) Čte ho 16 skillů, takže změna zasáhne celý běh
+   c) PRD Template se nemění vůbec
 
 <details><summary>Odpověď</summary>
 
@@ -518,8 +550,8 @@ b) Čím víc skillů know-how čte, tím pečlivěji změnu ověřujte.
 **5. Proč agenti nesmějí číst kód kontrol a co to znamená pro vás?**
 
    a) Kvůli rychlosti. Pro GM nic
-   b) Aby psali podle know-how, ne pro kontrolu. Kvalita know-how je proto kvalita výstupu
-   c) Kód je tajný
+   b) Aby psali podle know-how, ne pro kontrolu
+   c) Kód kontrol je tajný a patří pilotnímu týmu
 
 <details><summary>Odpověď</summary>
 
@@ -541,9 +573,9 @@ a) Výjimky označené jako podezření na chybu workflow se sčítají v tomto 
 
 **7. PM se ptá, proč by měl brát výstup SPOCKu opatrně, když všechno prošlo. Co mu řeknete?**
 
-   a) Nemusí, výstup je ověřený
-   b) Pilot nedělá průběžné rozhovory ani testování. Výstup je definice, ne důkaz
-   c) Že agenti dělají chyby
+   a) Nemusí, zelené brány výstup ověřily
+   b) Pilot nedělá průběžné rozhovory ani testování
+   c) Že agenti dělají chyby a nejde jim věřit
 
 <details><summary>Odpověď</summary>
 

@@ -31,9 +31,9 @@
 **SPOCK neověřuje žádoucnost.** Varianty MVP se porovnávají jen na papíře. Prototypy a testy s uživateli přijdou až v Execution. Výstup SPOCKu je **definice, ne důkaz** (`method-canon.md` §3).
 
 **Otázka:** Co výstup SPOCKu je?
-- [ ] Důkaz, že klienti řešení chtějí
+- [ ] Důkaz, že klienti o řešení stojí a budou ho používat
 - [x] Definice toho, co postavit, ne důkaz
-- [ ] Otestovaný prototyp
+- [ ] Prototyp otestovaný s klienty
 
 **Proč:** Prototypy a testy s uživateli přijdou až v Execution.
 
@@ -65,9 +65,9 @@
 - **Grafy z exportu Tableau do PowerPointu se nečtou**, čte se jen text a poznámky. Čísla, na kterých záleží, dejte vedle do textového souboru.
 
 **Otázka:** Máte výsledky ve formě desky v Miru. Co uděláte?
-- [ ] Vložím odkaz na desku
-- [x] Přepíšu podstatné do textového souboru, desku SPOCK nepřečte
-- [ ] Udělám screenshot
+- [ ] Vložím do materiálu odkaz na desku, agent si ji otevře
+- [x] Přepíšu podstatné do textového souboru
+- [ ] Udělám screenshot desky a uložím ho mezi materiál
 
 **Proč:** Desky z Mira ani obrázky SPOCK nečte.
 
@@ -92,7 +92,7 @@
 
 **Otázka:** Co do fáze 2 dáte radši?
 - [x] Přepisy rozhovorů a poznámky
-- [ ] Jen slide s hotovými závěry
+- [ ] Jeden slide s hotovými závěry z workshopu
 
 **Proč:** Pilot zkoumá, jak SPOCK pracuje s podkladovými důkazy. Z hotových závěrů je nepozná.
 
@@ -101,8 +101,8 @@
 **Jen povolená data:** pouze klasifikace C1, anonymizovaná nebo syntetická. Nikdy C2, C3 ani C4, produkční klientská data, osobní údaje, bankovní tajemství, hesla, tokeny ani API klíče. Když si nejste jistí, zeptejte se SPOCK core týmu dřív, než materiál vložíte.
 
 **Otázka:** Máte přepis rozhovoru se jménem a číslem účtu klienta. Smíte ho vložit?
-- [ ] Ano, je to cvičný běh
-- [x] Ne, nejdřív ho anonymizujte, osobní údaje do SPOCKu nepatří
+- [ ] Ano, v cvičném běhu na datech nezáleží
+- [x] Ne, nejdřív ho musíte anonymizovat
 
 **Proč:** Do SPOCKu smí jen data s klasifikací C1, anonymizovaná nebo syntetická.
 
@@ -132,8 +132,8 @@
 **Dobře formulovaná příležitost** popisuje potřebu, bolest nebo touhu zákazníka, ne řešení (`method-canon.md` §10.4).
 
 **Otázka:** Je „Poradci by používali samoobslužný nástroj“ dobře formulovaná příležitost?
-- [ ] Ano
-- [x] Ne, je to řešení převlečené za problém
+- [ ] Ano, popisuje, co by poradci dělali
+- [x] Ne, je to řešení, ne potřeba
 
 **Proč:** Test tvaru: mohlo by problém vyřešit víc než jedna věc? Tady už je řešení vybrané.
 
@@ -146,8 +146,8 @@
 - **Alternativy zůstávají prázdné s důvodem.** Řešení napsané ve fázi 2 by bylo o tři fáze dřív (`TESTER-GUIDE.md` §4, Stage 2).
 
 **Otázka:** Kdo určí, které příležitosti bolí klienty nejvíc, když to materiál neřekne?
-- [ ] Agent odhadem
-- [x] Člověk, typicky PD nebo PM, jako pořadí přes celou sadu
+- [ ] Agent, odhadem z počtu zmínek v materiálu
+- [x] Člověk, jako pořadí přes celou sadu
 
 **Proč:** Co materiál neřekne, agent nedoplňuje. Ptá se vás.
 
@@ -168,7 +168,7 @@
 **Každé řešení je jiná kombinace příležitostí, ne varianta jednoho řešení.** Vlastní řešení, které řeší jen podmnožinu existujícího, SPOCK odmítne, a to správně (`TESTER-GUIDE.md` §4, Stage 4).
 
 **Otázka:** Přidáte řešení, které řeší jen část příležitostí existujícího řešení. Co SPOCK udělá?
-- [ ] Přijme ho jako variantu
+- [ ] Přijme ho jako užší variantu téhož řešení
 - [x] Odmítne ho, a to správně
 
 **Proč:** Každé řešení má být jiná kombinace příležitostí, ne podmnožina jiného.
@@ -179,8 +179,8 @@
 
 **Otázka:** Co patří do sekce *How it does it*?
 - [x] Zážitek klienta a pracovníka
-- [ ] Architektura systému
-- [ ] Seznam obrazovek
+- [ ] Architektura systému a jeho integrace
+- [ ] Seznam obrazovek a jejich prvků
 
 **Proč:** Tady je pohled PD nejcennější. Architektura do řešení nepatří.
 
@@ -222,9 +222,9 @@ Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při ka
 
 **1. Máte výsledky testu použitelnosti jako desku v Miro a pár screenshotů. Co s nimi?**
 
-   a) Přiložím je, SPOCK je přečte
-   b) Podstatné přepíšu do textového souboru. Desky ani obrázky SPOCK nečte
-   c) Pošlu je agentovi do chatu
+   a) Přiložím je do materiálu, SPOCK si je přečte sám
+   b) Podstatné přepíšu do textového souboru
+   c) Pošlu je agentovi do chatu a požádám o shrnutí
 
 <details><summary>Odpověď</summary>
 
@@ -235,7 +235,7 @@ b) SPOCK přečte text, tabulky a dokumenty, ale ne desky z Mira ani obrázky.
 **2. Za příležitostí stojí jeden přepis rozhovoru z první ruky a jeden souhrn tiketů. Agent dal *weak*. Je to chyba?**
 
    a) Ano, má být strong
-   b) Záleží na provenienci. Jsou-li oba zdroje nezávislé a úplně doložené, mělo by to být strong
+   b) Záleží na provenienci
    c) Ne, tikety se nepočítají
 
 <details><summary>Odpověď</summary>
@@ -247,7 +247,7 @@ b) Strong chce dva nezávislé původy s úplnou proveniencí a aspoň jeden z p
 **3. Řekne SPOCK, jestli uživatelé o řešení stojí?**
 
    a) Ano, ve fázi 5
-   b) Ne. Výstup je definice, ne důkaz. Žádoucnost se ověří až v Execution
+   b) Ne
    c) Ano, trust tag to měří
 
 <details><summary>Odpověď</summary>
@@ -258,9 +258,9 @@ b) SPOCK nic netestuje (`method-canon.md` §3).
 
 **4. Export z Tableau do PowerPointu obsahuje graf konverze, na kterém závisí příležitost. Co uděláte?**
 
-   a) Nic, PowerPoint SPOCK přečte
-   b) Čísla z grafu přepíšu do textového souboru vedle prezentace
-   c) Udělám z grafu obrázek
+   a) Nic, PowerPoint SPOCK přečte včetně grafů
+   b) Čísla z grafu přepíšu do textového souboru
+   c) Vyříznu graf jako obrázek a přiložím ho zvlášť
 
 <details><summary>Odpověď</summary>
 
@@ -271,7 +271,7 @@ b) Z PowerPointu se čte jen text a poznámky. Grafy ne.
 **5. PM navrhuje příležitost „Chceme chatbota v aplikaci“. Co namítnete?**
 
    a) Nic, je to jasná potřeba
-   b) Je to řešení, ne potřeba. Přeformulujte ji na potřebu, kterou by šlo vyřešit víc způsoby
+   b) Je to řešení, ne potřeba
    c) Je moc široká
 
 <details><summary>Odpověď</summary>
@@ -282,8 +282,8 @@ b) Test tvaru: mohlo by problém vyřešit víc než jedna věc?
 
 **6. V rozhovoru klient zmínil své rodné číslo. Chcete přepis dát do fáze 2. Co uděláte?**
 
-   a) Vložím přepis, je to cvičný běh
-   b) Osobní údaje odstraním a do SPOCKu dám jen anonymizovanou verzi
+   a) Vložím přepis celý, je to jen cvičný běh
+   b) Vložím jen anonymizovanou verzi
    c) Vložím ho, ale soubor pojmenuji „citlivé“
 
 <details><summary>Odpověď</summary>
@@ -306,9 +306,9 @@ b) Agent navrhne tři, vy přidáte až tři vlastní. Hotová sada má 2–6 va
 
 **8. V sekci *What it does* řešení stojí „nová obrazovka se třemi záložkami“. Co je špatně?**
 
-   a) Nic
+   a) Nic, popis obrazovky sem patří
    b) Sekce má popisovat změnu chování klienta, ne obrazovky
-   c) Chybí architektura
+   c) Chybí popis architektury za obrazovkou
 
 <details><summary>Odpověď</summary>
 

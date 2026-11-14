@@ -22,8 +22,8 @@ V ČS se oprávnění objednávají jako **role v REDIMu**, interním systému p
 
 **Otázka:** Čeká vás bootcamp za týden. Kdy objednáte role?
 - [x] Dnes, schválení může trvat dny
-- [ ] Den předem
-- [ ] Až na bootcampu
+- [ ] Den předem, schválení je automatické
+- [ ] Až na bootcampu, kde s tím pomohou
 
 **Proč:** Bez schválených rolí nenaklonujete SPOCK ani nespustíte Copilota.
 
@@ -34,8 +34,8 @@ Oficiální postup ČS je na Wiki České spořitelny, stránka **GitHub – Onb
 **Víc do hloubky:** Copilot musí ve firemní konfiguraci povolit **agent mode** (asistent smí pracovat se soubory) a **vlastní agenty** (asistenti, které si SPOCK přináší) a v nabídce modelů musí být **Claude Sonnet 5**. Nastavovat to nemusíte, jen to uveďte v žádosti.
 
 **Otázka:** Můžete pro SPOCK použít svůj soukromý GitHub účet?
-- [ ] Ano, když má Copilota
-- [x] Ne, Copilot i repozitář jsou navázané na firemní účet
+- [ ] Ano, když na něm máte vlastní licenci Copilota
+- [x] Ne, potřebujete firemní účet
 
 **Proč:** Přístupy a licence se přidělují firemnímu účtu ČS.
 
@@ -88,9 +88,9 @@ Oficiální postup ČS je na Wiki České spořitelny, stránka **GitHub – Onb
 Pro SPOCK potřebujete **VS Code** (program na práci se soubory), **Git** (stahuje a aktualizuje SPOCK), **Node.js 22** (spouští skripty SPOCKu) a v ČS navíc **caauth-cli** pro SSH certifikát. Jde o **Visual Studio Code**, ne o „Visual Studio“, to je jiný program.
 
 **Otázka:** Proč potřebujete Node.js, když v něm nic nepíšete?
-- [ ] Nepotřebujete ho
+- [ ] Nepotřebujete ho, instaluje se jen pro vývojáře
 - [x] Každý task SPOCKu spouští malý Node skript
-- [ ] Kvůli Copilotovi
+- [ ] Kvůli Copilotovi, který na Node.js běží
 
 **Proč:** Bez Node.js žádný task nefunguje: kontroly, zápisy ani podpisy.
 
@@ -99,9 +99,9 @@ Pro SPOCK potřebujete **VS Code** (program na práci se soubory), **Git** (stah
 Na firemním počítači neinstalujete z internetu, ale z katalogu: **Solveo** na Windows, **Self Service+** na Macu. Některé aplikace se v katalogu ukážou až po schválení role v REDIMu. Po instalaci Node.js nebo Gitu **VS Code zavřete a znovu otevřete**, jinak nástroj nenajde.
 
 **Otázka:** V Self Service+ nevidíte Node.js. Co to nejspíš znamená?
-- [ ] Node.js na Macu nejde
-- [x] Chybí vám role `APP_INSTALL_MACOS_NODEJS` v REDIMu
-- [ ] Musíte ho stáhnout z internetu
+- [ ] Node.js na firemním Macu nainstalovat nejde
+- [x] Chybí vám role v REDIMu
+- [ ] Musíte si ho stáhnout z internetu sami
 
 **Proč:** Na Macu se Node.js v katalogu objeví až po schválení této role.
 
@@ -110,8 +110,8 @@ Na firemním počítači neinstalujete z internetu, ale z katalogu: **Solveo** n
 **Command Palette je ve VS Code vyhledávací řádek pro všechny příkazy.** Otevřete ji **Cmd+Shift+P** (Mac) nebo **Ctrl+Shift+P** (Windows). Napíšete část názvu, šipkami vyberete a potvrdíte Enter. Esc ji zavře. SPOCK ji používá na všechno: klonování, tasky i znovunačtení okna.
 
 **Otázka:** Jak nejrychleji ve VS Code najdete příkaz, jehož umístění v menu neznáte?
-- [ ] Projdu všechna menu
-- [x] Otevřu Command Palette a napíšu část jeho názvu
+- [ ] Projdu postupně všechna menu a podmenu
+- [x] Napíšu část názvu do Command Palette
 
 **Proč:** Command Palette najde jakýkoli příkaz podle názvu.
 
@@ -161,8 +161,8 @@ Na firemním počítači neinstalujete z internetu, ale z katalogu: **Solveo** n
 Copilot a Copilot Chat se do VS Code přidávají jako rozšíření a přihlašují se **firemním GitHub účtem**. Agenti SPOCKu se vybírají ve **výběru agenta** v okně chatu. **Model se volí ručně před první zprávou: Claude Sonnet 5**, effort High, kontext 1M. Agenti nevidí, jaký model běží, takže to za vás nikdo nezkontroluje.
 
 **Otázka:** Kdo pohlídá, že pracujete se správným modelem?
-- [ ] Agent Product Manager
-- [x] Vy, model volíte ručně ve výběru modelu
+- [ ] Agent Product Manager, při startu běhu
+- [x] Vy, model volíte ručně
 - [ ] Kontrola nastavení při každé zprávě
 
 **Proč:** Agenti model nevidí. Zvolit ho musíte sami.
@@ -173,8 +173,8 @@ Copilot čerpá **AI kredity**. Stav vidíte vpravo dole ve VS Code u ikony Copi
 
 **Otázka:** Agent se uprostřed práce zastavil bez vysvětlení. Co zkontrolujete jako první?
 - [x] AI kredity u ikony Copilota vpravo dole
-- [ ] Verzi Gitu
-- [ ] Soubor surface
+- [ ] Verzi Gitu a Node.js v terminálu
+- [ ] Soubor surface ve složce `.github`
 
 **Proč:** Došlé kredity jsou častá příčina, proč agent přestane odpovídat.
 
@@ -205,8 +205,8 @@ Copilot čerpá **AI kredity**. Stav vidíte vpravo dole ve VS Code u ikony Copi
 SPOCK si do počítače **naklonujete** z repozitáře `csas-dev/spock-pilot` přes SSH certifikát. Klon se později aktualizuje jedním taskem, stažený ZIP by se musel stahovat znovu. Ve VS Code otevírejte **složku, která přímo obsahuje `.github` a `.vscode`**, a autorům složky důvěřujte, jinak se tasky nespustí.
 
 **Otázka:** V seznamu tasků nevidíte nic, co začíná `SPOCK:`. Proč?
-- [ ] SPOCK je rozbitý
-- [x] Máte otevřenou jinou složku nebo jste autorům nedůvěřovali
+- [ ] SPOCK je rozbitý a je potřeba ho naklonovat znovu
+- [x] Máte otevřenou jinou složku
 - [ ] Chybí vám kredity
 
 **Proč:** Tasky se načtou jen ze správně otevřené složky v důvěryhodném režimu.
@@ -216,8 +216,8 @@ SPOCK si do počítače **naklonujete** z repozitáře `csas-dev/spock-pilot` p�
 Soubor `.github/surface` říká SPOCKu, v jakém nástroji pracujete. Musí v něm být **`copilot`**. Pak spustíte **`SPOCK: check my setup`**: ověří Node, Git, vaši kopii, agenty i model najednou.
 
 **Otázka:** V souboru surface je `unset`. Co uděláte?
-- [x] Přepíšu ho na `copilot`, nebo spustím `SPOCK: check my setup` s volbou GitHub Copilot
-- [ ] Nechám ho, nevadí to
+- [x] Přepíšu ho na `copilot`
+- [ ] Nechám ho být, SPOCK si nástroj při prvním běhu zjistí sám
 
 **Proč:** S `unset` SPOCK žádný běh nezaloží.
 
@@ -226,8 +226,8 @@ Soubor `.github/surface` říká SPOCKu, v jakém nástroji pracujete. Musí v n
 Ve výběru agenta musí být **přesně šest agentů SPOCKu**. Vedle nich uvidíte vestavěné režimy **Agent, Ask, Plan** a firemního agenta **CSAS Copilot Ecosystem Architect**. Ty k SPOCKu nepatří a pro SPOCK je nevybírejte.
 
 **Otázka:** Ve výběru vidíte jen pět agentů SPOCKu. Co uděláte?
-- [ ] Pokračuji, pět stačí
-- [x] Zastavím se a pošlu screenshot týmu CoE Product Management
+- [ ] Pokračuji, pět agentů na první fáze stačí a šestý se doinstaluje
+- [x] Zastavím se a pošlu screenshot týmu
 
 **Proč:** Jiná sada agentů znamená jinou konfiguraci a výsledky by neplatily.
 
@@ -274,8 +274,8 @@ Ve výběru agenta musí být **přesně šest agentů SPOCKu**. Vedle nich uvid
 Každý běh je složka ve vaší kopii SPOCKu. Uvnitř jsou fáze `1-brief` až `7-initiative`, `records/` (strojové záznamy pro kontroly), `RUN-STATE.md` (stav a podpisy) a `README.md`, titulní stránka, která říká, kde běh stojí.
 
 **Otázka:** Kde zjistíte, kdo schválil brief?
-- [ ] V chatu s agentem
-- [x] V `RUN-STATE.md` běhu, kde jsou podpisy se jménem, rolí a datem
+- [ ] V chatu s agentem, který brief psal
+- [x] V `RUN-STATE.md` běhu
 - [ ] Nikde, nezapisuje se to
 
 **Proč:** Každý podpis je v záznamu běhu. Chat se nikam neukládá.
@@ -285,8 +285,8 @@ Každý běh je složka ve vaší kopii SPOCKu. Uvnitř jsou fáze `1-brief` až
 Artefakt jsou **dva soubory**: dokument pro čtenáře a záznam pro kontroly. Tabulka v hlavičce dokumentu je záměrná. Když se v náhledu ukáže jako `[object Object]`, vypněte rozšíření `bierner.markdown-yaml-preamble`.
 
 **Otázka:** Dokument začíná nesrozumitelnou tabulkou `[object Object]`. Je rozbitý?
-- [ ] Ano, je potřeba ho opravit
-- [x] Ne, jde o rozšíření VS Code, které je potřeba vypnout
+- [ ] Ano, soubor je poškozený a je potřeba ho vytvořit znovu
+- [x] Ne, stačí vypnout jedno rozšíření
 
 **Proč:** Soubor je v pořádku, jen ho jedno rozšíření špatně zobrazuje.
 
@@ -296,8 +296,8 @@ Spocka, průvodce z tohoto webu, máte i jako agenta **Spock průvodce** v GitHu
 
 **Otázka:** Otevřete tutoriál i SPOCK v jednom okně a ve výběru vidíte sedm agentů. Co uděláte?
 - [ ] Nahlásím nález, agentů má být šest
-- [x] Otevřu tutoriál v samostatném okně, sedmý je Spock průvodce z tutoriálu
-- [ ] Spock průvodce smažu
+- [x] Otevřu tutoriál v samostatném okně
+- [ ] Smažu soubor Spock průvodce z repozitáře
 
 **Proč:** Ve SPOCKu má být ve výběru přesně šest agentů. Spock průvodce k SPOCKu nepatří, jen se načetl z otevřeného tutoriálu.
 
@@ -344,8 +344,8 @@ Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při ka
 
 **1. Copilot Chat ve VS Code funguje, ale ve výběru agentů nevidíte žádného agenta SPOCKu. Co je nejpravděpodobnější příčina?**
 
-   a) Chybí licence Copilota
-   b) Ve VS Code je otevřená jiná složka, ne ta, která přímo obsahuje `.github` a `.vscode`
+   a) Chybí licence Copilota pro agent mode
+   b) Ve VS Code je otevřená jiná složka
    c) Agenti se objeví až po prvním běhu
 
 <details><summary>Odpověď</summary>
@@ -356,8 +356,8 @@ b) Agenti se načítají z otevřené složky SPOCKu. Otevřete složku, která 
 
 **2. `SPOCK: check my setup` hlásí „Node.js: missing: Node.js 18 is installed“. Co uděláte?**
 
-   a) Nic, Node.js tam je
-   b) Nainstaluji Node.js 22 z firemního katalogu a VS Code zavřu a znovu otevřu
+   a) Nic, Node.js nainstalovaný je a verze nerozhoduje
+   b) Nainstaluji Node.js 22 a restartuji VS Code
    c) Napíšu agentovi, ať Node.js aktualizuje
 
 <details><summary>Odpověď</summary>
@@ -381,7 +381,7 @@ b) Visual Studio a Visual Studio Code jsou dva různé programy. SPOCK běží v
 **4. Repozitář SPOCKu jste si stáhli jako ZIP a rozbalili. Co bude problém?**
 
    a) Nic, funguje to stejně
-   b) Kopie se nebude dát aktualizovat taskem. SPOCK se má naklonovat
+   b) Kopie se nebude dát aktualizovat taskem
    c) ZIP nejde otevřít ve VS Code
 
 <details><summary>Odpověď</summary>
@@ -392,9 +392,9 @@ b) Klon přes SSH certifikát se aktualizuje jedním taskem. Stažený ZIP byste
 
 **5. V REDIMu máte schválenou roli pro Copilota, ale klonování SPOCKu hlásí chybu přístupu. Co nejspíš chybí?**
 
-   a) Licence Copilota
-   b) Role `CSIN\GHB_DEV_SPOCK_WRITE` nebo funkční SSH certifikát (`CSIN\CAAUTH_USR`)
-   c) Node.js
+   a) Licence Copilota Enterprise
+   b) Role k repozitáři nebo SSH certifikát
+   c) Node.js 22 z firemního katalogu
 
 <details><summary>Odpověď</summary>
 
@@ -405,7 +405,7 @@ b) K repozitáři potřebujete přístupovou roli a SSH certifikát. Licence Cop
 **6. Ve výběru modelů vidíte jiný model než Claude Sonnet 5 a agenti fungují. Co uděláte?**
 
    a) Nechám to, agenti si model hlídají sami
-   b) Přepnu na Claude Sonnet 5 ručně, agenti model nevidí
+   b) Přepnu na Claude Sonnet 5 ručně
    c) Napíšu Workflow Supportu, ať model přepne
 
 <details><summary>Odpověď</summary>
@@ -416,8 +416,8 @@ b) Model volíte ručně před první zprávou. Agenti nevědí, na jakém model
 
 **7. Ve výběru agentů vidíte kromě šesti agentů SPOCKu i „CSAS Copilot Ecosystem Architect“. Co to znamená?**
 
-   a) Instalace je vadná
-   b) Nic. Je to firemní agent mimo SPOCK, pro SPOCK ho nevybírejte
+   a) Instalace je vadná a je potřeba ji zopakovat
+   b) Nic, je to firemní agent mimo SPOCK
    c) Je to sedmý agent SPOCKu
 
 <details><summary>Odpověď</summary>
