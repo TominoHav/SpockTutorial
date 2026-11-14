@@ -82,3 +82,20 @@ body.spock-busy .spock .sp-shadow{animation:spShadow .7s cubic-bezier(.3,0,.4,1)
 
 /* skryté prvky se skryjí i mimo claude.ai (např. při hostování na intranetu) */
 [hidden]{display:none!important}
+
+/* chat Spock na mobilu: celá viditelná obrazovka, pole pro psaní nad klávesnicí a lištou */
+@media (max-width:760px){
+  body.spock-open{overflow:hidden}
+  .g-panel{left:0;right:0;width:100%;top:0;bottom:auto;height:100vh;height:100dvh;max-height:none;border-radius:0;border:0;padding-top:env(safe-area-inset-top,0px);z-index:60}
+  .g-head{padding:10px 12px;gap:8px}
+  .g-head .g-bot,.g-head .spock{width:34px;height:auto}
+  .g-head small{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+  .g-x{font-size:26px;padding:6px 10px}
+  .g-log{padding:12px;overscroll-behavior:contain}
+  .g-msg{max-width:100%}
+  .g-tools{padding:0 12px;flex-wrap:wrap;column-gap:12px}
+  .g-form{padding:8px 12px calc(10px + env(safe-area-inset-bottom,0px))}
+  .g-form textarea{font-size:16px}   /* menší písmo by iPhone při psaní přiblížil */
+}
+.toast{z-index:70}
+@media (max-width:760px){body.spock-open .toast{bottom:auto;top:calc(env(safe-area-inset-top,0px) + 64px)}}
