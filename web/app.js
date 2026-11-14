@@ -53,6 +53,8 @@ function fmt(s){
   h = h.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/(^|[\s(„])\*([^*\s][^*]*)\*/g,'$1<i>$2</i>')
        .replace(/\[\[([a-z0-9]+)\|([^\]]+)\]\]/g, (_, id, tx) => `<a href="#" data-week="${id}">${tx}</a>`)
        .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  h = h.replace(/\{\{nanecisto\}\}/g, '<button type="button" class="btn sm primary vidbtn" data-simstart>▶ SPOCK nanečisto</button>');
+  h = h.replace(/\{\{video\}\}/g, '<button type="button" class="btn sm primary vidbtn" data-playvideo>▶ Pustit video</button>');
   return h.replace(/\u0000(\d+)\u0000/g, (_, i) => '<code>' + codes[+i] + '</code>');
 }
 const app = $('#app');
@@ -545,6 +547,18 @@ document.addEventListener('click', e => {
   if (t.dataset.scrollto) { const el = document.getElementById(t.dataset.scrollto); if (el) el.scrollIntoView({behavior:'smooth', block:'start'}); return; }
   if (t.hasAttribute('data-rolepick')) { const r = document.querySelector('.hx-rolepick'); if (r) r.hidden = !r.hidden; }
 });
+/* Video v okně: pustí se odkudkoli (tlačítko {{video}} v úkolu) */
+function playVideo(){
+  const ov = document.createElement('div'); ov.className = 'vidov'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','Video: Co je SPOCK');
+  ov.innerHTML = `<div class="vidov-in"><button type="button" class="g-x vidov-x" aria-label="Zavřít video">×</button>${VIDEO}</div>`;
+  document.body.append(ov);
+  const v = ov.querySelector('video'), close = () => { v.pause(); ov.remove(); };
+  ov.querySelector('.vidov-x').onclick = close;
+  ov.addEventListener('click', e => { if (e.target === ov) close(); });
+  ov.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  v.play().catch(() => {}); ov.querySelector('.vidov-x').focus();
+}
+document.addEventListener('click', e => { if (e.target.closest('[data-playvideo]')) { e.preventDefault(); playVideo(); } });
 document.addEventListener('play', e => { if (e.target.matches && e.target.matches('.cv-video') && !S.seenVideo) { S.seenVideo = true; save(); } }, true);
 
 /* ---------- SPOCK v kostce ---------- */

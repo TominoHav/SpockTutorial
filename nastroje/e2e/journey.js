@@ -38,6 +38,7 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  const doLesson=async()=>{await answerCards();let guard=0;while(await p.locator('.lpanel input[data-todo]:not(:checked)').count() && guard++<12){await checkNext();}};
  await p.locator('[data-golesson], [data-week=l0]').first().click();await p.waitForTimeout(250);
  ok(T('lekce 0.1 začíná první kartou, další jsou skryté'), await p.locator('.lpanel .lcard').count()===1 && await p.locator('.lpanel .lc-opt').count()>1);
+ ok(T('úkol s videem má tlačítko, které video pustí v okně'), await (async()=>{const bt=p.locator('.lpanel [data-playvideo]');if(!(await bt.count()))return false;await bt.first().click();await p.waitForTimeout(200);const n=await p.locator('.vidov video').count();await p.locator('.vidov-x').click();return n===1 && !(await p.locator('.vidov').count());})());
  ok(T('karta má štítek „jen na webu“'), (await p.locator('.lpanel').first().innerText()).toLowerCase().includes('jen na webu'));
  const x0=(await st()).xp;await p.evaluate(()=>document.querySelector('.lpanel .lcard.cur .lc-opt').click());await p.waitForTimeout(150);await dismiss();
  ok(T('odpověď ukáže vysvětlení a otevře další kartu'), await p.locator('.lpanel .lc-why').count()===1 && await p.locator('.lpanel .lcard').count()===2, 'XP '+x0+' → '+(await st()).xp);
@@ -113,7 +114,7 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  ok(T('bez chyb v konzoli'), errs.length===0, errs.slice(0,2).join(' | '));
  // přístupnost: tlačítka bez názvu, obrázky bez alt
  await p.evaluate(()=>document.querySelector('#home-btn').click());await p.waitForTimeout(150);
- const a11y=await p.evaluate(()=>[...document.querySelectorAll('button,a,input,textarea')].filter(e=>e.offsetParent!==null).filter(e=>!(e.innerText||'').trim()&&!e.getAttribute('aria-label')&&!e.getAttribute('title')&&!(e.labels&&e.labels.length)&&!e.querySelector('img[alt],svg title')).map(e=>e.outerHTML.slice(0,80)));
+ const a11y=await p.evaluate(()=>[...document.querySelectorAll('button,a,input,textarea')].filter(e=>e.offsetParent!==null && !(e.closest('details:not([open])') && !e.closest('summary'))).filter(e=>!(e.innerText||'').trim()&&!e.getAttribute('aria-label')&&!e.getAttribute('title')&&!(e.labels&&e.labels.length)&&!e.querySelector('img[alt],svg title')).map(e=>e.outerHTML.slice(0,80)));
  ok(T('ovládací prvky mají název'), a11y.length===0, a11y.slice(0,3).join(' | '));
  await ctx.close();}
 await b.close();
