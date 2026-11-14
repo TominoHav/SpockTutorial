@@ -26,7 +26,7 @@ Plné šipky: kudy teče obsah. Čárkované: údržba, která hlídá aktuálno
 | **Obsah** | Co se učí. Mění se nejčastěji. | `materialy/bootcamp/`: zdrojová PDF z bootcampu; `onboarding/*.md`: úrovně 0–4, moduly rolí PM, PD, SWE, GM a volitelná příručka Fáze do hloubky, lekce jako krátké karty s otázkou, úkoly se štítkem kde se dělají; tahák, slovník, diagnostika, zásady, připravenost; `POKROK.md` pro průvodce v Claude Code |
 | **Aplikace** | Jak se to ukazuje. Web ve stylu Duolinga. | `web/parse.py` čte lekce, `web/build.py` skládá stránku; `app.js` (cesta, lekce, kvízy, odznaky, chat se Spockem); `sim.js` (simulace SPOCK nanečisto, vysvětlivky, dotazník); `*.css`, `media/`. Návod v [web/README.md](web/README.md) |
 | **Údržba** | Aby tutoriál nezastaral, když se SPOCK mění. | [SPOCK-VERZE.md](SPOCK-VERZE.md): vydání a commit SPOCKu; `nastroje/spock-otisk.json`: otisk všech souborů SPOCKu v této verzi; `nastroje/kontrola-aktualnosti.py`: mechanická kontrola odkazů a změn; `nastroje/e2e/journey.js`: end-to-end test webu; `nastroje/generuj-pokrok.py`: přehled pokroku z lekcí; `/spock-aktualnost`: měsíční kontrola v Claude Code |
-| **Průvodci** | Kdo uživateli pomáhá. | `/spock-onboarding`: průvodce v Claude Code, zapisuje pokrok; Spock na webu: chat, který zná všechny lekce |
+| **Průvodci** | Kdo uživateli pomáhá. | `/spock-onboarding`: průvodce v Claude Code, zapisuje pokrok; Spock na webu: chat, který zná celý modul, ve kterém uživatel je, a přehled ostatních |
 
 ## Kudy jde která změna
 
@@ -54,6 +54,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
+| [#21](https://github.com/TominoHav/SpockTutorial/pull/21) | Průvodci | Spock dostává celý jen modul, ve kterém uživatel je, ostatní jako přehled: kontext zprávy 50–67 tisíc znaků místo 218 tisíc | 14. 11. 2026 |
 | [#20](https://github.com/TominoHav/SpockTutorial/pull/20) | Obsah, Aplikace, Údržba | Revize kvízů: zásoba 8 situačních otázek na modul, losování 5 a míchání, splnění na 80 %, kvíz až po kartách, přísnější skokový test | 14. 11. 2026 |
 | [#19](https://github.com/TominoHav/SpockTutorial/pull/19) | Obsah, Aplikace, Údržba | Celý tutoriál v kartách: nová úroveň 0 Poznejte SPOCK jen na webu, Příprava jako úroveň 1, Fáze do hloubky jako volitelná příručka, štítky kde se úkol dělá, e2e 68 kontrol | 14. 11. 2026 |
 | [#18](https://github.com/TominoHav/SpockTutorial/pull/18) | Obsah | Data: do SPOCKu jen klasifikace C1, C2 nikdy | 14. 11. 2026 |

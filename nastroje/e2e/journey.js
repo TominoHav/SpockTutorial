@@ -102,7 +102,7 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  if(open){await p.fill('#g-in','Jak spustím task?');await p.locator('#g-send').click();await p.waitForTimeout(500);
   const sent=await p.evaluate(()=>window.__sent.length?JSON.stringify(window.__sent[0]).length:0);
   ok(T('chat Spock: odpověď se zobrazí'), (await p.locator('#g-log .g-msg.a').last().innerText()).includes('Command Palette'));
-  ok(T('chat Spock dostane obsah lekcí'), sent>20000, 'kontext '+sent+' znaků');
+  ok(T('chat Spock dostane obsah lekcí'), sent>20000 && sent<120000, 'kontext '+sent+' znaků');
   ok(T('odznak Kamarád Spocka'), !!(await st()).badges['got.spock']);
   await dismiss();await p.locator('#g-x').click();}
  else ok(T('chat Spock se otevře'), false);
