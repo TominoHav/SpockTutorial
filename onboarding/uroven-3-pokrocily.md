@@ -15,9 +15,9 @@
 **Vrácení fáze** (`SPOCK: send a stage back to be redone`) zruší její přijetí a podpis. **Každou pozdější fázi**, která už prošla bránou, označí jako **stale**. Nic se nemaže, důvod se zapíše.
 
 **Otázka:** Vrátíte fázi 2. Co se stane s fází 4, která už prošla bránou?
-- [ ] Smaže se
+- [ ] Smaže se a začíná se znovu
 - [x] Označí se jako stale
-- [ ] Nic
+- [ ] Nic, zůstane přijatá
 
 **Proč:** Každá pozdější fáze se označí jako zastaralá. Nic se nemaže.
 
@@ -26,8 +26,8 @@
 **Stale fázi** buď přepracujete, nebo ji ponecháte taskem `SPOCK: keep a later stage as it is`. Ten na ní znovu spustí bránu a fázi přijme, jen když projde.
 
 **Otázka:** Co udělá `SPOCK: keep a later stage as it is`?
-- [ ] Přijme fázi bez kontroly
-- [x] Znovu na ní spustí bránu a přijme ji, jen když projde
+- [ ] Přijme fázi bez kontroly, jen zapíše důvod
+- [x] Znovu spustí bránu
 
 **Proč:** Ponechání stale fáze není zkratka kolem brány.
 
@@ -39,7 +39,7 @@
 
 **Otázka:** Upravili jste dokument ručně. Co uděláte?
 - [x] Spustím `SPOCK: record that I edited a document`
-- [ ] Nic, agent to pozná
+- [ ] Nic, agent si změny všimne a zapíše ji
 
 **Proč:** Jinak by záznam tvrdil, že dokument napsal agent.
 
@@ -49,7 +49,7 @@
 
 **Otázka:** Do `supplied/` jste omylem dali špatný soubor. Jak ho odstraníte?
 - [ ] Taskem `SPOCK: take something back`
-- [x] Přesunu ho ze `supplied/` a spustím `SPOCK: add problem material` → `yes`
+- [x] Přesunu ho a spustím `SPOCK: add problem material`
 
 **Proč:** `take something back` soubory v `supplied/` odmítne, jsou to materiál zákazníka.
 
@@ -79,8 +79,8 @@
 **Neprošlá brána obvykle k vám vůbec nedojde.** Fáze se vrátí agentovi, ten ji opraví a vás se ptá až potom. Když tatáž kontrola selže i **po jeho druhé opravě**, agent se zastaví, řekne, co kontrola chce, a odkáže na Workflow Support. To je správné chování.
 
 **Otázka:** Tatáž kontrola selže i po druhé opravě agenta. Co je správné chování?
-- [ ] Agent zkouší dál
-- [x] Agent se zastaví, řekne, co kontrola chce, a odkáže na Workflow Support
+- [ ] Agent zkouší dál, dokud kontrola neprojde
+- [x] Agent se zastaví a vysvětlí to
 
 **Proč:** Zastavení po druhé opravě je záměr, ne chyba.
 
@@ -91,8 +91,8 @@
 **Výjimka:** když kontrolu běh opravdu splnit nemůže, podepíšete ji taskem `SPOCK: sign off a check this run cannot meet` (6 políček). **Brána zůstane `fail`** a fáze pokračuje i se selháním. Zelená brána na výjimce by byla chyba.
 
 **Otázka:** Podepíšete výjimku. Jakou barvu má brána?
-- [ ] Zelenou
-- [x] Zůstává `fail` a fáze pokračuje i se selháním
+- [ ] Zelenou, výjimka selhání nahradí
+- [x] Zůstává `fail`
 
 **Proč:** Zelená brána na výjimce by byla chyba.
 
@@ -129,8 +129,8 @@ Poslední políčko výjimky rozhoduje, kam nález jde. **„the workflow looks 
 **Běh se předává zkopírováním celé složky**, nikdy přes git. Oba nejdřív zavřou své chaty. Kdo běh přebírá, nesmí mít jiný nedokončený běh. **Když jsou ve složce dva nedokončené běhy, tasky odmítnou pracovat**, protože nepoznají, který myslíte.
 
 **Otázka:** Jak běh předáte kolegovi?
-- [ ] Přes git push
-- [x] Zkopírováním celé složky běhu, oba nejdřív zavřou chaty
+- [ ] Přes git push do sdílené větve
+- [x] Zkopírováním celé složky běhu
 
 **Proč:** Běhy nejsou v gitu. Ve složce smí být jen jeden nedokončený běh.
 
@@ -248,7 +248,7 @@ b) Vrácení zapíše důvod a nic nesmaže. Stale fáze pak přepracujete nebo 
 **2. Fáze 5 je stale, ale vrácení ji podle vás neovlivnilo. Co uděláte?**
 
    a) Nic, stale nevadí
-   b) Spustím `SPOCK: keep a later stage as it is`. Přijme se, jen když znovu projde bránou
+   b) Spustím `SPOCK: keep a later stage as it is`
    c) Smažu příznak stale v záznamu
 
 <details><summary>Odpověď</summary>
@@ -272,7 +272,7 @@ b) Proto kdo běh přebírá, nesmí mít jiný nedokončený běh.
 **4. Přepsali jste ručně dva odstavce v PRD a nic jste nezapsali. Co je problém?**
 
    a) Žádný
-   b) Záznam tvrdí, že dokument napsal agent. Spusťte `SPOCK: record that I edited a document`
+   b) Záznam tvrdí, že dokument napsal agent
    c) Brána Q6 úpravu odmítne
 
 <details><summary>Odpověď</summary>
@@ -320,7 +320,7 @@ b) „the workflow looks wrong“ je jen pro podezření na chybu workflow.
 **8. Projekt byl zrušen a chcete běh ukončit. Co platí po `SPOCK: stop this run`?**
 
    a) Běh jde později obnovit
-   b) Je to trvalé. Dokumenty zůstanou čitelné, ale žádný task běh znovu nespustí
+   b) Je to trvalé
    c) Běh se smaže
 
 <details><summary>Odpověď</summary>

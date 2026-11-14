@@ -15,9 +15,9 @@
 **Agenti jsou Copilot agenti** (`.github/agents/*.agent.md`) a každý má jen nástroje, které má povolené. **Tasky** (`.vscode/tasks.json`) spouštějí malé **Node skripty** v `.github/scripts/`. Kromě Node se nic dalšího neinstaluje (`SETUP.md` §1).
 
 **Otázka:** Co spouští task `SPOCK: …`?
-- [ ] Agenta Copilota
+- [ ] Agenta Copilota, který task provede
 - [x] Malý Node skript v `.github/scripts/`
-- [ ] Docker kontejner
+- [ ] Docker kontejner se SPOCKem
 
 **Proč:** Tasky z `.vscode/tasks.json` spouštějí Node skripty. Nic dalšího se neinstaluje.
 
@@ -46,7 +46,7 @@
 **Ani jako SWE neupravujte `.github/` ani `.vscode/`** (`SETUP.md` §9). Chybu ve workflow nahlaste (úroveň 4).
 
 **Otázka:** Najdete chybu ve skriptu kontroly. Co uděláte?
-- [ ] Opravím ho ve své kopii
+- [ ] Opravím ho ve své kopii a pošlu kolegům
 - [x] Nahlásím ji týmu CoE Product Management
 
 **Proč:** Úprava `.github/` shodí kontrolu C189 a při aktualizaci zmizí.
@@ -90,8 +90,8 @@ Každé řešení v sadě (`4-solutions/1-solution-set.md`) má části **„Wha
 Compliance část vzniká tak, že producent odpoví na uzavřené otázky a skript z odpovědí odvodí touchpointy. **Správnost odpovědí žádná kontrola neověřuje** (`BUSINESS-LOGIC-OVERVIEW.md` §7). Tři ze čtyř karet oblastí navíc nikdo z banky nerevidoval.
 
 **Otázka:** Projde řešení, u kterého agent na otázku odpověděl „ne“, i když poctivá odpověď je „ano“?
-- [x] Ano, žádná kontrola správnost odpovědí neověřuje
-- [ ] Ne, kontrola to pozná
+- [x] Ano, správnost odpovědí nikdo neověřuje
+- [ ] Ne, kontrola porovná odpověď s textem řešení
 
 **Proč:** Proto je váš technický pohled před G4 tak důležitý.
 
@@ -117,7 +117,7 @@ Compliance část vzniká tak, že producent odpoví na uzavřené otázky a skr
 
 **Otázka:** Kde najdete, co je z MVP záměrně mimo rozsah?
 - [x] V rozpracovaném MVP `5-mvp/2-expanded-mvp.md`
-- [ ] V briefu
+- [ ] V briefu, v části o rozsahu trhu
 
 **Proč:** Rozpracované MVP říká rozsah, hranice i to, co je záměrně mimo.
 
@@ -129,7 +129,7 @@ Compliance část vzniká tak, že producent odpoví na uzavřené otázky a skr
 - **Odsouhlasené PRD je samostatný dokument**, vzniklý z draftu doslovně, když PM označí PRD jako agreed. Odsouhlasené PRD, které existuje dřív, nebo říká něco jiného než draft, je nález (`TESTER-GUIDE.md` §4, Stage 6).
 
 **Otázka:** Co v PRD najdete pod „What we could not establish“?
-- [ ] Seznam chyb agenta
+- [ ] Seznam chyb, které agent při psaní udělal
 - [x] Co se v běhu nepodařilo zjistit
 
 **Proč:** Mezery jsou v PRD vidět. Nejsou schované za sebejistým textem.
@@ -158,7 +158,7 @@ Když task selže, celý jeho text je v panelu Terminal ve VS Code a v souboru *
 Užitečné tasky bez políček: **`SPOCK: check the whole run`**, **`SPOCK: run one gate`**, **`SPOCK: explain what the gate failed`** a **`SPOCK: which gates can run in full`**.
 
 **Otázka:** Kde najdete celý text neúspěšného tasku?
-- [ ] Jen v chatu
+- [ ] Jen v chatu, kam ho agent zkopíruje
 - [x] V panelu Terminal a v `.github/last-task.md`
 
 **Proč:** Celý výstup tasku je v terminálu i v souboru.
@@ -180,8 +180,8 @@ Užitečné tasky bez políček: **`SPOCK: check the whole run`**, **`SPOCK: run
 **Čtyři oblasti:** Compliance, conduct and product regulation (karta od ČS), GDPR and privacy, Legal and contracts a ICT and security. **Poslední tři napsal pilotní tým z veřejného práva a ČS je nepotvrdila.** AI regulace ani outsourcing a DORA nejsou v žádné oblasti. AI se jen přesměruje na specialistu (`COMPLIANCE-REQUIREMENTS.md` §1).
 
 **Otázka:** Řešení pracuje s AI. Pokryje to compliance sweep SPOCKu?
-- [ ] Ano, AI je v oblasti ICT
-- [x] Ne, AI regulace v žádné oblasti není, jen se přesměruje na specialistu
+- [ ] Ano, AI spadá do oblasti ICT and security
+- [x] Ne, AI regulace v žádné oblasti není
 
 **Proč:** AI regulace, outsourcing ani DORA nejsou v žádné ze čtyř oblastí.
 
@@ -194,7 +194,7 @@ Užitečné tasky bez políček: **`SPOCK: check the whole run`**, **`SPOCK: run
 - **Tři soubory na řešení, každý s jedním autorem:** `parts/SOLn.md` (sekce 1–7, píše agent), záznam se 128 odpověďmi (píše agent, do dokumentu nejde) a `parts/SOLn.compliance.md` (píše skript). Sestavení skládá první a třetí soubor slovo od slova a odvozený soubor nese hash řešení, takže zastaralá compliance neprojde (R3.4.4–R3.4.5).
 
 **Otázka:** Které touchpointy se dostanou do dokumentu řešení?
-- [ ] Všechny odpovědi
+- [ ] Všechny odpovědi včetně `no` a `cannot_tell`
 - [x] Jen touchpointy s odpovědí `yes`, doslovně z karty
 
 **Proč:** Doslovnost dovoluje skriptu porovnat touchpoint s kartou.
@@ -208,8 +208,8 @@ Užitečné tasky bez políček: **`SPOCK: check the whole run`**, **`SPOCK: run
 - **Otevřené compliance položky se zatím nepřenášejí do PRD** (STAGE-4 část 12, STAGE-6 část 12). Hlídejte je sami, až budete PRD číst.
 
 **Otázka:** Spustí workflow eskalaci na compliance tým?
-- [ ] Ano, pošle e-mail
-- [x] Ne, jen jmenuje roli. Přesměrovat musí člověk
+- [ ] Ano, pošle e-mail roli, kterou karta jmenuje
+- [x] Ne, jen jmenuje roli
 
 **Proč:** Workflow nikoho neupozorní. Otevřené položky se navíc zatím nepřenášejí do PRD.
 
@@ -234,7 +234,7 @@ Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při ka
 **1. Brána vrátila `incomplete`. Můžete pokračovat, jako by prošla?**
 
    a) Ano, není to fail
-   b) Ne. `incomplete` není pass
+   b) Ne
    c) Ano, pokud ji podepíše PM
 
 <details><summary>Odpověď</summary>
@@ -246,7 +246,7 @@ b) Kontrola vrací `pass`, `fail` nebo `incomplete`, a jen `pass` znamená průc
 **2. Compliance sekce řešení neuvádí žádný ICT touchpoint, ale vy víte, že řešení mění autentizaci. Co uděláte?**
 
    a) Nic, compliance prošla
-   b) Upozorním PM před G4. Odpovědi agenta žádná kontrola neověřuje
+   b) Upozorním PM před G4
    c) Opravím záznam řešení ručně
 
 <details><summary>Odpověď</summary>
@@ -257,9 +257,9 @@ b) Odpověď „ne“ tam, kde poctivá odpověď zní „ano“, projde. Pojist
 
 **3. Task selhal a v chatu je jen zkrácená hláška. Kde najdete celý výstup?**
 
-   a) Nikde
+   a) Nikde, celý výstup se neukládá
    b) V panelu Terminal a v `.github/last-task.md`
-   c) V `RUN-STATE.md`
+   c) V `RUN-STATE.md` u záznamu fáze
 
 <details><summary>Odpověď</summary>
 
@@ -282,7 +282,7 @@ b) Tenhle task řekne, která polovina které brány proběhla a proč ta druhá
 **5. Řešení používá AI model pro doporučení klientům. Pokryje regulaci AI compliance sweep SPOCKu?**
 
    a) Ano, v oblasti ICT and security
-   b) Ne. AI regulace není v žádné oblasti, jen se přesměruje na specialistu
+   b) Ne
    c) Ano, v oblasti Legal
 
 <details><summary>Odpověď</summary>
@@ -294,7 +294,7 @@ b) AI regulace, outsourcing ani DORA nejsou v žádné ze čtyř oblastí.
 **6. Ve fázi 4 vyšla otevřená ICT položka. Najdete ji v PRD?**
 
    a) Ano, přenáší se automaticky
-   b) Zatím ne. Otevřené compliance položky se do PRD nepřenášejí, hlídejte je sami
+   b) Zatím ne
    c) Ano, v sekci Out of scope
 
 <details><summary>Odpověď</summary>
@@ -305,8 +305,8 @@ b) STAGE-4 a STAGE-6 část 12: přenos otevřených položek zatím není posta
 
 **7. Chcete vědět, odkud se vzal požadavek R3 v PRD. Co v PRD hledáte?**
 
-   a) Měřítko, kterému požadavek slouží, a vazbu na rozpracované MVP
-   b) Jméno autora požadavku
+   a) Měřítko, kterému požadavek slouží
+   b) Jméno autora požadavku a datum zápisu
    c) Odhad pracnosti
 
 <details><summary>Odpověď</summary>
@@ -318,7 +318,7 @@ a) Každý požadavek jmenuje měřítko a měřítka se přenášejí z dřív�
 **8. Odsouhlasené PRD existuje dřív než draft. Co to je?**
 
    a) Běžný stav
-   b) Nález. Odsouhlasené PRD vzniká doslovně z draftu až po označení
+   b) Nález
    c) Chyba Gitu
 
 <details><summary>Odpověď</summary>

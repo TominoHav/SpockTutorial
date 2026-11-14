@@ -90,6 +90,24 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  // volitelná příručka 1b se nezamyká
  await p.evaluate(()=>document.querySelector('[data-week=l1b]').click());await p.waitForTimeout(150);
  ok(T('příručka Fáze do hloubky je volitelná a otevřená'), !(await p.locator('[data-jump]').count()) && await p.locator('.lpanel .lcard').count()>0);
+ // průchod všemi moduly včetně příručky a modulů jiných rolí: přepínač lekcí, karty, přetečení
+ await p.evaluate(()=>document.querySelector('#home-btn').click());await p.waitForTimeout(100);
+ const mods=await p.evaluate(()=>__kviz.mods());const miss=[],ovf=[];
+ for(const m of mods){await dismiss();
+  const nav=await p.evaluate(id=>{const e=document.querySelector(`.rail [data-week="${id}"]`)||document.querySelector(`[data-week="${id}"]`);if(!e)return 0;e.click();return 1},m.id);
+  if(!nav){miss.push(m.id+': chybí v menu');continue;}
+  await p.waitForTimeout(80);await p.evaluate(()=>{const e=document.querySelector('[data-peek]');e&&e.click()});await p.waitForTimeout(60);
+  for(let li=0;li<m.lessons;li++){await dismiss();
+   const sw=await p.evaluate(li=>{const e=[...document.querySelectorAll(`.pd-in-card [data-lesson="${li}"], .pd-mob-card [data-lesson="${li}"]`)].find(x=>x.offsetParent!==null);if(!e)return 0;e.click();return 1},li);
+   if(!sw){miss.push(m.id+': chybí přepínač lekce '+(li+1));break;}
+   await p.waitForTimeout(40);
+   for(let g=0;g<30;g++){await dismiss();const k=await p.evaluate(()=>{const e=document.querySelector('.lpanel .lcard.cur .lc-opt:not([disabled])');if(!e)return 0;e.click();return 1});if(!k)break;await p.waitForTimeout(25);}
+   const o=await ov();if(o>0)ovf.push(m.id+' '+(li+1)+' +'+o);}}
+ await dismiss();
+ const sc=await st();const tot=mods.reduce((n,m)=>n+m.cards,0);
+ ok(T('všech '+mods.length+' modulů je v menu a má přepínač lekcí'), miss.length===0, miss.join(' | '));
+ ok(T('všechny karty všech modulů jdou zodpovědět'), Object.keys(sc.cards||{}).length===tot, Object.keys(sc.cards||{}).length+' z '+tot);
+ ok(T('žádná lekce nepřetéká do strany'), ovf.length===0, ovf.join(', '));
  // opora
  for(const v of ['map','diag','cheat','gloss','badges','ready']){await p.evaluate(v=>{const e=document.querySelector(`[data-go="${v}"]`);e&&e.click()},v);await p.waitForTimeout(100);ok(T('stránka '+v+' bez přetékání'), (await ov())<=0);}
  await p.evaluate(()=>document.querySelector('[data-go="gloss"]').click());await p.fill('#gloss-q','trust');await p.waitForTimeout(100);

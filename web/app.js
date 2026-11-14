@@ -15,6 +15,14 @@ W.forEach((w, wi) => w.quiz.forEach((q, qi) => {
   q.o = o; q.a = target;
 }));
 
+/* Karty: správná odpověď nemá být vždy na stejném místě. Pořadí je stálé (uložené odpovědi platí dál), jen prostřídané. */
+W.forEach((w, wi) => w.days.forEach((d, di) => (d.cards || []).forEach((c, ci) => {
+  if (!c.o || c.o.length < 2 || c.a < 0) return;
+  const n = c.o.length, target = (ci + di * 2 + wi) % n, shift = (target - c.a + n) % n;
+  const o = new Array(n); c.o.forEach((x, i) => { o[(i + shift) % n] = x; });
+  c.o = o; c.a = target;
+})));
+
 const fmtMin = m => m >= 60 ? (Math.floor(m/60) + ' h' + (m%60 ? ' ' + (m%60) + ' min' : '')) : m + ' min';
 const dayLearn = d => d.learnMin || 0;
 const dayDo = d => d.todo.reduce((n,t) => n + (t.min || 0), 0);
@@ -218,7 +226,7 @@ function startSession(wid, mode){
   renderSession();
 }
 /* jen pro automatický test: čtení stavu kvízu */
-window.__kviz = {ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
+window.__kviz = {mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
 function sesQ(){ const w = W.find(x => x.id === SES.wid), qi = SES.qs[SES.i]; return {w, qi, q:SES.items[qi]}; }
 function renderSession(){
   let ov = document.getElementById('ses');
@@ -759,7 +767,9 @@ const selLesson = w => view.lessonOf === w.id ? view.lesson : (curLesson(w) >= 0
 const pathMods = () => pathIds().map(id => W.find(w => w.id === id)).filter(Boolean);
 const shortLab = w => w.role ? '2' : w.lab.replace('Úroveň ','');
 const ringSvg = (p, c) => `<svg class="pv-ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--surface-2)" stroke-width="4"/>${p > 0 ? `<circle cx="18" cy="18" r="15.5" fill="none" stroke="${c}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${(p*97.4).toFixed(1)} 97.4" transform="rotate(-90 18 18)"/>` : ''}</svg>`;
-const otherRoles = active => { const o = W.filter(w => w.role && w.role !== S.role); return o.length ? `<span class="grp">${S.role ? 'Jiné role' : 'Role'}</span>` + o.map(w => `<button type="button" class="${active===w.id?'on':''} dim c-${w.c}" data-week="${w.id}"><span class="dm"></span><span class="rl">${esc(w.title)}</span></button>`).join('') : ''; };
+const otherRoles = active => { const o = W.filter(w => w.role && w.role !== S.role); return o.length ? `<span class="grp">${S.role ? 'Jiné role' : 'Role'}</span>` + o.map(w => `<button type="button" class="${active===w.id?'on':''} dim c-${w.c}" data-week="${w.id}"><span class="dm"></span><span class="rl">${esc(w.title)}</span></button>` + sideLessons(w, active)).join('') : ''; };
+/* moduly mimo cestu (jiné role, příručka): přepínač lekcí pod položkou v menu */
+const sideLessons = (w, active) => active === w.id && view.name === 'week' ? `<div class="pd-in-card pd-side">${pdCard(w)}</div>` : '';
 
 /* A · Časová osa: moduly pod sebou na svislé lince, aktivní modul rozbalí lekce */
 
@@ -785,7 +795,7 @@ function railPathD(active){
     const sub = st === 'lock' ? 'Zamčeno' : Math.round(p*100) + ' % · ' + m.days.filter((_,di) => lessonDone(m, di)).length + '/' + m.days.length;
     return `<li class="pd-s st-${st} c-${m.c} ${on?'on':''}"><button type="button" class="pd-sb" data-week="${m.id}" ${on?'aria-current="step"':''}><span class="pd-node">${st === 'done' ? '' : ringSvg(p, 'var(--c)')}<span class="pd-in">${st === 'lock' ? LOCK : st === 'done' ? '✓' : esc(shortLab(m))}</span></span><span class="pd-sn"><b>${esc(m.title)}</b><small>${sub}</small></span>${(hereId ? m.id === hereId : on) ? `<span class="pd-spock">${spockSVG('fab')}</span>` : ''}</button>${on && aw && aw.id === m.id ? `<div class="pd-in-card">${pdCard(m)}</div>` : ''}</li>`;
   }).join('');
-  const mob = aw && pathMods().some(m => m.id === aw.id) ? `<div class="pd-mob-card">${pdCard(aw)}</div>` : '';
+  const mob = aw ? `<div class="pd-mob-card">${pdCard(aw)}</div>` : '';
   return `<div class="pdr"><span class="grp">Cesta</span><ol class="pd-line">${items}</ol>${mob}</div>`;
 }
 
@@ -796,9 +806,11 @@ function shell(active, body){
     const lk = isLocked(w);
     return `<button type="button" class="${active===w.id?'on':''} ${other?'dim':''} ${lk?'lk':''} c-${w.c}" data-week="${w.id}">${lk ? '<span class="dm lkic">' + LOCK + '</span>' : `<span class="dm ${cls}"></span>`}<span class="rl">${esc(w.role ? '2 · ' + w.title : w.lab.replace('Úroveň ','') + ' · ' + w.title)}</span><span class="rt num">${fmtH(weekTime(w).total)}</span></button>`;
   }).join('');
+  const gw = W.find(w => w.id === 'l1b');
+  const guide = gw ? `<button type="button" class="${active===gw.id?'on':''} c-${gw.c}" data-week="${gw.id}"><span class="dm"></span>Příručka: ${esc(gw.title)}</button>` + sideLessons(gw, active) : '';
   const ex = [['badges','Odznaky a profil','indigo'],['map','SPOCK v kostce','blue'],['diag','Diagnostika','purple'],['gloss','Slovníček','blue'],['cheat','Tahák tasků','blue'],['ready','Připravenost','indigo']]
     .map(x => `<button type="button" class="${active===x[0]?'on':''} c-${x[2]}" data-go="${x[0]}"><span class="dm"></span>${x[1]}</button>`).join('');
-  return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more">${otherRoles(active)}<span class="grp">Opora</span>${ex}</div>`}</nav><section class="main">${body}</section></div>`;
+  return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more">${otherRoles(active)}<span class="grp">Opora</span>${guide}${ex}</div>`}</nav><section class="main">${body}</section></div>`;
 }
 
 function nextWeek(){
