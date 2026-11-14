@@ -25,7 +25,7 @@ Plné šipky: kudy teče obsah. Čárkované: údržba, která hlídá aktuálno
 |---|---|---|
 | **Obsah** | Co se učí. Mění se nejčastěji. | `materialy/bootcamp/`: zdrojová PDF z bootcampu; `onboarding/*.md`: úrovně 0–4, moduly rolí PM, PD, SWE, GM a volitelná příručka Fáze do hloubky, lekce jako krátké karty s otázkou, úkoly se štítkem kde se dělají; tahák, slovník, diagnostika, zásady, připravenost; `POKROK.md` pro průvodce v Claude Code |
 | **Aplikace** | Jak se to ukazuje. Web ve stylu Duolinga. | `web/parse.py` čte lekce, `web/build.py` skládá stránku; `app.js` (cesta, lekce, kvízy, odznaky, chat se Spockem); `sim.js` (simulace SPOCK nanečisto, vysvětlivky, dotazník); `*.css`, `media/`. Návod v [web/README.md](web/README.md) |
-| **Údržba** | Aby tutoriál nezastaral, když se SPOCK mění. | [SPOCK-VERZE.md](SPOCK-VERZE.md): vydání a commit SPOCKu; `nastroje/spock-otisk.json`: otisk všech souborů SPOCKu v této verzi; `nastroje/kontrola-aktualnosti.py`: mechanická kontrola odkazů a změn; `nastroje/e2e/journey.js`: end-to-end test webu; `nastroje/generuj-pokrok.py`: přehled pokroku z lekcí; `/spock-aktualnost`: měsíční kontrola v Claude Code |
+| **Údržba** | Aby tutoriál nezastaral, když se SPOCK mění. | [SPOCK-VERZE.md](SPOCK-VERZE.md): vydání a commit SPOCKu; `nastroje/spock-otisk.json`: otisk všech souborů SPOCKu v této verzi; `nastroje/kontrola-aktualnosti.py`: mechanická kontrola odkazů a změn; `nastroje/e2e/journey.js`: end-to-end test webu; `nastroje/generuj-pokrok.py`: přehled pokroku z lekcí; `nastroje/generuj-revizi.py`: kontrolní seznam pro odbornou kontrolu (`revize/`); `/spock-aktualnost`: měsíční kontrola v Claude Code |
 | **Průvodci** | Kdo uživateli pomáhá. | `/spock-onboarding`: průvodce v Claude Code, zapisuje pokrok; agent **Spock průvodce** v GitHub Copilotu (`.github/agents/spock-pruvodce.agent.md`), stejná pravidla; Spock na webu: chat, který zná celý modul, ve kterém uživatel je, a přehled ostatních |
 
 ## Kudy jde která změna
@@ -55,6 +55,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
+| [#26](https://github.com/TominoHav/SpockTutorial/pull/26) | Obsah, Údržba | Kontrolní seznam odborné kontroly (287 položek), scénář pilotu s nováčky, kratší úkoly v Přípravě a u PM | 14. 11. 2026 |
 | [#25](https://github.com/TominoHav/SpockTutorial/pull/25) | Průvodci | Agent Spock průvodce pro GitHub Copilot ve VS Code: odpovídá z lekcí, vede úkoly a kvíz, zapisuje jen POKROK.md | 14. 11. 2026 |
 | [#24](https://github.com/TominoHav/SpockTutorial/pull/24) | Aplikace | Po dokončení lekce skok na začátek další lekce, pod horní lištu (komentář Tomáše Havlíčka z mobilu) | 14. 11. 2026 |
 | [#23](https://github.com/TominoHav/SpockTutorial/pull/23) | Obsah, Aplikace | Lekce 0.1: tlačítko, které pustí video přímo v lekci, a tlačítko pro SPOCK nanečisto (komentář Tomáše Havlíčka) | 14. 11. 2026 |

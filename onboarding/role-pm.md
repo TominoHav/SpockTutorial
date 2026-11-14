@@ -133,7 +133,9 @@ Ve fázi 2 platí **karanténa**: pokyn schovaný v materiálu je jen text a age
   - *Proč:* Materiál je jediná věc v běhu, kterou nenapsal ani systém, ani tým. Proto se načítá tímhle zvláštním způsobem.
   1. Vložte 2–4 soubory (poznámky z rozhovorů, tikety, průzkum) do `2-problems/supplied/`. Ideálně si je připraví PD (viz [role-designer.md](role-designer.md)).
   2. Nový chat → agent **Opportunity Designer**.
-  3. Agent spustí `SPOCK: read in the problem material`. Když ohlásí soubory bez data, spusťte `SPOCK: date the material that arrived without dates` a období vyplňte sami. Do prvního políčka napište `as listed`, pokud souhlasíte s obdobími, která task vypsal. Opravu nebo doplnění přidejte za středník, např. `as listed; rozhovory.md: 2026-03; clanek.md: 2026-Q1`. Období je rok (`2026`), čtvrtletí (`2026-Q2`) nebo měsíc (`2026-04`). Tip: datum v názvu souboru (`rozhovory-2026-03.md`) SPOCK přečte jen jako rok, proto měsíc uveďte v políčku nebo přímo v textu souboru.
+  3. Agent spustí `SPOCK: read in the problem material`.
+  4. Ohlásí soubory bez data? Spusťte `SPOCK: date the material that arrived without dates`. Do políčka napište `as listed`, opravy přidejte za středník: `as listed; rozhovory.md: 2026-03`.
+  5. Období je rok (`2026`), čtvrtletí (`2026-Q2`) nebo měsíc (`2026-04`). Měsíc z názvu souboru SPOCK nepozná, uveďte ho v políčku nebo v textu souboru.
 - [ ] **Přidejte problém vlastními slovy** (10 min, ve VS Code)
   - *Proč:* Některé věci víte, ale nemáte je napsané. Takhle se dostanou do materiálu jako váš výrok.
   1. Spusťte `SPOCK: add a problem in my own words` a napište jeden problém.
@@ -255,15 +257,17 @@ Každý odkaz v souboru **sami otevřete** na počítači, na kterém budete pra
 
 ### Úkoly
 
-- [ ] **Připravte soubor trhu a projděte fázi 3** (90 min, ve VS Code)
+- [ ] **Připravte soubor trhu** (60 min, v Microsoft Copilotu v prohlížeči)
   - *Proč:* V bance nebude vždy dovolené volně hledat na webu. Se seznamem máte přehled, co odchází ven.
-  1. Nový chat → agent **Competitive Analysis**. Agent popíše oba způsoby a čeká.
-  2. V Microsoft Copilotu v prohlížeči vytvořte soubor trhu promptem výše. Vložte jen popis trhu, zemi a jazyk běhu.
-  3. Projděte devět bodů kontroly. **Každý odkaz sami otevřete** a nefunkční smažte.
-  4. Uložte ho jako `market.md` do `runs/<běh>/3-competitive-analysis/supplied/` jako jediný soubor ve složce, ještě než agentovi řeknete, ať začne. Nadpisy `## Competitors` a `## Trends` nechte anglicky, zbytek může být česky. Po načtení fází 3 soubor už neupravujte.
-  5. Spusťte `SPOCK: what market material has been supplied` → `yes`.
-  6. Kontrolujte, jestli agent otevírá jen adresy ze souboru. Zapisujte si každou cizí adresu.
-  7. Na konci ve výstupu ověřte, že trendy jsou ve třech třídách (business, technology, regulatory) a že regulatorní trend uvádí předpis a datum.
+  1. V Microsoft Copilotu v prohlížeči použijte prompt z karty výše. Vložte jen popis trhu, zemi a jazyk běhu.
+  2. Projděte devět bodů kontroly. **Každý odkaz sami otevřete** a nefunkční smažte.
+  3. Uložte výsledek jako `market.md`. Nadpisy `## Competitors` a `## Trends` nechte anglicky, zbytek může být česky.
+- [ ] **Projděte fázi 3 se souborem trhu** (30 min, ve VS Code)
+  - *Proč:* Agent má pracovat jen z vašeho seznamu. Vy hlídáte, že nesahá jinam.
+  1. Dejte `market.md` jako jediný soubor do `runs/<běh>/3-competitive-analysis/supplied/`, ještě než agenta požádáte o začátek. Pak už ho neupravujte.
+  2. Nový chat → agent **Competitive Analysis** → spusťte `SPOCK: what market material has been supplied` → `yes`.
+  3. Hlídejte, jestli agent otevírá jen adresy ze souboru. Každou cizí si zapište.
+  4. Ověřte ve výstupu tři třídy trendů (business, technology, regulatory) a u regulatorního trendu předpis a datum.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 

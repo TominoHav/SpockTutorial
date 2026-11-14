@@ -121,7 +121,8 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 **2P.3 — Fáze 3: trh**
 
-- [ ] 2P.3 Připravte soubor trhu a projděte fázi 3
+- [ ] 2P.3 Připravte soubor trhu
+- [ ] 2P.3 Projděte fázi 3 se souborem trhu
 
 **2P.4 — Fáze 4: řešení**
 
