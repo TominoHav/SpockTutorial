@@ -54,6 +54,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
+| [#23](https://github.com/TominoHav/SpockTutorial/pull/23) | Obsah, Aplikace | Lekce 0.1: tlačítko, které pustí video přímo v lekci, a tlačítko pro SPOCK nanečisto (komentář Tomáše Havlíčka) | 14. 11. 2026 |
 | [#22](https://github.com/TominoHav/SpockTutorial/pull/22) | Aplikace | Mobilní úvodní stránka: jeden sloupec, menší Spock, tlačítka přes celou šířku | 14. 11. 2026 |
 | [#21](https://github.com/TominoHav/SpockTutorial/pull/21) | Průvodci | Spock dostává celý jen modul, ve kterém uživatel je, ostatní jako přehled: kontext zprávy 50–67 tisíc znaků místo 218 tisíc | 14. 11. 2026 |
 | [#20](https://github.com/TominoHav/SpockTutorial/pull/20) | Obsah, Aplikace, Údržba | Revize kvízů: zásoba 8 situačních otázek na modul, losování 5 a míchání, splnění na 80 %, kvíz až po kartách, přísnější skokový test | 14. 11. 2026 |
