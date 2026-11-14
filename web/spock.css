@@ -79,3 +79,6 @@ body.spock-busy .spock .sp-shadow{animation:spShadow .7s cubic-bezier(.3,0,.4,1)
 .g-head .spock{width:44px;height:auto;flex:none;overflow:visible}
 .g-head .spock .sp-body{animation:spHop 3.2s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.spock *,.hx-chip,.hx-hi{animation:none!important}}
+
+/* skryté prvky se skryjí i mimo claude.ai (např. při hostování na intranetu) */
+[hidden]{display:none!important}

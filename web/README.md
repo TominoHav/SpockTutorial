@@ -14,6 +14,14 @@ python3 web/build.py
 
 Výsledek je `web/dist/spock-user-onboarding.html` (složka `dist/` není v gitu). Stránka načítá video a obrázek z `media/`. Při publikaci je dejte vedle stránky pod názvy `spock-intro.mp4` a `spock-intro-poster.jpg`.
 
+## Test
+
+Po každé změně spusťte end-to-end test. Projde cestu uživatele na počítači i na mobilu (simulace, výběr role, lekce, kvíz, odemykání modulů, opora, dotazník, chat se Spockem, obnovení stránky, přístupnost), celkem 58 kontrol. Potřebuje Node.js a Playwright s Chromiem.
+
+```bash
+node nastroje/e2e/journey.js
+```
+
 ## Co je kde
 
 | Soubor | Co dělá |
