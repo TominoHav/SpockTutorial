@@ -96,7 +96,7 @@
 ### Klíčové myšlenky
 
 - **Postup změny:** osoba v ČS rozhodne a upraví **zdroj** → zvýší **Version**, nastaví **Date** a do bloku historie připíše jeden řádek, co se změnilo a proč → **SWE** vygeneruje kopii pro agenty a spustí kontroly → teprve když projdou, se změna commitne.
-- **Změna bez nové verze je chyba.** Běh si zapisuje verzi, kterou četl, a změnu pod stejným číslem by nešlo odlišit od toho, co bylo předtím. **Výjimka existuje a je vzácná:** Method Canon zapisuje úpravu jedné věty se zachovanou verzí 0.4, protože na tu verzi odkazují citace Methodology Coache a žádný oddíl se nepřesunul. I taková úprava má řádek v historii s důvodem. O výjimce nerozhodujete sami: projděte ji s Igorem Tadićem.
+- **Změna bez nové verze je chyba.** Běh si zapisuje verzi, kterou četl, a změnu pod stejným číslem by nešlo odlišit od toho, co bylo předtím. **Výjimka existuje a je vzácná:** Method Canon zapisuje úpravu jedné věty se zachovanou verzí 0.4, protože na tu verzi odkazují citace Methodology Coache a žádný oddíl se nepřesunul. I taková úprava má řádek v historii s důvodem. O výjimce nerozhodujete sami: projděte ji s týmem CoE Product Management.
 - **Know-how se nikdy nemění ve vlastní pracovní kopii SPOCKu.** Vygenerovaná kopie v `.github/know-how/` patří k vydání. Jakákoli změna v ní, i ta provedená správným postupem, shodí v běhu kontrolu **`C189`** („soubory workflow se liší od vydání“). Tu nejde podepsat jako výjimku. Změna se dělá ve **vývojovém repozitáři pilotního týmu**, vyjde v **novém vydání** a k uživatelům se dostane taskem `SPOCK: update this copy to the latest release` po dokončení jejich běhů.
 - **Kontroly z `KNOW-HOW-OWNERS.md` §4 krok 4 ve vydané kopii nejsou.** `repo-check.mjs` a `check.test.mjs` má jen vývojový repozitář. SWE, se kterým změnu děláte, k němu potřebuje přístup od pilotního týmu.
 - **Status *Approved*** a vaše jméno v řádku Owner patří do hlavičky až po revizi **celého** dokumentu. Řádek *Written by* zůstává autorovi z pilotního týmu.
@@ -105,10 +105,10 @@
 ### Úkoly
 
 - [ ] **Napište návrh změny metodiky** (45 min)
-  - *Proč:* Návrh vás donutí promyslet dopad dřív, než se cokoli změní, a dá Igorovi i SWE co revidovat.
+  - *Proč:* Návrh vás donutí promyslet dopad dřív, než se cokoli změní, a dá týmu CoE Product Management i SWE co revidovat.
   1. Z revize v 2G.3 nebo z porovnání v 2G.2 vyberte jeden problém.
   2. Napište: problém, kterého dokumentu se týká, co přesně změníte, novou verzi a jak poznáte, že změna funguje (na kterém běhu ji ověříte).
-  3. Projděte návrh s Igorem.
+  3. Projděte návrh s týmem CoE Product Management.
 - [ ] **Proveďte změnu se SWE** (60 min, volitelné)
   - *Proč:* Celý cyklus jednou projdete sami: od rozhodnutí po ověřený commit.
   1. Ve **vývojovém repozitáři pilotního týmu** (ne ve své pracovní kopii SPOCKu) založte zkušební větev a upravte **jen zdrojový** soubor ve `specifications/definitions/know-how/`: text, Version, Date a řádek historie.
@@ -129,7 +129,7 @@
   - *Proč:* Jeden nález je náhoda, tři stejné jsou úkol pro metodiku.
   1. Spusťte `SPOCK: how the workflow performed` nad běhy, které máte k dispozici.
   2. Projděte deníky a nálezy PM z vaší komunity.
-  3. Zapište jeden opakující se vzor a rozhodněte: materiál, metodika, nebo workflow (to předáte Igorovi)?
+  3. Zapište jeden opakující se vzor a rozhodněte: materiál, metodika, nebo workflow (to předáte týmu CoE Product Management)?
 - [ ] **Připravte 30minutové intro pro Guildu** (45 min)
   - *Proč:* PM se SPOCK naučí rychleji od vás než z dokumentace.
   1. Osnova: co SPOCK dělá (7 fází), kde rozhoduje člověk, co výstup dokazuje a co ne a kde je onboarding.

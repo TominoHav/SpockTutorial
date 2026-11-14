@@ -168,7 +168,7 @@ function surveyCard(compact){
     ${SURVEY_Q.map((q,i) => `<div class="svy-q"><span>${q}</span><div class="svy-s" role="radiogroup" aria-label="${esc(q)}">${[1,2,3,4,5].map(v => `<button type="button" role="radio" aria-checked="${sv['q'+i] === v}" class="${sv['q'+i] === v ? 'on' : ''}" data-svy="${i}:${v}" title="${['vůbec nesouhlasím','spíš nesouhlasím','napůl','spíš souhlasím','plně souhlasím'][v-1]}">${v}</button>`).join('')}</div></div>`).join('')}
     <label class="svy-t"><span>Co bylo nejtěžší nebo nejasné?</span><textarea id="svy-txt" rows="${compact ? 2 : 3}" placeholder="Volitelné">${esc(sv.txt || '')}</textarea></label>
     <div class="svy-f"><span class="muted">1 = vůbec nesouhlasím, 5 = plně souhlasím. Odpovědi zůstávají jen ve vašem prohlížeči, dokud je nepošlete.</span><button class="btn primary" type="button" data-svy-send ${SURVEY_Q.every((_,i) => sv['q'+i]) ? '' : 'disabled'}>Zkopírovat odpovědi</button></div>
-    ${sv.at ? '<p class="svy-ok">Zkopírováno. Vložte je do zprávy Igoru Tadićovi nebo tomu, kdo vám onboarding zadal.</p>' : ''}</section>`;
+    ${sv.at ? '<p class="svy-ok">Zkopírováno. Vložte je do zprávy týmu CoE Product Management nebo tomu, kdo vám onboarding zadal.</p>' : ''}</section>`;
 }
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-svy],[data-svy-send]'); if (!b) return;
