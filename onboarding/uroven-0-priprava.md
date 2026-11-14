@@ -12,14 +12,15 @@
 
 ### Ke studiu (asi 10 min)
 
-- 📄 **`SETUP.md`** §1 („What you need installed“), tabulka nahoře
+- 📄 **Tato lekce**: nic dalšího zatím číst nemusíte. SPOCK ještě nemáte v počítači, jeho návod `SETUP.md` otevřete až v lekci 0.4.
 
 ### Klíčové myšlenky
 
-- **SPOCK běží ve VS Code s GitHub Copilot a Copilot Chat, přihlášenými vaším GitHub účtem České spořitelny** (`SETUP.md` §1). Bez Copilota se agenti SPOCKu nespustí.
-- **Potřebujete čtyři přístupy:** GitHub účet ČS, licenci GitHub Copilot, adresu repozitáře SPOCKu s právem ho stáhnout a oprávnění instalovat software (nebo pomoc IT, která ho nainstaluje).
-- **Copilot musí ve vaší firemní konfiguraci povolit agent mode a vlastní agenty** (custom agents) a v nabídce modelů musí být **Claude Sonnet 5**. Když agenti chybí, bývá příčinou firemní nastavení Copilota (`SETUP.md` §5).
-- **Testeři potřebují navíc** přístup k repozitáři AI Lab se složkou `SPOCK | Workflow Documentation` a testovacími scénáři (`TESTER-GUIDE.md` úvod).
+- **SPOCK běží ve VS Code s GitHub Copilot a Copilot Chat, přihlášenými vaším GitHub účtem České spořitelny.** VS Code je program na práci se soubory, Copilot Chat je okno s AI asistentem uvnitř něj. Bez Copilota se agenti SPOCKu nespustí.
+- **Potřebujete čtyři přístupy:** GitHub účet ČS, licenci GitHub Copilot, přístup k repozitáři SPOCKu (místo na GitHubu, odkud si SPOCK stáhnete) a oprávnění instalovat software (nebo pomoc IT, která ho nainstaluje).
+- **Copilot musí ve vaší firemní konfiguraci povolit agent mode a vlastní agenty** (custom agents) a v nabídce modelů musí být **Claude Sonnet 5**. Agent mode znamená, že asistent smí pracovat se soubory, ne jen odpovídat. Vlastní agenti jsou asistenti, které si SPOCK přináší s sebou. Nemusíte to nastavovat, jen to uveďte v žádosti.
+- **Kdo vám pomůže:** **Igor Tadić**, autor a vlastník SPOCKu, zařídí přístup k repozitáři a poradí, kudy žádat o licenci. **IT ČS** řeší GitHub účet, licenci Copilota a instalaci programů.
+- **Testeři potřebují navíc** přístup k repozitáři AI Lab se složkou `SPOCK | Workflow Documentation` a testovacími scénáři.
 
 ### Úkoly
 
@@ -30,12 +31,12 @@
   3. Zapište si své uživatelské jméno na GitHubu. Budete ho uvádět v žádostech.
 - [ ] **Požádejte o licenci GitHub Copilot pro VS Code** (15 min, schválení může trvat dny)
   - *Proč:* Agenti SPOCKu jsou Copilot agenti. Bez licence nic nespustíte.
-  1. Zjistěte u Igora nebo IT, kudy se v ČS o Copilota žádá.
+  1. Zjistěte u Igora Tadiće nebo IT, kudy se v ČS o Copilota žádá.
   2. Do žádosti napište: své GitHub uživatelské jméno, že potřebujete **GitHub Copilot a Copilot Chat ve Visual Studio Code**, k čemu (pilot SPOCK, discovery workflow), a že potřebujete **agent mode, vlastní agenty (custom agents) a model Claude Sonnet 5**.
   3. Když je licence přidělená, na [github.com/settings/copilot](https://github.com/settings/copilot) uvidíte, že Copilot máte aktivní.
 - [ ] **Vyžádejte si přístup k repozitáři SPOCKu** (10 min)
   - *Proč:* SPOCK si do počítače naklonujete z repozitáře. Bez přístupu ho nestáhnete ani neaktualizujete.
-  1. Požádejte Igora o adresu repozitáře SPOCKu a o přístup pro své GitHub jméno.
+  1. Požádejte Igora Tadiće o adresu repozitáře SPOCKu a o přístup pro své GitHub jméno.
   2. Ověřte, že stránku repozitáře v prohlížeči otevřete.
   3. Testeři navíc požádají o přístup k repozitáři AI Lab se složkou `SPOCK | Workflow Documentation`.
 - [ ] **Ověřte, jestli smíte instalovat software** (5 min)
