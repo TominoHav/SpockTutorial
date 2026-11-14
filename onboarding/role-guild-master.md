@@ -21,6 +21,8 @@
 - **Pět oblastí:** Compliance, Market, Method, Product a Writing. Pro PM metodiku jsou klíčové **Method** (Method Canon, Evidence Standards, Opportunity Framing, Discovery Craft) a **Product** (Brief Fields, PRD Template, Initiative Template, Strategy Basis a Stage Shapes).
 - **Zdroj je jen jeden:** `specifications/definitions/know-how/`. Kopie v `.github/know-how/` se generuje. Úprava kopie selže v kontrole `C41` a při dalším generování zmizí.
 - **Každý běh si zapisuje verzi každého know-how, které přečetl.** Proto má každá změna novou verzi.
+- **SPOCK podporuje metodiku banky, nenahrazuje ji.** Discovery v něm odpovídá části Product Development Lifecycle a Product Compass. Metoda uvnitř je Opportunity Solution Tree: brief → rámování příležitostí → hypotézy a analýza konkurence → nápady na řešení → MVP → PRD → iniciativa. GM vysvětluje týmům rozdíl mezi důkazem, předpokladem, příležitostí a řešením a proč se nemá skákat rovnou k řešení.
+- **Za kvalitu výstupů SPOCKu odpovídají hlavně Guild Masteři** CoE Product Management a CoE Product Design. SPOCK vlastní a řídí oba CoE: produkt, metodiku, workflow, šíření i roadmapu.
 
 ### Úkoly
 

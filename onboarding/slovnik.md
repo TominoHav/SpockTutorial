@@ -23,6 +23,14 @@
 | **RUN-STATE.md** | Záznam běhu: stav fází, podpisy, verze know-how. |
 | **Free-roam** | Práce mimo běh, bez bran a bez záznamu. Zpráva musí začínat doslovně `free-roam:`. |
 | **PM, PD, SWE, GM** | Zkratky rolí: Product Manager, Product Designer, Software Engineer a Guild Master, správce PM metodiky. |
+| **REDIM** | Interní systém ČS pro žádosti o oprávnění (role). Pro SPOCK: `CSIN\vcs_github_copilot`, `CSIN\GHB_DEV_SPOCK_WRITE`, `CSIN\CAAUTH_USR`. |
+| **Solveo / Self Service+** | Firemní katalogy softwaru: Solveo pro Windows, Self Service+ pro Mac. |
+| **caauth-cli** | Program, který nainstaluje SSH certifikát pro přístup k firemnímu GitHubu. |
+| **CEN** | Vaše interní uživatelské označení v ČS. Používá se v cestách ke složce `.ssh`. |
+| **C1–C4** | Klasifikace dat. Do SPOCKu a Copilota patří jen C1 nebo C2. |
+| **surface** | Soubor `.github/surface`: říká SPOCKu, v jakém nástroji pracujete. Pro práci musí obsahovat `copilot`. |
+| **AI kredity** | Množství práce, kterou vám Copilot povolí. Stav je u ikony Copilota vpravo dole ve VS Code. |
+| **Product Compass** | Rámec ČS pro produktovou práci. SPOCK pokrývá jeho discovery část. |
 | **Trio** | PM, PD a SWE dělající discovery spolu. Každý vede ve své oblasti, odpovídají společně. |
 | **Opportunity Solution Tree** | Metoda SPOCKu: outcome → příležitosti → řešení → artefakty. |
 | **Tvrdá zastávka (hard stop)** | Fáze odmítne běžet, např. bez materiálu nebo bez primární příležitosti. Není to neprošlá kontrola. |

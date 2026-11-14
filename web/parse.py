@@ -46,6 +46,8 @@ def parse_quiz(text):
     return out
 def parse_module(fn):
     t = open(f'{SRC}/{fn}',encoding='utf-8').read()
+    # nadpisy uvnitř ukázek kódu (```) nesmí dělit lekce: dočasně je zamaskujeme
+    t = re.sub(r'```.*?```', lambda m: m.group(0).replace('\n#', '\n\ue000'), t, flags=re.S)
     head, _, rest = t.partition('\n## ')
     rest = '## ' + rest
     title = re.match(r'# (.+)', head).group(1)
@@ -72,8 +74,13 @@ def parse_module(fn):
                     if mm: L['learn'].append({'k':'text','l':inline(mm.group(1)),'n':inline(mm.group(2).lstrip('— ').lstrip(', '))})
                     else: L['learn'].append({'k':'text','l':inline(s),'n':''})
             elif sh.startswith('Klíčové'):
-                lines = sb.split('\n'); tbl=[]
+                lines = sb.split('\n'); tbl=[]; code=None
                 for ln in lines:
+                    if ln.strip().startswith('```'):
+                        if code is None: code=[]
+                        else: L.setdefault('codes',[]).append({'at':len(L['key']),'text':'\n'.join(code).replace('\ue000','#')}); code=None
+                        continue
+                    if code is not None: code.append(ln); continue
                     if ln.strip().startswith('|'): tbl.append(ln); continue
                     if tbl: t_=parse_table(tbl); t_['at']=len(L['key']); L['tables'].append(t_); tbl=[]
                     m = re.match(r'^(?:-|\d+\.)\s+(.+)$', ln)

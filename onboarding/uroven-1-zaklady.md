@@ -1,4 +1,4 @@
-# Úroveň 1: Základy (všichni, 3–4 h)
+# Úroveň 1: Základy (všichni, 4–5 h)
 
 **Cíl:** Umíte vysvětlit, co SPOCK dělá a co ne, znáte 7 fází, 6 agentů a rozdíl mezi Q a G bránou a přečtete hotový běh od iniciativy zpátky k materiálu.
 
@@ -9,10 +9,14 @@
 ### Ke studiu (asi 45 min)
 
 - 📄 **`specifications/BUSINESS-LOGIC-OVERVIEW.md`**, sekce 0–3. Sekce 0 („co je postavené a co nikdo nedokázal“) čtěte jako první.
+- 📄 **`materialy/bootcamp/product-overview-about-spock.pdf`** v repozitáři tohoto tutoriálu: proč SPOCK vzniká, pro koho je a kam směřuje
 - 📄 **Claude jako učitel:** vložte sekci 3 a napište: „Vysvětli mi těchto 7 fází, jako bych byl/a nový/á v produktovém týmu. Ke každé fázi jedna věta.“
 
 ### Klíčové myšlenky
 
+- **Proč SPOCK vzniká:** týmy dnes dělají discovery každý jinak, opakovaně skládají stejný kontext, zavazují se k řešení dřív, než ověří předpoklady, a riziko, compliance a bezpečnost přizvou až těsně před vydáním. Kvalita discovery pak závisí na tom, kdo ji zrovna vede. SPOCK má discovery zrychlit, sjednotit, opřít o důkazy a udělat dohledatelnou.
+- **Agenti připravují, lidé rozhodují.** Každé schválení, výběr a podpis dělá jmenovitě člověk se svou rolí. SPOCK podporuje produktové myšlení, nenahrazuje ho.
+- **SPOCK je interní nástroj České spořitelny v pilotu.** Vlastní a rozvíjí ho CoE Product Management a CoE Product Design. Za kvalitu výstupů odpovídají hlavně Guild Masteři obou CoE. Pilot pokrývá přední část discovery, od briefu po jeden první přírůstek (MVP) a iniciativu. Výzkum se zákazníky, prototypy, roadmapa více přírůstků a funkční a nefunkční specifikace přijdou až v plné verzi (plán 2027).
 - **SPOCK vede iniciativu od briefu až k iniciativě připravené pro delivery** v 7 fázích. Kromě průzkumu trhu (fáze 3) rozhoduje v každé fázi člověk.
 - **Metoda je Opportunity Solution Tree:** outcome → problémy → příležitosti → řešení. Každá fáze smí číst jen to, co vyprodukovaly fáze před ní, takže se dá zpětně dohledat, na čem které rozhodnutí stojí (`BUSINESS-LOGIC-OVERVIEW.md` §2).
 - **SPOCK netestuje.** Nedělá experimenty, prototypy ani validaci se zákazníky. Končí definicí iniciativy, testování přichází až v Execution (`method-canon.md` §3).
@@ -101,6 +105,37 @@
   1. Otevřete `RUN-STATE.md` ukázkového běhu.
   2. Najděte, kdo a kdy podepsal G1 a G7.
 
+## 1.4 — Jak se SPOCKem pracovat
+
+### Ke studiu (asi 20 min)
+
+- 📄 **`materialy/bootcamp/spock-workflow-user-manual.pdf`** v repozitáři tohoto tutoriálu
+- 📄 **`materialy/bootcamp/bootcamp-onboarding-storyline.pdf`**, části 4 a 5
+
+### Klíčové myšlenky
+
+- **SPOCK není stroj na odpovědi.** Je to workflow, kterým trio dělá discovery: vstup → akce SPOCKu → kontrola → oprava → schválení člověkem → uložený výstup → další krok. Kontrola výstupu je součást práce, ne výjimka.
+- **Čtyři zásady:** SPOCKem strukturujte práci. Důkazy používejte ke zpochybnění výstupu. Rozhodnutí dělá trio. Repozitář uchovává zdůvodnění.
+- **Jeden scénář nebo jedna iniciativa na jedno okno VS Code.** Scénáře ani fáze nemíchejte.
+- **Pro každou fázi nový chat** s agentem, který fázi vede. Nechte SPOCK načíst aktuální fázi, než začnete. Pro Methodology Coache i Workflow Support otevřete také vždy nový chat.
+- **Po každém tasku zkontrolujte výsledek v panelu Terminal:** zelená fajfka znamená, že task doběhl, červený stav, že selhal. Technicky úspěšný task ale může vyrobit neúplný nebo slabý obsah, proto vždy čtěte i dokument.
+- **Hodnoťte dvě věci:** chování systému (správná fáze a agent, vznikly soubory, srozumitelné žádosti o schválení, reakce na opravy) a kvalitu obsahu (relevantní, odráží dodaný materiál, tvrzení mají důkaz, viditelné předpoklady, rozpory a chybějící informace).
+- **Zpětnou vazbu dávejte konkrétně**, ne „vylepši to“. Například: „Doplň důkaz z výzkumného materiálu k tomuto závěru.“ „Odděl potřeby uživatelů od navržených řešení.“ „Tahle sekce odporuje briefu, sjednoť to.“ „Označ toto tvrzení jako předpoklad.“ „Nepokračuj, dokud nedoplníme chybějící informaci.“
+- **Když task selže:** řekněte to aktivnímu agentovi a postupujte podle jeho návrhu. Když to nepomůže, otevřete nový chat s Workflow Support. Do deníku zapište fázi, task, chybu nebo výpis, co jste chtěli udělat, co jste zkusili a jak to dopadlo.
+- **Když neprojde kontrola:** přečtěte dokument, zjistěte příčinu a rozhodněte, jestli je výsledek přijatelný. Teprve pak podepište výjimku (`SPOCK: sign off a check this run cannot meet`). Neprošlou kontrolu nikdy nepřijímejte bez zapsaného zdůvodnění.
+- **Před schválením fáze ověřte:** dokument vznikl, odráží dodaný materiál, problémy jsou vyřešené nebo zapsané, neprošlé kontroly mají rozhodnutí a důvod a výstup je použitelný pro další fázi. Pak schvalte, požádejte o změny, nebo běh zastavte.
+
+### Úkoly
+
+- [ ] **Připravte si tři věty zpětné vazby** (10 min)
+  - *Proč:* Konkrétní pokyn agent zapracuje, obecné „vylepši“ ne.
+  1. Vezměte libovolný dokument ukázkového běhu (např. `fixtures/2026-09-savings-goals/2-problems/`).
+  2. Napište k němu tři konkrétní pokyny podle vzorů výše: jeden o důkazu, jeden o oddělení potřeby od řešení, jeden o předpokladu.
+- [ ] **Připravte si šablonu záznamu o selhání** (10 min)
+  - *Proč:* Když task selže, nebudete vymýšlet, co zapsat. Tým CoE Product Management z toho pozná, co opravit.
+  1. Do deníku si vytvořte šablonu: fáze, task, chyba nebo výpis, co jste chtěli udělat, co jste zkusili, vyřešeno ano/ne.
+  2. Přidejte druhou šablonu pro neprošlou kontrolu: co neprošlo, přijali jste nebo odmítli, proč.
+
 ## Kvíz
 
 **1. Proč fáze 3 nemá rozhodnutí člověka?**
@@ -148,5 +183,17 @@ b) Automatické spouštění fází postavené není. Workflow jen oznámí dal�
 <details><summary>Odpověď</summary>
 
 b) Agent píše, kód kontroluje, člověk podepisuje. Hlídače za běhu zastaví krok dřív, než se stane: schválená fáze se mění jen vrácením, které spouští člověk (`SPOCK: send a stage back to be redone`).
+
+</details>
+
+**5. Task skončil zelenou fajfkou. Můžete fázi schválit?**
+
+   a) Ano, task je úspěšný
+   b) Ne hned. Technicky úspěšný task může vyrobit slabý obsah, takže nejdřív přečtu dokument a posoudím jeho kvalitu
+   c) Ne, musím počkat na Workflow Support
+
+<details><summary>Odpověď</summary>
+
+b) Výsledek tasku říká jen, že doběhl. Kvalitu obsahu posuzujete vy: jestli odráží materiál, má důkazy a ukazuje předpoklady a mezery.
 
 </details>

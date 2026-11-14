@@ -12,8 +12,22 @@
 
 - 📄 **`SETUP.md`** §6 („Your first run“)
 - 📄 **`TESTER-GUIDE.md`** §3.3 a §4 „Stage 1 · Brief“
+- 📄 **`materialy/bootcamp/struktura-briefu-initial-brief-structure.pdf`** v repozitáři tohoto tutoriálu
 
 ### Klíčové myšlenky
+
+- **Brief si připravte předem.** Má dát i někomu mimo váš tým dost kontextu, aby pochopil problém. Struktura z bootcampu:
+
+| Část | Co napsat |
+|---|---|
+| Problém nebo prostor nápadu | Co chceme řešit |
+| Outcome | Jakou změnu chování klienta nebo uživatele chceme vidět |
+| Produktový cíl | Čeho chce produkt dosáhnout |
+| Produktová metrika | Měřítko na úrovni produktu, které sleduje produktový cíl |
+| Strategický cíl | Který key result banky zlepšujeme |
+| Strategická vazba | Vlastními slovy: jak pokrok v produktovém cíli posune North Star a strategický cíl |
+| Segment zákazníků | Pro koho outcome je |
+| Rozsah trhu | Problém, podle kterého se ve fázi 3 hledá na trhu |
 
 - Běh založíte povelem **`Start a discovery run.`** u agenta Product Manager. Název běhu, své jméno a roli zadáváte v tasku `SPOCK: start a run`, ne v chatu.
 - Když přinesete vlastní dokument, agent ho **vyslýchá, ne přepisuje**: začne tím, co je slabé nebo chybí, a u každého pole řekne, odkud je (STAGE-1 R3.0.1–R3.0.4).
@@ -22,6 +36,12 @@
 
 ### Úkoly
 
+- [ ] **Připravte si podklad pro brief** (30 min)
+  - *Proč:* S připraveným podkladem agent jen doptá, co chybí. Bez něj se rozhovor protáhne a víc polí skončí jako unknown.
+  1. Vyberte skutečné discovery téma, ke kterému máte kontext a materiál.
+  2. Sepište podklad podle struktury výše: problém, outcome, čtyři části cílů, segment a rozsah trhu.
+  3. Strategickou vazbu napište vlastními slovy. Agent ji za vás nenapíše.
+  4. Podklad uložte jako `.md`. Ve fázi 1 je to jediný soubor, který smíte přiložit přímo do chatu.
 - [ ] **Založte běh** (15 min)
   - *Proč:* Název, jméno a roli zadáváte vy. Agent, který by běh pojmenoval sám, se chová chybně.
   1. Nový chat → agent **Product Manager** → model Claude Sonnet 5, High, 1M.
@@ -78,19 +98,81 @@
 
 ### Klíčové myšlenky
 
-- Fáze 3 má **dva způsoby práce**. Buď **seznam konkurentů** jako jeden soubor v `3-competitive-analysis/supplied/`, nebo prázdná složka, a pak agent hledá sám. Hledání ale potřebuje rozšíření pro webové vyhledávání a klíč, které běžná instalace nemá. **Použijte seznam.**
+- Fáze 3 má **dva způsoby práce**. Buď **soubor trhu** jako jediný soubor v `3-competitive-analysis/supplied/`, nebo prázdná složka, a pak agent hledá sám. Hledání ale potřebuje rozšíření pro webové vyhledávání a klíč, které běžná instalace nemá. **Použijte soubor trhu.**
+- **Soubor trhu je všechno, co fáze 3 o trhu ví.** Co v něm chybí, se později nedoplní a workflow mezeru jen zapíše. Proto chce víc, než požaduje úvodní zpráva fáze: 10 organizací (aspoň dvě náhražky, tedy to, co lidé používají místo vašeho typu produktu), u každé aspoň 6 odkazů od 6 různých vydavatelů a 12 trendů, po čtyřech v třídách business, technology a regulatory. Postup je zatím dočasné řešení z bootcampu.
+- **Soubor připravíte v Microsoft Copilotu v prohlížeči, ne v Copilotu ve VS Code.** Do Microsoft Copilotu vkládejte jen popis trhu a zemi. Brief, rozhovory ani materiál od klientů ne: cokoli z vlastních dokumentů po odeslání opouští Českou spořitelnu.
+- **Prompt pro Microsoft Copilot** (vyplňte jen tři řádky v hranatých závorkách, nic dalšího neměňte):
+
+```text
+I need a market scan that will be handed to a structured analysis process.
+It has fixed rules and the output has to meet them exactly.
+
+Market: [describe the product or service area in one line]
+Country or region: [e.g. Czech Republic]
+Output language: [English or Czech]
+
+FIND 10 ORGANISATIONS active in this market.
+Most should be direct or adjacent players. At least two must be substitutes:
+something people use instead of this kind of product rather than a direct rival.
+
+For each organisation give me:
+- Its name
+- Whether it is direct, adjacent or substitute
+- A link to its own page about this product or service
+- At least five further links, each from a different publisher
+
+The link rules are the part that matters:
+- Six links minimum per organisation, no two from the same publisher.
+  A company's own blog and its own product page are one publisher, not two.
+- The organisation's own page must be one of them.
+- At least three must be the organisation itself, a regulator, a trade body,
+  a law firm or an industry analyst. Six news sites is not enough.
+- Prefer pages that load for anyone: no login, no paywall, no country block.
+- List only links you opened in this conversation and saw load. Never list a
+  link from memory, and never build one from a pattern or a site's structure.
+- If you tried a link and it did not open, you may list it, but end its line
+  with "(did not open)". Never leave such a link unmarked.
+- If you cannot reach six different publishers for an organisation, say so
+  under that entry and leave it short. Do not fill the gap.
+
+THEN FIND 12 TRENDS, four in each of these classes:
+- business: how the market or customer behaviour is moving
+- technology: what is changing in how this is built or delivered
+- regulatory: laws and rules that are changing
+
+For each trend: a short name, one sentence on what is moving, and two links
+from different publishers. The link rules above apply to these links too.
+For the regulatory ones only, also give:
+- The real name of the law, regulation or directive
+- The date it applies from, or "date not yet settled" if it is not fixed
+
+FORMAT. Follow this exactly, because it is read by a parser.
+Two sections, each a level-two heading:
+## Competitors
+## Trends
+Keep these two headings in English exactly as written, even when the
+output language is Czech.
+Every organisation and every trend is a level-three heading under its section.
+Nothing else in the file uses a level-three heading. Do NOT group the trends
+under class headings: the class goes inside each trend entry.
+Write every link out in full.
+```
+
+- **Než soubor použijete, musí platit všech devět bodů:** 1) deset organizací, z toho aspoň dvě náhražky; 2) u každé šest odkazů od šesti vydavatelů včetně vlastní stránky, nebo poznámka, proč méně; 3) aspoň tři z nich jsou organizace sama, regulátor, profesní sdružení, advokátní kancelář nebo analytik; 4) dvanáct trendů, čtyři v každé třídě; 5) každý trend má dva odkazy od různých vydavatelů a regulatorní trend skutečný předpis a datum; 6) jen dva nadpisy `## Competitors` a `## Trends` a `###` pro každou položku, trendy nejsou seskupené pod nadpisy tříd; 7) každý odkaz jste sami otevřeli na počítači, na kterém budete pracovat, a nefunkční jste smazali, včetně řádků „(did not open)“; 8) i po smazání má každá organizace odkazy aspoň od dvou vydavatelů, z toho svůj web, jinak ji vyřaďte nebo k ní napište, co chybí; 9) v souboru není nic, co jste nemohli ověřit. Krátký seznam je v pořádku, vycpaný ne.
 - **Fáze 3 nemá vaše schválení.** Kdyby vás agent o schválení fáze 3 žádal, je to nález. Fázi přijme brána Q3.
 - Než agent otevře webovou stránku, VS Code se vás zeptá. Povolte jen adresy ze seznamu a jakoukoli jinou odmítněte a zapište si ji.
 
 ### Úkoly
 
-- [ ] **Připravte seznam trhu a projděte fázi 3** (60 min)
+- [ ] **Připravte soubor trhu a projděte fázi 3** (90 min)
   - *Proč:* V bance nebude vždy dovolené volně hledat na webu. Se seznamem máte přehled, co odchází ven.
   1. Nový chat → agent **Competitive Analysis**. Agent popíše oba způsoby a čeká.
-  2. Podle jeho úvodní zprávy připravte soubor se 3–10 konkurenty a jejich adresami. **Každou adresu nejdřív sami otevřete.** Nefunkční vyhoďte.
-  3. Soubor uložte do `3-competitive-analysis/supplied/` a spusťte `SPOCK: what market material has been supplied` → `yes`.
-  4. Kontrolujte, jestli agent otevírá jen adresy ze seznamu. Zapisujte si každou cizí adresu.
-  5. Na konci ve výstupu ověřte, že trendy jsou ve třech třídách (business, technology, regulatory) a že regulatorní trend uvádí předpis a datum.
+  2. V Microsoft Copilotu v prohlížeči vytvořte soubor trhu promptem výše. Vložte jen popis trhu, zemi a jazyk běhu.
+  3. Projděte devět bodů kontroly. **Každý odkaz sami otevřete** a nefunkční smažte.
+  4. Uložte ho jako `market.md` do `runs/<běh>/3-competitive-analysis/supplied/` jako jediný soubor ve složce, ještě než agentovi řeknete, ať začne. Nadpisy `## Competitors` a `## Trends` nechte anglicky, zbytek může být česky. Po načtení fází 3 soubor už neupravujte.
+  5. Spusťte `SPOCK: what market material has been supplied` → `yes`.
+  6. Kontrolujte, jestli agent otevírá jen adresy ze souboru. Zapisujte si každou cizí adresu.
+  7. Na konci ve výstupu ověřte, že trendy jsou ve třech třídách (business, technology, regulatory) a že regulatorní trend uvádí předpis a datum.
 
 ## 2P.4 — Fáze 4: řešení
 

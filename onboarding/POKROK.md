@@ -6,18 +6,19 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 ## Úroveň 0: Příprava
 
-**0.1 — Přístupy a licence**
+**0.1 — Přístupy a role v REDIMu**
 
-- [ ] 0.1 Ověřte si GitHub účet ČS
-- [ ] 0.1 Požádejte o licenci GitHub Copilot pro VS Code
-- [ ] 0.1 Vyžádejte si přístup k repozitáři SPOCKu
-- [ ] 0.1 Ověřte, jestli smíte instalovat software
+- [ ] 0.1 Projděte onboarding GitHubu v ČS
+- [ ] 0.1 Objednejte roli pro GitHub Copilot
+- [ ] 0.1 Objednejte přístup k repozitáři SPOCKu a SSH certifikátu
 
-**0.2 — Instalace nástrojů**
+**0.2 — Instalace nástrojů a SSH certifikát**
 
+- [ ] 0.2 Najděte firemní katalog softwaru
 - [ ] 0.2 Nainstalujte VS Code
-- [ ] 0.2 Nainstalujte Node.js 22 LTS
 - [ ] 0.2 Nainstalujte Git
+- [ ] 0.2 Nainstalujte Node.js 22
+- [ ] 0.2 Nainstalujte caauth-cli a ověřte SSH certifikát
 
 **0.3 — GitHub Copilot ve VS Code**
 
@@ -27,13 +28,14 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 **0.4 — SPOCK ve vašem počítači**
 
 - [ ] 0.4 Naklonujte SPOCK a otevřete ho
+- [ ] 0.4 Ověřte soubor surface
 - [ ] 0.4 Spusťte SPOCK: check my setup
 - [ ] 0.4 Zkontrolujte šest agentů
 - [ ] 0.4 Nastavte model a zkontrolujte náhled dokumentů
 
 **0.5 — Pět pravidel, která se neporušují**
 
-- [ ] 0.5 Najděte v `TASKS.md` tři tasky, které otevírají políčka
+- [ ] 0.5 Najděte v TASKS.md tři tasky, které otevírají políčka
 - [ ] 0.5 Založte si deník
 
 - [ ] Kvíz: Úroveň 0: Příprava
@@ -55,6 +57,11 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 - [ ] 1.3 Projděte ukázkový běh
 - [ ] 1.3 Dohledejte jedno tvrzení zpět ke zdroji
 - [ ] 1.3 Najděte v běhu podpisy
+
+**1.4 — Jak se SPOCKem pracovat**
+
+- [ ] 1.4 Připravte si tři věty zpětné vazby
+- [ ] 1.4 Připravte si šablonu záznamu o selhání
 
 - [ ] Kvíz: Úroveň 1: Základy
 
@@ -102,6 +109,7 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 **2P.1 — Fáze 1: brief**
 
+- [ ] 2P.1 Připravte si podklad pro brief
 - [ ] 2P.1 Založte běh
 - [ ] 2P.1 Projděte brief se schválnou chybou
 - [ ] 2P.1 Schvalte brief (G1)
@@ -114,7 +122,7 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 **2P.3 — Fáze 3: trh**
 
-- [ ] 2P.3 Připravte seznam trhu a projděte fázi 3
+- [ ] 2P.3 Připravte soubor trhu a projděte fázi 3
 
 **2P.4 — Fáze 4: řešení**
 

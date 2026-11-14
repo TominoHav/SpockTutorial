@@ -15,6 +15,7 @@ Ve složce `onboarding/` v kořeni repa:
 
 - `README.md`: cesta (úrovně 0–4 a čtyři role na úrovni 2)
 - `uroven-0-priprava.md`, `uroven-1-zaklady.md`, `uroven-1b-faze-do-hloubky.md` (sedm fází podle `specifications/stage-specs/`), `role-pm.md`, `role-designer.md`, `role-engineer.md`, `role-guild-master.md`, `uroven-3-pokrocily.md`, `uroven-4-superuser.md`: lekce s materiály ke studiu, klíčovými myšlenkami, úkoly (pole *Proč*) a kvízem
+- `../materialy/bootcamp/*.pdf`: materiály z bootcampu SPOCKu. Interní postup ČS (role v REDIMu, Solveo, Self Service+, SSH certifikát), kontakty, struktura briefu, soubor trhu a pracovní postup. Lekce z nich čerpají, PDF otevři, když uživatel potřebuje detail (např. konfiguraci SSH).
 - `POKROK.md`: zaškrtávací seznam a **jediný soubor, do kterého zapisuješ**
 - `tahak.md`, `slovnik.md`, `diagnostika.md`, `zasady.md`, `pripravenost.md`: referenční podklady
 

@@ -7,6 +7,11 @@ Postupujte shora dolů. **Než cokoli zkusíte znovu, uložte si stav**: export 
 | Co vidím | Co udělám |
 |---|---|
 | V seznamu tasků není nic `SPOCK:` | Otevřená je jiná složka nebo je VS Code v restricted mode. Otevřete složku s `.github` a `.vscode` a autorům důvěřujte (`SETUP.md` §3). |
+| SSH hlásí chybu 225 nebo 255 | Známý problém certifikátu po standardní instalaci. Podle *Technical setup instructions*, část 5: do složky `.ssh` ve svém domovském adresáři (`/Users/<CEN>/.ssh` na Macu, `C:\Users\<CEN>\.ssh` na Windows; na Macu skryté soubory ukážete Cmd+Shift+.) zkopírujte dodaný `known_hosts` a obsah souboru `config` nahraďte konfigurací z návodu (s vaším CEN). Pak v caauth-cli zvolte Desktop Management → Test Certificate. |
+| V Self Service+ nebo Solveo aplikace chybí | Aplikace vyžaduje roli v REDIMu. Najděte ji na stránce Confluence k dané aplikaci. Na Windows chybí zařízení: kontaktujte svého Delivery Managera. |
+| SPOCK odmítá založit běh kvůli nástroji | Soubor `.github/surface` obsahuje `unset`. Přepište ho na `copilot` a uložte, nebo spusťte `SPOCK: check my setup` a zvolte GitHub Copilot. |
+| Agent se uprostřed práce zastaví bez vysvětlení | Zkontrolujte AI kredity Copilota (ikona vpravo dole ve VS Code). |
+| Ve výběru agenta je CSAS Copilot Ecosystem Architect | Firemní agent, k SPOCKu nepatří. Pro SPOCK ho nepoužívejte. |
 | Agent chybí nebo přebývá | Zastavte se a pošlete týmu CoE Product Management jména agentů se screenshotem (`SETUP.md` §5). |
 | Běh nejde založit | Spusťte `SPOCK: check my setup` a zvolte GitHub Copilot. |
 | Chat hlásí, že nemáte Copilot | Licence ještě není přidělená nebo jste přihlášení jiným účtem. Ověřte [github.com/settings/copilot](https://github.com/settings/copilot) a přihlášení účtem ČS (úroveň 0, lekce 0.1 a 0.3). |
