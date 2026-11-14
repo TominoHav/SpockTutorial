@@ -52,6 +52,7 @@ fab = '<button class="g-fab" id="g-fab" type="button" aria-label="Spock, průvod
 head, n1 = _re.subn(r'<button class="g-fab".*?</button>', lambda m: fab, head, count=1, flags=_re.S)
 head, n2 = _re.subn(r'<svg class="g-bot" id="g-bot-head".*?</svg>', '<span id="g-head-bot"></span>', head, count=1, flags=_re.S)
 assert n1 == 1 and n2 == 1
+head = head.replace('placeholder="Např. Jak mám začít se SPOCKem?"', 'placeholder="Zeptejte se Spocka…"')
 head = head.replace('<b>Průvodce SPOCK</b>', '<b>Spock</b>').replace('Zná celý tento onboarding. Odpovídá z vašeho Claude účtu.', 'Průvodce onboardingem. Zná všechny lekce a odpovídá z vašeho Claude účtu.')
 head = head.replace('aria-label="Průvodce SPOCK onboardingem"', 'aria-label="Spock, průvodce onboardingem"')
 os.makedirs('dist', exist_ok=True)

@@ -39,6 +39,6 @@ Mluv česky, vykej. Fakta o SPOCKu ber jen ze souborů SPOCKu, ne z paměti.
 2. Když přidáváš úkol nebo kvízovou otázku, přidej je **na konec** lekce nebo kvízu. Pořadí stávajících úkolů ovlivňuje uložený pokrok uživatelů webu. Nové úkoly doplň i do `onboarding/POKROK.md`.
 3. Přepiš `SPOCK-VERZE.md`: nové `release`, `commit` a dnešní datum v `overeno`. Pak ulož nový otisk: `python3 nastroje/kontrola-aktualnosti.py <SPOCK> --zapis-otisk`.
 4. Znovu spusť `python3 nastroje/kontrola-aktualnosti.py <SPOCK>` a ověř, že odkazy sedí.
-5. Sestav web: `python3 web/parse.py && python3 web/build.py` (návod v `web/README.md`).
+5. Sestav web: `python3 web/parse.py && python3 web/build.py` (návod v `web/README.md`) a spusť `node nastroje/e2e/journey.js`. Všech 58 kontrol musí projít.
 6. Do tabulky **Historie změn** v `ARCHITEKTURA.md` přidej řádek s číslem pull requestu, vrstvami a popisem změny.
 7. Commit a push dělej jen na pokyn uživatele, na nové větvi, a nabídni pull request. Publikaci webu nech na uživateli.

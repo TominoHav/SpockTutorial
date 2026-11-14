@@ -146,7 +146,12 @@ function checkBadges(){
 
 /* oslavy: fronta, aby se nepřekrývaly */
 const CEL = [];
-function celebrate(c){ CEL.push(c); if (CEL.length === 1) showCel(); }
+function celebrate(c){
+  /* Při otevřeném chatu odznak ani denní cíl nepřekryjí rozhovor: stačí krátké upozornění. */
+  const chat = document.getElementById('g-panel');
+  if (chat && !chat.hidden && (c.kind === 'badge' || c.kind === 'goal')) { toast('★ ' + c.title); return; }
+  CEL.push(c); if (CEL.length === 1) showCel();
+}
 function showCel(){
   const c = CEL[0]; if (!c) return;
   const ov = document.createElement('div'); ov.className = 'cel'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label', c.title);
@@ -845,10 +850,21 @@ function openSpock(){
     let y = below ? r.bottom - ph : r.top;
     x = Math.max(16, Math.min(innerWidth - pw - 16, x)); y = Math.max(16, Math.min(innerHeight - ph - 16, y));
     Object.assign(panel.style, {left:x+'px', top:y+'px', right:'auto', bottom:'auto'});
-  } else if (innerWidth <= 760) { Object.assign(panel.style, {left:'', top:'', right:'', bottom:''}); }
-  if (!$('#g-log').children.length) gIntro(); $('#g-in').focus();
+  } else if (innerWidth <= 760) { Object.assign(panel.style, {left:'', top:'', right:'', bottom:''}); document.body.classList.add('spock-open'); fitPanel(); }
+  if (!$('#g-log').children.length) gIntro();
+  if (innerWidth > 760) $('#g-in').focus();   /* na mobilu klávesnici neotevírat hned, zakryla by odpověď */
 }
-function closeSpock(){ $('#g-panel').hidden = true; $('#g-fab').hidden = false; }
+/* Na mobilu panel vyplní viditelnou část obrazovky, i když se otevře klávesnice nebo lišta prohlížeče. */
+function fitPanel(){
+  const panel = $('#g-panel'); if (!panel || panel.hidden) return;
+  if (innerWidth > 760) { panel.style.height = ''; return; }
+  const vv = window.visualViewport, h = vv ? vv.height : innerHeight, top = vv ? vv.offsetTop : 0;
+  Object.assign(panel.style, {top: top + 'px', height: h + 'px', bottom: 'auto'});
+  const log = $('#g-log'); if (log) log.scrollTop = log.scrollHeight;
+}
+if (window.visualViewport) { visualViewport.addEventListener('resize', fitPanel); visualViewport.addEventListener('scroll', fitPanel); }
+addEventListener('resize', fitPanel);
+function closeSpock(){ const p = $('#g-panel'); p.hidden = true; Object.assign(p.style, {height:''}); if (innerWidth <= 760) Object.assign(p.style, {top:'', bottom:''}); document.body.classList.remove('spock-open'); $('#g-fab').hidden = false; }
 function spockFab(fab){
   let saved = null; try { saved = JSON.parse(localStorage.getItem(POS_KEY) || 'null'); } catch(e) {}
   let seen = false; try { seen = localStorage.getItem(HINT_KEY) === '1'; } catch(e) {}
