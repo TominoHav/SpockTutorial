@@ -146,11 +146,23 @@ function checkBadges(){
 
 /* oslavy: fronta, aby se nepřekrývaly */
 const CEL = [];
+/* Přes celou obrazovku jen přirozené předěly: lekce, modul, konec kvízu, odemčení. Odznaky a denní cíl
+   práci nepřeruší: ukážou se jako upozornění v rohu, které samo zmizí. */
+const QUIET = ['badge', 'goal'];
 function celebrate(c){
-  /* Při otevřeném chatu odznak ani denní cíl nepřekryjí rozhovor: stačí krátké upozornění. */
-  const chat = document.getElementById('g-panel');
-  if (chat && !chat.hidden && (c.kind === 'badge' || c.kind === 'goal')) { toast('★ ' + c.title); return; }
+  if (QUIET.includes(c.kind)) return notice(c);
   CEL.push(c); if (CEL.length === 1) showCel();
+}
+function notice(c){
+  let box = document.getElementById('notices');
+  if (!box) { box = document.createElement('div'); box.id = 'notices'; box.className = 'notices'; box.setAttribute('role', 'status'); box.setAttribute('aria-live', 'polite'); document.body.append(box); }
+  const n = document.createElement('button'); n.type = 'button'; n.className = 'notice ' + c.kind;
+  n.innerHTML = `<span class="nt-ic" aria-hidden="true">${c.kind === 'goal' ? FLAME : '<span>★</span>'}</span><span class="nt-tx"><b>${esc(c.title)}</b><small>${esc(c.text || '')}</small></span>`;
+  n.title = c.kind === 'badge' ? 'Zobrazit odznaky' : 'Zobrazit profil';
+  n.addEventListener('click', () => { n.remove(); go('badges'); });
+  box.append(n);
+  requestAnimationFrame(() => n.classList.add('in'));
+  setTimeout(() => { n.classList.remove('in'); setTimeout(() => n.remove(), 300); }, 4500);
 }
 function showCel(){
   const c = CEL[0]; if (!c) return;
