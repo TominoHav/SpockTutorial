@@ -21,6 +21,7 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  await p.goto('file://'+path.join(DIST,'e2e.html'));await p.waitForTimeout(400);
  const T=s=>tag+': '+s;
  ok(T('nováček vidí úvod „Seznamte se se SPOCKem“'), await p.locator('.hx-first h1').innerText().then(t=>t.includes('Seznamte')));
+ ok(T('úvod: na mobilu jeden sloupec, na počítači dva'), (await p.evaluate(()=>getComputedStyle(document.querySelector('.hx-first')).gridTemplateColumns.split(' ').length))===(W>980?2:1));
  // simulace
  await p.locator('.hx [data-simstart]').click();
  for(const s of ['next','o-sol','o-ok','sign','load','sign','next','sol-1','why-2','sign','mvp-0','sign','sign','sign','trace']){await p.locator(`[data-sim="${s}"]`).first().click();await p.waitForTimeout(60);}
