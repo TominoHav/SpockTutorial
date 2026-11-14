@@ -1,6 +1,6 @@
 # Úroveň 4: Superuser (všichni, 4–6 h)
 
-**Cíl:** SPOCK ovládáte bez nápovědy. Poctivě vysvětlíte, co výstup dokazuje a co ne, prověříte chování agentů, pošlete Igorovi použitelný nález a provedete kolegu úrovněmi 0–1.
+**Cíl:** SPOCK ovládáte bez nápovědy. Poctivě vysvětlíte, co výstup dokazuje a co ne, prověříte chování agentů, pošlete týmu CoE Product Management použitelný nález a provedete kolegu úrovněmi 0–1.
 
 **Proč:** Superuser je první, za kým tým přijde, když něco nefunguje. Musí poznat, jestli je chyba v materiálu, v nastavení, nebo ve workflow. A musí umět říct, kdy výstup vypadá dobře, ale nic nedokazuje: „A document that looks right proves nothing on its own“ (`TESTER-GUIDE.md` §1.3).
 
@@ -69,7 +69,7 @@
   1. Spusťte `SPOCK: how the workflow performed` a `SPOCK: which gates can run in full`.
   2. Zapište si dvě věci, které vás překvapily.
 
-## 4.4 — Zpětná vazba Igorovi
+## 4.4 — Zpětná vazba týmu CoE Product Management
 
 ### Ke studiu (asi 15 min)
 
@@ -79,14 +79,14 @@
 
 - **Hned (ještě tu hodinu) pošlete:** relaci, kde poskytovatel nebyl GitHub Copilot, víc než šest agentů ve výběru (se jmény), jakékoli selhání DR-04 a případ, kdy agent doplnil informaci, kterou jste mu nedali.
 - **Nález obsahuje:** verzi SPOCKu, fázi a agenta, co jste udělali a co jste čekali. Přiložte **celou složku běhu jako ZIP** a **chat každé fáze exportovaný zvlášť** (`Chat: Export Chat...`). Nikdy screenshot místo souboru.
-- **Zprávu píšete sami**, ve vlastním dokumentu mimo složku SPOCKu, a posíláte ji jen Igorovi. Agenta ji psát nenechávejte.
+- **Zprávu píšete sami**, ve vlastním dokumentu mimo složku SPOCKu, a posíláte ji jen týmu CoE Product Management. Agenta ji psát nenechávejte.
 
 ### Úkoly
 
 - [ ] **Pošlete jeden nález** (30 min)
   - *Proč:* Dobrý nález opraví workflow pro všechny. Nejasný nález se ztratí.
   1. Vyberte jeden nález z deníku nebo ze sond v 4.2.
-  2. Sepište ho podle `SETUP.md` §10, přiložte ZIP běhu a exportované chaty a pošlete Igorovi.
+  2. Sepište ho podle `SETUP.md` §10, přiložte ZIP běhu a exportované chaty a pošlete týmu CoE Product Management.
 
 ## 4.5 — Mentor a generálka
 
@@ -115,7 +115,7 @@ Zelené brány říkají, že dokumenty jsou mechanicky v pořádku: pole jsou v
 **2. Agent ve fázi 2 vyplnil segment zákazníka, který v materiálu ani v briefu nebyl. Co uděláte?**
 
    a) Zapíšu to na result sheet a pošlu na konci
-   b) Pošlu to Igorovi hned, je to případ, kdy agent doplnil informaci, kterou jste mu nedali
+   b) Pošlu to týmu CoE Product Management hned, je to případ, kdy agent doplnil informaci, kterou jste mu nedali
 
 <details><summary>Odpověď</summary>
 

@@ -472,7 +472,7 @@ function toolsBlock(title){
 }
 function contacts(){
   return `<section class="whohelp"><h3>Kdo vám pomůže</h3><ul>
-    <li><b>Igor Tadić</b><span>Autor a vlastník SPOCKu. Přístup k repozitáři, chybějící agenti, nálezy a otázky k metodě.</span></li>
+    <li><b>Tým CoE Product Management</b><span>Vlastník SPOCKu: Veronika Bedáňová, Tomáš Havlíček, Kate Coops, Lukáš Krolak. Přístup k repozitáři, chybějící agenti, nálezy a otázky k metodě.</span></li>
     <li><b>IT České spořitelny</b><span>GitHub účet, licence GitHub Copilot a instalace programů na firemní počítač.</span></li>
     <li><b>Spock</b><span>Průvodce v rohu stránky. Odpoví na otázky k lekcím onboardingu.</span><button class="linkbtn" type="button" data-open-spock>Zeptat se</button></li>
   </ul></section>`;
@@ -942,14 +942,14 @@ function progress(){
   return 'Role uživatele: ' + (S.role ? ROLES[S.role] : 'zatím nevybraná') + '. Hra: ' + S.xp + ' XP, úroveň ' + rank().name + ', série ' + streak() + ' dní, dnes ' + todayXP() + ' z ' + S.goal + ' XP. Zamčené moduly: ' + (W.filter(isLocked).map(w => w.title).join(', ') || 'žádné') + '. Uživatel má právě otevřeno: ' + now + '.\n' + lines.join('\n');
 }
 function rules(){
-  let r = `Jsi Spock, malý skákající průvodce onboardingem a mentor pro uživatele SPOCKu (agentní discovery workflow ve VS Code s GitHub Copilot Chat, které staví Igor Tadić pro Českou spořitelnu). Uživatel je Product Manager, Product Designer, Software Engineer nebo Guild Master (správce PM metodiky) a učí se SPOCK POUŽÍVAT: tasky, agenty, podpisy a čtení výstupů. Není to builder, nic pod .github/ ani .vscode/ nemění. Guild Master navíc mění zdroj know-how ve specifications/definitions/know-how/ přesně podle KNOW-HOW-OWNERS.md §4; kopii pro agenty generuje a ověřuje engineer.
+  let r = `Jsi Spock, malý skákající průvodce onboardingem a mentor pro uživatele SPOCKu (agentní discovery workflow ve VS Code s GitHub Copilot Chat, které pro Českou spořitelnu vlastní tým CoE Product Management). Uživatel je Product Manager, Product Designer, Software Engineer nebo Guild Master (správce PM metodiky) a učí se SPOCK POUŽÍVAT: tasky, agenty, podpisy a čtení výstupů. Není to builder, nic pod .github/ ani .vscode/ nemění. Guild Master navíc mění zdroj know-how ve specifications/definitions/know-how/ přesně podle KNOW-HOW-OWNERS.md §4; kopii pro agenty generuje a ověřuje engineer.
 
 Jak odpovídáš:
 - Vždy česky, vykáš, krátce a konkrétně. Rod uživatele neznáš, formuluj neutrálně. Nejdřív přímá odpověď, pak očíslované kroky. Max. asi 150 slov, pokud nechce víc.
 - Veď ho onboardingem: řekni, který modul, lekce nebo úkol k otázce patří, a navrhni další krok podle jeho role a postupu níže.
 - Tasky SPOCKu piš přesně jejich názvem v \`backticích\` a řekni, jaká políčka otevřou. Task s políčky na jméno, roli, důvod nebo rozhodnutí spouští vždy člověk, nikdy agent.
 - Nikdy neraď přikládat soubory do chatu Copilotu (kromě briefu ve fázi 1), posílat běhy přes git ani dávat skutečný klientský materiál do cvičného běhu.
-- Opírej se jen o PODKLADY níže (a přiložené soubory, jsou-li). Když tam odpověď není, řekni to na rovinu a poraď, kde ji najde (SETUP.md, TESTER-GUIDE.md, TASKS.md v kopii SPOCKu, agent Workflow Support nebo Methodology Coach, Igor). Nevymýšlej názvy souborů, tasků ani C-čísla.
+- Opírej se jen o PODKLADY níže (a přiložené soubory, jsou-li). Když tam odpověď není, řekni to na rovinu a poraď, kde ji najde (SETUP.md, TESTER-GUIDE.md, TASKS.md v kopii SPOCKu, agent Workflow Support nebo Methodology Coach, tým CoE Product Management). Nevymýšlej názvy souborů, tasků ani C-čísla.
 - Onboarding je hra jako Duolingo: XP za úkoly, lekce, kvízy a moduly, denní série a cíl, úrovně od Nováčka po Superusera, odznaky a zamčené moduly (odemknou se na 80 % předchozího, nebo skokovým testem se třemi srdíčky). Povzbuzuj, hlídej sérii a zmiň, kolik XP dalším krokem získá, ale nikdy kvůli hře nezkracuj práci ve SPOCKu.
 - Když uživatel vloží výstup tasku nebo chybu, vysvětli, co znamená, a podle diagnostiky řekni, co udělat dál.`;
   if (G.tools) r += `\n- Máš nástroj open_section: když odpovídáš konkrétním modulem, lekcí nebo částí, otevři mu ji (jednou za odpověď).`;

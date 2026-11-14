@@ -262,7 +262,7 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 - [ ] 4.3 Přečtěte výkon workflow
 
-**4.4 — Zpětná vazba Igorovi**
+**4.4 — Zpětná vazba týmu CoE Product Management**
 
 - [ ] 4.4 Pošlete jeden nález
 

@@ -6,7 +6,7 @@
 
 **Jak tu lekci používat:** Kroky dělejte popořadě a za každým si ověřte výsledek. Postup vychází ze `SETUP.md` (release 1.16.1). Když se vaše kopie SPOCKu liší, platí její `SETUP.md`. Kde se postup liší podle systému, jsou kroky zvlášť pro **Mac** a **Windows**.
 
-> **Co v podkladech SPOCKu není:** přesný interní postup ČS, jak si zažádat o GitHub účet, licenci Copilota nebo přístup k repozitáři. Lekce říká, *co* potřebujete a *co* napsat do žádosti. *Kam* žádost poslat, si ověřte u Igora Tadiće nebo u svého IT.
+> **Co v podkladech SPOCKu není:** přesný interní postup ČS, jak si zažádat o GitHub účet, licenci Copilota nebo přístup k repozitáři. Lekce říká, *co* potřebujete a *co* napsat do žádosti. *Kam* žádost poslat, si ověřte u týmu CoE Product Management nebo u svého IT.
 
 ## 0.1 — Přístupy a licence
 
@@ -19,7 +19,7 @@
 - **SPOCK běží ve VS Code s GitHub Copilot a Copilot Chat, přihlášenými vaším GitHub účtem České spořitelny.** VS Code je program na práci se soubory, Copilot Chat je okno s AI asistentem uvnitř něj. Bez Copilota se agenti SPOCKu nespustí.
 - **Potřebujete čtyři přístupy:** GitHub účet ČS, licenci GitHub Copilot, přístup k repozitáři SPOCKu (místo na GitHubu, odkud si SPOCK stáhnete) a oprávnění instalovat software (nebo pomoc IT, která ho nainstaluje).
 - **Copilot musí ve vaší firemní konfiguraci povolit agent mode a vlastní agenty** (custom agents) a v nabídce modelů musí být **Claude Sonnet 5**. Agent mode znamená, že asistent smí pracovat se soubory, ne jen odpovídat. Vlastní agenti jsou asistenti, které si SPOCK přináší s sebou. Nemusíte to nastavovat, jen to uveďte v žádosti.
-- **Kdo vám pomůže:** **CoE Product Managementu - Veronika Bedáňová, Tomáš Havlíček, Kate Coops, Lukáš Krolak**, vlastníci SPOCKu, zařídí přístup k repozitáři a poradí, kudy žádat o licenci. **IT ČS** řeší GitHub účet, licenci Copilota a instalaci programů.
+- **Kdo vám pomůže:** **Tým CoE Product Management** (Veronika Bedáňová, Tomáš Havlíček, Kate Coops, Lukáš Krolak), vlastník SPOCKu, zařídí přístup k repozitáři a poradí, kudy žádat o licenci. **IT ČS** řeší GitHub účet, licenci Copilota a instalaci programů.
 - **Testeři potřebují navíc** přístup k repozitáři AI Lab se složkou `SPOCK | Workflow Documentation` a testovacími scénáři.
 
 ### Úkoly
@@ -31,12 +31,12 @@
   3. Zapište si své uživatelské jméno na GitHubu. Budete ho uvádět v žádostech.
 - [ ] **Požádejte o licenci GitHub Copilot pro VS Code** (15 min, schválení může trvat dny)
   - *Proč:* Agenti SPOCKu jsou Copilot agenti. Bez licence nic nespustíte.
-  1. Zjistěte u Igora Tadiće nebo IT, kudy se v ČS o Copilota žádá.
+  1. Zjistěte u týmu CoE Product Management nebo IT, kudy se v ČS o Copilota žádá.
   2. Do žádosti napište: své GitHub uživatelské jméno, že potřebujete **GitHub Copilot a Copilot Chat ve Visual Studio Code**, k čemu (pilot SPOCK, discovery workflow), a že potřebujete **agent mode, vlastní agenty (custom agents) a model Claude Sonnet 5**.
   3. Když je licence přidělená, na [github.com/settings/copilot](https://github.com/settings/copilot) uvidíte, že Copilot máte aktivní.
 - [ ] **Vyžádejte si přístup k repozitáři SPOCKu** (10 min)
   - *Proč:* SPOCK si do počítače naklonujete z repozitáře. Bez přístupu ho nestáhnete ani neaktualizujete.
-  1. Požádejte CoE Product Managementu o adresu repozitáře SPOCKu a o přístup pro své GitHub jméno.
+  1. Požádejte tým CoE Product Management o adresu repozitáře SPOCKu a o přístup pro své GitHub jméno.
   2. Ověřte, že stránku repozitáře v prohlížeči otevřete.
   3. Testeři navíc požádají o přístup k repozitáři AI Lab se složkou `SPOCK | Workflow Documentation`.
 - [ ] **Ověřte, jestli smíte instalovat software** (5 min)
@@ -105,7 +105,7 @@
 - [ ] **Ověřte agent mode a výběr modelu** (5 min)
   - *Proč:* SPOCK potřebuje agenty a konkrétní model. Když chybí, zjistíte to teď a ne uprostřed běhu.
   1. V okně chatu najděte výběr režimu nebo agenta a ověřte, že nabízí **Agent**.
-  2. Ve výběru modelu najděte **Claude Sonnet 5**. Pokud tam není, firemní nastavení Copilota ho nepovoluje. Napište to IT nebo Igorovi spolu se screenshotem výběru.
+  2. Ve výběru modelu najděte **Claude Sonnet 5**. Pokud tam není, firemní nastavení Copilota ho nepovoluje. Napište to IT nebo týmu CoE Product Management spolu se screenshotem výběru.
 
 ## 0.4 — SPOCK ve vašem počítači
 
@@ -145,7 +145,7 @@
   - *Proč:* Agent navíc nebo chybějící agent znamená jinou konfiguraci, než SPOCK předpokládá, a výsledky by neplatily (`TESTER-GUIDE.md` §2.2).
   1. Otevřete výběr agenta v Copilot Chatu.
   2. Musí tam být přesně těchto šest: **Business Analyst, Competitive Analysis, Methodology Coach, Opportunity Designer, Product Manager, Workflow Support**.
-  3. Když nějaký chybí nebo přebývá, zastavte se a pošlete Igorovi screenshot výběru se jmény agentů.
+  3. Když nějaký chybí nebo přebývá, zastavte se a pošlete týmu CoE Product Management screenshot výběru se jmény agentů.
 - [ ] **Nastavte model a zkontrolujte náhled dokumentů** (5 min)
   - *Proč:* Agenti nevidí, jaký model běží. A jedno rozšíření umí zkazit náhled dokumentů SPOCKu.
   1. Ve výběru modelu v chatu zvolte **Claude Sonnet 5**, effort **High** a kontext **1M** (`SETUP.md` §6).
@@ -162,7 +162,7 @@
 
 1. **Rozhodnutí podepisujete vy, sami a svým jménem.** Task, který otevírá políčka na jméno, roli, důvod nebo rozhodnutí, spouštíte jen vy. Když se o to pokusí agent, odmítněte to (`SETUP.md` §6 krok 3–4).
 2. **Do chatu nepřikládejte soubory.** Jedinou výjimkou je brief ve fázi 1. Příloha se posílá s každou další zprávou, prodražuje ji a PDF může rozbít konverzaci. Materiál patří do složky `supplied/` dané fáze (`SETUP.md` §6 krok 8).
-3. **Běhy zůstávají u vás.** Složka `runs/` je mimo git a může obsahovat klientský materiál. Nikam ji nekopírujte. Celý běh se posílá jen Igorovi a jen jako ZIP (`SETUP.md` §6 krok 6 a §10).
+3. **Běhy zůstávají u vás.** Složka `runs/` je mimo git a může obsahovat klientský materiál. Nikam ji nekopírujte. Celý běh se posílá jen týmu CoE Product Management a jen jako ZIP (`SETUP.md` §6 krok 6 a §10).
 4. **Nic pod `.github/` ani `.vscode/` neupravujte.** To je samotné workflow (`SETUP.md` §9).
 5. **Výchozí schvalování ve VS Code nechte zapnuté** a nevolte „Allow All“. Tasky `SPOCK:` bez políček agent spustit smí, cokoli mimo složku SPOCKu odmítněte (`SETUP.md` §6 krok 4).
 
@@ -174,7 +174,7 @@
   2. Vypište si tři tasky s řádkem „Opens N boxes“ a tři s „Opens no box“.
   3. U každého jednou větou: proč ho asi spouští člověk, nebo proč ho smí spustit agent?
 - [ ] **Založte si deník** (5 min)
-  - *Proč:* Do deníku si zapisujete, co agent udělal jinak, než jste čekali. Z těchhle zápisků vzniká zpětná vazba pro Igora (úroveň 4).
+  - *Proč:* Do deníku si zapisujete, co agent udělal jinak, než jste čekali. Z těchhle zápisků vzniká zpětná vazba pro tým CoE Product Management (úroveň 4).
   1. Vytvořte si soubor `denik.md` **mimo** složku SPOCKu.
   2. První zápis: datum, verze SPOCKu (nahoře v `SETUP.md`, např. 1.16.1), model, který jste zvolili, a výsledek `check my setup`.
 
