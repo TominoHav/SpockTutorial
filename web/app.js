@@ -7,7 +7,7 @@ const ROLE_SHORT = {pm:'PM', pd:'PD', se:'SWE', gm:'GM'};
 const LANG = 'cz';
 const $t = (cz) => cz;
 
-/* Správná odpověď kvízu nemá být vždy na stejném místě: možnosti se deterministicky prostřídají. */
+/* Přehled otázek po splnění kvízu: možnosti se prostřídají, aby správná nebyla vždy první. V kvízu samém se míchají náhodně. */
 W.forEach((w, wi) => w.quiz.forEach((q, qi) => {
   if (!q.o.length) return;
   const n = q.o.length, target = (qi * 2 + wi) % n, shift = (target - q.a + n) % n;
@@ -62,7 +62,7 @@ const applies = w => !w.role || w.role === S.role;
 function weekTotals(w){
   let tot = 0, done = 0;
   w.days.forEach((d,di) => { d.todo.forEach((_,ti) => { tot++; if (S.todo[w.id+'.'+di+'.'+ti]) done++; }); (d.cards || []).forEach((_,ci) => { tot++; if (cardAns(w.id+'.'+di+'.'+ci) !== undefined) done++; }); });
-  w.quiz.forEach((q,qi) => { tot++; const a = S.quiz[w.id+'.'+qi]; if (q.o.length ? a === q.a : a !== undefined && a !== null) done++; });
+  if (w.quiz.length) { tot++; if (S.qpass && S.qpass[w.id]) done++; }
   return {tot, done};
 }
 function overall(){
@@ -172,12 +172,13 @@ function showCel(){
     ${c.kind === 'badge' ? '<span class="cel-badge"><span>★</span></span>' : ''}
     <h2>${esc(c.title)}</h2><p>${esc(c.text || '')}</p>
     <div class="cel-stats"><span>${FLAME}<b>${streak()}</b> série</span><span><b>${S.xp}</b> XP celkem</span><span><b>${rank().name}</b> úroveň</span></div>
-    <button class="btn primary cel-go" type="button">Pokračovat</button></div>`;
+    <div class="cel-acts">${c.quiz ? '<button class="btn primary cel-quiz" type="button">Spustit kvíz</button><button class="btn cel-go" type="button">Později</button>' : '<button class="btn primary cel-go" type="button">Pokračovat</button>'}</div></div>`;
   document.body.append(ov);
   const done = () => { ov.remove(); CEL.shift(); showCel(); };
   ov.querySelector('.cel-go').onclick = done;
+  const cq = ov.querySelector('.cel-quiz'); if (cq) cq.onclick = () => { CEL.length = 1; done(); startSession(c.quiz, 'quiz'); };
   ov.addEventListener('keydown', e => { if (e.key === 'Escape') done(); });
-  ov.querySelector('.cel-go').focus();
+  (ov.querySelector('.cel-quiz') || ov.querySelector('.cel-go')).focus();
   confetti(ov.querySelector('.confetti'), big ? 160 : 90);
 }
 function confetti(cv, n){
@@ -191,41 +192,47 @@ function confetti(cv, n){
     requestAnimationFrame(f); })();
 }
 
-/* ---------- kvíz jako lekce (Duolingo): jedna otázka, Zkontrolovat, zpětná vazba, chyby se opakují ---------- */
+/* ---------- kvíz jako lekce (Duolingo): losuje 5 otázek ze zásoby, pořadí otázek i možností se míchá při každém spuštění ---------- */
+const QN = 5, QPASS = .8;
 let SES = null;
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const cardsTotal = w => w.days.reduce((n, d) => n + (d.cards || []).length, 0);
+const cardsAll = w => w.days.reduce((n, d, di) => n + cardsDone(w, di), 0);
+const quizReady = w => cardsAll(w) === cardsTotal(w);
+const quizPassed = w => !!(S.qpass && S.qpass[w.id]);
+function sesItem(src, key){
+  const ord = shuffle(src.o.map((_, i) => i));
+  return {key, q:src.q, e:src.e !== undefined ? src.e : src.why, o:ord.map(i => src.o[i]), a:ord.indexOf(src.a)};
+}
 function startSession(wid, mode){
   const w = W.find(x => x.id === wid); if (!w) return;
-  let qs = w.quiz.map((q,i) => i);
-  if (mode === 'jump') qs = qs.filter(i => w.quiz[i].o.length);
-  if (!qs.length) return;
-  SES = {wid, mode, qs, i:0, hearts:3, pick:null, checked:false, right:0, total:qs.length, missed:new Set(), gained:0};
+  if (mode === 'quiz' && !quizReady(w)) { toast('Kvíz se odemkne po kartách modulu (' + cardsAll(w) + ' z ' + cardsTotal(w) + ').'); return; }
+  let pool = w.quiz.map((q, i) => q.o.length ? sesItem(q, w.id + '.' + i) : null).filter(Boolean);
+  if (mode === 'jump') w.days.forEach((d, di) => (d.cards || []).forEach((c, ci) => { if (c.o.length && c.a >= 0) pool.push(sesItem(c, 'card.' + w.id + '.' + di + '.' + ci)); }));
+  const items = shuffle(pool).slice(0, QN);
+  if (!items.length) return;
+  SES = {wid, mode, items, qs:items.map((_, i) => i), i:0, hearts:mode === 'jump' ? Math.max(1, items.length - Math.ceil(items.length * QPASS)) + 1 : 0, pick:null, checked:false, right:0, total:items.length, missed:new Set(), gained:0};
+  SES.heartsMax = SES.hearts;
   renderSession();
 }
-function sesQ(){ const w = W.find(x => x.id === SES.wid); return {w, qi:SES.qs[SES.i], q:w.quiz[SES.qs[SES.i]]}; }
+/* jen pro automatický test: čtení stavu kvízu */
+window.__kviz = {ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
+function sesQ(){ const w = W.find(x => x.id === SES.wid), qi = SES.qs[SES.i]; return {w, qi, q:SES.items[qi]}; }
 function renderSession(){
   let ov = document.getElementById('ses');
   if (!ov) { ov = document.createElement('div'); ov.id = 'ses'; ov.className = 'ses'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); document.body.append(ov); }
-  const {w, qi, q} = sesQ();
+  const {w, q} = sesQ();
   ov.className = 'ses c-' + w.c;
   const pct = Math.round(SES.i / SES.qs.length * 100);
-  const hearts = SES.mode === 'jump' ? `<span class="ses-hearts" aria-label="Zbývá ${SES.hearts} srdíček">${[0,1,2].map(i => `<span class="${i < SES.hearts ? '' : 'lost'}">${HEART}</span>`).join('')}</span>` : '';
-  const open = !q.o.length;
-  const k = w.id + '.' + qi;
-  let body;
-  if (open) {
-    body = `<p class="ses-hint">Odpovězte si nejdřív sami v duchu, pak si odpověď ukažte.</p>`;
-  } else {
-    body = `<div class="ses-opts">${q.o.map((o,oi) => {
+  const hearts = SES.mode === 'jump' ? `<span class="ses-hearts" aria-label="Zbývá ${SES.hearts} ${SES.hearts === 1 ? 'srdíčko' : 'srdíčka'}">${Array.from({length:SES.heartsMax || SES.hearts}, (_, i) => `<span class="${i < SES.hearts ? '' : 'lost'}">${HEART}</span>`).join('')}</span>` : `<span class="ses-n num">${Math.min(SES.i + 1, SES.qs.length)} / ${SES.qs.length}</span>`;
+  const body = `<div class="ses-opts">${q.o.map((o,oi) => {
       let cls = ''; if (SES.checked) { if (oi === q.a) cls = 'right'; else if (oi === SES.pick) cls = 'wrong'; } else if (oi === SES.pick) cls = 'picked';
       return `<button type="button" class="ses-opt ${cls}" data-sopt="${oi}" ${SES.checked?'disabled':''}><span class="ses-k">${oi+1}</span><span>${fmt(o)}</span></button>`; }).join('')}</div>`;
-  }
   let foot;
-  if (!SES.checked) {
-    foot = open ? `<div class="ses-foot"><span></span><button class="btn primary" type="button" data-scheck>Ukázat odpověď</button></div>`
-                : `<div class="ses-foot"><button class="btn" type="button" data-sskip>Přeskočit</button><button class="btn primary" type="button" data-scheck ${SES.pick === null ? 'disabled' : ''}>Zkontrolovat</button></div>`;
-  } else {
-    const ok = open || SES.pick === q.a;
-    foot = `<div class="ses-foot fb-${ok ? 'ok' : 'bad'}"><div class="ses-fb"><b>${open ? 'Odpověď' : ok ? 'Výborně!' : 'Správná odpověď: ' + fmt(q.o[q.a])}</b><p>${fmt(q.e)}</p></div><button class="btn primary" type="button" data-snext>Pokračovat</button></div>`;
+  if (!SES.checked) foot = `<div class="ses-foot">${SES.mode === 'quiz' ? '<button class="btn" type="button" data-sskip>Přeskočit</button>' : '<span></span>'}<button class="btn primary" type="button" data-scheck ${SES.pick === null ? 'disabled' : ''}>Zkontrolovat</button></div>`;
+  else {
+    const ok = SES.pick === q.a;
+    foot = `<div class="ses-foot fb-${ok ? 'ok' : 'bad'}"><div class="ses-fb"><b>${ok ? 'Výborně!' : 'Správná odpověď: ' + fmt(q.o[q.a])}</b><p>${fmt(q.e || '')}</p></div><button class="btn primary" type="button" data-snext>Pokračovat</button></div>`;
   }
   ov.innerHTML = `<div class="ses-in">
     <div class="ses-top"><button class="g-x" type="button" data-sclose aria-label="Ukončit kvíz">×</button><span class="ses-bar"><i style="width:${pct}%"></i></span>${hearts}</div>
@@ -234,13 +241,10 @@ function renderSession(){
   const f = ov.querySelector('[data-snext],[data-scheck]:not([disabled]),.ses-opt'); if (f) f.focus();
 }
 function sesCheck(){
-  const {w, qi, q} = sesQ(), k = w.id + '.' + qi;
+  const {qi, q} = sesQ();
   SES.checked = true;
-  if (!q.o.length) { S.quiz[k] = -1; save(); SES.gained += award('reveal.' + k, XP.reveal); SES.right++; return renderSession(); }
-  S.tries[k] = (S.tries[k] || 0) + 1;
-  const ok = SES.pick === q.a;
-  if (SES.mode === 'quiz') { S.quiz[k] = SES.pick; save(); }
-  if (ok) { if (!SES.missed.has(qi)) SES.right++; if (SES.mode === 'quiz') SES.gained += award('quiz.' + k, S.tries[k] === 1 ? XP.quizFirst : XP.quizRetry); }
+  const ok = SES.pick === q.a, first = !SES.missed.has(qi);
+  if (ok) { if (first) SES.right++; if (SES.mode === 'quiz') SES.gained += award('quiz.' + q.key, first ? XP.quizFirst : XP.quizRetry); }
   else { SES.missed.add(qi); if (SES.mode === 'jump') SES.hearts--; else SES.qs.push(qi); }
   renderSession();
 }
@@ -253,13 +257,19 @@ function sesNext(){
 function endSession(ok){
   const s = SES, w = W.find(x => x.id === s.wid); SES = null;
   const ov = document.getElementById('ses'); if (ov) ov.remove();
+  const need = Math.ceil(s.total * QPASS);
   if (s.mode === 'jump') {
-    if (ok) { S.unlocked[w.id] = true; save(); award('jump.' + w.id, XP.jump, 'skok'); celebrate({kind:'unlock', title:'Odemčeno: ' + w.title, text:'Skokový test zvládnutý. Modul je otevřený.'}); }
-    else celebrate({kind:'fail', title:'Došla srdíčka', text:'Nevadí. Vraťte se k předchozímu modulu, nebo to zkuste znovu.'});
+    if (ok && s.right >= need) { S.unlocked[w.id] = true; save(); award('jump.' + w.id, XP.jump, 'skok'); celebrate({kind:'unlock', title:'Odemčeno: ' + w.title, text:`Skokový test zvládnutý: ${s.right} z ${s.total}. Modul je otevřený.`}); }
+    else celebrate({kind:'fail', title:'Skokový test nevyšel', text:`Potřebujete aspoň ${need} z ${s.total} správně. Vraťte se k předchozímu modulu, nebo to zkuste znovu s jinými otázkami.`});
   } else {
-    const perfect = s.missed.size === 0 && w.quiz.length > 0;
+    const passed = s.right >= need;
+    S.qpass = S.qpass || {};
+    if (passed && !S.qpass[w.id]) { S.qpass[w.id] = {at:Date.now(), right:s.right, total:s.total}; }
+    save();
+    const perfect = s.missed.size === 0;
     if (perfect && !S.badges.perfect) { S.badges.perfect = true; save(); }
-    celebrate({kind:'quiz', title: perfect ? 'Kvíz bez chyby!' : 'Kvíz hotový', text:`Správně napoprvé ${s.right} z ${s.total}. Získáno ${s.gained} XP.`});
+    if (passed) celebrate({kind:'quiz', title: perfect ? 'Kvíz bez chyby!' : 'Kvíz splněný', text:`Správně napoprvé ${s.right} z ${s.total}. Získáno ${s.gained} XP.`});
+    else celebrate({kind:'fail', title:'Kvíz zatím nesplněný', text:`Napoprvé správně ${s.right} z ${s.total}, potřeba je ${need}. Projděte si znovu karty a zkuste to: vylosují se jiné otázky.`});
     checkModuleDone(w);
   }
   render();
@@ -281,7 +291,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { const ov = document.getElementById('ses'); if (ov) ov.remove(); SES = null; render(); return; }
   const {q} = sesQ();
   if (!SES.checked && /^[1-6]$/.test(e.key) && q.o[+e.key-1] !== undefined) { SES.pick = +e.key-1; renderSession(); }
-  else if (e.key === 'Enter' && !e.target.closest('button')) { e.preventDefault(); if (SES.checked) sesNext(); else if (SES.pick !== null || !q.o.length) sesCheck(); }
+  else if (e.key === 'Enter' && !e.target.closest('button')) { e.preventDefault(); if (SES.checked) sesNext(); else if (SES.pick !== null) sesCheck(); }
 });
 
 /* ---------- profil a odznaky ---------- */
@@ -311,14 +321,14 @@ document.addEventListener('click', e => { const g = e.target.closest('[data-goal
 
 /* zamčený modul */
 function renderLocked(w){
-  const prev = prevOf(w), jq = w.quiz.filter(q => q.o.length).length;
+  const prev = prevOf(w), jq = QN;
   app.innerHTML = shell(w.id, `
     <div class="locked-card c-${w.c}">
       ${spockSVG('big')}
       <span class="eyebrow">${esc(w.lab)} · zamčeno</span>
       <h1>${LOCK} ${esc(w.title)}</h1>
       <p>Tenhle modul se odemkne, až budete mít <b>${esc(prev.title)}</b> hotový aspoň na 80 % (teď ${Math.round(modPct(prev)*100)} %).</p>
-      <p class="muted">Už to umíte? Přeskočte ho skokovým testem: ${jq} otázek, tři srdíčka.</p>
+      <p class="muted">Už to umíte? Přeskočte ho skokovým testem: ${jq} otázek z celého modulu, potřeba je aspoň ${Math.ceil(jq * QPASS)} správně.</p>
       <div class="hx-cta" style="justify-content:center"><button class="btn primary" type="button" data-week="${prev.id}">Pokračovat v modulu ${esc(prev.title)}</button><button class="btn" type="button" data-jump="${w.id}">Skokový test</button><button class="btn" type="button" data-peek="${w.id}">Jen si to prohlédnout</button></div>
     </div>`);
 }
@@ -565,7 +575,7 @@ function todoItem(k, o){
   const det = (o.why || (o.how && o.how.length)) ? `<div class="tdet">${o.why ? `<p class="twhy"><b>Proč:</b> ${fmt(o.why)}</p>` : ''}${o.how && o.how.length ? `<ol class="thow">${o.how.map(h => `<li>${fmt(h)}</li>`).join('')}</ol>` : ''}</div>` : '';
   return `<div class="titem"><label><input type="checkbox" id="t-${k.replace(/\./g,'-')}" data-todo="${k}" ${S.todo[k]?'checked':''}><span>${fmt(o.t)}${o.min ? ` <span class="tm">~${fmtMin(o.min)}</span>` : ''}${o.note ? ` <span class="tm ${/VS Code/.test(o.note) ? 'where vsc' : ''}">${esc(o.note)}</span>` : ''} <span class="tm xp ${S.got['task.'+k] ? 'got' : ''}">+${XP.task} XP</span></span></label>${det}</div>`;
 }
-function qDone(w){ return w.quiz.filter((q,qi) => { const a = S.quiz[w.id+'.'+qi]; return q.o.length ? a === q.a : a !== undefined && a !== null; }).length; }
+function qDone(w){ return quizPassed(w) ? 1 : 0; }
 function tbl(t){
   return `<div class="tw"><table><thead><tr>${t.head.map(h => `<th>${fmt(h)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${fmt(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
@@ -627,7 +637,7 @@ function lessonPanel(w, di){
   const xpLeft = d.todo.filter((_,ti) => !S.got['task.'+w.id+'.'+di+'.'+ti]).length * XP.task + (S.got['lesson.'+w.id+'.'+di] ? 0 : XP.lesson);
   const next = di + 1 < w.days.length
     ? `<button class="btn ${done ? 'primary' : ''}" type="button" data-lesson="${di+1}">Další lekce: ${esc(w.days[di+1].d)} →</button>`
-    : `<button class="btn ${done ? 'primary' : ''}" type="button" data-quiz="${w.id}">Spustit kvíz modulu →</button>`;
+    : quizReady(w) ? `<button class="btn ${done ? 'primary' : ''}" type="button" data-quiz="${w.id}">${quizPassed(w) ? 'Zopakovat kvíz modulu' : 'Spustit kvíz modulu'} →</button>` : `<button class="btn" type="button" disabled>${LOCK} Kvíz po kartách modulu</button>`;
   return `<section class="lpanel c-${w.c}" id="lpanel" aria-label="Lekce ${esc(d.d)}">
     <div class="lp-head">
       <span class="lp-badge">${done ? '✓' : esc(d.d)}</span>
@@ -651,17 +661,8 @@ function renderWeek(id){
   const cur = curLesson(w);
   if (typeof view.lesson !== 'number' || view.lessonOf !== w.id || !w.days[view.lesson]) { view.lesson = cur >= 0 ? cur : w.days.length - 1; view.lessonOf = w.id; }
   const sel = view.lesson;
-  const quiz = w.quiz.map((q,qi) => {
-    const k = w.id+'.'+qi, ans = S.quiz[k];
-    const answered = ans !== undefined && ans !== null;
-    if (!q.o.length) {
-      return `<div class="qcard"><div class="stmt">${fmt(q.q)}</div><p class="muted" style="font-size:14px">Odpovězte si nejdřív sami, pak si odpověď ukažte.</p>${answered ? `<div class="fb"><b>Odpověď:</b> ${fmt(q.e)}</div>` : `<div><button type="button" class="btn sm" data-reveal="${k}">Ukázat odpověď</button></div>`}</div>`;
-    }
-    return `<div class="qcard"><div class="stmt">${fmt(q.q)}</div><div class="opts">${q.o.map((o,oi) => {
-      let cls = ''; if (answered) { if (oi === q.a) cls = 'right'; else if (oi === ans) cls = 'wrong'; }
-      return `<button type="button" class="opt ${cls}" data-q="${k}" data-o="${oi}" ${answered?'disabled':''}><span class="rad"></span><span>${fmt(o)}</span></button>`;
-    }).join('')}</div>${answered?`<div class="fb"><b>${ans===q.a?'Správně.':'Ne úplně.'}</b> ${fmt(q.e)} ${ans!==q.a?'<button type="button" class="btn sm" data-retry="'+k+'" style="margin-left:6px">Zkusit znovu</button>':''}</div>`:''}</div>`;
-  }).join('');
+  const quiz = quizPassed(w) ? w.quiz.map(q => `<div class="qcard"><div class="stmt">${fmt(q.q)}</div><div class="opts">${q.o.map((o,oi) => `<div class="opt ${oi === q.a ? 'right' : ''}"><span class="rad"></span><span>${fmt(o)}</span></div>`).join('')}</div><div class="fb">${fmt(q.e)}</div></div>`).join('') : '';
+  const qr = quizReady(w), qp = quizPassed(w), ct = cardsTotal(w), ca = cardsAll(w);
   const seq = pathIds().map(id => W.find(x => x.id === id)).filter(Boolean), si = seq.indexOf(w);
   const prev = si >= 0 ? seq[si-1] : W[idx-1], next = si >= 0 ? seq[si+1] : W[idx+1];
   const wt = weekTime(w);
@@ -678,9 +679,9 @@ function renderWeek(id){
     ${other ? `<p class="goal" style="background:var(--warn-bg)"><b>Tohle je lekce pro roli ${ROLES[w.role]}.</b> Čtěte ji pro kontext tria, do vašeho pokroku se nepočítá.</p>` : ''}
     <details class="unit-guide"><summary>Průvodce modulem: proč, kolik času a co mít připravené</summary><div class="mh c-${w.c}">${tsum}<p class="why"><b>Proč:</b> ${fmt(w.why)}</p>${w.before ? `<p class="why"><b>Než začnete:</b> ${fmt(w.before)}</p>` : ''}</div></details>
     ${lessonPanel(w, sel)}
-    <div class="sec-h" style="margin-top:28px"><h2>Ověř se</h2><p>Odpovězte až po dokončení modulu.</p></div>
-    <div class="qlaunch c-${w.c}">${spockSVG('fab')}<div><b>Kvíz modulu · ${w.quiz.length} otázek</b><span>${qDone(w)} z ${w.quiz.length} zodpovězeno správně · až ${w.quiz.length * XP.quizFirst} XP. Chyby se na konci zopakují.</span></div><button class="btn primary" type="button" data-quiz="${w.id}">${qDone(w) ? 'Zopakovat kvíz' : 'Spustit kvíz'}</button></div>
-    <details class="qreview"><summary>Projít otázky a vysvětlení</summary><div class="quiz c-${w.c}">${quiz}</div></details>
+    <div class="sec-h" style="margin-top:28px"><h2>Ověř se</h2><p>${qp ? 'Kvíz máte splněný. Můžete si ho zopakovat s jinými otázkami.' : qr ? 'Karty máte hotové, kvíz je odemčený.' : 'Kvíz se odemkne, až zodpovíte všechny karty modulu.'}</p></div>
+    <div class="qlaunch c-${w.c} ${qr ? '' : 'qlock'}">${spockSVG('fab')}<div><b>Kvíz modulu · ${Math.min(QN, w.quiz.length)} otázek ze ${w.quiz.length}</b><span>${qp ? `Splněno: ${S.qpass[w.id].right} z ${S.qpass[w.id].total} napoprvé.` : qr ? `Otázky se losují a míchají. Na splnění potřebujete ${Math.ceil(Math.min(QN, w.quiz.length) * QPASS)} z ${Math.min(QN, w.quiz.length)} napoprvé.` : `Karty: ${ca} z ${ct}.`}</span></div><button class="btn ${qr && !qp ? 'primary' : ''}" type="button" data-quiz="${w.id}" ${qr ? '' : 'disabled'}>${qp ? 'Zopakovat kvíz' : qr ? 'Spustit kvíz' : LOCK + ' Po kartách'}</button></div>
+    ${qp ? `<details class="qreview"><summary>Všechny otázky kvízu s vysvětlením</summary><div class="quiz c-${w.c}">${quiz}</div></details>` : ''}
     <div class="navrow">${prev?`<button class="btn" type="button" data-week="${prev.id}">← ${esc(prev.title)}</button>`:'<span></span>'}${next?`<button class="btn primary" type="button" data-week="${next.id}">${esc(next.title)} →</button>`:`<button class="btn primary" type="button" data-go="ready">Připravenost →</button>`}</div>`);
   glossify(document.querySelector('.lpanel') || document.querySelector('.main'));
   const um = document.querySelector('.unit-more');
@@ -754,9 +755,9 @@ const otherRoles = active => { const o = W.filter(w => w.role && w.role !== S.ro
 
 /* D (v levém sloupci) · Spock + cesta modulů s prstencem, aktivní modul rozbalí kartu s očíslovanými lekcemi */
 function pdCard(w){
-  const nd = w.days.filter((_,di) => lessonDone(w, di)).length, sl = selLesson(w), qd = qDone(w), qa = w.quiz.length && qd === w.quiz.length;
+  const nd = w.days.filter((_,di) => lessonDone(w, di)).length, sl = selLesson(w), qd = qDone(w), qa = quizPassed(w);
   const steps = w.days.map((d,di) => { const ls = lesState(w, di); return `<li class="pd-l st-${ls} ${sl === di ? 'sel' : ''}"><button type="button" data-lesson="${di}" title="${esc(d.d + ' ' + plain(d.t))}" ${sl === di ? 'aria-current="true"' : ''}><span class="pd-ld">${ls === 'done' ? '✓' : esc(d.d.split('.').pop())}</span></button></li>`; }).join('')
-    + `<li class="pd-l trophy ${qa ? 'st-done' : ''}"><button type="button" data-quiz="${w.id}" title="Kvíz modulu · ${qd}/${w.quiz.length} správně"><span class="pd-ld">${TROPHY}</span></button></li>`;
+    + `<li class="pd-l trophy ${qa ? 'st-done' : ''}"><button type="button" data-quiz="${w.id}" title="${qa ? 'Kvíz splněný' : quizReady(w) ? 'Kvíz modulu je odemčený' : 'Kvíz se odemkne po kartách'}"><span class="pd-ld">${TROPHY}</span></button></li>`;
   const cur = w.days[sl];
   return `<div class="pd-card c-${w.c}"><div class="pd-ch"><span>Lekce</span><span class="pd-cnt num">${nd}/${w.days.length} hotovo</span></div><ol class="pd-les ${w.days.length > 5 ? 'many' : ''}">${steps}</ol>${cur ? `<p class="pd-cur"><small>${esc(cur.d)}</small>${fmt(cur.t)}</p>` : ''}</div>`;
 }
@@ -816,16 +817,6 @@ document.addEventListener('click', e => {
   if (t.dataset.phase) { view.phase = +t.dataset.phase; return renderMap(); }
   if (t.dataset.layer) { view.layer = +t.dataset.layer; return renderMap(); }
   const keep = () => { const y = window.scrollY; renderWeek(view.week); updatePills(); window.scrollTo({top:y}); };
-  if (t.dataset.reveal) { S.quiz[t.dataset.reveal] = -1; save(); award('reveal.' + t.dataset.reveal, XP.reveal); keep(); return checkModuleDone(W.find(x => x.id === view.week)); }
-  if (t.dataset.q) {
-    const k = t.dataset.q, o = +t.dataset.o; S.quiz[k] = o; S.tries[k] = (S.tries[k] || 0) + 1; save();
-    const w = W.find(x => x.id === view.week), q = w.quiz[+k.split('.')[1]];
-    if (o === q.a) award('quiz.' + k, S.tries[k] === 1 ? XP.quizFirst : XP.quizRetry); else toast('Přečtěte si vysvětlení a zkuste to znovu');
-    keep(); const det = document.querySelector('.qreview'); if (det) det.open = true;
-    checkModuleDone(w);
-    return;
-  }
-  if (t.dataset.retry) { delete S.quiz[t.dataset.retry]; save(); keep(); }
 });
 document.addEventListener('change', e => {
   const t = e.target;
@@ -962,7 +953,7 @@ Jak odpovídáš:
 - Tasky SPOCKu piš přesně jejich názvem v \`backticích\` a řekni, jaká políčka otevřou. Task s políčky na jméno, roli, důvod nebo rozhodnutí spouští vždy člověk, nikdy agent.
 - Nikdy neraď přikládat soubory do chatu Copilotu (kromě briefu ve fázi 1), posílat běhy přes git ani dávat skutečný klientský materiál do cvičného běhu.
 - Opírej se jen o PODKLADY níže (a přiložené soubory, jsou-li). Když tam odpověď není, řekni to na rovinu a poraď, kde ji najde (SETUP.md, TESTER-GUIDE.md, TASKS.md v kopii SPOCKu, agent Workflow Support nebo Methodology Coach, tým CoE Product Management). Nevymýšlej názvy souborů, tasků ani C-čísla.
-- Onboarding je hra jako Duolingo: XP za úkoly, lekce, kvízy a moduly, denní série a cíl, úrovně od Nováčka po Superusera, odznaky a zamčené moduly (odemknou se na 80 % předchozího, nebo skokovým testem se třemi srdíčky). Povzbuzuj, hlídej sérii a zmiň, kolik XP dalším krokem získá, ale nikdy kvůli hře nezkracuj práci ve SPOCKu.
+- Onboarding je hra jako Duolingo: XP za úkoly, lekce, kvízy a moduly, denní série a cíl, úrovně od Nováčka po Superusera, odznaky a zamčené moduly (odemknou se na 80 % předchozího, nebo skokovým testem: 5 losovaných otázek z modulu, potřeba 4 správně). Kvíz modulu se odemkne po všech kartách modulu, losuje 5 otázek ze zásoby a je splněný při 4 z 5 správně napoprvé. Povzbuzuj, hlídej sérii a zmiň, kolik XP dalším krokem získá, ale nikdy kvůli hře nezkracuj práci ve SPOCKu.
 - Když uživatel vloží výstup tasku nebo chybu, vysvětli, co znamená, a podle diagnostiky řekni, co udělat dál.`;
   if (G.tools) r += `\n- Máš nástroj open_section: když odpovídáš konkrétním modulem, lekcí nebo částí, otevři mu ji (jednou za odpověď).`;
   r += `\n\nPOSTUP UŽIVATELE:\n` + progress() + `\n\nPODKLADY (obsah onboardingu, JSON):\n` + kb();

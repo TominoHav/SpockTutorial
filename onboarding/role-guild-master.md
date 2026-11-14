@@ -465,61 +465,100 @@
 
 ## Kvíz
 
+Kvíz losuje 5 otázek z této zásoby. Pořadí otázek i možností se při každém spuštění zamíchá.
+
 **1. Chcete upravit pravidlo v Brief Fields. Který soubor upravíte?**
 
-   a) `.github/know-how/product/brief-fields.md`, ten čtou agenti
-   b) `specifications/definitions/know-how/product/brief-fields.md` a zvýšíte Version
-   c) Oba, ať jsou stejné
+   a) `.github/know-how/product/brief-fields.md`
+   b) Zdroj ve `specifications/definitions/know-how/product/`, ve vývojovém repozitáři
+   c) Skill `brief-creation`
 
 <details><summary>Odpověď</summary>
 
-b) Zdroj je jediná kopie, kterou kdo upravuje. Kopii v `.github/know-how/` generuje SWE. Ruční úprava kopie selže v `C41` a zmizí (`KNOW-HOW-OWNERS.md` §3).
+b) Zdroj je jen jeden. Kopie v `.github/know-how/` se generuje a její úprava shodí kontrolu.
 
 </details>
 
 **2. Všechny brány běhu jsou zelené, ale outcome v briefu je „spustit nový onboarding“. Co z toho plyne?**
 
-   a) Je to v pořádku, brány prošly
-   b) Kontroly hlídají formu, ne metodickou kvalitu. Tohle je řešení, ne outcome, a je to úkol pro metodickou revizi
+   a) Běh je v pořádku
+   b) Outcome je řešení, ne změna chování. Kontroly to neposoudí, posoudí to člověk
+   c) Brána Q1 je rozbitá
 
 <details><summary>Odpověď</summary>
 
-b) Posuzovanou polovinu bran nečte žádný automat. Outcome formulovaný jako řešení je jedna z chyb v `method-canon.md` §9.2.
+b) Zelená brána je jen mechanická polovina. Kvalitu outcome hlídá GM.
 
 </details>
 
-**3. Šablona Guildy pro iniciativu k jedné sekci nic neříká. Co SPOCK dělá?**
+**3. Opravili jste v know-how překlep a verzi jste nezměnili. Je to v pořádku?**
 
-   a) Sekci vynechá
-   b) Ponechá převzatou sekci, protože mlčení Guildy není nesouhlas
-   c) Nechá ji napsat agenta podle jeho uvážení
+   a) Ano, je to drobnost
+   b) Obvykle ne. Každá změna má novou verzi a řádek v historii. Výjimku projděte s týmem CoE Product Management
+   c) Ano, pokud to schválí SWE
 
 <details><summary>Odpověď</summary>
 
-b) Kde se šablony liší, vyhrává Guilda. Kde mlčí, zůstávají převzaté sekce (`initiative-template.md`).
+b) Běh si zapisuje verzi know-how. Změnu pod stejným číslem by nešlo odlišit.
 
 </details>
 
 **4. Chcete upravit Method Canon. Proč to vyžaduje víc ověřování než změna PRD Template?**
 
    a) Method Canon je delší
-   b) Method Canon čte 16 skillů v celém běhu, PRD Template jen skill `prd` ve fázi 6
-   c) PRD Template nemá verzi
+   b) Čte ho 16 skillů, takže změna zasáhne celý běh. PRD Template čte jen jeden
+   c) PRD Template se nemění
 
 <details><summary>Odpověď</summary>
 
-b) Mapa v `.github/registry/skills.yaml` ukazuje, kolik skillů know-how čte. Změna Method Canonu se projeví od briefu po iniciativu i v odpovědích Methodology Coache.
+b) Čím víc skillů know-how čte, tím pečlivěji změnu ověřujte.
 
 </details>
 
 **5. Proč agenti nesmějí číst kód kontrol a co to znamená pro vás?**
 
-   a) Kód je tajný
-   b) Mají psát podle know-how, ne „na test“. Kvalita know-how je proto přímo kvalita výstupu
-   c) Kód kontrol je moc dlouhý
+   a) Kvůli rychlosti. Pro GM nic
+   b) Aby psali podle know-how, ne pro kontrolu. Kvalita know-how je proto kvalita výstupu
+   c) Kód je tajný
 
 <details><summary>Odpověď</summary>
 
-b) Hlídač `checker` čtení kódu kontrol zastaví. Agent se tak řídí jen skillem a know-how, a to, co v know-how chybí nebo je nejasné, se projeví ve výstupu.
+b) Agent, který by znal kontroly, by psal tak, aby prošel. Takhle píše podle know-how.
+
+</details>
+
+**6. Pět PM za měsíc podepsalo výjimku u stejné kontroly s „the workflow looks wrong“. Kde to uvidíte?**
+
+   a) V `SPOCK: how the workflow performed`
+   b) V Methodology Coachi
+   c) Nikde, výjimky se nesčítají
+
+<details><summary>Odpověď</summary>
+
+a) Výjimky označené jako podezření na chybu workflow se sčítají v tomto tasku.
+
+</details>
+
+**7. PM se ptá, proč by měl brát výstup SPOCKu opatrně, když všechno prošlo. Co mu řeknete?**
+
+   a) Nemusí, výstup je ověřený
+   b) Pilot nedělá průběžné rozhovory ani testování. Výstup je definice, ne důkaz
+   c) Že agenti dělají chyby
+
+<details><summary>Odpověď</summary>
+
+b) Co pilot z metody vynechává (`method-canon.md` §15), musí Guilda říkat na rovinu.
+
+</details>
+
+**8. Která vrstva SPOCKu zastaví agenta, který chce zapsat do už schválené fáze?**
+
+   a) Kontroly
+   b) Hlídače
+   c) Tasky
+
+<details><summary>Odpověď</summary>
+
+b) Hlídač `write` odmítne zápis mimo běžící fázi i do schválené fáze dřív, než se stane.
 
 </details>

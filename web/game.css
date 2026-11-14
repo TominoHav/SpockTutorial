@@ -129,3 +129,5 @@
 .pc-np{display:flex;align-items:center;gap:8px;max-width:360px}.pc-np .bar{flex:1;height:8px}.pc-np .num{font-size:12px;font-weight:700;color:var(--ink-3)}
 @media (prefers-reduced-motion:reduce){.pc-b.on .bd{animation:none}}
 .hp-ref{margin:14px 0 0;font-size:14px}
+.cel-acts{display:grid;gap:8px}.cel-quiz{width:100%;justify-content:center;padding:12px;font-size:15px;border-radius:12px}.qlaunch.qlock{opacity:.75}.ses-n{font-size:13px;color:var(--ink-3,#667);white-space:nowrap}
+.cel-acts{width:100%}body:has(#ses) .notices{display:none}
