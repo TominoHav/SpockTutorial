@@ -82,7 +82,7 @@
 - [ ] **Projděte ukázkový běh** (60 min)
   - *Proč:* Uvidíte, jak vypadá správný výstup každé fáze, a na vlastním běhu pak poznáte odchylku.
   1. Otevřete `fixtures/2026-09-spending-insights/README.md`. Tento běh je česky a je hotový (7/7). Kdo radši čte anglicky, může použít `fixtures/2026-01-mortgage-onboarding/`.
-  2. Otevírejte postupně dokumenty ve složkách `1-brief` až `7-initiative`.
+  2. Otevírejte postupně dokumenty ve složkách `1-brief` až `7-initiative`. Ve `1-brief` najdete i `initiative-screen.md` (regulatorní screening, A1b). Ten vznikl podle starších pravidel: od 1. září 2026 fáze 1 screening nedělá a regulace se posuzuje až u konkrétních řešení ve fázi 4 (`STAGE-1-SPEC.md`). Ve svém běhu ho neuvidíte.
   3. U každé fáze si zapište jednou větou, co z ní vzešlo.
 - [ ] **Dohledejte jedno tvrzení zpět ke zdroji** (30 min)
   - *Proč:* Dohledatelnost je hlavní slib SPOCKu. Každá role ji potřebuje: PM, aby obhájil rozhodnutí, designer, aby viděl, na jakém výzkumu řešení stojí, a engineer, aby věděl, odkud se vzal požadavek.
