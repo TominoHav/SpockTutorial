@@ -20,6 +20,7 @@ extra_css = """
 .rolebtn.on{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
 .journey.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .journey.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.journey.three{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media (max-width:1100px){.journey.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .jstep.other{opacity:.6}
 .jstep.other:hover{opacity:1}
@@ -31,7 +32,7 @@ extra_css = """
 .tw tr:last-child td{border-bottom:0}
 .keys li > span{min-width:0}
 .main a[data-week]{font-weight:600}
-@media (max-width:760px){.journey.two,.journey.four{grid-template-columns:1fr}}
+@media (max-width:760px){.journey.two,.journey.three,.journey.four{grid-template-columns:1fr}}
 </style>"""
 i = head.index('</style>'); head = head[:i] + extra_css + head[i+len('</style>'):]
 import re as _re

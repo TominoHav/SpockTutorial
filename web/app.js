@@ -481,9 +481,9 @@ function continueBtn(cls){
 }
 function pathBlock(title){
   const mine = S.role ? W.find(w => w.role === S.role) : null;
-  const tm = id => { const w = W.find(x => x.id === id); return w ? weekTime(w).total : 0; }, knowM = Math.round(tm('l0')), prepH = fmtH(tm('l1'));
+
   return `<section class="hpcard"><div class="hp">
-    <div class="hp-head"><h2>${title || 'Vaše cesta'}</h2><p class="muted">Začněte na webu: Poznejte SPOCK zabere asi ${knowM} minut a nic neinstalujete. Mezitím si objednejte role, Příprava ve VS Code pak trvá ${prepH}. Dál stačí <b>30 minut denně</b>.</p></div>
+    <div class="hp-head"><h2>${title || 'Vaše cesta'}</h2><p class="muted">Začněte na webu, mezitím si objednejte role v REDIMu. Pak stačí <b>30 minut denně</b>.</p></div>
     <ol class="hp-path">
       ${pathStep('0','pink','Poznejte SPOCK','Jen na webu: fáze, agenti, brány a 5 pravidel.',['l0'],`<button class="linkbtn" type="button" data-week="l0">Otevřít</button>`)}
       ${pathStep('1','pink','Příprava','Role v REDIMu, VS Code, Copilot a hotový běh.',['l1'],`<button class="linkbtn" type="button" data-week="l1">Otevřít</button>`)}
@@ -495,9 +495,9 @@ function pathBlock(title){
 function roleCards(){
   return `<div class="rcards">${W.filter(w => w.role).map(w => `<button type="button" class="rcard c-${w.c} ${S.role === w.role ? 'on' : ''}" data-role="${w.role}" aria-pressed="${S.role === w.role}"><span class="rc-dia"><span>${S.role === w.role ? '✓' : ROLE_SHORT[w.role]}</span></span><b>${esc(ROLES[w.role])}</b><span>${esc(ROLE_WHO[w.role])}</span></button>`).join('')}</div>`;
 }
-function toolsBlock(title){
-  return `<div class="sec-h"><h2>${title || 'Opora'}</h2></div><div class="journey four">
-    <button class="jstep c-pink" type="button" data-simstart><span class="n">5 minut · interaktivně</span><h3>SPOCK nanečisto</h3><p>Zkrácený běh od nápadu po iniciativu. Vy rozhodujete na každé bráně.</p></button>
+function toolsBlock(title, noSim){
+  return `<div class="sec-h"><h2>${title || 'Opora'}</h2></div><div class="journey ${noSim ? 'three' : 'four'}">
+    ${noSim ? '' : `<button class="jstep c-pink" type="button" data-simstart><span class="n">5 minut · interaktivně</span><h3>SPOCK nanečisto</h3><p>Zkrácený běh od nápadu po iniciativu. Vy rozhodujete na každé bráně.</p></button>`}
     <button class="jstep c-blue" type="button" data-go="map"><span class="n">Interaktivní mapa</span><h3>SPOCK v kostce</h3><p>7 fází a 6 agentů. Kdo v které fázi rozhoduje a na co si dát pozor.</p></button>
     <button class="jstep c-purple" type="button" data-go="diag"><span class="n">Když něco nejde</span><h3>Diagnostika</h3><p>Co vidím → co udělám a nejčastější chyby uživatelů.</p></button>
     <button class="jstep c-indigo" type="button" data-go="cheat"><span class="n">Opora</span><h3>Tahák tasků</h3><p>Všechny tasky SPOCKu, kdy je spustit a která políčka otevřou.</p></button></div>${contacts()}`;
@@ -510,26 +510,20 @@ function contacts(){
     <li><b>Onboarding Tutorial</b><span>Tomáš Havlíček, Guild Master Product Management.</span></li>
   </ul></section>`;
 }
-function simTeaser(){
-  return `<section class="simt">${spockSVG('fab')}<div><span class="eyebrow">Ještě nic neinstalujte</span><h2>Vyzkoušejte si SPOCK nanečisto</h2><p>Za 5 minut projdete zkrácený běh: brief, materiál od klientů, trh, výběr řešení, MVP, PRD a iniciativu. Agenti připravují, vy rozhodujete.</p>
-    <ol class="simt-ph">${['Brief','Problémy','Trh','Řešení','MVP','PRD','Iniciativa'].map((p,i) => `<li><span>${i+1}</span>${p}</li>`).join('')}</ol>
-    <button class="btn primary" type="button" data-simstart>${S.badges && S.badges.sim ? 'Projít znovu' : 'Spustit simulaci · 5 min'} →</button></div></section>`;
-}
 function heroFirst(){
   return `<section class="hx hx-first"><div class="hx-txt">
     <span class="eyebrow">Nový nástroj pro discovery v ČS</span>
     <h1>Seznamte se <em>se SPOCKem</em></h1>
-    <p class="hx-lead">SPOCK je AI asistent ve VS Code. Produktovým týmům připraví podklady v sedmi fázích discovery, od nápadu po iniciativu připravenou k vývoji. <b>Agenti připravují, vy rozhodujete.</b></p>
-    <ul class="hx-ben"><li>Rychleji</li><li>Jednotně napříč týmy</li><li>Na základě důkazů</li><li>Dohledatelně</li></ul>
-    <div class="hx-cta"><button class="btn primary" type="button" data-simstart>Vyzkoušet nanečisto · 5 min</button><button class="btn" type="button" data-scrollto="cv-h">Pustit video · 2 min</button></div>
-    <p class="hx-note">Nic neinstalujete. Úroveň 0 je celá na webu, instalace přijde až v Přípravě.</p>
+    <p class="hx-lead">AI asistent ve VS Code, který produktovým týmům připraví discovery od nápadu po iniciativu. <b>Agenti připravují, vy rozhodujete.</b></p>
+    <div class="hx-cta"><button class="btn primary" type="button" data-simstart>Vyzkoušet nanečisto · 5 min</button><button class="btn" type="button" data-playvideo="">▶ Pustit video · 2 min</button></div>
+    <p class="hx-note">Nic neinstalujete. Začíná se tady na webu.</p>
   </div>${heroArt('Ahoj, jsem Spock')}</section>`;
 }
 function startBlock(){
-  return `<section class="startb"><div class="sec-h"><h2 id="role-h">Začněte: vyberte svou roli</h2><p>Úrovně 0 a 1 jsou společné. Role určí modul na úrovni 2. Za výběr dostanete první odznak.</p></div>${roleCards()}
+  return `<section class="startb"><div class="sec-h"><h2 id="role-h">Začněte: vyberte svou roli</h2><p>Role určí, který modul vás čeká na úrovni 2.</p></div>${roleCards()}
     <div class="startb-go"><button class="btn primary" type="button" data-week="l0" ${S.role ? '' : 'disabled'}>Začít úrovní 0: Poznejte SPOCK →</button><span class="muted">${S.role ? 'Role: ' + esc(ROLES[S.role]) : 'Nejdřív vyberte roli.'}</span></div></section>`;
 }
-function introCollapsed(){ return `<details class="introfold"><summary>${spockLogo('sm')}<b>O SPOCKu</b><span>Video 2 min 26 s a 8 hlavních myšlenek</span></summary>${introSection()}</details>`; }
+function introCollapsed(){ return `<details class="introfold"><summary>${spockLogo('sm')}<b>Co je SPOCK</b><span>video a 8 hlavních myšlenek</span></summary>${introSection()}</details>`; }
 
 /* 1 · Dvě tváře: jiná stránka pro nováčka a pro vracejícího se */
 /* 2 · Jeden příběh shora dolů, číslované kroky; po návratu se hotové kroky sbalí */
@@ -557,9 +551,10 @@ function heroStable(){
   </div>${heroArt(first ? 'Ahoj, jsem Spock' : streak() ? `Série ${streak()} ${streak() === 1 ? 'den' : streak() < 5 ? 'dny' : 'dní'}!` : 'Vítejte zpět')}</section>`;
 }
 function homeV4(){
-  if (isFirst()) return heroFirst() + introSection() + simTeaser() + startBlock() + pathBlock('Co vás čeká') + toolsBlock();
+  /* nováček: jedna hlavní akce (nanečisto) v úvodu, pak výběr role a cesta; vysvětlení a opora sbalené níž */
+  if (isFirst()) return heroFirst() + startBlock() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora', true);
   const l1 = W.find(w => w.id === 'l1'), showSvy = l1 && modPct(l1) === 1 && !(S.survey && S.survey.at);
-  return heroStable() + (showSvy ? surveyCard(true) : '') + pathBlock() + (S.seenVideo ? `<div class="v4-gap">${introCollapsed()}</div>` : introSection()) + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard() + toolsBlock();
+  return heroStable() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard() + toolsBlock();
 }
 function renderHome(){ app.innerHTML = homeV4(); }
 document.addEventListener('click', e => {
