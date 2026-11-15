@@ -36,6 +36,8 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  ok(T('odznak Pilot nanečisto a 30 XP'), (await st()).badges['got.sim'] && (await st()).xp===30);
  // role
  await p.locator('.startb [data-role=gm]').click();await p.waitForTimeout(200);
+ ok(T('hlášky se ukazují po jedné'), await p.locator('.notice').count()===1);
+ await p.locator('.notice',{hasText:'Na palubě'}).waitFor({timeout:15000}).catch(()=>{});
  ok(T('výběr role → upozornění na odznak Na palubě, bez překrytí obrazovky'), (await p.locator('.notice').allInnerTexts()).some(t=>t.includes('Na palubě')) && !(await p.locator('.cel').count()));await dismiss();
  ok(T('po výběru role „Vítejte zpět“'), (await p.locator('.hx .eyebrow').first().innerText()).toLowerCase().includes('zpět'));
  // lekce 0.1 – karty a úkoly
