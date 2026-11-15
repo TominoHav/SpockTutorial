@@ -46,6 +46,15 @@ Web je stránka na claude.ai (artifact). Po sloučení změny do `main` se **sá
 
 **Verze:** v patičce webu je commit tutoriálu, datum a vydání SPOCKu, podle kterého je tutoriál napsaný. Podle ní poznáte, jestli je publikovaná nejnovější verze.
 
+## Videa „SPOCK krok za krokem“
+
+Jedno dlouhé video přes všech sedm fází a sedm krátkých klipů po fázích. Ukazují hotový ukázkový běh ze SPOCKu (`fixtures/2026-09-spending-insights`). Jsou bez zvuku, české titulky jsou přímo v obraze.
+
+- Scény, texty a titulky: `nastroje/video/video.html` (pole `SC`).
+- Výroba: `node nastroje/video/record.js` vykreslí snímky v prohlížeči a ffmpeg z nich složí `web/media/spock-krok-za-krokem.mp4` a `spock-faze-1.mp4` až `spock-faze-7.mp4` i s náhledy. Jeden klip: `node nastroje/video/record.js faze-3`.
+- V lekci se video vloží zápisem `{{video:krok-za-krokem}}` nebo `{{video:faze-3}}`. Úvodní video je `{{video}}`.
+- Až bude komentář, přidá se k hotovému obrazu jako zvuková stopa. Délky scén (`dur`) a časy titulků se pak upraví podle nahrávky.
+
 ## Co je kde
 
 | Soubor | Co dělá |

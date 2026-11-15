@@ -70,6 +70,7 @@ function fmt(s){
        .replace(/\[\[([a-z0-9]+)\|([^\]]+)\]\]/g, (_, id, tx) => `<a href="#" data-week="${id}">${tx}</a>`)
        .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
   h = h.replace(/\{\{nanecisto\}\}/g, '<button type="button" class="btn sm primary vidbtn" data-simstart>▶ SPOCK nanečisto</button>');
+  h = h.replace(/\{\{video:([a-z0-9-]+)\}\}/g, (_, id) => `<button type="button" class="btn sm primary vidbtn" data-playvideo="${id}">▶ ${VIDS[id] ? VIDS[id][0] : 'Video'}</button>`);
   h = h.replace(/\{\{video\}\}/g, '<button type="button" class="btn sm primary vidbtn" data-playvideo>▶ Pustit video</button>');
   return h.replace(/\u0000(\d+)\u0000/g, (_, i) => '<code>' + codes[+i] + '</code>');
 }
@@ -442,6 +443,9 @@ const CH = [
   body:`<blockquote class="cv-quote"><b>SPOCK</b> připomíná, že myšlení opřené o data a objektivitu, spojené s lidskou zvědavostí, kreativitou a společným posláním, posouvá hranice našeho vesmíru.</blockquote>`}
 ];
 const fmtT = s => Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+/* Videa „SPOCK krok za krokem“: dlouhé a klipy po fázích (bez zvuku, české titulky v obraze). Vyrábí je nastroje/video/record.js. */
+const VIDS = Object.assign({'krok-za-krokem':['Video: SPOCK krok za krokem · 3,5 min', 'Sedm fází na hotovém běhu']}, Object.fromEntries(['Brief','Problémy a příležitosti','Trh','Řešení','MVP','PRD','Iniciativa'].map((n, i) => ['faze-' + (i + 1), ['Video: fáze ' + (i + 1) + ' · ' + n, 'Fáze ' + (i + 1) + ': ' + n]])));
+const vidTag = id => VIDS[id] ? `<video class="cv-video" controls preload="metadata" playsinline poster="spock-${id}-poster.jpg" aria-label="Video: ${VIDS[id][1]}"><source src="spock-${id}.mp4" type="video/mp4">Váš prohlížeč video neumí přehrát.</video>` : VIDEO;
 const VIDEO = `<video class="cv-video" controls preload="metadata" playsinline poster="spock-intro-poster.jpg" aria-label="Video: Co je SPOCK"><source src="spock-intro.mp4" type="video/mp4">Váš prohlížeč video neumí přehrát.</video>`;
 const BRAND = () => `<div class="cv-lock">${spockLogo('md')}<div><b>SPOCK</b><span>Lepší produktová rozhodnutí, rychleji.</span></div></div>`;
 function introSection(){ return introB(); }
@@ -565,9 +569,9 @@ document.addEventListener('click', e => {
   if (t.hasAttribute('data-rolepick')) { const r = document.querySelector('.hx-rolepick'); if (r) r.hidden = !r.hidden; }
 });
 /* Video v okně: pustí se odkudkoli (tlačítko {{video}} v úkolu) */
-function playVideo(){
+function playVideo(id){
   const ov = document.createElement('div'); ov.className = 'vidov'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','Video: Co je SPOCK');
-  ov.innerHTML = `<div class="vidov-in"><button type="button" class="g-x vidov-x" aria-label="Zavřít video">×</button>${VIDEO}</div>`;
+  ov.innerHTML = `<div class="vidov-in"><button type="button" class="g-x vidov-x" aria-label="Zavřít video">×</button>${vidTag(id)}</div>`;
   document.body.append(ov);
   const v = ov.querySelector('video'), close = () => { v.pause(); ov.remove(); };
   ov.querySelector('.vidov-x').onclick = close;
@@ -575,7 +579,7 @@ function playVideo(){
   ov.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   v.play().catch(() => {}); ov.querySelector('.vidov-x').focus();
 }
-document.addEventListener('click', e => { if (e.target.closest('[data-playvideo]')) { e.preventDefault(); playVideo(); } });
+document.addEventListener('click', e => { const vb = e.target.closest('[data-playvideo]'); if (vb) { e.preventDefault(); playVideo(vb.dataset.playvideo || ''); } });
 document.addEventListener('play', e => { if (e.target.matches && e.target.matches('.cv-video') && !S.seenVideo) { S.seenVideo = true; save(); } }, true);
 
 /* ---------- SPOCK v kostce ---------- */
