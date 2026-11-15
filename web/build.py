@@ -47,7 +47,7 @@ _old = '<span class="logo" aria-hidden="true"></span><span>SPOCK User<small id="
 assert _old in head, 'brand'
 head = head.replace(_old, '<svg class="sp-logo hdr" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#1068D2"/><path d="'+_h+'" fill="#fff"/></svg><span>SPOCK <span class="brand-u">User Onboarding</span><small id="brand-sub">PM · PD · SWE · GM</small></span>')
 assert '<span class="pill num" id="pill-prog">0 %</span>' in head
-head = head.replace('<span class="pill num" id="pill-prog">0 %</span>', '<span class="pill num" id="pill-streak" title="Série"></span><span class="pill num hide-sm" id="pill-xp" title="XP"></span><span class="pill num hide-sm" id="pill-prog">0 %</span>')
+head = head.replace('<span class="pill num" id="pill-prog">0 %</span>', '<span class="pill num" id="pill-streak" title="Série"></span><span class="pill num hide-sm" id="pill-xp" title="XP"></span><span class="pill num hide-sm" id="pill-prog">0 %</span><button class="pill fb-pill" id="pill-fb" type="button" data-fbopen aria-label="Napsat zpětnou vazbu k tutoriálu" title="Napsat zpětnou vazbu k tutoriálu"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="fb-t">Zpětná vazba</span></button>')
 fab = '<button class="g-fab" id="g-fab" type="button" aria-label="Spock, průvodce onboardingem. Klikněte pro otázku, přetažením nebo šipkami ho přesunete." hidden><span class="g-bubble" id="g-fab-t">Jsem Spock. Klikněte, nebo mě přetáhněte.</span></button>'
 head, n1 = _re.subn(r'<button class="g-fab".*?</button>', lambda m: fab, head, count=1, flags=_re.S)
 head, n2 = _re.subn(r'<svg class="g-bot" id="g-bot-head".*?</svg>', '<span id="g-head-bot"></span>', head, count=1, flags=_re.S)
@@ -86,7 +86,7 @@ _ver = _git('log', '-1', '--format=%h') or 'neznámá'; _date = _git('log', '-1'
 BUILD.update({'ver': _ver, 'date': _date, 'ts': int(_git('log', '-1', '--format=%ct') or 0) * 1000, 'title': _git('log', '-1', '--format=%s')[:120]})
 _sv = open(os.path.join('..', 'SPOCK-VERZE.md'), encoding='utf-8').read()
 _rel = (_re.search(r'^release:\s*(\S+)', _sv, _re.M) or [None, '?'])[1]
-foot = '<button class="fb-fab" type="button" data-fbopen>Zpětná vazba</button><footer class="ver"><span class="ver-n">Tutoriál zaznamenává váš průchod (návštěvy, kliknutí, odpovědi, dotazy na Spocka) pro vlastníka tutoriálu, aby ho mohl zlepšovat.</span>Tutoriál: verze ' + _ver + (' z ' + _date if _date else '') + ' · napsaný podle SPOCKu ' + _rel + '</footer>'
+foot = '<footer class="ver"><span class="ver-n">Tutoriál zaznamenává váš průchod (návštěvy, kliknutí, odpovědi, dotazy na Spocka) pro vlastníka tutoriálu, aby ho mohl zlepšovat.</span>Tutoriál: verze ' + _ver + (' z ' + _date if _date else '') + ' · napsaný podle SPOCKu ' + _rel + '</footer>'
 tail = "\ndocument.querySelector('#app').insertAdjacentHTML('afterend', " + json.dumps(foot, ensure_ascii=False) + ");" + "\n$('#g-fab').insertAdjacentHTML('afterbegin', spockSVG('fab'));\n$('#g-head-bot').outerHTML = spockSVG('head');\n$('#home-btn').addEventListener('click', () => go('home'));\nrender();\n})();\n</script>\n"
 _rel_ = _rel
 BUILD['spock'] = _rel_
