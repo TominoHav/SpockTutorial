@@ -1,5 +1,6 @@
 const KEY = 'spock-user-onboarding-v1';
 const DATA = __DATA__;
+const BUILD = __BUILD__;
 let {W, GLOSS, CHEAT, CHEAT_INTRO, DIAG, DIAG_INTRO, PRINCIPLES, MISTAKES, READY} = DATA;
 const ROLES = {pm:'Product Manager', pd:'Product Designer', se:'Software Engineer', gm:'Guild Master'};
 const ROLE_WHO = {pm:'Vedete produkt nebo iniciativu a rozhodujete, co se bude stavět.', pd:'Děláte výzkum s klienty a navrhujete, jak bude produkt fungovat a vypadat.', se:'Posuzujete, co jde technicky postavit, a pak to stavíte.', gm:'Spravujete PM metodiku banky a pomáháte komunitě produktových manažerů.'};
@@ -226,7 +227,7 @@ function startSession(wid, mode){
   renderSession();
 }
 /* jen pro automatický test: čtení stavu kvízu */
-window.__kviz = {mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
+window.__kviz = {build: () => BUILD, ctx: () => { const v = view, out = {}; W.forEach(w => { view = Object.assign({}, v, {name:'week', week:w.id}); out[w.id] = rules().length; }); view = v; return out; }, mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
 function sesQ(){ const w = W.find(x => x.id === SES.wid), qi = SES.qs[SES.i]; return {w, qi, q:SES.items[qi]}; }
 function renderSession(){
   let ov = document.getElementById('ses');
@@ -268,6 +269,7 @@ function endSession(ok){
   const s = SES, w = W.find(x => x.id === s.wid); SES = null;
   const ov = document.getElementById('ses'); if (ov) ov.remove();
   const need = Math.ceil(s.total * QPASS);
+  try { trackQuiz(w.id, s.mode, !!ok && s.right >= need, s.right, s.total); } catch (e) {}
   if (s.mode === 'jump') {
     if (ok && s.right >= need) { S.unlocked[w.id] = true; save(); award('jump.' + w.id, XP.jump, 'skok'); celebrate({kind:'unlock', title:'Odemčeno: ' + w.title, text:`Skokový test zvládnutý: ${s.right} z ${s.total}. Modul je otevřený.`}); }
     else celebrate({kind:'fail', title:'Skokový test nevyšel', text:`Potřebujete aspoň ${need} z ${s.total} správně. Vraťte se k předchozímu modulu, nebo to zkuste znovu s jinými otázkami.`});
@@ -809,6 +811,7 @@ function shell(active, body){
   const gw = W.find(w => w.id === 'l1b');
   const guide = gw ? `<button type="button" class="${active===gw.id?'on':''} c-${gw.c}" data-week="${gw.id}"><span class="dm"></span>Příručka: ${esc(gw.title)}</button>` + sideLessons(gw, active) : '';
   const ex = [['badges','Odznaky a profil','indigo'],['map','SPOCK v kostce','blue'],['diag','Diagnostika','purple'],['gloss','Slovníček','blue'],['cheat','Tahák tasků','blue'],['ready','Připravenost','indigo']]
+    .concat(TRK.owner ? [['dash','Dashboard (jen vy)','indigo']] : [])
     .map(x => `<button type="button" class="${active===x[0]?'on':''} c-${x[2]}" data-go="${x[0]}"><span class="dm"></span>${x[1]}</button>`).join('');
   return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more">${otherRoles(active)}<span class="grp">Opora</span>${guide}${ex}</div>`}</nav><section class="main">${body}</section></div>`;
 }
@@ -818,7 +821,9 @@ function nextWeek(){
   return W.filter(applies).find(w => { const t = weekTotals(w); return t.done < t.tot; }) || W[W.length-1];
 }
 function render(){
-  if (view.name === 'home') renderHome();
+  const t0 = performance.now();
+  if (view.name === 'dash') renderDash();
+  else if (view.name === 'home') renderHome();
   else if (view.name === 'week') renderWeek(view.week);
   else if (view.name === 'map') renderMap();
   else if (view.name === 'diag') renderDiag();
@@ -827,6 +832,7 @@ function render(){
   else if (view.name === 'cheat') renderCheat();
   else if (view.name === 'badges') renderBadges();
   updatePills();
+  try { trackRender(performance.now() - t0); trackView(); } catch (e) {}
 }
 function go(name, extra){
   view = Object.assign({}, view, {name, peek:null}, extra || {});
@@ -1040,8 +1046,10 @@ async function gAsk(q){
   const opts = {cache:false, signal:G.ctl.signal, onText:({text}) => { bubble.innerHTML = md(text); bubble.scrollIntoView({block:'end'}); }};
   if (G.tools) opts.tools = [openTool];
   try {
-    const turns = G.turns.slice(-12);
-    const {text, truncated} = await G.sample([{role:'user', content:rules()}, ...turns], opts);
+    const turns = G.turns.slice(-12), sysTxt = rules(), tS = performance.now(), inChars = sysTxt.length + turns.reduce((n, t) => n + String(t.content).length, 0);
+    let text, truncated;
+    try { ({text, truncated} = await G.sample([{role:'user', content:sysTxt}, ...turns], opts)); trackSpock(inChars, (text || '').length, Math.round(performance.now() - tS), true); }
+    catch (err) { try { trackSpock(inChars, ((err && err.text) || '').length, Math.round(performance.now() - tS), false); } catch (e2) {} throw err; }
     bubble.innerHTML = md(text) + (truncated ? '<p class="g-note">Odpověď je zkrácená. Zeptejte se na menší část.</p>' : '');
     G.turns.push({role:'assistant', content:text});
   } catch(e) {
