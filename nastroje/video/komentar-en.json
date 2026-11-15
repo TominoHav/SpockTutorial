@@ -1,0 +1,57 @@
+{
+ "uvod": [
+  "SPOCK is an AI assistant in VS Code. It guides a product team from a first idea to an initiative that is ready to build.",
+  "Let's walk through a finished sample run. The customer does not know which recurring payments leave their account.",
+  "In every stage, an agent prepares a document, a check verifies it, and a person decides."
+ ],
+ "faze-1": [
+  "Stage one, the brief. You start the run yourself with a task. You enter the run name, your name and your role.",
+  "The Product Manager agent interviews you and writes the brief. The target state is a change for the customer, not a solution.",
+  "The agent asks about one field at a time. It never fills in anything on its own.",
+  "What you do not know is recorded as unknown, with a reason. That is an honest brief, not a mistake.",
+  "The agent runs the check and fixes what it found. Then you approve the brief, under your own name."
+ ],
+ "faze-2": [
+  "Stage two. It does not start without your material. Put the files into the supplied folder. They do not belong in the chat.",
+  "The agent extracts observations from the material and frames opportunities: customer needs, not solutions.",
+  "Each one carries a trust tag. Strong means at least two independent sources, and one of them first hand.",
+  "Weakly supported opportunities stay on the record. Nothing is thrown away.",
+  "You decide which opportunities are primary. The agent only proposes the order."
+ ],
+ "faze-3": [
+  "Stage three, the market. The agent works from a market file that you prepare. It is the only agent allowed to reach the web.",
+  "Each organisation gets a profile: what it offers, how it differs, and what it is confirmed not to do.",
+  "The synthesis says what the market already does about your opportunities, so stage four does not guess.",
+  "Note: nobody signs stage three. The check accepts it, and you read the result in stage four."
+ ],
+ "faze-4": [
+  "Stage four. Only now do solutions appear. The agent proposes several, each built on a different combination of opportunities.",
+  "The solutions have no score and no ranking. The agent does not recommend any of them.",
+  "For each one you see its regulatory touchpoints. SPOCK does not rate technical complexity, so ask your engineer.",
+  "Here, solution I 2 was chosen: a notification before the next payment.",
+  "Choosing takes two tasks: you record the choice with your reason, then you approve. The reason is carried forward word for word."
+ ],
+ "faze-5": [
+  "Stage five shrinks the chosen solution into something you can pilot.",
+  "The agent proposes three options. They differ in how the solution is built. You can add up to three of your own.",
+  "You choose the option, and the agent expands only that one. It adds nothing new to it.",
+  "You decide twice: first you choose the option, then you accept its expansion."
+ ],
+ "faze-6": [
+  "Stage six. The Business Analyst combines six inputs into one document: the P R D.",
+  "Every requirement names the measure it serves. A requirement with no measure is visible right away.",
+  "The agreed P R D is a separate document. It is created word for word from the draft, when you mark it with a task.",
+  "Review the P R D with the whole trio. SPOCK does not judge technical feasibility or cost."
+ ],
+ "faze-7": [
+  "Stage seven writes the document the bank actually receives: the initiative, in the Guild's template.",
+  "It reads only the agreed P R D. It invents nothing new.",
+  "The agent never makes up a Jira key. You enter it yourself with a task, or you write: none yet.",
+  "With the G 7 sign-off, the run is complete. You move the initiative into Jira yourself."
+ ],
+ "zaver": [
+  "Seven stages, six sign-offs. From the initiative you can trace your way back to a sentence in the original material.",
+  "SPOCK does not decide for you. It prepares the groundwork and makes sure nothing came out of nowhere.",
+  "Now try it in VS Code, on a run of your own."
+ ]
+}
