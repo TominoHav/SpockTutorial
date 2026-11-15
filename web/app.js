@@ -235,7 +235,7 @@ function startSession(wid, mode){
   renderSession();
 }
 /* jen pro automatický test: čtení stavu kvízu */
-window.__kviz = {check: (w, d, t) => { const m = W.find(x => x.id === w); return m.days[d].todo[t].check.a; }, build: () => BUILD, ctx: () => { const v = view, out = {}; W.forEach(w => { view = Object.assign({}, v, {name:'week', week:w.id}); out[w.id] = rules().length; }); view = v; return out; }, mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
+window.__kviz = {idle: mins => { const now = Date.now(), b = Object.values(TRK.doc.secs).reduce((n, x) => n + x, 0); tTick(); TRK.act = now - (mins + 2) * 60000; TRK.curAt = now - mins * 60000; tTick(); return Object.values(TRK.doc.secs).reduce((n, x) => n + x, 0) - b; }, check: (w, d, t) => { const m = W.find(x => x.id === w); return m.days[d].todo[t].check.a; }, build: () => BUILD, ctx: () => { const v = view, out = {}; W.forEach(w => { view = Object.assign({}, v, {name:'week', week:w.id}); out[w.id] = rules().length; }); view = v; return out; }, mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
 function sesQ(){ const w = W.find(x => x.id === SES.wid), qi = SES.qs[SES.i]; return {w, qi, q:SES.items[qi]}; }
 function renderSession(){
   let ov = document.getElementById('ses');
