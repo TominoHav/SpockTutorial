@@ -28,7 +28,7 @@ function tSnapshot(){
   const T = TRK.doc; if (!T) return;
   T.last = tNow(); T.role = S.role || null;
   const mods = {}; let done = 0, tot = 0;
-  W.forEach(w => { const t = weekTotals(w); mods[w.id] = [t.done, t.tot, w.days.filter((_, di) => lessonDone(w, di)).length, w.days.length, quizPassed(w) ? 1 : 0, cardsAll(w), cardsTotal(w)]; if (applies(w) && w.id !== 'l1b') { done += t.done; tot += t.tot; } });
+  W.forEach(w => { const t = weekTotals(w); mods[w.id] = [t.done, t.tot, w.days.filter((_, di) => lessonDone(w, di)).length, w.days.length, quizPassed(w) ? 1 : 0, cardsAll(w), cardsTotal(w)]; if (counts(w)) { done += t.done; tot += t.tot; } });
   T.prog = {xp:S.xp || 0, pct:tot ? Math.round(100 * done / tot) : 0, mods, loc:tLoc(), badges:Object.keys(S.badges || {}).filter(k => k.startsWith('got.')).length, streak:streak(), sim:!!(S.badges && S.badges.sim), video:!!S.seenVideo};
   T.devs = Object.keys(S.proof || {}).filter(k => { const [wid, di, ti] = k.split('.'), w = W.find(x => x.id === wid), t = w && w.days[+di] && w.days[+di].todo[+ti]; return t && t.check && t.check.kind === 'seen' && S.proof[k] !== t.check.a; });
   T.ptries = Object.assign({}, S.ptries || {});

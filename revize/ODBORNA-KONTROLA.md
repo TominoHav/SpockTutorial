@@ -324,7 +324,7 @@ Kontrolní seznam všech karet (162), kvízových otázek (72) a úkolů tutori�
 ## Úroveň 3: Pokročilý
 
 **Kdo by měl kontrolovat:** superuser nebo SPOCK core tým  
-**Rozsah:** 13 karet, 8 kvízových otázek · asi 40 minut
+**Rozsah:** 16 karet, 8 kvízových otázek · asi 45 minut
 
 ### 3.1 Vrácení a změny
 
@@ -359,6 +359,13 @@ Kontrolní seznam všech karet (162), kvízových otázek (72) a úkolů tutori�
 - [ ] Karta „Začít znovu, nebo ukončit“ · otázka: Co se stane po `SPOCK: stop this run`? → správně: Ukončení je trvalé, dokumenty zůstanou čitelné
 - [ ] Úkoly lekce 3.5 (1): Aktualizujte kopii · kroky a čas sedí
 
+### 3.6 Co výstup SPOCKu dokazuje a co ne
+
+- [ ] Karta „Zelená brána nic nedokazuje sama“ · otázka: Všechny brány jsou zelené. Je discovery kvalitní? → správně: Nevíme, kvalitu discovery neposuzuje žádná kontrola
+- [ ] Karta „Compliance a co pilot nedělá“ · otázka: Kdo rozhoduje o compliance? → správně: Compliance tým banky
+- [ ] Karta „Otázka pro akceptační testování“ · otázka: Kde se ověří, jestli jsou to ty správné příležitosti? → správně: V uživatelském akceptačním testování
+- [ ] Úkoly lekce 3.6 (1): Připravte si „poctivé shrnutí“ pro kolegy · kroky a čas sedí
+
 ### Kvíz modulu
 
 - [ ] Kvíz: Fáze 4 je schválená a přijde nový výzkum, který mění příležitosti. Co uděláte? → správně: Vrátím fázi 2 taskem `SPOCK: send a stage back to be redone`, pozdější fáze se označí jako stale
@@ -373,36 +380,29 @@ Kontrolní seznam všech karet (162), kvízových otázek (72) a úkolů tutori�
 ## Úroveň 4: Superuser
 
 **Kdo by měl kontrolovat:** SPOCK core tým  
-**Rozsah:** 9 karet, 8 kvízových otázek · asi 35 minut
+**Rozsah:** 6 karet, 8 kvízových otázek · asi 30 minut
 
-### 4.1 Co výstup SPOCKu dokazuje a co ne
-
-- [ ] Karta „Zelená brána nic nedokazuje sama“ · otázka: Všechny brány jsou zelené. Je discovery kvalitní? → správně: Nevíme, kvalitu discovery neposuzuje žádná kontrola
-- [ ] Karta „Compliance a co pilot nedělá“ · otázka: Kdo rozhoduje o compliance? → správně: Compliance tým banky
-- [ ] Karta „Otázka pro akceptační testování“ · otázka: Kde se ověří, jestli jsou to ty správné příležitosti? → správně: V uživatelském akceptačním testování
-- [ ] Úkoly lekce 4.1 (1): Připravte si „poctivé shrnutí“ pro kolegy · kroky a čas sedí
-
-### 4.2 Prověřte chování agentů
+### 4.1 Prověřte chování agentů
 
 - [ ] Karta „Testujete chování“ · otázka: Nejste si jistí, jestli agent scénář splnil. Co zapíšete? → správně: `unclear`
 - [ ] Karta „Odpovědní list nesmí do chatu“ · otázka: Proč nesmí odpovědní list scénáře do chatu? → správně: Agent by z něj mohl opsat pole a test by nic neměřil
-- [ ] Úkoly lekce 4.2 (2): Sondy chování na cvičném běhu; Projděte jeden scénář z balíčku · kroky a čas sedí
+- [ ] Úkoly lekce 4.1 (2): Sondy chování na cvičném běhu; Projděte jeden scénář z balíčku · kroky a čas sedí
 
-### 4.3 Měření a stav
+### 4.2 Měření a stav
 
 - [ ] Karta „Měření a stav“ · otázka: Který task řekne, která polovina brány proběhla? → správně: `SPOCK: which gates can run in full`
 - [ ] Karta „Kredity po pauze“ · otázka: Po hodinové pauze stála jedna zpráva hodně kreditů. Je to chyba? → správně: Ne, je to očekávané
-- [ ] Úkoly lekce 4.3 (1): Přečtěte výkon workflow · kroky a čas sedí
+- [ ] Úkoly lekce 4.2 (1): Přečtěte výkon workflow · kroky a čas sedí
 
-### 4.4 Zpětná vazba týmu CoE Product Management
+### 4.3 Zpětná vazba týmu CoE Product Management
 
 - [ ] Karta „Co poslat hned“ · otázka: Ve výběru vidíte sedm agentů SPOCKu. Kdy to nahlásíte? → správně: Hned, ještě tu hodinu, se jmény agentů
 - [ ] Karta „Jak vypadá nález“ · otázka: Co přiložíte k nálezu? → správně: Celou složku běhu jako ZIP a chat každé fáze exportovaný zvlášť
-- [ ] Úkoly lekce 4.4 (1): Pošlete jeden nález · kroky a čas sedí
+- [ ] Úkoly lekce 4.3 (1): Pošlete jeden nález · kroky a čas sedí
 
-### 4.5 Mentor a generálka
+### 4.4 Mentor a generálka
 
-- [ ] Úkoly lekce 4.5 (2): Generálka: celý běh bez nápovědy; Proveďte kolegu úrovněmi 0 a 1 · kroky a čas sedí
+- [ ] Úkoly lekce 4.4 (2): Generálka: celý běh bez nápovědy; Proveďte kolegu úrovněmi 0 a 1 · kroky a čas sedí
 
 ### Kvíz modulu
 

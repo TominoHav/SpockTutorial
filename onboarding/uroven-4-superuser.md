@@ -1,59 +1,12 @@
-# Úroveň 4: Superuser (všichni, 4–6 h)
+# Úroveň 4: Superuser (volitelně pro superusery a Guild Mastery, 4–5 h)
 
-**Cíl:** SPOCK ovládáte bez nápovědy. Poctivě vysvětlíte, co výstup dokazuje a co ne, prověříte chování agentů, pošlete týmu CoE Product Management použitelný nález a provedete kolegu úrovněmi 0–1.
+**Cíl:** SPOCK ovládáte bez nápovědy. Prověříte chování agentů, pošlete týmu CoE Product Management použitelný nález a provedete kolegu úrovněmi 0–1.
+
+**Pro koho:** Úroveň je volitelná. Je pro ty, kdo budou v týmu první pomocí se SPOCKem, a pro Guild Mastery. Na běžnou práci se SPOCKem stačí úrovně 0 až 3.
 
 **Proč:** Superuser je první, za kým tým přijde, když něco nefunguje. Musí poznat, jestli je chyba v materiálu, v nastavení, nebo ve workflow. A musí umět říct, kdy výstup vypadá dobře, ale nic nedokazuje: „A document that looks right proves nothing on its own“ (`TESTER-GUIDE.md` §1.3).
 
-## 4.1 — Co výstup SPOCKu dokazuje a co ne
-
-### Karty (asi 6 min, jen na webu)
-
-#### Zelená brána nic nedokazuje sama
-
-**Zelená brána = prošla mechanická polovina.** Posuzovaná pravidla nehodnotí žádný automatický soudce. Odpovědět na ně může ten, kdo podepisuje.
-
-**Otázka:** Všechny brány jsou zelené. Je discovery kvalitní?
-- [ ] Ano
-- [x] Nevíme, kvalitu discovery neposuzuje žádná kontrola
-
-**Proč:** Zelená brána znamená jen mechanickou polovinu.
-
-#### Compliance a co pilot nedělá
-
-**Compliance:** tři ze čtyř karet oblastí napsal projekt a nikdo z banky je nerevidoval. Odpovědi producenta žádná kontrola neověřuje. Compliance rozhodnutí patří compliance týmu.
-
-**Pilot neobjevuje průběžně:** pracuje s materiálem dodaným na začátku, ne s týdenními rozhovory. Nápady negeneruje proti jedné cílové příležitosti a nic netestuje.
-
-**Otázka:** Kdo rozhoduje o compliance?
-- [ ] Agent ve fázi 4
-- [x] Compliance tým banky
-
-**Proč:** Tři ze čtyř karet nikdo z banky nerevidoval a odpovědi nikdo neověřuje.
-
-#### Otázka pro akceptační testování
-
-**Kvalitu discovery** (jsou to ty správné příležitosti? financovala by banka takovou iniciativu?) **neposuzuje žádná kontrola.** To je otázka pro uživatelské akceptační testování (`TESTER-GUIDE.md` §1.2).
-
-**Otázka:** Kde se ověří, jestli jsou to ty správné příležitosti?
-- [x] V uživatelském akceptačním testování
-- [ ] V bráně Q2
-
-**Proč:** Žádná kontrola kvalitu discovery neposuzuje.
-
-### Úkoly
-
-- [ ] **Připravte si „poctivé shrnutí“ pro kolegy** (30 min, ve VS Code)
-  - *Proč:* Kolegům musíte umět v pěti větách říct, čemu ve výstupu věřit a co si ověřit.
-  1. Do deníku napište pět vět: co SPOCK zaručuje, co ne a co si má tým u každé iniciativy ověřit sám.
-  2. Porovnejte je s odpovědí agenta **Methodology Coach** na otázku „Co tento pilot z metody vynechává?“
-
-### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
-
-- 📄 **`BUSINESS-LOGIC-OVERVIEW.md`** §0 a poslední sekce „What this document is not“
-- 📄 **`method-canon.md`** §15 (co pilot s praxí dělá a kde jí nemůže následovat)
-- 📄 **`TESTER-GUIDE.md`** §1
-
-## 4.2 — Prověřte chování agentů
+## 4.1 — Prověřte chování agentů
 
 ### Karty (asi 5 min, jen na webu)
 
@@ -103,7 +56,7 @@
 - 📄 **`TESTER-GUIDE.md`** §4 (celé), §5 a §6
 - 📄 Testovací scénáře jsou v balíčku **testing scenarios pack**, ve složce `SPOCK | Workflow Documentation` v repozitáři AI Lab. **Rozbalte ho mimo složku SPOCKu**, aby ho žádný agent nepřečetl.
 
-## 4.3 — Měření a stav
+## 4.2 — Měření a stav
 
 ### Karty (asi 5 min, jen na webu)
 
@@ -136,7 +89,7 @@
   1. Spusťte `SPOCK: how the workflow performed` a `SPOCK: which gates can run in full`.
   2. Zapište si dvě věci, které vás překvapily.
 
-## 4.4 — Zpětná vazba týmu CoE Product Management
+## 4.3 — Zpětná vazba týmu CoE Product Management
 
 ### Karty (asi 5 min, jen na webu)
 
@@ -166,14 +119,14 @@
 
 - [ ] **Pošlete jeden nález** (30 min, ve VS Code)
   - *Proč:* Dobrý nález opraví workflow pro všechny. Nejasný nález se ztratí.
-  1. Vyberte jeden nález z deníku nebo ze sond v 4.2.
+  1. Vyberte jeden nález z deníku nebo ze sond v 4.1.
   2. Sepište ho podle `SETUP.md` §10, přiložte ZIP běhu a exportované chaty a pošlete týmu CoE Product Management.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
 - 📄 **`SETUP.md`** §10 a **`TESTER-GUIDE.md`** §8–9
 
-## 4.5 — Mentor a generálka
+## 4.4 — Mentor a generálka
 
 ### Úkoly
 

@@ -78,6 +78,9 @@ const app = $('#app');
 let view = {name:'home', week:null, phase:0, layer:0};
 
 const applies = w => !w.role || w.role === S.role;
+/* volitelné moduly: příručka a úroveň 4 se do cesty ani do „Hotovo %“ nepočítají */
+const OPT = ['l1b', 'l4'];
+const counts = w => applies(w) && !OPT.includes(w.id);
 function weekTotals(w){
   let tot = 0, done = 0;
   w.days.forEach((d,di) => { d.todo.forEach((_,ti) => { tot++; if (S.todo[w.id+'.'+di+'.'+ti]) done++; }); (d.cards || []).forEach((_,ci) => { tot++; if (cardAns(w.id+'.'+di+'.'+ci) !== undefined) done++; }); });
@@ -86,7 +89,7 @@ function weekTotals(w){
 }
 function overall(){
   let tot = 0, done = 0;
-  W.filter(applies).forEach(w => { const t = weekTotals(w); tot += t.tot; done += t.done; });
+  W.filter(counts).forEach(w => { const t = weekTotals(w); tot += t.tot; done += t.done; });
   return tot ? Math.round(done / tot * 100) : 0;
 }
 function updatePills(){
@@ -126,10 +129,10 @@ function xpPop(text){
   el.textContent = text; el.classList.remove('go'); void el.offsetWidth; el.classList.add('go');
 }
 
-/* zámky: cesta 0 → 1 → role → 3 → 4 (příručka 1b je volitelná a nezamyká se), další modul se odemkne na 80 % předchozího nebo skokovým testem */
-const pathIds = () => ['l0','l1', S.role, 'l3','l4'].filter(Boolean);
+/* zámky: cesta 0 → 1 → role → 3; volitelná úroveň 4 se odemkne po úrovni 3, příručka 1b se nezamyká; další modul se odemkne na 80 % předchozího nebo skokovým testem */
+const pathIds = () => ['l0','l1', S.role, 'l3'].filter(Boolean);
 const modPct = w => { const t = weekTotals(w); return t.tot ? t.done / t.tot : 0; };
-function prevOf(w){ const p = pathIds(), i = p.indexOf(w.id); return i > 0 ? W.find(x => x.id === p[i-1]) : null; }
+function prevOf(w){ if (w.id === 'l4') return W.find(x => x.id === 'l3'); const p = pathIds(), i = p.indexOf(w.id); return i > 0 ? W.find(x => x.id === p[i-1]) : null; }
 function isLocked(w){
   if (!w || S.unlocked[w.id]) return false;
   if (w.role && w.role !== S.role) return false;
@@ -153,7 +156,7 @@ const BADGES = [
   ['spock','Kamarád Spocka','Zeptejte se Spocka na první otázku.', () => !!S.badges.spock],
   ['xp500','500 XP','Nasbírejte 500 XP.', () => S.xp >= 500],
   ['xp1000','1000 XP','Nasbírejte 1000 XP.', () => S.xp >= 1000],
-  ['superuser','Superuser','Dokončete celou cestu včetně své role.', () => !!S.role && pathIds().every(id => modPct(W.find(w => w.id === id)) === 1)]
+  ['superuser','Superuser','Dokončete celou cestu a volitelnou úroveň 4.', () => !!S.role && pathIds().concat('l4').every(id => modPct(W.find(w => w.id === id)) === 1)]
 ];
 function checkBadges(){
   BADGES.forEach(([id, name, how, test]) => {
@@ -504,8 +507,7 @@ function pathBlock(title){
       ${pathStep('1','pink','Příprava','Role v REDIMu, VS Code, Copilot a hotový běh.',['l1'],`<button class="linkbtn" type="button" data-week="l1">Otevřít</button>`)}
       ${pathStep('2','purple', mine ? esc(mine.title) : 'Vaše role', mine ? esc(mine.short) : 'PM, PD, SWE nebo GM.', mine ? [mine.id] : [], mine ? `<button class="linkbtn" type="button" data-week="${mine.id}">Otevřít</button>` : `<span class="muted">Nejdřív vyberte roli</span>`)}
       ${pathStep('3','indigo','Pokročilý','Vrácení fáze, výjimky, předání běhu.',['l3'],`<button class="linkbtn" type="button" data-week="l3">Otevřít</button>`)}
-      ${pathStep('4','blue','Superuser','Sondy chování, nálezy, mentoring.',['l4'],`<button class="linkbtn" type="button" data-week="l4">Otevřít</button>`)}
-    </ol><p class="hp-ref muted">Volitelně: <button class="linkbtn" type="button" data-week="l1b">příručka Fáze do hloubky</button>, každá fáze podle své specifikace. Hodí se hlavně pro GM a superusery.</p></div></section>`;
+    </ol><p class="hp-ref muted">Volitelně pro superusery a Guild Mastery: <button class="linkbtn" type="button" data-week="l4">úroveň 4 Superuser</button> (sondy chování, nálezy, mentoring) a <button class="linkbtn" type="button" data-week="l1b">příručka Fáze do hloubky</button>.</p></div></section>`;
 }
 function roleCards(){
   return `<div class="rcards">${W.filter(w => w.role).map(w => `<button type="button" class="rcard c-${w.c} ${S.role === w.role ? 'on' : ''}" data-role="${w.role}" aria-pressed="${S.role === w.role}"><span class="rc-dia"><span>${S.role === w.role ? '✓' : ROLE_SHORT[w.role]}</span></span><b>${esc(ROLES[w.role])}</b><span>${esc(ROLE_WHO[w.role])}</span></button>`).join('')}</div>`;
@@ -560,7 +562,7 @@ function heroStable(){
       </div>${miniStats()}`;
   return `<section class="hx"><div class="hx-txt">
     <span class="eyebrow">${first ? 'Vítejte v onboardingu SPOCKu' : 'Vítejte zpět'}</span>
-    <h1>Od první instalace <em>k superuserovi</em></h1>
+    <h1>Od první instalace <em>k vlastnímu běhu</em></h1>
     ${first ? '<p class="hx-lead">Pro Product Managera, Product Designera, Software Engineera a Guild Mastera. Naučí vás, jak SPOCK funguje uvnitř každé fáze, provede vás vlastním během a ukáže, čemu výstupu věřit a čemu ne.</p>' : ''}
     ${action}
   </div>${heroArt(first ? 'Ahoj, jsem Spock' : streak() ? `Série ${streak()} ${streak() === 1 ? 'den' : streak() < 5 ? 'dny' : 'dní'}!` : 'Vítejte zpět')}</section>`;
@@ -623,7 +625,7 @@ function checkBlock(k, c){
   const a = proofAns(k), ans = a !== undefined, seen = c.kind === 'seen', tries = (S.ptries || {})[k] || 0;
   const right = ans && a === c.a, locked = seen ? ans : right;
   let fb = '';
-  if (seen && ans) fb = right ? `<p class="lc-why ok"><b>Tak to má být.</b> ${c.hint ? '' : 'Agent se zachoval správně.'}</p>` : `<p class="lc-why bad"><b>To je odchylka od správného chování.</b> Zapište si ji do deníku i s citací agenta. ${fmt(c.hint || 'Opakuje-li se, pošlete nález týmu CoE Product Management (lekce 4.4).')}</p>`;
+  if (seen && ans) fb = right ? `<p class="lc-why ok"><b>Tak to má být.</b> ${c.hint ? '' : 'Agent se zachoval správně.'}</p>` : `<p class="lc-why bad"><b>To je odchylka od správného chování.</b> Zapište si ji do deníku i s citací agenta. ${fmt(c.hint || 'Opakuje-li se, pošlete nález týmu CoE Product Management (lekce 4.3).')}</p>`;
   else if (!seen && right) fb = `<p class="lc-why ok"><b>Sedí.</b> Úkol je splněný.</p>`;
   else if (!seen && tries) fb = `<p class="lc-why bad"><b>To nesedí.</b> ${fmt(c.hint || 'Podívejte se do SPOCKu ještě jednou a zkuste to znovu.')}</p>`;
   return `<div class="tchk ${seen ? 'seen' : 'proof'}"><span class="tchk-l">${seen ? 'Co jste viděli' : 'Ověření z VS Code'}</span><b>${fmt(c.q)}</b><div class="lc-opts">${c.o.map((o, oi) => `<button type="button" class="lc-opt ${locked ? (oi === c.a ? 'right' : oi === a ? 'wrong' : '') : ''}" data-proof="${k}:${oi}" ${locked ? 'disabled' : ''}>${fmt(o)}</button>`).join('')}</div>${fb}</div>`;
@@ -778,7 +780,7 @@ function renderDiag(){
     <div class="mh c-purple"><span class="eyebrow">Když něco nejde</span><h1>Co vidím → co udělám</h1>
     <p class="why">${fmt(DIAG_INTRO)}</p></div>
     ${ladder.map(g => `<div class="sec-h"><h2>${esc(g.g)}</h2></div><div class="ladder c-purple">${g.t.rows.map(r => `<div class="rung"><span class="rn"><span>${++n}</span></span><div class="rb"><b>${fmt(r[0])}</b><p class="fix">${fmt(r[1])}</p></div></div>`).join('')}</div>`).join('')}
-    ${finds ? `<div class="sec-h"><h2>Nálezy, které hlásíte</h2><p>Podle <a href="#" data-week="l4">úrovně 4, lekce 4.4</a>.</p></div><div class="mist">${finds.t.rows.map(r => `<div><b>${fmt(r[0])}</b><span>${fmt(r[1])}</span></div>`).join('')}</div>` : ''}
+    ${finds ? `<div class="sec-h"><h2>Nálezy, které hlásíte</h2><p>Podle <a href="#" data-week="l4">úrovně 4, lekce 4.3</a>.</p></div><div class="mist">${finds.t.rows.map(r => `<div><b>${fmt(r[0])}</b><span>${fmt(r[1])}</span></div>`).join('')}</div>` : ''}
     <div class="sec-h"><h2>Nejčastější chyby uživatelů</h2></div>
     <div class="mist">${MISTAKES.map(m => `<div><b>${fmt(m[0])}</b><span>${fmt(m[1])}</span></div>`).join('')}</div>
     <div class="sec-h"><h2>Jak SPOCK přemýšlí</h2></div>
@@ -862,16 +864,18 @@ function shell(active, body){
     return `<button type="button" class="${active===w.id?'on':''} ${other?'dim':''} ${lk?'lk':''} c-${w.c}" data-week="${w.id}">${lk ? '<span class="dm lkic">' + LOCK + '</span>' : `<span class="dm ${cls}"></span>`}<span class="rl">${esc(w.role ? '2 · ' + w.title : w.lab.replace('Úroveň ','') + ' · ' + w.title)}</span><span class="rt num">${fmtH(weekTime(w).total)}</span></button>`;
   }).join('');
   const gw = W.find(w => w.id === 'l1b');
+  const sw = W.find(w => w.id === 'l4'), slk = sw && isLocked(sw);
+  const optl = sw ? `<span class="grp">Volitelné</span><button type="button" class="${active===sw.id?'on':''} ${slk?'lk':''} c-${sw.c}" data-week="${sw.id}">${slk ? '<span class="dm lkic">' + LOCK + '</span>' : '<span class="dm"></span>'}Úroveň 4: ${esc(sw.title)}</button>` + sideLessons(sw, active) : '';
   const guide = gw ? `<button type="button" class="${active===gw.id?'on':''} c-${gw.c}" data-week="${gw.id}"><span class="dm"></span>Příručka: ${esc(gw.title)}</button>` + sideLessons(gw, active) : '';
   const ex = [['badges','Odznaky a profil','indigo'],['map','SPOCK v kostce','blue'],['diag','Diagnostika','purple'],['gloss','Slovníček','blue'],['cheat','Tahák tasků','blue'],['ready','Připravenost','indigo']]
     .concat(TRK.owner ? [['dash','Dashboard (jen vy)','indigo']] : [])
     .map(x => `<button type="button" class="${active===x[0]?'on':''} c-${x[2]}" data-go="${x[0]}"><span class="dm"></span>${x[1]}</button>`).join('');
-  return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more">${otherRoles(active)}<span class="grp">Opora</span>${guide}${ex}</div>`}</nav><section class="main">${body}</section></div>`;
+  return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more">${otherRoles(active)}${optl}${guide}<span class="grp">Opora</span>${ex}</div>`}</nav><section class="main">${body}</section></div>`;
 }
 
 function nextWeek(){
   const n = nextOnPath(); if (n && !isLocked(n)) return n;
-  return W.filter(applies).find(w => { const t = weekTotals(w); return t.done < t.tot; }) || W[W.length-1];
+  return W.filter(counts).find(w => { const t = weekTotals(w); return t.done < t.tot; }) || W[W.length-1];
 }
 function render(){
   const t0 = performance.now();
@@ -1046,7 +1050,7 @@ Jak odpovídáš:
 - Tasky SPOCKu piš přesně jejich názvem v \`backticích\` a řekni, jaká políčka otevřou. Task s políčky na jméno, roli, důvod nebo rozhodnutí spouští vždy člověk, nikdy agent.
 - Nikdy neraď přikládat soubory do chatu Copilotu (kromě briefu ve fázi 1), posílat běhy přes git ani dávat skutečný klientský materiál do cvičného běhu.
 - Opírej se jen o PODKLADY níže (a přiložené soubory, jsou-li). Když tam odpověď není, řekni to na rovinu a poraď, kde ji najde (SETUP.md, TESTER-GUIDE.md, TASKS.md v kopii SPOCKu, agent Workflow Support nebo Methodology Coach, tým CoE Product Management). Nevymýšlej názvy souborů, tasků ani C-čísla.
-- Onboarding je hra jako Duolingo: XP za úkoly, lekce, kvízy a moduly, denní série a cíl, úrovně od Nováčka po Superusera, odznaky a zamčené moduly (odemknou se na 80 % předchozího, nebo skokovým testem: 5 losovaných otázek z modulu, potřeba 4 správně). Kvíz modulu se odemkne po všech kartách modulu, losuje 5 otázek ze zásoby a je splněný při 4 z 5 správně napoprvé. Povzbuzuj, hlídej sérii a zmiň, kolik XP dalším krokem získá, ale nikdy kvůli hře nezkracuj práci ve SPOCKu.
+- Onboarding je hra jako Duolingo: XP za úkoly, lekce, kvízy a moduly, denní série a cíl, hodnosti od Nováčka po Superusera, odznaky a zamčené moduly (odemknou se na 80 % předchozího, nebo skokovým testem: 5 losovaných otázek z modulu, potřeba 4 správně). Kvíz modulu se odemkne po všech kartách modulu, losuje 5 otázek ze zásoby a je splněný při 4 z 5 správně napoprvé. Povzbuzuj, hlídej sérii a zmiň, kolik XP dalším krokem získá, ale nikdy kvůli hře nezkracuj práci ve SPOCKu.
 - Když uživatel vloží výstup tasku nebo chybu, vysvětli, co znamená, a podle diagnostiky řekni, co udělat dál.`;
   if (G.tools) r += `\n- Máš nástroj open_section: když odpovídáš konkrétním modulem, lekcí nebo částí, otevři mu ji (jednou za odpověď).`;
   r += `\n\nPOSTUP UŽIVATELE:\n` + progress() + `\n\nPODKLADY (obsah onboardingu, JSON). Celý obsah máš jen u modulu „` + focusMod().title + `“ (detail: celý obsah), u ostatních jen přehled lekcí, karet a úkolů. Když se uživatel ptá na podrobnost z jiného modulu, odpověz z přehledu a obecných podkladů a nabídni mu ten modul otevřít (nástroj open_section); pak dostaneš jeho celý obsah. Odpovědi z kvízů neprozrazuj.\n` + kb();

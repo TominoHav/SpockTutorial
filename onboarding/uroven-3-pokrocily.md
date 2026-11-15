@@ -1,6 +1,6 @@
 # Úroveň 3: Pokročilý (všichni, 3–4 h)
 
-**Cíl:** Zvládnete situace mimo šťastnou cestu: vrátit fázi, vyřešit neprošlou bránu, opravit záznam, předat běh kolegovi, pracovat mimo workflow a aktualizovat svou kopii SPOCKu.
+**Cíl:** Zvládnete situace mimo šťastnou cestu: vrátit fázi, vyřešit neprošlou bránu, opravit záznam, předat běh kolegovi, pracovat mimo workflow a aktualizovat svou kopii SPOCKu. A umíte poctivě říct, co výstup SPOCKu dokazuje a co ne.
 
 **Proč:** Skutečné běhy se šťastnou cestou nedrží. Přijde nový materiál, kolega odjede na dovolenou, kontrolu nejde splnit. SPOCK má na každou z těchto situací task, a ten zanechá záznam. Bez něj by se běh, který změnil názor, nedal obhájit.
 
@@ -235,6 +235,55 @@ Nový vlastník otevře nový chat s agentem dané fáze, spustí `SPOCK: record
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
 - 📄 **`SETUP.md`** §7 („Starting again“) a §8 („When a new version arrives“)
+
+## 3.6 — Co výstup SPOCKu dokazuje a co ne
+
+### Karty (asi 6 min, jen na webu)
+
+#### Zelená brána nic nedokazuje sama
+
+**Zelená brána = prošla mechanická polovina.** Posuzovaná pravidla nehodnotí žádný automatický soudce. Odpovědět na ně může ten, kdo podepisuje.
+
+**Otázka:** Všechny brány jsou zelené. Je discovery kvalitní?
+- [ ] Ano
+- [x] Nevíme, kvalitu discovery neposuzuje žádná kontrola
+
+**Proč:** Zelená brána znamená jen mechanickou polovinu.
+
+#### Compliance a co pilot nedělá
+
+**Compliance:** tři ze čtyř karet oblastí napsal projekt a nikdo z banky je nerevidoval. Odpovědi producenta žádná kontrola neověřuje. Compliance rozhodnutí patří compliance týmu.
+
+**Pilot neobjevuje průběžně:** pracuje s materiálem dodaným na začátku, ne s týdenními rozhovory. Nápady negeneruje proti jedné cílové příležitosti a nic netestuje.
+
+**Otázka:** Kdo rozhoduje o compliance?
+- [ ] Agent ve fázi 4
+- [x] Compliance tým banky
+
+**Proč:** Tři ze čtyř karet nikdo z banky nerevidoval a odpovědi nikdo neověřuje.
+
+#### Otázka pro akceptační testování
+
+**Kvalitu discovery** (jsou to ty správné příležitosti? financovala by banka takovou iniciativu?) **neposuzuje žádná kontrola.** To je otázka pro uživatelské akceptační testování (`TESTER-GUIDE.md` §1.2).
+
+**Otázka:** Kde se ověří, jestli jsou to ty správné příležitosti?
+- [x] V uživatelském akceptačním testování
+- [ ] V bráně Q2
+
+**Proč:** Žádná kontrola kvalitu discovery neposuzuje.
+
+### Úkoly
+
+- [ ] **Připravte si „poctivé shrnutí“ pro kolegy** (30 min, ve VS Code)
+  - *Proč:* Sobě i kolegům musíte umět v pěti větách říct, čemu ve výstupu věřit a co si ověřit.
+  1. Do deníku napište pět vět: co SPOCK zaručuje, co ne a co si má tým u každé iniciativy ověřit sám.
+  2. Porovnejte je s odpovědí agenta **Methodology Coach** na otázku „Co tento pilot z metody vynechává?“
+
+### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
+
+- 📄 **`BUSINESS-LOGIC-OVERVIEW.md`** §0 a poslední sekce „What this document is not“
+- 📄 **`method-canon.md`** §15 (co pilot s praxí dělá a kde jí nemůže následovat)
+- 📄 **`TESTER-GUIDE.md`** §1
 
 ## Kvíz
 

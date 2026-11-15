@@ -59,7 +59,7 @@ Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až mát
 ## Úroveň 4: Superuser
 
 - [ ] Poctivě vysvětlím, co zelené brány dokazují a co ne.
-- [ ] Vyvolám a poznám typické odchylky agenta (sondy v 4.2).
+- [ ] Vyvolám a poznám typické odchylky agenta (sondy v 4.1).
 - [ ] Poslal(a) jsem týmu CoE Product Management aspoň jeden úplný nález.
 - [ ] Prošel/prošla jsem generálku bez nápovědy.
 - [ ] Provedl(a) jsem kolegu úrovněmi 0 a 1.

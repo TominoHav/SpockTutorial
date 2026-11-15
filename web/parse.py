@@ -13,7 +13,7 @@ MODS = [
  ('se','role-engineer.md','purple','se','Úroveň 2 · SWE','Software Engineer','Proveditelnost před G4, PRD jako vstup pro delivery, čtení kontrol.'),
  ('gm','role-guild-master.md','purple','gm','Úroveň 2 · GM','Guild Master','Správce know-how: revize běhů ve své oblasti, změny know-how, komunita.'),
  ('l3','uroven-3-pokrocily.md','indigo',None,'Úroveň 3','Pokročilý','Vrácení fáze, neprošlá brána, předání běhu, free-roam a aktualizace.'),
- ('l4','uroven-4-superuser.md','blue',None,'Úroveň 4','Superuser','Co výstup dokazuje, sondy chování agentů, nálezy a mentoring.'),
+ ('l4','uroven-4-superuser.md','blue',None,'Úroveň 4','Superuser','Volitelně pro superusery a GM: sondy chování agentů, nálezy a mentoring.'),
 ]
 FILE2MOD = {m[1]:m[0] for m in MODS}
 NAMES = {m[1]:'modul '+m[5] for m in MODS}

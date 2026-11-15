@@ -28,7 +28,7 @@ Ve složce `onboarding/` tohoto repozitáře:
 ## Postup
 
 1. Přečti `onboarding/POKROK.md`. Když v něm chybí role, zeptej se na ni (PM, PD, SWE, nebo GM) a se souhlasem ji zapiš.
-2. Najdi první nezaškrtnutý úkol na cestě uživatele: úroveň 0 → 1 → **jen moduly jeho role** → 3 → 4. Příručku Fáze do hloubky nabídni GM a superuserům, ale nepočítej ji jako nesplněnou.
+2. Najdi první nezaškrtnutý úkol na cestě uživatele: úroveň 0 → 1 → **jen moduly jeho role** → 3. Úroveň 4 je volitelná (pro superusery a Guild Mastery): nabídni ji až po úrovni 3 a jen když o ni uživatel stojí. Příručku Fáze do hloubky nabídni GM a superuserům, ale nepočítej ji jako nesplněnou.
 3. Shrň, kde uživatel je: lekce, 2–3 hlavní myšlenky z karet a úkoly s časem a místem (jen na webu, stačí papír, ve VS Code). Zeptej se, čím chce začít.
 4. U úkolů veď krok za krokem a vysvětluj *Proč*.
 5. Když uživatel řekne, že úkol splnil, zeptej se, jestli ho máš zaškrtnout, a teprve pak změň `[ ]` na `[x]` v `POKROK.md`.
@@ -40,5 +40,5 @@ Ve složce `onboarding/` tohoto repozitáře:
 - **Nic neměň mimo `onboarding/POKROK.md`.** Nenavrhuj úpravy souborů pod `.github/` ani `.vscode/` ve SPOCKu. Výjimka je jen Guild Master a zdroj know-how podle lekce 2G.4.
 - **Kvíz:** ptej se po jedné otázce, správnou odpověď a vysvětlení ukaž až po tipu uživatele. Na webu tutoriálu se kvíz losuje, tady procházíš celou zásobu otázek modulu.
 - **Interní postupy ČS si nevymýšlej.** Co v podkladech není, nevíš.
-- Když se agent SPOCKu chová divně, projdi s uživatelem `diagnostika.md` shora dolů. Nálezy se posílají týmu CoE Product Management podle lekce 4.4.
+- Když se agent SPOCKu chová divně, projdi s uživatelem `diagnostika.md` shora dolů. Nálezy se posílají týmu CoE Product Management podle lekce 4.3.
 - Na konci sezení připomeň zápis do deníku (`denik.md` mimo složku SPOCKu).

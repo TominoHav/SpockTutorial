@@ -31,7 +31,7 @@ Příručka  Fáze do hloubky    volitelně, hlavně GM a superuser
 | 2 | [Software Engineer](role-engineer.md) | SWE | 4–5 h | Posoudit proveditelnost před výběrem řešení, přečíst PRD a záznamy běhu. |
 | 2 | [Guild Master](role-guild-master.md) | GM, správce know-how | 6–7 h | Metodicky posoudit běh, změnit know-how správným postupem, odhadnout dopad změny na architekturu SPOCKu a vést komunitu PM. |
 | 3 | [Pokročilý](uroven-3-pokrocily.md) | všichni | 3–4 h | Vrátit fázi, vyřešit neprošlou bránu, předat běh kolegovi, aktualizovat kopii. |
-| 4 | [Superuser](uroven-4-superuser.md) | všichni | 4–6 h | Prověřit chování agentů, poslat použitelný nález a provést kolegu onboardingem. |
+| 4 | [Superuser](uroven-4-superuser.md) | volitelně, superuser a GM | 4–5 h | Prověřit chování agentů, poslat použitelný nález a provést kolegu onboardingem. |
 | Příručka | [Fáze do hloubky](uroven-1b-faze-do-hloubky.md) | volitelně, hlavně GM a superuser | 8–10 h | U každé fáze vysvětlit kroky, pravidla, bránu, rozhodnutí a to, co fáze záměrně nedělá a neopraví. |
 
 **Doporučené pořadí:** 0 → 1 → vaše role → 3 → 4. Úroveň 0 projdete celou na webu, a mezitím si objednejte role v REDIMu pro Přípravu. Příručka Fáze do hloubky stojí na specifikacích fází ve `specifications/stage-specs/`. Je to nejhlubší část onboardingu, nic nezamyká a vracíte se k ní podle potřeby.
