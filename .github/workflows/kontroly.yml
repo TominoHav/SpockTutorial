@@ -1,0 +1,52 @@
+name: Kontroly
+
+# Při každém pull requestu a po sloučení do main: sestaví web a pustí kontroly.
+# Kontrola aktuálnosti vůči SPOCKu tu neběží, potřebuje repozitář SPOCKu (viz SPOCK-VERZE.md).
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  kontroly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Struktura modulů
+        run: python3 nastroje/kontrola-struktury.py
+      - name: Odpovědi nejdou uhodnout podle délky
+        run: python3 nastroje/kontrola-odpovedi.py
+      - name: Sestavení webu
+        run: |
+          python3 web/parse.py
+          python3 web/build.py
+      - name: Přehledy odpovídají lekcím
+        run: |
+          python3 nastroje/generuj-pokrok.py
+          python3 nastroje/generuj-revizi.py
+          git diff --exit-code -- onboarding/POKROK.md revize/ODBORNA-KONTROLA.md || (echo "Po změně lekcí spusťte nastroje/generuj-pokrok.py a nastroje/generuj-revizi.py a výsledek commitněte." && exit 1)
+      - name: Playwright
+        run: |
+          npm install --no-save playwright@1.63.0
+          npx playwright install --with-deps chromium
+      - name: End-to-end test webu
+        run: node nastroje/e2e/journey.js
+      - name: Uložit sestavený web
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: spock-user-onboarding
+          path: |
+            web/dist/spock-user-onboarding.html
+            web/media/
+          retention-days: 90
