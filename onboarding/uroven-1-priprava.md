@@ -302,7 +302,7 @@ Ve výběru agenta musí být **přesně šest agentů SPOCKu**. Vedle nich uvid
 
 ## 1.5 — První kroky ve SPOCKu
 
-### Karty (asi 5 min, jen na webu)
+### Karty (asi 4 min, jen na webu)
 
 #### Běh je složka
 
@@ -314,16 +314,6 @@ Každý běh je složka ve vaší kopii SPOCKu. Uvnitř jsou fáze `1-brief` až
 - [ ] Nikde, nezapisuje se to
 
 **Proč:** Každý podpis je v záznamu běhu. Chat se nikam neukládá.
-
-#### Každý dokument má dva soubory
-
-Artefakt jsou **dva soubory**: dokument pro čtenáře a záznam pro kontroly. Tabulka v hlavičce dokumentu je záměrná. Když se v náhledu ukáže jako `[object Object]`, vypněte rozšíření `bierner.markdown-yaml-preamble`.
-
-**Otázka:** Dokument začíná nesrozumitelnou tabulkou `[object Object]`. Je rozbitý?
-- [ ] Ano, soubor je poškozený a je potřeba ho vytvořit znovu
-- [x] Ne, stačí vypnout jedno rozšíření
-
-**Proč:** Soubor je v pořádku, jen ho jedno rozšíření špatně zobrazuje.
 
 #### Průvodce i ve VS Code
 
@@ -352,6 +342,40 @@ Spocka, průvodce z tohoto webu, máte i jako agenta **Spock průvodce** v GitHu
   - *Proč:* Do deníku si zapisujete, co agent udělal jinak, než jste čekali. Z těchhle zápisků vzniká zpětná vazba pro tým CoE Product Management (úroveň 4).
   1. Vytvořte si soubor `denik.md` **mimo** složku SPOCKu.
   2. První zápis: datum, verze SPOCKu (nahoře v `SETUP.md`, např. 1.16.1), model, který jste zvolili, a výsledek `check my setup`.
+- [ ] **Najděte v běhu podpisy** (10 min, ve VS Code)
+  - *Proč:* Každé rozhodnutí má jméno a roli. Právě to vám dá jistotu, že výstup nikdo „nepodepsal za vás“.
+  1. Otevřete `RUN-STATE.md` ukázkového běhu.
+  2. Najděte, kdo a kdy podepsal G1 a G7.
+  - *Ověření:* Jaké datum má podpis G1 v `RUN-STATE.md` ukázkového běhu?
+    - [x] 28. 8. 2026
+    - [ ] 1. 9. 2026
+    - [ ] 15. 9. 2026
+  - *Nápověda:* Hledejte `G1` a řádek `decided_at` v `RUN-STATE.md`.
+- [ ] **Zeptejte se Methodology Coache** (10 min, ve VS Code)
+  - *Proč:* Coach odpovídá jen z psaného kánonu metody, ne z paměti, a má říct, odkud odpověď bere.
+  1. Nový chat → agent **Methodology Coach**.
+  2. Zeptejte se: „Proč fáze 3 nemá rozhodnutí člověka?“
+  3. Zkontrolujte, jestli odpověď odkazuje na konkrétní dokument.
+  - *Co jste viděli:* Odkázal Coach v odpovědi na konkrétní dokument nebo oddíl?
+    - [x] Ano, jmenoval, odkud odpověď bere
+    - [ ] Ne, odpověděl obecně bez zdroje
+
+## 1.6 — Ukázkový běh od briefu po iniciativu
+
+### Karty (asi 2 min, jen na webu)
+
+#### Každý dokument má dva soubory
+
+Artefakt jsou **dva soubory**: dokument pro čtenáře a záznam pro kontroly. Tabulka v hlavičce dokumentu je záměrná. Když se v náhledu ukáže jako `[object Object]`, vypněte rozšíření `bierner.markdown-yaml-preamble`.
+
+**Otázka:** Dokument začíná nesrozumitelnou tabulkou `[object Object]`. Je rozbitý?
+- [ ] Ano, soubor je poškozený a je potřeba ho vytvořit znovu
+- [x] Ne, stačí vypnout jedno rozšíření
+
+**Proč:** Soubor je v pořádku, jen ho jedno rozšíření špatně zobrazuje.
+
+### Úkoly
+
 - [ ] **Projděte ukázkový běh** (60 min, ve VS Code)
   - *Proč:* Uvidíte, jak vypadá správný výstup každé fáze, a na vlastním běhu pak poznáte odchylku.
   1. Pusťte si {{video:krok-za-krokem}}. Uvidíte stejný běh fázi po fázi dřív, než ho otevřete. Komentář je anglicky, titulky česky.
@@ -374,23 +398,6 @@ Spocka, průvodce z tohoto webu, máte i jako agenta **Spock průvodce** v GitHu
     - [ ] Tři
     - [ ] Deset
   - *Nápověda:* Spočítejte nadpisy začínající `I1`, `I2`… v `4-solutions/1-solution-set.md`.
-- [ ] **Najděte v běhu podpisy** (10 min, ve VS Code)
-  - *Proč:* Každé rozhodnutí má jméno a roli. Právě to vám dá jistotu, že výstup nikdo „nepodepsal za vás“.
-  1. Otevřete `RUN-STATE.md` ukázkového běhu.
-  2. Najděte, kdo a kdy podepsal G1 a G7.
-  - *Ověření:* Jaké datum má podpis G1 v `RUN-STATE.md` ukázkového běhu?
-    - [x] 28. 8. 2026
-    - [ ] 1. 9. 2026
-    - [ ] 15. 9. 2026
-  - *Nápověda:* Hledejte `G1` a řádek `decided_at` v `RUN-STATE.md`.
-- [ ] **Zeptejte se Methodology Coache** (10 min, ve VS Code)
-  - *Proč:* Coach odpovídá jen z psaného kánonu metody, ne z paměti, a má říct, odkud odpověď bere.
-  1. Nový chat → agent **Methodology Coach**.
-  2. Zeptejte se: „Proč fáze 3 nemá rozhodnutí člověka?“
-  3. Zkontrolujte, jestli odpověď odkazuje na konkrétní dokument.
-  - *Co jste viděli:* Odkázal Coach v odpovědi na konkrétní dokument nebo oddíl?
-    - [x] Ano, jmenoval, odkud odpověď bere
-    - [ ] Ne, odpověděl obecně bez zdroje
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 

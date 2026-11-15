@@ -3,7 +3,7 @@ const DATA = __DATA__;
 const BUILD = __BUILD__;
 let {W, GLOSS, CHEAT, CHEAT_INTRO, DIAG, DIAG_INTRO, PRINCIPLES, MISTAKES, READY} = DATA;
 const ROLES = {pm:'Product Manager', pd:'Product Designer', se:'Software Engineer', gm:'Guild Master'};
-const ROLE_WHO = {pm:'Vedete produkt nebo iniciativu a rozhodujete, co se bude stavět.', pd:'Děláte výzkum s klienty a navrhujete, jak bude produkt fungovat a vypadat.', se:'Posuzujete, co jde technicky postavit, a pak to stavíte.', gm:'Spravujete PM metodiku banky a pomáháte komunitě produktových manažerů.'};
+const ROLE_WHO = {pm:'Vedete produkt nebo iniciativu a rozhodujete, co se bude stavět.', pd:'Děláte výzkum s klienty a navrhujete, jak bude produkt fungovat a vypadat.', se:'Posuzujete, co jde technicky postavit, a pak to stavíte.', gm:'Držíte některou oblast know-how SPOCKu (metoda, produkt, trh, compliance, styl) a pomáháte lidem, kteří s ním pracují.'};
 const ROLE_SHORT = {pm:'PM', pd:'PD', se:'SWE', gm:'GM'};
 const LANG = 'cz';
 const $t = (cz) => cz;
@@ -1038,7 +1038,7 @@ function progress(){
   return 'Role uživatele: ' + (S.role ? ROLES[S.role] : 'zatím nevybraná') + '. Hra: ' + S.xp + ' XP, úroveň ' + rank().name + ', série ' + streak() + ' dní, dnes ' + todayXP() + ' z ' + S.goal + ' XP. Zamčené moduly: ' + (W.filter(isLocked).map(w => w.title).join(', ') || 'žádné') + '. Uživatel má právě otevřeno: ' + now + '.\n' + lines.join('\n');
 }
 function rules(){
-  let r = `Jsi Spock, malý skákající průvodce onboardingem a mentor pro uživatele SPOCKu (agentní discovery workflow ve VS Code s GitHub Copilot Chat, které pro Českou spořitelnu vlastní tým CoE Product Management). Uživatel je Product Manager, Product Designer, Software Engineer nebo Guild Master (správce PM metodiky) a učí se SPOCK POUŽÍVAT: tasky, agenty, podpisy a čtení výstupů. Není to builder, nic pod .github/ ani .vscode/ nemění. Guild Master navíc mění zdroj know-how ve specifications/definitions/know-how/ přesně podle KNOW-HOW-OWNERS.md §4; kopii pro agenty generuje a ověřuje engineer.
+  let r = `Jsi Spock, malý skákající průvodce onboardingem a mentor pro uživatele SPOCKu (agentní discovery workflow ve VS Code s GitHub Copilot Chat, které pro Českou spořitelnu vlastní tým CoE Product Management). Uživatel je Product Manager, Product Designer, Software Engineer nebo Guild Master (správce některé z pěti oblastí know-how) a učí se SPOCK POUŽÍVAT: tasky, agenty, podpisy a čtení výstupů. Není to builder, nic pod .github/ ani .vscode/ nemění. Guild Master navíc mění zdroj know-how ve specifications/definitions/know-how/ přesně podle KNOW-HOW-OWNERS.md §4; kopii pro agenty generuje a ověřuje engineer.
 
 Jak odpovídáš:
 - Vždy česky, vykáš, krátce a konkrétně. Rod uživatele neznáš, formuluj neutrálně. Nejdřív přímá odpověď, pak očíslované kroky. Max. asi 150 slov, pokud nechce víc.

@@ -22,7 +22,7 @@
 | **Titulní stránka běhu** | `runs/<běh>/README.md`. Říká, kde běh stojí, a vede na hlavní dokumenty. |
 | **RUN-STATE.md** | Záznam běhu: stav fází, podpisy, verze know-how. |
 | **Free-roam** | Práce mimo běh, bez bran a bez záznamu. Zpráva musí začínat doslovně `free-roam:`. |
-| **PM, PD, SWE, GM** | Zkratky rolí: Product Manager, Product Designer, Software Engineer a Guild Master, správce PM metodiky. |
+| **PM, PD, SWE, GM** | Zkratky rolí: Product Manager, Product Designer, Software Engineer a Guild Master, správce některé z pěti oblastí know-how. |
 | **REDIM** | Interní systém ČS pro žádosti o oprávnění (role). Pro SPOCK: `CSIN\vcs_github_copilot`, `CSIN\GHB_DEV_SPOCK_WRITE`, `CSIN\CAAUTH_USR`. |
 | **Solveo / Self Service+** | Firemní katalogy softwaru: Solveo pro Windows, Self Service+ pro Mac. |
 | **caauth-cli** | Program, který nainstaluje SSH certifikát pro přístup k firemnímu GitHubu. |

@@ -43,7 +43,7 @@ Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až mát
 - [ ] Přečtu výstup brány a dohledám kontrolu podle C-čísla.
 
 **Guild Master**
-- [ ] Vím, které know-how oblastí Method a Product existuje, v jaké je verzi a stavu.
+- [ ] Vím, které know-how mé oblasti existuje, v jaké je verzi a stavu a že osobu, která oblast udržuje, ČS teprve jmenuje.
 - [ ] Udělám metodickou revizi běhu a odliším slabý materiál od mezery v metodice.
 - [ ] Navrhnu a se SWE provedu změnu know-how podle `KNOW-HOW-OWNERS.md` §4.
 - [ ] U každé vrstvy SPOCKu řeknu, co dělá, a u změny know-how určím, které skilly a fáze zasáhne.

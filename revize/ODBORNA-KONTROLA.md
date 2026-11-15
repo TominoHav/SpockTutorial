@@ -1,6 +1,6 @@
 # Odborná kontrola obsahu
 
-Kontrolní seznam všech karet (161), kvízových otázek (72) a úkolů tutoriálu. Moduly jsou seřazené podle rizika: nejdřív obsah, který je nejhlubší a nejméně ověřený.
+Kontrolní seznam všech karet (162), kvízových otázek (72) a úkolů tutoriálu. Moduly jsou seřazené podle rizika: nejdřív obsah, který je nejhlubší a nejméně ověřený.
 
 **Jak kontrolovat:** Mějte vedle otevřený web tutoriálu (modul a lekci podle nadpisu). U každé položky ověřte čtyři věci:
 
@@ -16,15 +16,16 @@ Kontrolní seznam všech karet (161), kvízových otázek (72) a úkolů tutori�
 ## Úroveň 2 · GM: Guild Master
 
 **Kdo by měl kontrolovat:** Guild Master Product Management (metodika, know-how, architektura)  
-**Rozsah:** 25 karet, 8 kvízových otázek · asi 70 minut
+**Rozsah:** 26 karet, 8 kvízových otázek · asi 70 minut
 
-### 2G.1 Kde metodika ve SPOCKu žije
+### 2G.1 Kde know-how ve SPOCKu žije a kdo ho vlastní
 
 - [ ] Karta „Know-how: co agenti čtou a nikdy nepíší“ · otázka: Kdo smí měnit know-how? → správně: Jen člověk, mimo jakýkoli běh
 - [ ] Karta „Pět oblastí, zdroj jen jeden“ · otázka: Upravíte soubor v `.github/know-how/`. Co se stane? → správně: Selže kontrola a změna zmizí
+- [ ] Karta „Vlastnictví je rozdělené, jména zatím chybí“ · otázka: V hlavičce know-how stojí `Written by:` autor z pilotního týmu. Vlastní ten dokument? → správně: Ne, vlastní ho Česká spořitelna, autor ho jen napsal
 - [ ] Karta „Každá změna má novou verzi“ · otázka: Proč musí mít každá změna know-how novou verzi? → správně: Běh si zapisuje verzi, kterou četl
 - [ ] Karta „SPOCK podporuje metodiku banky“ · otázka: Kdo odpovídá hlavně za kvalitu výstupů SPOCKu? → správně: Guild Masteři CoE Product Management a CoE Product Design
-- [ ] Úkoly lekce 2G.1 (2): Zmapujte know-how oblastí Method a Product; Najděte, které verze know-how běh četl · kroky a čas sedí
+- [ ] Úkoly lekce 2G.1 (2): Zmapujte know-how své oblasti; Najděte, které verze know-how běh četl · kroky a čas sedí
 
 ### 2G.2 Šablona Guildy a co z ní SPOCK dělá
 
@@ -45,27 +46,27 @@ Kontrolní seznam všech karet (161), kvízových otázek (72) a úkolů tutori�
 - [ ] Karta „Postup změny know-how“ · otázka: Kdo vygeneruje kopii know-how pro agenty a spustí kontroly? → správně: SWE
 - [ ] Karta „Změna se dělá ve vývojovém repozitáři“ · otázka: Upravíte know-how ve své pracovní kopii SPOCKu správným postupem. Projde to? → správně: Ne, selže kontrola `C189`
 - [ ] Karta „Jedna změna najednou“ · otázka: Proč dělat změny po jedné? → správně: Pak víte, co která změna způsobila
-- [ ] Úkoly lekce 2G.4 (2): Napište návrh změny metodiky; Proveďte změnu se SWE · kroky a čas sedí
+- [ ] Úkoly lekce 2G.4 (2): Napište návrh změny know-how; Proveďte změnu se SWE · kroky a čas sedí
 
-### 2G.5 Vedení komunity PM
+### 2G.5 Vedení komunity
 
 - [ ] Karta „Mezery v kánonu jsou signál“ · otázka: PM se opakovaně ptají Methodology Coache na věc, kterou neumí odpovědět. Co to pro vás je? → správně: Podnět ke změně kánonu
 - [ ] Karta „Co pilot z metody vynechává“ · otázka: Co musí Guilda říkat na rovinu? → správně: Že výstup pilotu není ověřený
-- [ ] Karta „Opakované výjimky“ · otázka: Tři PM podepsali výjimku u stejné kontroly s „the workflow looks wrong“. Co uděláte? → správně: Projdu, jestli nejde o chybu metodiky nebo kontroly
+- [ ] Karta „Opakované výjimky“ · otázka: Tři PM podepsali výjimku u stejné kontroly s „the workflow looks wrong“. Co uděláte? → správně: Projdu, jestli nejde o chybu know-how nebo kontroly
 - [ ] Úkoly lekce 2G.5 (2): Najděte vzor ve zpětné vazbě; Připravte 30minutové intro pro Guildu · kroky a čas sedí
 
-### 2G.6 Architektura pro správce metodiky
+### 2G.6 Architektura pro správce know-how
 
 - [ ] Karta „Proč architekturu znát“ · otázka: Kde je nejsilnější páka GM na kvalitu výstupu? → správně: V know-how
 - [ ] Karta „Co agent ví a co smí“ · otázka: Na čem stojí kvalita toho, co agent napíše? → správně: Na skillu a know-how
 - [ ] Karta „Kdo ověřuje a kdo rozhoduje“ · otázka: Kdo ověří, co agent napsal? → správně: Kód kontrol, kvalitu metodiky pak člověk
 - [ ] Karta „Proč je to postavené takhle“ · otázka: Proč čte agent cizí materiál bez nástrojů? → správně: Aby pokyn z materiálu nemohl provést
-- [ ] Karta „Běh si pamatuje, workflow se mění vydáním“ · otázka: Kdy se vaše změna metodiky dostane k uživatelům? → správně: Až s novým vydáním SPOCKu
+- [ ] Karta „Běh si pamatuje, workflow se mění vydáním“ · otázka: Kdy se vaše změna know-how dostane k uživatelům? → správně: Až s novým vydáním SPOCKu
 - [ ] Karta „Devět vrstev, vaše je jedna“ · otázka: Kterou vrstvu vlastní Guild Master? → správně: Know-how
 - [ ] Karta „Agenti a hlídače“ · otázka: Který agent jediný smí na web? → správně: Competitive Analysis
 - [ ] Karta „Jeden tah fáze 1“ · otázka: Kdo zapíše podpis G1? → správně: Vy, taskem pro schválení
 - [ ] Karta „Mapa dopadu změny“ · otázka: Která změna zasáhne víc běhu? → správně: Změna Method Canonu
-- [ ] Úkoly lekce 2G.6 (3): Zmapujte dopad jedné změny; Projděte jeden tah ve vlastním běhu a určete, kdo co dělal; Vysvětlete kolegovi z PM komunity tři pojistky · kroky a čas sedí
+- [ ] Úkoly lekce 2G.6 (3): Zmapujte dopad jedné změny; Projděte jeden tah ve vlastním běhu a určete, kdo co dělal; Vysvětlete kolegovi z komunity tři pojistky · kroky a čas sedí
 
 ### Kvíz modulu
 
@@ -449,9 +450,13 @@ Kontrolní seznam všech karet (161), kvízových otázek (72) a úkolů tutori�
 ### 1.5 První kroky ve SPOCKu
 
 - [ ] Karta „Běh je složka“ · otázka: Kde zjistíte, kdo schválil brief? → správně: V `RUN-STATE.md` běhu
-- [ ] Karta „Každý dokument má dva soubory“ · otázka: Dokument začíná nesrozumitelnou tabulkou `[object Object]`. Je rozbitý? → správně: Ne, stačí vypnout jedno rozšíření
 - [ ] Karta „Průvodce i ve VS Code“ · otázka: Otevřete tutoriál i SPOCK v jednom okně a ve výběru vidíte sedm agentů. Co uděláte? → správně: Otevřu tutoriál v samostatném okně
-- [ ] Úkoly lekce 1.5 (6): Najděte v `TASKS.md` tři tasky, které otevírají políčka; Založte si deník; Projděte ukázkový běh; Dohledejte jedno tvrzení zpět ke zdroji; Najděte v běhu podpisy; Zeptejte se Methodology Coache · kroky a čas sedí
+- [ ] Úkoly lekce 1.5 (4): Najděte v `TASKS.md` tři tasky, které otevírají políčka; Založte si deník; Najděte v běhu podpisy; Zeptejte se Methodology Coache · kroky a čas sedí
+
+### 1.6 Ukázkový běh od briefu po iniciativu
+
+- [ ] Karta „Každý dokument má dva soubory“ · otázka: Dokument začíná nesrozumitelnou tabulkou `[object Object]`. Je rozbitý? → správně: Ne, stačí vypnout jedno rozšíření
+- [ ] Úkoly lekce 1.6 (2): Projděte ukázkový běh; Dohledejte jedno tvrzení zpět ke zdroji · kroky a čas sedí
 
 ### Kvíz modulu
 
