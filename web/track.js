@@ -122,7 +122,7 @@ window.addEventListener('pagehide', () => { tFlush(); });
   setInterval(tFlush, 20000);
   if (TRK.owner) {
     const pp = document.getElementById('pill-prog');
-    if (pp && !document.getElementById('pill-dash')) pp.insertAdjacentHTML('afterend', '<button class="pill" id="pill-dash" type="button" data-go="dash" title="Dashboard: jak lidé procházejí tutoriálem">Dashboard</button>');
+    if (pp && !document.getElementById('pill-dash')) pp.insertAdjacentHTML('afterend', '<button class="pill fb-pill" id="pill-dash" type="button" data-go="dash" aria-label="Dashboard: jak lidé procházejí tutoriálem a zpětná vazba" title="Dashboard: jak lidé procházejí tutoriálem a zpětná vazba"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="fb-t">Dashboard</span></button>');
     if (view.name !== 'week' && view.name !== 'home') render();
   }
 })();
