@@ -353,7 +353,7 @@ Spocka, průvodce z tohoto webu, máte i jako agenta **Spock průvodce** v GitHu
   2. První zápis: datum, verze SPOCKu (nahoře v `SETUP.md`, např. 1.16.1), model, který jste zvolili, a výsledek `check my setup`.
 - [ ] **Projděte ukázkový běh** (60 min, ve VS Code)
   - *Proč:* Uvidíte, jak vypadá správný výstup každé fáze, a na vlastním běhu pak poznáte odchylku.
-  1. Pusťte si {{video:krok-za-krokem}}. Uvidíte stejný běh fázi po fázi dřív, než ho otevřete. Video nemá zvuk, titulky jsou v obraze.
+  1. Pusťte si {{video:krok-za-krokem}}. Uvidíte stejný běh fázi po fázi dřív, než ho otevřete. Komentář je anglicky, titulky česky.
   2. Otevřete `fixtures/2026-09-spending-insights/README.md`. Tento běh je česky a je hotový. Kdo radši čte anglicky, může použít `fixtures/2026-01-mortgage-onboarding/`.
   3. Otevírejte postupně dokumenty ve složkách `1-brief` až `7-initiative`. Ve `1-brief` najdete i `initiative-screen.md` (regulatorní screening, A1b). Vznikl podle starších pravidel: od 1. září 2026 fáze 1 screening nedělá a regulace se posuzuje až u konkrétních řešení ve fázi 4 (`STAGE-1-SPEC.md`). Ve svém běhu ho neuvidíte.
   4. U každé fáze si zapište jednou větou, co z ní vzešlo.

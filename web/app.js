@@ -444,7 +444,7 @@ const CH = [
 ];
 const fmtT = s => Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
 /* Videa „SPOCK krok za krokem“: dlouhé a klipy po fázích (bez zvuku, české titulky v obraze). Vyrábí je nastroje/video/record.js. */
-const VIDS = Object.assign({'krok-za-krokem':['Video: SPOCK krok za krokem · 3,5 min', 'Sedm fází na hotovém běhu']}, Object.fromEntries(['Brief','Problémy a příležitosti','Trh','Řešení','MVP','PRD','Iniciativa'].map((n, i) => ['faze-' + (i + 1), ['Video: fáze ' + (i + 1) + ' · ' + n, 'Fáze ' + (i + 1) + ': ' + n]])));
+const VIDS = Object.assign({'krok-za-krokem':['Video: SPOCK krok za krokem · 4 min', 'Sedm fází na hotovém běhu']}, Object.fromEntries(['Brief','Problémy a příležitosti','Trh','Řešení','MVP','PRD','Iniciativa'].map((n, i) => ['faze-' + (i + 1), ['Video: fáze ' + (i + 1) + ' · ' + n, 'Fáze ' + (i + 1) + ': ' + n]])));
 const vidTag = id => VIDS[id] ? `<video class="cv-video" controls preload="metadata" playsinline poster="spock-${id}-poster.jpg" aria-label="Video: ${VIDS[id][1]}"><source src="spock-${id}.mp4" type="video/mp4">Váš prohlížeč video neumí přehrát.</video>` : VIDEO;
 const VIDEO = `<video class="cv-video" controls preload="metadata" playsinline poster="spock-intro-poster.jpg" aria-label="Video: Co je SPOCK"><source src="spock-intro.mp4" type="video/mp4">Váš prohlížeč video neumí přehrát.</video>`;
 const BRAND = () => `<div class="cv-lock">${spockLogo('md')}<div><b>SPOCK</b><span>Lepší produktová rozhodnutí, rychleji.</span></div></div>`;

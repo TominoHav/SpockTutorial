@@ -10,6 +10,8 @@ Věci, které nejde vyřešit v repozitáři ani je nemůže udělat Claude. Jso
   - Výsledek:
 - [ ] **Rozhodnout, jak poběží chat se Spockem pro celou banku.** Na claude.ai funguje každému s přístupem ke Claudovi. Mimo claude.ai je potřeba model schválený IT a malá serverová služba, nebo jen agent Spock průvodce v GitHub Copilotu.
   - Výsledek:
+- [ ] **Posoudit licenci hlasu ve videích.** Videa „SPOCK krok za krokem“ namluvil syntetický hlas `en-us-ryan` (nástroj Piper). Jeho licence je CC BY-NC-SA 4.0: jen nekomerční použití a uvedení zdroje (RyanSpeech). Ověřte u právníků nebo bezpečnosti ČS, jestli se smí použít pro interní školení. Když ne, napište Claudovi, ať videa namluví jiným hlasem (například `libritts`, CC BY 4.0), nebo vrátí verze bez zvuku.
+  - Výsledek:
 - [ ] **Sdílet web** kolegům přes menu Sdílet na stránce webu (jmenovitě nebo organizaci, ne „komukoli s odkazem“). **Sdílejte jako Přispěvatel (Contributor).** Kdo má jen čtení, toho web neměří a jeho zpětná vazba se neuloží (dostane ji jen do schránky).
 - [ ] **Ověřit, že smíte měřit průchod jmenovitě.** Web zaznamenává u každého přihlášeného člověka návštěvy, kliknutí, odpovědi, čas, zařízení a dotazy na Spocka a vy je v Dashboardu vidíte po jménech. Jde o sledování zaměstnanců: zeptejte se pověřence pro ochranu osobních údajů nebo bezpečnosti ČS, jestli je to v pořádku a jestli stačí oznámení v patičce webu. Když ne, napište Claudovi, ať měření vypne nebo anonymizuje.
   - Výsledek:

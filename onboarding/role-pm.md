@@ -68,7 +68,7 @@ Když přinesete vlastní dokument, agent začne tím, co je slabé nebo chybí,
   4. Podklad uložte jako `.md`. Ve fázi 1 je to jediný soubor, který smíte přiložit přímo do chatu.
 - [ ] **Založte běh** (15 min, ve VS Code)
   - *Proč:* Název, jméno a roli zadáváte vy. Agent, který by běh pojmenoval sám, se chová chybně.
-  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-1}}. Video nemá zvuk, titulky jsou v obraze.
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-1}}. Komentář je anglicky, titulky česky.
   2. Nový chat → agent **Product Manager** → model Claude Sonnet 5, High, 1M.
   3. Napište `Start a discovery run.`
   4. Agent vás pošle na task `SPOCK: start a run`. Spusťte ho a vyplňte název (`2026-11-<krátký-název>`, malými písmeny), jméno a roli (`Product Manager`).
@@ -145,7 +145,7 @@ Ve fázi 2 platí **karanténa**: pokyn schovaný v materiálu je jen text a age
 
 - [ ] **Dodejte materiál a načtěte ho** (20 min, ve VS Code)
   - *Proč:* Materiál je jediná věc v běhu, kterou nenapsal ani systém, ani tým. Proto se načítá tímhle zvláštním způsobem.
-  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-2}}. Video nemá zvuk, titulky jsou v obraze.
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-2}}. Komentář je anglicky, titulky česky.
   2. Vložte 2–4 soubory (poznámky z rozhovorů, tikety, průzkum) do `2-problems/supplied/`. Ideálně si je připraví PD (viz [role-designer.md](role-designer.md)).
   3. Nový chat → agent **Opportunity Designer**.
   4. Agent spustí `SPOCK: read in the problem material`.
@@ -285,7 +285,7 @@ Každý odkaz v souboru **sami otevřete** na počítači, na kterém budete pra
   3. Uložte výsledek jako `market.md`. Nadpisy `## Competitors` a `## Trends` nechte anglicky, zbytek může být česky.
 - [ ] **Projděte fázi 3 se souborem trhu** (30 min, ve VS Code)
   - *Proč:* Agent má pracovat jen z vašeho seznamu. Vy hlídáte, že nesahá jinam.
-  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-3}}. Video nemá zvuk, titulky jsou v obraze.
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-3}}. Komentář je anglicky, titulky česky.
   2. Dejte `market.md` jako jediný soubor do `runs/<běh>/3-competitive-analysis/supplied/`, ještě než agenta požádáte o začátek. Pak už ho neupravujte.
   3. Nový chat → agent **Competitive Analysis** → spusťte `SPOCK: what market material has been supplied` → `yes`.
   4. Hlídejte, jestli agent otevírá jen adresy ze souboru. Každou cizí si zapište.
@@ -342,7 +342,7 @@ Výběr jsou dvě akce: nejdřív zapíšete volbu i s důvodem, pak schválíte
 
 - [ ] **Vyberte řešení (G4)** (45 min, ve VS Code)
   - *Proč:* Výběr řešení je rozhodnutí člověka. SPOCK u něj chce **důvod vlastními slovy**, aby se dal za dva roky obhájit.
-  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-4}}. Video nemá zvuk, titulky jsou v obraze.
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-4}}. Komentář je anglicky, titulky česky.
   2. Nový chat → **Product Manager**. Projděte sadu řešení (`4-solutions/1-solution-set.md`).
   3. Pokud chcete, přidejte vlastní řešení. Bude označené jako vaše.
   4. Zapište volbu: `SPOCK: record a decision I made` → druh `choice`, id řešení (např. `SOL2`), proč, jméno a roli.
@@ -384,7 +384,7 @@ Agent navrhne **tři** varianty a vy můžete přidat **až tři vlastní**. Var
 
 - [ ] **Přidejte vlastní variantu a vyberte** (40 min, ve VS Code)
   - *Proč:* Ověříte, že agent pracuje s vaším vstupem a nepřepíše ho, a uvidíte, že rozpracuje jen tu jednu variantu, kterou vyberete.
-  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-5}}. Video nemá zvuk, titulky jsou v obraze.
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-5}}. Komentář je anglicky, titulky česky.
   2. Až agent navrhne varianty, přidejte jednu svou.
   3. Zkontrolujte, že žádná varianta není „fáze“ jiné. Text typu „nejdřív tohle, pak tamto“ je chyba.
   4. Zapište volbu a po rozpracování schvalte G5b.
@@ -431,7 +431,7 @@ Iniciativa má **13 sekcí** podle šablony Product Management Guildy ČS. **Jir
 
 - [ ] **Odsouhlaste PRD (G6)** (40 min, ve VS Code)
   - *Proč:* Na PRD staví delivery. Musíte vědět, s čím souhlasíte.
-  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-6}}. Video nemá zvuk, titulky jsou v obraze.
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-6}}. Komentář je anglicky, titulky česky.
   2. Nový chat → **Business Analyst**. Projděte draft (`6-prd/1-prd-draft.md`) se SWE a PD.
   3. `SPOCK: mark the PRD agreed` → vaše jméno.
   4. `SPOCK: approve what is in front of me`.
@@ -441,7 +441,7 @@ Iniciativa má **13 sekcí** podle šablony Product Management Guildy ČS. **Jir
     - [ ] Žádný, vznikne samo s draftem
 - [ ] **Schvalte iniciativu (G7)** (30 min, ve VS Code)
   - *Proč:* Iniciativa je dokument, který banka skutečně dostane.
-  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-7}}. Video nemá zvuk, titulky jsou v obraze.
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-7}}. Komentář je anglicky, titulky česky.
   2. Až se agent zeptá, spusťte `SPOCK: record the Jira key` (`none yet`, když klíč ještě nemáte).
   3. Projděte `7-initiative/initiative.md` a schvalte G7.
   4. Čistou kopii bez hlavičky najdete ve složce `read/` běhu.
