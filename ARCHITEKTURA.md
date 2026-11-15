@@ -73,6 +73,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
+| [#39](https://github.com/TominoHav/SpockTutorial/pull/39) | Aplikace | Revize desktopu i mobilu: hlášky po jedné na jednom místě, sbalený postup úkolů, příkazy kopírovatelné kliknutím, průvodce modulem jen u první lekce, chat na místě Spocka, lehčí profil na úvodu | 15. 11. 2026 |
 | [#37](https://github.com/TominoHav/SpockTutorial/pull/37) | Údržba | Architektura aktuální: schéma s oběma průvodci, webem s dashboardem a automatickými kontrolami, upravená pravidla; stránka s architekturou čitelná na mobilu | 15. 11. 2026 |
 | [#36](https://github.com/TominoHav/SpockTutorial/pull/36) | Aplikace | Kontakty na úvodní stránce: řádky SPOCK a Spock spojené do jednoho | 15. 11. 2026 |
 | [#35](https://github.com/TominoHav/SpockTutorial/pull/35) | Obsah | Kontakty: řádek Metodika nahrazen řádkem SPOCK (CoE Product Management a CoE Product Design) | 15. 11. 2026 |

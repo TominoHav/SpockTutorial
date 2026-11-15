@@ -214,3 +214,9 @@ document.addEventListener('click', e => {
   const nx = document.getElementById('card-' + wid + '-' + di + '-' + (+ci + 1));
   if (nx) nx.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center'});
 });
+/* Příkazy v postupu úkolu (SPOCK: …) se kliknutím zkopírují do schránky */
+document.addEventListener('click', e => {
+  const c = e.target.closest('.thow code, .lc-ol code'); if (!c || e.target.closest('a,button')) return;
+  const t = c.textContent.trim(); if (t.length < 6 || !navigator.clipboard) return;
+  navigator.clipboard.writeText(t).then(() => toast('Zkopírováno: ' + (t.length > 40 ? t.slice(0, 40) + '…' : t)), () => {});
+});

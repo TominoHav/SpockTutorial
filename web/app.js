@@ -92,11 +92,11 @@ function overall(){
 function updatePills(){
   const st = streak(), lit = todayXP() > 0;
   $('#pill-days').innerHTML = '<span class="dot"></span>' + (S.role ? ROLES[S.role] : 'Vyberte svou roli');
-  const ps = $('#pill-streak'); if (ps) { ps.innerHTML = FLAME + '<b>' + st + '</b>'; ps.classList.toggle('lit', lit); ps.title = 'Série: ' + st + ' dní' + (lit ? '' : ' · dnes ještě nic'); }
-  const px = $('#pill-xp'); if (px) { px.innerHTML = `<span class="ring sm" style="--p:${Math.min(100, todayXP()/S.goal*100)}"></span><b>${S.xp}</b> XP`; px.title = 'Dnes ' + todayXP() + ' z ' + S.goal + ' XP · ' + rank().name; }
+  const ps = $('#pill-streak'); if (ps) { ps.hidden = !S.xp; ps.innerHTML = FLAME + '<b>' + st + '</b>'; ps.classList.toggle('lit', lit); ps.title = 'Série: ' + st + ' dní' + (lit ? '' : ' · dnes ještě nic'); }
+  const px = $('#pill-xp'); if (px) { px.hidden = !S.xp; px.innerHTML = `<span class="ring sm" style="--p:${Math.min(100, todayXP()/S.goal*100)}"></span><b>${S.xp}</b> XP`; px.title = 'Dnes ' + todayXP() + ' z ' + S.goal + ' XP · ' + rank().name; }
   $('#pill-prog').textContent = 'Hotovo ' + overall() + ' %';
 }
-function toast(msg){ const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => t.hidden = true, 1800); }
+function toast(msg){ notice({kind:'info', title:msg}); }
 
 /* ---------- hra: XP, série, úrovně, odznaky, zámky ---------- */
 const XP = {task:10, quizFirst:15, quizRetry:5, reveal:5, lesson:20, module:100, jump:50, ready:5};
@@ -172,16 +172,31 @@ function celebrate(c){
   if (QUIET.includes(c.kind)) return notice(c);
   CEL.push(c); if (CEL.length === 1) showCel();
 }
+/* Všechny hlášky (role, odznak, denní cíl, zkopírováno) jdou jednou frontou na jedno místo a ukazují se po jedné. */
+const MSGQ = []; let msgOn = false, msgCur = null;
 function notice(c){
+  if (c.kind === 'info') { for (let i = MSGQ.length - 1; i >= 0; i--) if (MSGQ[i].kind === 'info') MSGQ.splice(i, 1); }
+  MSGQ.push(c); if (!msgOn) msgNext(); else if (msgCur && msgCur.info) msgCur.end(500);
+}
+function msgNext(){
+  const c = MSGQ.shift();
+  if (!c) { msgOn = false; document.body.classList.remove('msg-on'); return; }
+  msgOn = true; document.body.classList.add('msg-on');
   let box = document.getElementById('notices');
   if (!box) { box = document.createElement('div'); box.id = 'notices'; box.className = 'notices'; box.setAttribute('role', 'status'); box.setAttribute('aria-live', 'polite'); document.body.append(box); }
-  const n = document.createElement('button'); n.type = 'button'; n.className = 'notice ' + c.kind;
-  n.innerHTML = `<span class="nt-ic" aria-hidden="true">${c.kind === 'goal' ? FLAME : '<span>★</span>'}</span><span class="nt-tx"><b>${esc(c.title)}</b><small>${esc(c.text || '')}</small></span>`;
-  n.title = c.kind === 'badge' ? 'Zobrazit odznaky' : 'Zobrazit profil';
-  n.addEventListener('click', () => { n.remove(); go('badges'); });
+  const info = c.kind === 'info', n = document.createElement(info ? 'div' : 'button'); n.className = 'notice ' + c.kind;
+  if (info) n.textContent = c.title;
+  else {
+    n.type = 'button';
+    n.innerHTML = `<span class="nt-ic" aria-hidden="true">${c.kind === 'goal' ? FLAME : '<span>★</span>'}</span><span class="nt-tx"><b>${esc(c.title)}</b><small>${esc(c.text || '')}</small></span>`;
+    n.title = c.kind === 'badge' ? 'Zobrazit odznaky' : 'Zobrazit profil';
+    n.addEventListener('click', () => { n.remove(); go('badges'); });
+  }
   box.append(n);
   requestAnimationFrame(() => n.classList.add('in'));
-  setTimeout(() => { n.classList.remove('in'); setTimeout(() => n.remove(), 300); }, 4500);
+  const out = () => { n.classList.remove('in'); setTimeout(() => { n.remove(); msgCur = null; msgNext(); }, 250); };
+  let h = setTimeout(out, info ? 1800 : (MSGQ.length ? 2600 : 4200));
+  msgCur = {info, end: ms => { clearTimeout(h); h = setTimeout(out, ms); }};
 }
 function showCel(){
   const c = CEL[0]; if (!c) return;
@@ -403,7 +418,7 @@ function badgeProg(id){
   if (id === 'role') { const w = S.role && W.find(x => x.role === S.role); if (!w) return null; const t = weekTotals(w); return [t.done, t.tot]; }
   return null;
 }
-function profileCard(){
+function profileCard(compact){
   const r = rank(), span = r.next ? r.next[0] - r.at : 1, into = r.next ? S.xp - r.at : 1;
   const got = BADGES.filter(b => S.badges['got.' + b[0]]), todo = BADGES.filter(b => !S.badges['got.' + b[0]]);
   const nb = todo.map(b => ({b, p:badgeProg(b[0])})).sort((x,y) => (y.p ? y.p[0]/y.p[1] : 0) - (x.p ? x.p[0]/x.p[1] : 0))[0];
@@ -411,11 +426,11 @@ function profileCard(){
     <div class="pc-head">
       <div class="pc-me">${spockSVG('fab')}<div><span class="eyebrow">Profil hráče</span><h3>${esc(r.name)} · úroveň ${r.lvl}</h3>
         <div class="rankbar"><span class="bar"><i style="width:${Math.min(100, into/span*100)}%"></i></span><span class="lbl num">${r.next ? `${S.xp} / ${r.next[0]} XP do úrovně ${r.next[1]}` : `${S.xp} XP · nejvyšší úroveň`}</span></div></div></div>
-      <div class="pc-stats"><span class="${todayXP() ? 'lit' : ''}">${FLAME}<b class="num">${streak()}</b>série</span><span><b class="num">${S.xp}</b>XP</span><span><span class="ring" style="--p:${Math.min(100, todayXP()/S.goal*100)}"></span><b class="num">${todayXP()}/${S.goal}</b>dnes</span></div>
+      ${compact ? '' : `<div class="pc-stats"><span class="${todayXP() ? 'lit' : ''}">${FLAME}<b class="num">${streak()}</b>série</span><span><b class="num">${S.xp}</b>XP</span><span><span class="ring" style="--p:${Math.min(100, todayXP()/S.goal*100)}"></span><b class="num">${todayXP()}/${S.goal}</b>dnes</span></div>`}
     </div>
     <div class="pc-badges">
       <div class="pc-bh"><h3>Odznaky <span class="hk-n">${got.length}/${BADGES.length}</span></h3><button class="btn sm" type="button" data-go="badges">Celý profil →</button></div>
-      <div class="pc-row">${BADGES.map(([id,name,how]) => { const g = S.badges['got.' + id]; return `<button type="button" class="pc-b ${g?'on':''}" data-go="badges" title="${esc(name + ': ' + how)}"><span class="bd"><span>${g ? '★' : LOCK}</span></span><small>${esc(name)}</small></button>`; }).join('')}</div>
+      <div class="pc-row">${(compact ? got.concat(todo).slice(0, Math.max(6, got.length)).slice(-6) : BADGES).map(([id,name,how]) => { const g = S.badges['got.' + id]; return `<button type="button" class="pc-b ${g?'on':''}" data-go="badges" title="${esc(name + ': ' + how)}"><span class="bd"><span>${g ? '★' : LOCK}</span></span><small>${esc(name)}</small></button>`; }).join('')}</div>
       ${nb ? `<div class="pc-next"><span class="bd sm"><span>${LOCK}</span></span><div><b>Další odznak: ${esc(nb.b[1])}</b><span>${esc(nb.b[2])}</span>${nb.p ? `<span class="pc-np"><span class="bar"><i style="width:${nb.p[1] ? Math.round(nb.p[0]/nb.p[1]*100) : 0}%"></i></span><span class="num">${nb.p[0]}/${nb.p[1]}</span></span>` : ''}</div></div>` : '<div class="pc-next"><b>Máte všechny odznaky. Jste superuser!</b></div>'}
     </div>
   </section>`;
@@ -470,7 +485,7 @@ document.addEventListener('click', e => {
 /* ---------- úvodní stránka ---------- */
 const isFirst = () => !S.role;
 function heroArt(hi){ return `<div class="hx-art" aria-hidden="true">${spockSVG('big')}<span class="hx-chip c1">Fáze 1–7</span><span class="hx-chip c2">Q a G brány</span><span class="hx-chip c3">Váš podpis</span><span class="hx-hi">${hi}</span></div>`; }
-function miniStats(){ return `<ul class="hx-facts"><li class="fl ${todayXP() ? 'lit' : ''}">${FLAME}<b class="num">${streak()}</b><span>dní v sérii</span></li><li><b class="num">${S.xp}</b><span>XP · ${esc(rank().name)}</span></li><li><span class="ring" style="--p:${Math.min(100, todayXP()/S.goal*100)}"></span><b class="num">${todayXP()}/${S.goal}</b><span>dnešní cíl</span></li><li><button class="linkbtn" type="button" data-go="badges">Odznaky ${BADGES.filter(b => S.badges['got.' + b[0]]).length}/${BADGES.length}</button></li></ul>`; }
+function miniStats(){ return `<ul class="hx-facts"><li class="fl ${todayXP() ? 'lit' : ''}">${FLAME}<b class="num">${streak()}</b><span>dní v sérii</span></li><li><b class="num">${S.xp}</b><span>XP · ${esc(rank().name)}</span></li><li><span class="ring" style="--p:${Math.min(100, todayXP()/S.goal*100)}"></span><b class="num">${todayXP()}/${S.goal}</b><span>dnešní cíl</span></li></ul>`; }
 function nextLessonInfo(){
   const w = nextOnPath(); if (!w) return null;
   const li = curLesson(w); return {w, li: li >= 0 ? li : null, d: li >= 0 ? w.days[li] : null};
@@ -554,7 +569,7 @@ function homeV4(){
   /* nováček: jedna hlavní akce (nanečisto) v úvodu, pak výběr role a cesta; vysvětlení a opora sbalené níž */
   if (isFirst()) return heroFirst() + startBlock() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora', true);
   const l1 = W.find(w => w.id === 'l1'), showSvy = l1 && modPct(l1) === 1 && !(S.survey && S.survey.at);
-  return heroStable() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard() + toolsBlock();
+  return heroStable() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
 }
 function renderHome(){ app.innerHTML = homeV4(); }
 document.addEventListener('click', e => {
@@ -613,8 +628,11 @@ function checkBlock(k, c){
   else if (!seen && tries) fb = `<p class="lc-why bad"><b>To nesedí.</b> ${fmt(c.hint || 'Podívejte se do SPOCKu ještě jednou a zkuste to znovu.')}</p>`;
   return `<div class="tchk ${seen ? 'seen' : 'proof'}"><span class="tchk-l">${seen ? 'Co jste viděli' : 'Ověření z VS Code'}</span><b>${fmt(c.q)}</b><div class="lc-opts">${c.o.map((o, oi) => `<button type="button" class="lc-opt ${locked ? (oi === c.a ? 'right' : oi === a ? 'wrong' : '') : ''}" data-proof="${k}:${oi}" ${locked ? 'disabled' : ''}>${fmt(o)}</button>`).join('')}</div>${fb}</div>`;
 }
-function todoItem(k, o){
-  const det = (o.why || (o.how && o.how.length) || o.check) ? `<div class="tdet">${o.why ? `<p class="twhy"><b>Proč:</b> ${fmt(o.why)}</p>` : ''}${o.how && o.how.length ? `<ol class="thow">${o.how.map(h => `<li>${fmt(h)}</li>`).join('')}</ol>` : ''}${o.check ? checkBlock(k, o.check) : ''}</div>` : '';
+function todoItem(k, o, cur){
+  const nh = o.how ? o.how.length : 0, how = nh ? `<ol class="thow">${o.how.map(h => `<li>${fmt(h)}</li>`).join('')}</ol>` : '', chk = o.check ? checkBlock(k, o.check) : '';
+  const fold = nh > 2 || (nh && o.check);
+  const body = fold ? `<details class="tfold" ${cur ? 'open' : ''}><summary><span class="tf-o">Zobrazit postup</span><span class="tf-c">Skrýt postup</span> · ${nh} ${nh === 1 ? 'krok' : nh < 5 ? 'kroky' : 'kroků'}${o.check ? (o.check.kind === 'seen' ? ' a otázka, co jste viděli' : ' a ověření') : ''}</summary>${how}${chk}</details>` : how + chk;
+  const det = (o.why || nh || o.check) ? `<div class="tdet">${o.why ? `<p class="twhy"><b>Proč:</b> ${fmt(o.why)}</p>` : ''}${body}</div>` : '';
   const gate = o.check && !proofOk(k, o) && !S.todo[k];
   return `<div class="titem ${o.check ? 'has-chk' : ''}"><label><input type="checkbox" id="t-${k.replace(/\./g,'-')}" data-todo="${k}" ${S.todo[k]?'checked':''} ${gate ? 'disabled title="Odškrtne se odpovědí na ověření níže"' : ''}><span>${fmt(o.t)}${o.min ? ` <span class="tm">~${fmtMin(o.min)}</span>` : ''}${o.note ? ` <span class="tm ${/VS Code/.test(o.note) ? 'where vsc' : ''}">${esc(o.note)}</span>` : ''} <span class="tm xp ${S.got['task.'+k] ? 'got' : ''}">+${XP.task} XP</span></span></label>${det}</div>`;
 }
@@ -691,7 +709,7 @@ function lessonPanel(w, di){
   })() : '';
   const extra = d.extra && d.extra.length ? `<details class="blk extra"><summary>Pro zvídavé · anglicky, ve vaší kopii SPOCKu</summary><div class="res">${d.extra.map(r => `<div class="ritem"><span class="ty text">text</span><span>${fmt(r.l)}<small>${fmt(r.n||'')}</small></span></div>`).join('')}</div></details>` : '';
   const key = (d.key.length || d.tables.length || (d.codes && d.codes.length)) ? `<div class="blk"><h4><i>\u0001</i>Co si odnést</h4>${w.id === 'gm' && d.d === '2G.6' ? archSvg() : ''}${(() => { const at = t => t.at === undefined ? 0 : t.at; let h = '', ul = []; const flush = () => { if (ul.length) { h += `<ul class="keys">${ul.join('')}</ul>`; ul = []; } }; const codes = d.codes || [], cb = c => `<div class="codeblk"><button type="button" class="btn sm codecopy" data-copy>Zkopírovat</button><pre><code>${esc(c.text)}</code></pre></div>`; d.key.forEach((k, i) => { d.tables.filter(t => at(t) === i).forEach(t => { flush(); h += tbl(t); }); codes.filter(c => c.at === i).forEach(c => { flush(); h += cb(c); }); ul.push(`<li><span>${fmt(k)}</span></li>`); }); flush(); d.tables.filter(t => at(t) >= d.key.length).forEach(t => { h += tbl(t); }); codes.filter(c => c.at >= d.key.length).forEach(c => { h += cb(c); }); return h; })()}</div>` : '';
-  const todo = d.todo.length ? `<div class="blk"><h4><i>\u0001</i>${prakt ? 'Vyzkoušejte ve SPOCKu' : 'Udělej'}${dayDo(d) ? ' · ~' + fmtMin(dayDo(d)) : ''}</h4><div class="todo">${d.todo.map((t,ti) => todoItem(w.id+'.'+di+'.'+ti, t)).join('')}</div></div>` : '';
+  const todo = d.todo.length ? `<div class="blk"><h4><i>\u0001</i>${prakt ? 'Vyzkoušejte ve SPOCKu' : 'Udělej'}${dayDo(d) ? ' · ~' + fmtMin(dayDo(d)) : ''}</h4><div class="todo">${(() => { const ci = d.todo.findIndex((_,ti) => !S.todo[w.id+'.'+di+'.'+ti]); return d.todo.map((t,ti) => todoItem(w.id+'.'+di+'.'+ti, t, ti === ci)).join(''); })()}</div></div>` : '';
   const xpLeft = d.todo.filter((_,ti) => !S.got['task.'+w.id+'.'+di+'.'+ti]).length * XP.task + (S.got['lesson.'+w.id+'.'+di] ? 0 : XP.lesson);
   const next = di + 1 < w.days.length
     ? `<button class="btn ${done ? 'primary' : ''}" type="button" data-lesson="${di+1}">Další lekce: ${esc(w.days[di+1].d)} →</button>`
@@ -703,7 +721,7 @@ function lessonPanel(w, di){
     </div>
     <div class="lp-prog"><span class="bar"><i style="width:${Math.round(lessonPct(w, di)*100)}%"></i></span><span class="num">${d.cards && d.cards.length ? cardsDone(w, di) + '/' + d.cards.length + ' karet · ' : ''}${dn}/${d.todo.length} úkolů</span></div>
     <div class="dbody">${(() => { let n = 0; return (prakt ? learn + todo + cards + key : learn + cards + key + todo).replace(/<i>\u0001<\/i>/g, () => '<i>' + (++n) + '</i>'); })()}${extra}</div>
-    <p class="lp-fb"><button class="linkbtn" type="button" data-fbopen>Něco v této lekci nesedí nebo je nejasné? Napište nám</button></p>
+    <p class="lp-fb"><button class="btn sm ghost" type="button" data-fbopen>Něco tu nesedí? Napište nám</button></p>
     <div class="lp-foot">${di > 0 ? `<button class="btn" type="button" data-lesson="${di-1}">← ${esc(w.days[di-1].d)}</button>` : '<span></span>'}${next}</div>
   </section>`;
 }
@@ -738,12 +756,12 @@ function renderWeek(id){
     <div class="unit c-${w.c}"><div class="unit-t"><span class="eyebrow">${esc(w.lab)}${w.role ? '' : ' · všichni'}</span><h1>${esc(w.title)}</h1><p>${fmt(w.goal)}</p><button type="button" class="unit-more" aria-expanded="false">Více</button></div>
       </div>
     ${other ? `<p class="goal" style="background:var(--warn-bg)"><b>Tohle je lekce pro roli ${ROLES[w.role]}.</b> Čtěte ji pro kontext tria, do vašeho pokroku se nepočítá.</p>` : ''}
-    <details class="unit-guide"><summary>Průvodce modulem: proč, kolik času a co mít připravené</summary><div class="mh c-${w.c}">${tsum}<p class="why"><b>Proč:</b> ${fmt(w.why)}</p>${w.before ? `<p class="why"><b>Než začnete:</b> ${fmt(w.before)}</p>` : ''}</div></details>
+    ${sel === 0 ? `<details class="unit-guide"><summary>Průvodce modulem: proč, kolik času a co mít připravené</summary><div class="mh c-${w.c}">${tsum}<p class="why"><b>Proč:</b> ${fmt(w.why)}</p>${w.before ? `<p class="why"><b>Než začnete:</b> ${fmt(w.before)}</p>` : ''}</div></details>` : ''}
     ${lessonPanel(w, sel)}
     <div class="sec-h" style="margin-top:28px"><h2>Ověř se</h2><p>${qp ? 'Kvíz máte splněný. Můžete si ho zopakovat s jinými otázkami.' : qr ? 'Karty máte hotové, kvíz je odemčený.' : 'Kvíz se odemkne, až zodpovíte všechny karty modulu.'}</p></div>
     <div class="qlaunch c-${w.c} ${qr ? '' : 'qlock'}">${spockSVG('fab')}<div><b>Kvíz modulu · ${Math.min(QN, w.quiz.length)} otázek ze ${w.quiz.length}</b><span>${qp ? `Splněno: ${S.qpass[w.id].right} z ${S.qpass[w.id].total} napoprvé.` : qr ? `Otázky se losují a míchají. Na splnění potřebujete ${Math.ceil(Math.min(QN, w.quiz.length) * QPASS)} z ${Math.min(QN, w.quiz.length)} napoprvé.` : `Karty: ${ca} z ${ct}.`}</span></div><button class="btn ${qr && !qp ? 'primary' : ''}" type="button" data-quiz="${w.id}" ${qr ? '' : 'disabled'}>${qp ? 'Zopakovat kvíz' : qr ? 'Spustit kvíz' : LOCK + ' Po kartách'}</button></div>
     ${qp ? `<details class="qreview"><summary>Všechny otázky kvízu s vysvětlením</summary><div class="quiz c-${w.c}">${quiz}</div></details>` : ''}
-    <div class="navrow">${prev?`<button class="btn" type="button" data-week="${prev.id}">← ${esc(prev.title)}</button>`:'<span></span>'}${next?`<button class="btn primary" type="button" data-week="${next.id}">${esc(next.title)} →</button>`:`<button class="btn primary" type="button" data-go="ready">Připravenost →</button>`}</div>`);
+    <div class="navrow">${prev?`<button class="btn" type="button" data-week="${prev.id}">← ${esc(prev.title)}</button>`:'<span></span>'}${next?`<button class="btn ${qp ? 'primary' : ''}" type="button" data-week="${next.id}">${esc(next.title)} →</button>`:`<button class="btn primary" type="button" data-go="ready">Připravenost →</button>`}</div>`);
   glossify(document.querySelector('.lpanel') || document.querySelector('.main'));
   const um = document.querySelector('.unit-more');
   if (um) um.addEventListener('click', () => { const u = um.closest('.unit'), o = u.classList.toggle('open'); um.textContent = o ? 'Méně' : 'Více'; um.setAttribute('aria-expanded', o); });
@@ -929,8 +947,7 @@ function openSpock(){
   if (innerWidth > 760 && r && r.width) {
     const pw = panel.offsetWidth, ph = panel.offsetHeight, gap = 8;
     const right = r.left + r.width / 2 > innerWidth / 2, below = r.top + r.height / 2 > innerHeight / 2;
-    let x = right ? r.left - pw - gap : r.right + gap;
-    if (x < 16 || x + pw > innerWidth - 16) x = right ? r.right - pw : r.left;
+    let x = right ? r.right - pw : r.left;
     let y = below ? r.bottom - ph : r.top;
     x = Math.max(16, Math.min(innerWidth - pw - 16, x)); y = Math.max(16, Math.min(innerHeight - ph - 16, y));
     Object.assign(panel.style, {left:x+'px', top:y+'px', right:'auto', bottom:'auto'});
@@ -953,7 +970,7 @@ function spockFab(fab){
   let saved = null; try { saved = JSON.parse(localStorage.getItem(POS_KEY) || 'null'); } catch(e) {}
   let seen = false; try { seen = localStorage.getItem(HINT_KEY) === '1'; } catch(e) {}
   const bub = $('#g-fab-t'); if (bub && seen) bub.hidden = true;
-  if (bub && !seen) setTimeout(() => { bub.hidden = true; }, 9000);
+  if (bub && !seen) setTimeout(() => { bub.hidden = true; try { localStorage.setItem(HINT_KEY, '1'); } catch(e) {} }, 8000);
   const put = () => { if (saved && typeof saved.fx === 'number') placeFab(fab, saved.fx * innerWidth, saved.fy * innerHeight); };
   requestAnimationFrame(put);
   addEventListener('resize', put);

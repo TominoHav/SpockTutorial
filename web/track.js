@@ -213,12 +213,16 @@ async function dashLoad(){
 }
 function dTile(label, value, sub){ return `<div class="ds-tile"><span class="ds-l">${label}</span><b class="num">${value}</b>${sub ? `<small>${sub}</small>` : ''}</div>`; }
 function dBars(rows, unit){
+  if (!rows.some(r => r[1])) return '<p class="muted ds-empty">V tomhle období zatím žádná data.</p>';
   const max = Math.max(1, ...rows.map(r => r[1]));
   return `<div class="ds-bars" role="img" aria-label="Sloupcový graf">${rows.map(r => `<div class="ds-bar" title="${esc(r[0])}: ${dNum(r[1])}${unit || ''}"><span class="ds-bv num">${r[1] ? dNum(r[1]) : ''}</span><i style="height:${Math.round(r[1] / max * 100)}%"></i><span class="ds-bl">${esc(r[2] || r[0])}</span></div>`).join('')}</div>`;
 }
 function dHBars(rows, total){
   const max = Math.max(1, total || 0, ...rows.map(r => r[1]));
-  return `<div class="ds-hb">${rows.map(r => `<div class="ds-hr" title="${esc(r[0])}: ${dNum(r[1])}"><span class="ds-hl">${esc(r[0])}</span><span class="ds-ht"><i style="width:${Math.round(r[1] / max * 100)}%"></i></span><span class="ds-hv num">${dNum(r[1])}${r[2] ? ' <small>' + r[2] + '</small>' : ''}</span></div>`).join('')}</div>`;
+  let last = -1; rows.forEach((r, i) => { if (r[1]) last = i; });
+  const rest = rows.length - (last + 2); let tail = '';
+  if (rest > 1) { tail = `<p class="muted ds-rest">Dalších ${rest} kroků zatím nikdo: ${rows.slice(last + 2).map(r => esc(r[0])).join(', ')}.</p>`; rows = rows.slice(0, last + 2); }
+  return `<div class="ds-hb">${rows.map(r => `<div class="ds-hr" title="${esc(r[0])}: ${dNum(r[1])}"><span class="ds-hl">${esc(r[0])}</span><span class="ds-ht"><i style="width:${Math.round(r[1] / max * 100)}%"></i></span><span class="ds-hv num">${dNum(r[1])}${r[2] ? ' <small>' + r[2] + '</small>' : ''}</span></div>`).join('')}${tail}</div>`;
 }
 function dTable(head, rows, empty){
   if (!rows.length) return `<p class="muted">${empty || 'Zatím žádná data.'}</p>`;
@@ -302,7 +306,7 @@ function renderDash(){
 
     <div class="sec-h"><h2>Zpětná vazba k vyřízení</h2><p>Každá položka je úkol: kdo ji napsal, kde a co navrhuje. Odškrtnutím ji uzavřete.</p></div>
     ${DASH.fb.length ? `<div class="ds-fb">${DASH.fb.map(f => `<label class="ds-fbi ${DASH.state.done[f.id] ? 'done' : ''}"><input type="checkbox" data-dash="fb:${esc(f.id)}" ${DASH.state.done[f.id] ? 'checked' : ''}><span><b>${esc((FB_KINDS.find(k => k[0] === f.kind) || [0, f.kind])[1])}</b> · ${esc(f.where || '')}<small>${dName(f.uid)}${f.role ? ' · ' + esc(ROLES[f.role]) : ''} · ${dWhen(f.at)}</small><span class="ds-fbt">${esc(f.text)}</span>${f.fix ? `<span class="ds-fbf"><b>Návrh:</b> ${esc(f.fix)}</span>` : ''}${f.loc && f.loc.includes('/') ? `<button class="linkbtn" type="button" data-dash="open:${esc(f.loc)}">Otevřít to místo</button>` : ''}</span></label>`).join('')}</div>
-      <p><button class="btn sm" type="button" data-dash="md">Zkopírovat otevřené jako Markdown do TODO</button></p>` : '<p class="muted">Zatím nikdo nic nenapsal. Tlačítko „Zpětná vazba“ je vlevo dole na každé stránce.</p>'}
+      <p><button class="btn sm" type="button" data-dash="md">Zkopírovat otevřené jako Markdown do TODO</button></p>` : '<p class="muted">Zatím nikdo nic nenapsal. Tlačítko „Zpětná vazba“ je nahoře v liště na každé stránce.</p>'}
 
     <div class="sec-h"><h2>Návštěvy</h2><p>Kolik různých lidí přišlo v posledních ${DASH.days} dnech.</p></div>
     ${dBars(visitBars, ' lidí')}

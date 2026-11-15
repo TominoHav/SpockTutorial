@@ -267,3 +267,31 @@ button.pill{font:inherit;cursor:pointer;border:1px solid var(--line)}button.pill
 .titem.has-chk input:disabled{opacity:.45}
 .fb-pill{gap:6px;color:var(--ink)}.fb-pill svg{flex:none}.lp-fb{margin:14px 0 0;font-size:14px;text-align:center}
 @media (max-width:640px){.fb-pill .fb-t{display:none}.fb-pill{padding:6px 9px}}
+/* ---------- revize desktopu: hlášky na jednom místě, lehčí lekce ---------- */
+.notices{left:50%;right:auto;bottom:auto;top:calc(72px + env(safe-area-inset-top,0px));transform:translateX(-50%);justify-items:center;width:max-content;max-width:calc(100vw - 32px)}
+.notice{transform:translateY(-10px)}
+.notice.info{border:0;border-radius:10px;padding:9px 16px;background:var(--ink);color:var(--bg);font-weight:600;font-size:14px;cursor:default}
+@media (max-width:760px){.notices{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));top:calc(env(safe-area-inset-top,0px) + 12px);transform:none;width:auto;max-width:none;justify-items:stretch}.notice.info{text-align:center}}
+body.msg-on .g-bubble{display:none}
+.lcard{max-width:none}
+.lcard>p,.lcard>.keys,.lcard>.lc-ol,.lcard .lc-more>p,.lcard .lc-why{max-width:80ch}
+.tfold>summary{cursor:pointer;list-style:none;font-size:13px;font-weight:700;color:var(--blue-2);padding:4px 0;width:max-content;max-width:100%}
+.tfold>summary::-webkit-details-marker{display:none}
+.tfold>summary::before{content:"▸ ";color:var(--ink-3)}
+.tfold[open]>summary::before{content:"▾ "}
+.tfold .tf-c,.tfold[open] .tf-o{display:none}
+.tfold[open] .tf-c{display:inline}
+.tfold[open]>summary{margin-bottom:4px}
+.tfold>.thow,.tfold>.tchk{margin-top:6px}
+.thow code,.lc-ol code{cursor:copy}
+.thow code:hover,.lc-ol code:hover{outline:1px solid var(--blue-2)}
+.lp-fb{text-align:right}
+.btn.ghost{border-color:transparent;background:none;color:var(--ink-3);font-weight:600}
+.btn.ghost:hover{color:var(--ink);border-color:var(--line)}
+.btn:disabled{box-shadow:none!important;filter:grayscale(1)}
+.ds-empty{border:1px dashed var(--line);border-radius:12px;padding:18px;text-align:center}
+.ds-rest{margin:4px 0 0;font-size:13px}
+@media (min-width:900px){.sim-body:has(.sim-hero){align-content:center;padding-bottom:12vh}.sim-foot{border:1px solid var(--line);border-bottom:0;border-radius:14px 14px 0 0}}
+@media (min-width:981px){.hp-path{grid-template-columns:repeat(5,minmax(0,1fr))}.hp-path::before{left:10%;right:10%}}
+.tfold{min-width:0}.tfold>summary{width:auto}.tdet{grid-template-columns:minmax(0,1fr)}
+.codeblk pre{max-height:280px;overflow:auto}
