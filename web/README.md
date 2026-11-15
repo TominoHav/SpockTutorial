@@ -16,11 +16,31 @@ Výsledek je `web/dist/spock-user-onboarding.html` (složka `dist/` není v gitu
 
 ## Test
 
-Po každé změně spusťte end-to-end test. Projde cestu uživatele na počítači i na mobilu (simulace, výběr role, lekce, kvíz, odemykání modulů, opora, dotazník, chat se Spockem, obnovení stránky, přístupnost), celkem 58 kontrol. Potřebuje Node.js a Playwright s Chromiem.
+Po každé změně spusťte kontroly. Na GitHubu běží samy při každém pull requestu a po sloučení do `main` (`.github/workflows/kontroly.yml`).
+
+```bash
+python3 nastroje/kontrola-struktury.py
+```
+
+```bash
+python3 nastroje/kontrola-odpovedi.py
+```
 
 ```bash
 node nastroje/e2e/journey.js
 ```
+
+End-to-end test projde cestu uživatele na počítači i na mobilu: simulaci, výběr role, karty, kvíz, zámky a skokový test, všech 9 modulů, oporu, dotazník, chat se Spockem, obnovení stránky a přístupnost. Potřebuje Node.js a Playwright s Chromiem.
+
+## Publikace
+
+Web je stránka na claude.ai (artifact). Po sloučení změny do `main` se **sám neaktualizuje**.
+
+**S Claudem (běžná cesta):** v Claude Code napište „Sestav web z main a publikuj ho na stejnou adresu“. Claude web sestaví, pustí testy a zeptá se na souhlas. Adresa webu a stránky s architekturou je v [ARCHITEKTURA.md](../ARCHITEKTURA.md).
+
+**Bez Clauda:** hotový soubor si stáhnete z GitHubu. V repozitáři otevřete **Actions → Kontroly → poslední běh na `main` → Artifacts → spock-user-onboarding**. V balíčku je `spock-user-onboarding.html` a složka `media/`. Soubor a obě média dejte vedle sebe na interní web (SharePoint, Confluence, webový server). Mimo claude.ai funguje všechno kromě chatu se Spockem.
+
+**Verze:** v patičce webu je commit tutoriálu, datum a vydání SPOCKu, podle kterého je tutoriál napsaný. Podle ní poznáte, jestli je publikovaná nejnovější verze.
 
 ## Co je kde
 

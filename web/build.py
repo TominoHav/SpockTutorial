@@ -57,7 +57,16 @@ head = head.replace('<b>Průvodce SPOCK</b>', '<b>Spock</b>').replace('Zná cel�
 head = head.replace('aria-label="Průvodce SPOCK onboardingem"', 'aria-label="Spock, průvodce onboardingem"')
 os.makedirs('dist', exist_ok=True)
 app = (open('app.js',encoding='utf-8').read() + '\n' + open('sim.js',encoding='utf-8').read()).replace('__DATA__', json.dumps(json.load(open(os.path.join('dist','data.json'),encoding='utf-8')), ensure_ascii=False))
-tail = "\n$('#g-fab').insertAdjacentHTML('afterbegin', spockSVG('fab'));\n$('#g-head-bot').outerHTML = spockSVG('head');\n$('#home-btn').addEventListener('click', () => go('home'));\nrender();\n})();\n</script>\n"
+# verze v patičce: commit tutoriálu a vydání SPOCKu, podle kterého je napsaný
+import subprocess
+def _git(*a):
+    try: return subprocess.run(['git', *a], capture_output=True, text=True, cwd=HERE).stdout.strip()
+    except Exception: return ''
+_ver = _git('log', '-1', '--format=%h') or 'neznámá'; _date = _git('log', '-1', '--format=%cd', '--date=format:%-d. %-m. %Y')
+_sv = open(os.path.join('..', 'SPOCK-VERZE.md'), encoding='utf-8').read()
+_rel = (_re.search(r'^release:\s*(\S+)', _sv, _re.M) or [None, '?'])[1]
+foot = '<footer class="ver">Tutoriál: verze ' + _ver + (' z ' + _date if _date else '') + ' · napsaný podle SPOCKu ' + _rel + '</footer>'
+tail = "\ndocument.querySelector('#app').insertAdjacentHTML('afterend', " + json.dumps(foot, ensure_ascii=False) + ");" + "\n$('#g-fab').insertAdjacentHTML('afterbegin', spockSVG('fab'));\n$('#g-head-bot').outerHTML = spockSVG('head');\n$('#home-btn').addEventListener('click', () => go('home'));\nrender();\n})();\n</script>\n"
 out = head + app + "\n\n" + bot + tail
 open(os.path.join('dist','spock-user-onboarding.html'),'w',encoding='utf-8').write(out)
 print(len(out))
