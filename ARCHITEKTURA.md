@@ -70,6 +70,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
+| [#36](https://github.com/TominoHav/SpockTutorial/pull/36) | Aplikace | Kontakty na úvodní stránce: řádky SPOCK a Spock spojené do jednoho | 15. 11. 2026 |
 | [#35](https://github.com/TominoHav/SpockTutorial/pull/35) | Obsah | Kontakty: řádek Metodika nahrazen řádkem SPOCK (CoE Product Management a CoE Product Design) | 15. 11. 2026 |
 | [#34](https://github.com/TominoHav/SpockTutorial/pull/34) | Obsah | Kontakty: Tomáš Havlíček u Onboarding Tutorialu, metodika patří týmu CoE Product Management (komentář Tomáše Havlíčka) | 15. 11. 2026 |
 | [#33](https://github.com/TominoHav/SpockTutorial/pull/33) | Aplikace, Údržba | Čas na stránce počítá jen aktivní práci (dřív i otevřenou nečinnou stránku), čitelnější popisky v dashboardu, kontrola videí a ověření u úkolů | 15. 11. 2026 |
