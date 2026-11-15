@@ -45,6 +45,7 @@ Oficiální postup ČS je na Wiki České spořitelny, stránka **GitHub – Onb
 |---|---|
 | Přístup k pilotu, materiály a data | SPOCK core tým: Veronika Bedáňová (vbedanova@csas.cz), Ines Bamburać-Alibašić (ibamburac-alibasic@csas.cz) |
 | Repozitář a prostředí SPOCKu | Ilya Shramov |
+| Metodika | Tým CoE Product Management |
 | Onboarding Tutorial | Tomáš Havlíček, Guild Master Product Management |
 | Instalace a běžné technické potíže | Nejdřív support engineer ve vašem týmu, pak IT podpora ČS |
 

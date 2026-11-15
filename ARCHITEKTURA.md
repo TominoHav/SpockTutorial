@@ -70,7 +70,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
-| [#34](https://github.com/TominoHav/SpockTutorial/pull/34) | Obsah | Kontakt Tomáše Havlíčka je uveden u Onboarding Tutorialu místo Metodiky (komentář Tomáše Havlíčka) | 15. 11. 2026 |
+| [#34](https://github.com/TominoHav/SpockTutorial/pull/34) | Obsah | Kontakty: Tomáš Havlíček u Onboarding Tutorialu, metodika patří týmu CoE Product Management (komentář Tomáše Havlíčka) | 15. 11. 2026 |
 | [#33](https://github.com/TominoHav/SpockTutorial/pull/33) | Aplikace, Údržba | Čas na stránce počítá jen aktivní práci (dřív i otevřenou nečinnou stránku), čitelnější popisky v dashboardu, kontrola videí a ověření u úkolů | 15. 11. 2026 |
 | [#32](https://github.com/TominoHav/SpockTutorial/pull/32) | Aplikace | Tlačítko Dashboard je na mobilu jen ikona, hlavička se vlastníkovi už neláme | 15. 11. 2026 |
 | [#31](https://github.com/TominoHav/SpockTutorial/pull/31) | Aplikace | Tlačítko Zpětná vazba v horní liště místo plovoucího tlačítka, odkaz na zpětnou vazbu na konci každé lekce | 15. 11. 2026 |

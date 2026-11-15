@@ -506,6 +506,7 @@ function contacts(){
   return `<section class="whohelp"><h3>Kdo vám pomůže</h3><ul>
     <li><b>SPOCK core tým</b><span>Přístup k pilotu, materiály a data, obecné otázky: Veronika Bedáňová (vbedanova@csas.cz) a Ines Bamburać-Alibašić (ibamburac-alibasic@csas.cz).</span></li>
     <li><b>Repozitář a prostředí</b><span>Ilya Shramov. Instalace a běžné potíže: nejdřív support engineer ve vašem týmu, pak IT podpora ČS.</span></li>
+    <li><b>Metodika</b><span>Tým CoE Product Management.</span></li>
     <li><b>Onboarding Tutorial</b><span>Tomáš Havlíček, Guild Master Product Management. SPOCK vlastní tým CoE Product Management a CoE Product Design.</span></li>
     <li><b>Spock</b><span>Průvodce v rohu stránky. Odpoví na otázky k lekcím onboardingu.</span><button class="linkbtn" type="button" data-open-spock>Zeptat se</button></li>
   </ul></section>`;
