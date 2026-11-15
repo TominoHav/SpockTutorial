@@ -38,6 +38,10 @@ Příručka  Fáze do hloubky    volitelně, hlavně GM a superuser
 
 **Jak lekce vypadají:** Každá lekce začíná krátkými **kartami** (asi 60–80 slov a jedna otázka s okamžitou odpovědí). Další karta se otevře, až odpovíte. Delší vysvětlení je pod „Víc do hloubky“, anglické podklady pod „Pro zvídavé“. U každého úkolu je napsané, kde ho děláte: **jen na webu**, **stačí papír**, nebo **ve VS Code**.
 
+**Práce ve VS Code je od úrovně 1 na prvním místě.** Lekce začíná částí „Vyzkoušejte ve SPOCKu“, karty s vysvětlením „Proč to tak je“ jsou až za ní. Úkoly mají dva druhy kontroly:
+- **Ověření z VS Code:** otázka, na kterou odpovíte jen tehdy, když úkol opravdu uděláte (například co vypsal task nebo co je v ukázkovém běhu). Úkol se odškrtne až správnou odpovědí.
+- **Co jste viděli:** vyberete, jak se agent zachoval. Když to nebylo správné chování, tutoriál řekne, že jde o odchylku, a vlastník ji uvidí v dashboardu.
+
 **Kvíz modulu** se odemkne, až zodpovíte všechny karty modulu (úkoly můžete dodělat i potom). Losuje 5 otázek ze zásoby 8 a pořadí otázek i možností se při každém spuštění zamíchá. Otázky nejsou opakováním karet, ale situacemi z praxe. Splněný je při 4 z 5 správně napoprvé. **Skokový test** zamčeného modulu losuje 5 otázek z kvízu i z karet modulu a chce aspoň 4 správně. Na úrovni 2 se vyplatí přečíst si i úvod ostatních rolí, protože SPOCK počítá s **triem** PM, PD a SWE (`specifications/definitions/know-how/method/method-canon.md` §14.1). Guild Master by měl mít za sebou i modul Product Manager.
 
 Tempo si určujete sami, pevná data tu nejsou.

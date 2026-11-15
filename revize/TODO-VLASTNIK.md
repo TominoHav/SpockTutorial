@@ -27,6 +27,7 @@ Věci, které nejde vyřešit v repozitáři ani je nemůže udělat Claude. Jso
 
 - [ ] **Odborná kontrola obsahu** podle [ODBORNA-KONTROLA.md](ODBORNA-KONTROLA.md) (289 položek, asi 8 hodin, rozdělit mezi GM, PM, SWE, PD a SPOCK core tým). Odpovědi u karet a kvízů se 14. 11. 2026 přeformulovaly, ověřte hlavně je.
 - [ ] **Pilot s 3–5 nováčky** podle [PILOT-S-NOVACKY.md](PILOT-S-NOVACKY.md). Role v REDIMu ať si objednají týden předem.
+- [ ] **Ověřit odpovědi u úkolů „Ověření z VS Code“ proti `csas-dev/spock-pilot`.** Správné odpovědi (stav ukázkového běhu, počet řešení a variant MVP, datum podpisu G1, verze `brief-fields`, počty políček tasků) jsou ověřené proti kopii `SPOCK-Workflow-1.0` verze 1.16.1. Když se interní repozitář liší, uživatelé správnou odpověď nenajdou a úkol neodškrtnou.
 - [ ] **Vyzkoušet agenta Spock průvodce** ve VS Code s GitHub Copilotem: otevřít repozitář tutoriálu v samostatném okně, vybrat „Spock průvodce“, napsat „Co mám dělat dál?“. Ověřit, že se objeví ve výběru, odpovídá z lekcí a zapisuje jen `POKROK.md`.
 - [ ] **Vyzkoušet web na skutečných zařízeních:** iPhone, telefon s Androidem, iPad a firemní notebook s firemním prohlížečem. Dosud se testovalo jen v emulaci.
 - [ ] **Ověřit, že kolegové mají přístup ke Claudovi** (kvůli chatu se Spockem), a zkusit chat pod cizím účtem.

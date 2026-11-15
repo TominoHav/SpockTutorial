@@ -77,6 +77,16 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  const s2=await st();ok(T('modul Poznejte SPOCK hotový (100 %) a odznaky'), s2.got['module.l0']===true, `XP ${s2.xp}, odznaky ${Object.keys(s2.badges).filter(k=>k.startsWith('got.')).length}`);
  await p.evaluate(()=>document.querySelector('[data-week=l1]').click());await p.waitForTimeout(150);
  ok(T('kvíz Přípravy je před kartami zamčený'), await p.locator('.qlaunch [data-quiz][disabled]').count()===1);
+ // praktická lekce: nejdřív práce ve VS Code, úkol se odškrtne až ověřením
+ await p.evaluate(()=>{const e=document.querySelector('.pd-in-card [data-lesson="1"], .pd-mob-card [data-lesson="1"]');e&&e.click()});await p.waitForTimeout(150);
+ ok(T('praktická lekce začíná prací ve VS Code, karty jsou až potom'), await p.evaluate(()=>{const h=[...document.querySelectorAll('.lpanel .blk h4')].map(x=>x.innerText);return h.length>=2 && /Vyzkoušejte ve SPOCKu/i.test(h[0]) && /Proč to tak je/i.test(h[1])}));
+ const pk=await p.evaluate(()=>{const b=document.querySelector('.lpanel .tchk.proof [data-proof]');return b?b.dataset.proof.split(':')[0]:''});
+ ok(T('úkol s ověřením nejde odškrtnout bez odpovědi'), !!pk && await p.evaluate(k=>document.getElementById('t-'+k.replace(/\./g,'-')).disabled,pk));
+ const pa=await p.evaluate(k=>{const [w,d,t]=k.split('.');return __kviz.check(w,+d,+t)},pk);
+ await p.evaluate(([k,a])=>document.querySelector(`[data-proof="${k}:${(a+1)%3}"]`).click(),[pk,pa]);await p.waitForTimeout(150);
+ ok(T('špatné ověření úkol neodškrtne a napoví'), !(await st()).todo[pk] && (await p.locator('.lpanel .tchk .lc-why.bad').count())===1);
+ await p.evaluate(([k,a])=>document.querySelector(`[data-proof="${k}:${a}"]`).click(),[pk,pa]);await p.waitForTimeout(200);await dismiss();
+ ok(T('správné ověření úkol odškrtne'), (await st()).todo[pk]===true && (await st()).proof[pk]===pa);
  ok(T('Příprava se odemkla'), await p.evaluate(()=>!document.querySelector('.pd-s.c-pink:nth-child(2).st-lock')));
  // zamčený modul a skokový test
  await p.evaluate(()=>document.querySelector('[data-week=l3]').click());await p.waitForTimeout(150);

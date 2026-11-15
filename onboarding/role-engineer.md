@@ -58,6 +58,10 @@
   1. Otevřete `fixtures/2026-01-mortgage-onboarding/`.
   2. Porovnejte `6-prd/2-prd-agreed.md` a odpovídající soubor v `records/6-prd/`. Co je jen v záznamu?
   3. Otevřete `RUN-STATE.md` a najděte, kterou verzi know-how fáze 6 četla.
+  - *Ověření:* Ve které složce běhu jsou strojové záznamy pro kontroly?
+    - [x] `records/`
+    - [ ] `read/`
+    - [ ] `1-brief/`
 - [ ] **Spusťte kontroly nad ukázkovým během** (15 min, ve VS Code, volitelné)
   - *Proč:* Uvidíte, jak vypadá výstup brány, a budete ho umět přečíst i u vlastního běhu.
   1. V terminálu ve složce SPOCKu: `node .github/scripts/check.mjs fixtures/2026-01-mortgage-onboarding` (příkaz je v `fixtures/README.md`). Spouštíte ho jen nad ukázkovým během, ne místo tasků ve vlastním běhu.

@@ -49,7 +49,7 @@ Každá změna jde na vlastní větev a do pull requestu. Do hlavní větve se s
 
 | Co se mění | Vrstva a kde | Co následuje |
 |---|---|---|
-| Text lekce, karta, úkol, kvíz | Obsah: `onboarding/*.md` (karty pod `### Karty`, `#### název`, otázka `**Otázka:**` a `- [x]`) | Spustit `nastroje/kontrola-odpovedi.py` (správná odpověď nesmí být poznat podle délky), sestavit web, publikovat. Nový úkol nebo karta jen na konec lekce. |
+| Text lekce, karta, úkol, kvíz | Obsah: `onboarding/*.md` (karty pod `### Karty`, `#### název`, otázka `**Otázka:**` a `- [x]`; u úkolu `- *Ověření:*` nebo `- *Co jste viděli:*` s možnostmi `- [x]`, volitelně `- *Nápověda:*` a `- *Když ne:*`) | Spustit `nastroje/kontrola-odpovedi.py` (správná odpověď nesmí být poznat podle délky), sestavit web, publikovat. Nový úkol nebo karta jen na konec lekce. |
 | Vzhled nebo funkce webu | Aplikace: `web/app.js`, `sim.js`, `*.css` | Sestavit web, otestovat počítač, mobil a tmavý režim, publikovat. |
 | Simulace, vysvětlivky pojmů, popisy rolí | Aplikace: `sim.js`, `app.js` | Texty jsou mimo markdown, proto je hlídá i měsíční kontrola. |
 | Přejmenovaný nebo nový soubor lekce | Průvodci: `.claude/skills/spock-onboarding/SKILL.md` a `.github/agents/spock-pruvodce.agent.md` | Oba průvodci mají seznam lekcí, upravit ho v obou. |
@@ -70,6 +70,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
+| [#30](https://github.com/TominoHav/SpockTutorial/pull/30) | Obsah, Aplikace | Praktičtější tutoriál: od úrovně 1 nejdřív práce ve VS Code, 29 úkolů s ověřením z VS Code nebo otázkou Co jste viděli, odchylky agentů v dashboardu | 15. 11. 2026 |
 | [#29](https://github.com/TominoHav/SpockTutorial/pull/29) | Aplikace, Údržba | Měření průchodu, zpětná vazba jako úkoly a dashboard vlastníka: návštěvy, trychtýř, kde se lidé ztrácejí, kliknutí, výkon, odhad tokenů Spocka; záložka Verze a kvalita: testy, zhoršení výkonu a náročnost na tokeny u každé verze | 15. 11. 2026 |
 | [#28](https://github.com/TominoHav/SpockTutorial/pull/28) | Údržba, Aplikace | Automatické kontroly na GitHubu, verze v patičce webu, postup publikace, kontrola struktury modulů, seznam úkolů pro vlastníka | 15. 11. 2026 |
 | [#27](https://github.com/TominoHav/SpockTutorial/pull/27) | Obsah, Aplikace, Údržba | Odpovědi nejdou uhodnout podle délky a pořadí, příručka a přepínač lekcí v menu u všech modulů, rozdělené dlouhé karty 2G.6, e2e průchod všemi 9 moduly | 14. 11. 2026 |

@@ -128,9 +128,20 @@ def parse_module(fn):
                     if m.group(3) and not re.fullmatch(r'\d+\s*min', m.group(3).strip()):
                         extra = re.sub(r'\d+\s*min,?\s*','',m.group(3)).strip(' ,–-')
                         if extra: task['note']=extra
+                    chk=None
                     for ln in tr.split('\n'):
                         w = re.match(r'^\s+- \*Proč:\*\s*(.+)$', ln)
                         if w: task['why']=inline(w.group(1)); continue
+                        # ověření z VS Code: *Ověření:* (jedna správná odpověď, bez ní úkol nejde odškrtnout)
+                        # nebo *Co jste viděli:* (zaškrtnutá možnost je správné chování, ostatní jsou odchylky)
+                        c = re.match(r'^\s+- \*(Ověření|Co jste viděli):\*\s*(.+)$', ln)
+                        if c: chk={'kind':'proof' if c.group(1)=='Ověření' else 'seen','q':inline(c.group(2)),'o':[],'a':-1,'hint':''}; task['check']=chk; continue
+                        o = re.match(r'^\s+- \[( |x)\]\s+(.+)$', ln)
+                        if o and chk is not None:
+                            if o.group(1)=='x': chk['a']=len(chk['o'])
+                            chk['o'].append(inline(o.group(2))); continue
+                        n = re.match(r'^\s+- \*(Nápověda|Když ne):\*\s*(.+)$', ln)
+                        if n and chk is not None: chk['hint']=inline(n.group(2)); continue
                         h = re.match(r'^\s+\d+\.\s+(.+)$', ln)
                         if h: task['how'].append(inline(h.group(1)))
                     L['todo'].append(task)

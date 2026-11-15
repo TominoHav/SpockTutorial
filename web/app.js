@@ -23,6 +23,13 @@ W.forEach((w, wi) => w.days.forEach((d, di) => (d.cards || []).forEach((c, ci) =
   const o = new Array(n); c.o.forEach((x, i) => { o[(i + shift) % n] = x; });
   c.o = o; c.a = target;
 })));
+/* Ověření u úkolů: stejné prostřídání možností */
+W.forEach((w, wi) => w.days.forEach((d, di) => d.todo.forEach((t, ti) => {
+  const c = t.check; if (!c || c.o.length < 2 || c.a < 0) return;
+  const n = c.o.length, target = (ti + di + wi) % n, shift = (target - c.a + n) % n;
+  const o = new Array(n); c.o.forEach((x, i) => { o[(i + shift) % n] = x; });
+  c.o = o; c.a = target;
+})));
 
 const fmtMin = m => m >= 60 ? (Math.floor(m/60) + ' h' + (m%60 ? ' ' + (m%60) + ' min' : '')) : m + ' min';
 const dayLearn = d => d.learnMin || 0;
@@ -94,7 +101,7 @@ function toast(msg){ const t = $('#toast'); t.textContent = msg; t.hidden = fals
 const XP = {task:10, quizFirst:15, quizRetry:5, reveal:5, lesson:20, module:100, jump:50, ready:5};
 const RANKS = [[0,'Nováček'],[100,'Učeň'],[300,'Praktik'],[700,'Znalec'],[1200,'Expert'],[2000,'Superuser']];
 ['xp','goal'].forEach(k => { if (typeof S[k] !== 'number') S[k] = k === 'goal' ? 50 : 0; });
-['days','got','badges','unlocked','tries'].forEach(k => { if (!S[k] || typeof S[k] !== 'object') S[k] = {}; });
+['days','got','badges','unlocked','tries','proof','ptries','cards'].forEach(k => { if (!S[k] || typeof S[k] !== 'object') S[k] = {}; });
 const dKey = off => { const d = new Date(); d.setDate(d.getDate() - (off || 0)); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); };
 const todayXP = () => S.days[dKey(0)] || 0;
 function streak(){ let n = 0, off = todayXP() > 0 ? 0 : 1; while ((S.days[dKey(off)] || 0) > 0) { n++; off++; } return n; }
@@ -227,7 +234,7 @@ function startSession(wid, mode){
   renderSession();
 }
 /* jen pro automatický test: čtení stavu kvízu */
-window.__kviz = {build: () => BUILD, ctx: () => { const v = view, out = {}; W.forEach(w => { view = Object.assign({}, v, {name:'week', week:w.id}); out[w.id] = rules().length; }); view = v; return out; }, mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
+window.__kviz = {check: (w, d, t) => { const m = W.find(x => x.id === w); return m.days[d].todo[t].check.a; }, build: () => BUILD, ctx: () => { const v = view, out = {}; W.forEach(w => { view = Object.assign({}, v, {name:'week', week:w.id}); out[w.id] = rules().length; }); view = v; return out; }, mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
 function sesQ(){ const w = W.find(x => x.id === SES.wid), qi = SES.qs[SES.i]; return {w, qi, q:SES.items[qi]}; }
 function renderSession(){
   let ov = document.getElementById('ses');
@@ -595,10 +602,38 @@ function renderMap(){
 }
 
 /* ---------- modul ---------- */
-function todoItem(k, o){
-  const det = (o.why || (o.how && o.how.length)) ? `<div class="tdet">${o.why ? `<p class="twhy"><b>Proč:</b> ${fmt(o.why)}</p>` : ''}${o.how && o.how.length ? `<ol class="thow">${o.how.map(h => `<li>${fmt(h)}</li>`).join('')}</ol>` : ''}</div>` : '';
-  return `<div class="titem"><label><input type="checkbox" id="t-${k.replace(/\./g,'-')}" data-todo="${k}" ${S.todo[k]?'checked':''}><span>${fmt(o.t)}${o.min ? ` <span class="tm">~${fmtMin(o.min)}</span>` : ''}${o.note ? ` <span class="tm ${/VS Code/.test(o.note) ? 'where vsc' : ''}">${esc(o.note)}</span>` : ''} <span class="tm xp ${S.got['task.'+k] ? 'got' : ''}">+${XP.task} XP</span></span></label>${det}</div>`;
+/* Úkol s ověřením z VS Code: odškrtne se až odpovědí, kterou člověk zjistí jen tak, že úkol opravdu udělá. */
+const proofAns = k => (S.proof || {})[k];
+const proofOk = (k, o) => !o.check || (o.check.kind === 'seen' ? proofAns(k) !== undefined : proofAns(k) === o.check.a);
+function checkBlock(k, c){
+  const a = proofAns(k), ans = a !== undefined, seen = c.kind === 'seen', tries = (S.ptries || {})[k] || 0;
+  const right = ans && a === c.a, locked = seen ? ans : right;
+  let fb = '';
+  if (seen && ans) fb = right ? `<p class="lc-why ok"><b>Tak to má být.</b> ${c.hint ? '' : 'Agent se zachoval správně.'}</p>` : `<p class="lc-why bad"><b>To je odchylka od správného chování.</b> Zapište si ji do deníku i s citací agenta. ${fmt(c.hint || 'Opakuje-li se, pošlete nález týmu CoE Product Management (lekce 4.4).')}</p>`;
+  else if (!seen && right) fb = `<p class="lc-why ok"><b>Sedí.</b> Úkol je splněný.</p>`;
+  else if (!seen && tries) fb = `<p class="lc-why bad"><b>To nesedí.</b> ${fmt(c.hint || 'Podívejte se do SPOCKu ještě jednou a zkuste to znovu.')}</p>`;
+  return `<div class="tchk ${seen ? 'seen' : 'proof'}"><span class="tchk-l">${seen ? 'Co jste viděli' : 'Ověření z VS Code'}</span><b>${fmt(c.q)}</b><div class="lc-opts">${c.o.map((o, oi) => `<button type="button" class="lc-opt ${locked ? (oi === c.a ? 'right' : oi === a ? 'wrong' : '') : ''}" data-proof="${k}:${oi}" ${locked ? 'disabled' : ''}>${fmt(o)}</button>`).join('')}</div>${fb}</div>`;
 }
+function todoItem(k, o){
+  const det = (o.why || (o.how && o.how.length) || o.check) ? `<div class="tdet">${o.why ? `<p class="twhy"><b>Proč:</b> ${fmt(o.why)}</p>` : ''}${o.how && o.how.length ? `<ol class="thow">${o.how.map(h => `<li>${fmt(h)}</li>`).join('')}</ol>` : ''}${o.check ? checkBlock(k, o.check) : ''}</div>` : '';
+  const gate = o.check && !proofOk(k, o) && !S.todo[k];
+  return `<div class="titem ${o.check ? 'has-chk' : ''}"><label><input type="checkbox" id="t-${k.replace(/\./g,'-')}" data-todo="${k}" ${S.todo[k]?'checked':''} ${gate ? 'disabled title="Odškrtne se odpovědí na ověření níže"' : ''}><span>${fmt(o.t)}${o.min ? ` <span class="tm">~${fmtMin(o.min)}</span>` : ''}${o.note ? ` <span class="tm ${/VS Code/.test(o.note) ? 'where vsc' : ''}">${esc(o.note)}</span>` : ''} <span class="tm xp ${S.got['task.'+k] ? 'got' : ''}">+${XP.task} XP</span></span></label>${det}</div>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-proof]'); if (!b) return;
+  const [k, oi] = b.dataset.proof.split(':'), [wid, di, ti] = k.split('.'), w = W.find(x => x.id === wid), t = w && w.days[+di] && w.days[+di].todo[+ti], c = t && t.check; if (!c) return;
+  S.proof = S.proof || {}; S.ptries = S.ptries || {};
+  const seen = c.kind === 'seen', ok = +oi === c.a;
+  S.ptries[k] = (S.ptries[k] || 0) + 1;
+  try { trk(seen ? 'co viděli' : 'ověření', k + (ok ? ' správně' : seen ? ' odchylka' : ' špatně')); } catch (err) {}
+  if (seen || ok) {
+    S.proof[k] = +oi; save();
+    if (ok) award('proof.' + k, 5, 'ověření');
+    const box = document.getElementById('t-' + k.replace(/\./g, '-'));
+    if (box && !box.checked) { box.disabled = false; box.checked = true; box.dispatchEvent(new Event('change', {bubbles:true})); return; }
+  } else save();
+  const y = scrollY; renderWeek(view.week); scrollTo({top:y});
+});
 function qDone(w){ return quizPassed(w) ? 1 : 0; }
 function tbl(t){
   return `<div class="tw"><table><thead><tr>${t.head.map(h => `<th>${fmt(h)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${fmt(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
@@ -646,18 +681,18 @@ function archSvg(){
 function lessonPanel(w, di){
   const d = w.days[di]; if (!d) return '';
   const dn = d.todo.filter((_,ti) => S.todo[w.id+'.'+di+'.'+ti]).length, done = lessonDone(w, di);
-  let step = 0;
-  const learn = d.learn.length ? `<div class="blk"><h4><i>${++step}</i>Nauč se${d.learn.some(r => /`/.test(r.l)) ? ' · v kopii SPOCKu' : ''}${d.learnMin ? ' · ~' + fmtMin(d.learnMin) : ''}</h4><div class="res">${d.learn.map(r => `<div class="ritem"><span class="ty text">text</span><span>${fmt(r.l)}<small>${fmt(r.n||'')}</small></span></div>`).join('')}</div></div>` : '';
+  const prakt = w.id !== 'l0' && d.todo.some(t => t.check || /VS Code|katalog|REDIM|prohlížeč/.test(t.note || ''));
+  const learn = d.learn.length ? `<div class="blk"><h4><i>\u0001</i>Nauč se${d.learn.some(r => /`/.test(r.l)) ? ' · v kopii SPOCKu' : ''}${d.learnMin ? ' · ~' + fmtMin(d.learnMin) : ''}</h4><div class="res">${d.learn.map(r => `<div class="ritem"><span class="ty text">text</span><span>${fmt(r.l)}<small>${fmt(r.n||'')}</small></span></div>`).join('')}</div></div>` : '';
   const cards = d.cards && d.cards.length ? (() => {
     const nAns = cardsDone(w, di), shown = d.cards.slice(0, Math.min(d.cards.length, nAns + 1));
-    return `<div class="blk"><h4><i>${++step}</i>Nauč se · ${d.cards.length} karet${d.learnMin ? ' · ~' + fmtMin(d.learnMin) : ''} <span class="where web">jen na webu</span></h4><div class="cards">${shown.map((c, ci) => {
+    return `<div class="blk"><h4><i>\u0001</i>${prakt ? 'Proč to tak je' : 'Nauč se'} · ${d.cards.length} karet${d.learnMin ? ' · ~' + fmtMin(d.learnMin) : ''} <span class="where web">jen na webu</span></h4><div class="cards">${shown.map((c, ci) => {
       const k = w.id + '.' + di + '.' + ci, a = cardAns(k), answered = a !== undefined;
       return `<article class="lcard ${answered ? 'done' : 'cur'}" id="card-${k.replace(/\./g,'-')}"><span class="lc-n num">Karta ${ci + 1} z ${d.cards.length}</span><h3>${fmt(c.t)}</h3>${(c.blocks || c.text.map(p => ({p}))).map(b => b.p !== undefined ? `<p>${fmt(b.p)}</p>` : b.list ? `<ul class="keys">${b.list.map(x => `<li><span>${fmt(x)}</span></li>`).join('')}</ul>` : b.table ? tbl(b.table) : b.svg === 'arch' ? archSvg() : b.olist ? `<ol class="lc-ol">${b.olist.map(x => `<li>${fmt(x)}</li>`).join('')}</ol>` : b.code !== undefined ? `<div class="codeblk"><button type="button" class="btn sm codecopy" data-copy>Zkopírovat</button><pre><code>${esc(b.code)}</code></pre></div>` : '').join('')}${c.more || c.moreList ? `<details class="lc-more"><summary>Víc do hloubky</summary>${c.more ? `<p>${fmt(c.more)}</p>` : ''}${c.moreList ? `<ul class="keys">${c.moreList.map(x => `<li><span>${fmt(x)}</span></li>`).join('')}</ul>` : ''}</details>` : ''}${c.q ? `<div class="lc-q"><b>${fmt(c.q)}</b><div class="lc-opts">${c.o.map((o, oi) => `<button type="button" class="lc-opt ${answered ? (oi === c.a ? 'right' : oi === a ? 'wrong' : '') : ''}" data-card="${k}:${oi}" ${answered ? 'disabled' : ''}>${fmt(o)}</button>`).join('')}</div>${answered ? `<p class="lc-why ${a === c.a ? 'ok' : 'bad'}"><b>${a === c.a ? 'Správně.' : 'Ne tak docela.'}</b> ${fmt(c.why)}</p>` : ''}</div>` : ''}</article>`;
     }).join('')}${nAns < d.cards.length ? `<p class="lc-left muted">Odpovězte a otevře se další karta. Zbývá ${d.cards.length - nAns} z ${d.cards.length}.</p>` : ''}</div></div>`;
   })() : '';
   const extra = d.extra && d.extra.length ? `<details class="blk extra"><summary>Pro zvídavé · anglicky, ve vaší kopii SPOCKu</summary><div class="res">${d.extra.map(r => `<div class="ritem"><span class="ty text">text</span><span>${fmt(r.l)}<small>${fmt(r.n||'')}</small></span></div>`).join('')}</div></details>` : '';
-  const key = (d.key.length || d.tables.length || (d.codes && d.codes.length)) ? `<div class="blk"><h4><i>${++step}</i>Co si odnést</h4>${w.id === 'gm' && d.d === '2G.6' ? archSvg() : ''}${(() => { const at = t => t.at === undefined ? 0 : t.at; let h = '', ul = []; const flush = () => { if (ul.length) { h += `<ul class="keys">${ul.join('')}</ul>`; ul = []; } }; const codes = d.codes || [], cb = c => `<div class="codeblk"><button type="button" class="btn sm codecopy" data-copy>Zkopírovat</button><pre><code>${esc(c.text)}</code></pre></div>`; d.key.forEach((k, i) => { d.tables.filter(t => at(t) === i).forEach(t => { flush(); h += tbl(t); }); codes.filter(c => c.at === i).forEach(c => { flush(); h += cb(c); }); ul.push(`<li><span>${fmt(k)}</span></li>`); }); flush(); d.tables.filter(t => at(t) >= d.key.length).forEach(t => { h += tbl(t); }); codes.filter(c => c.at >= d.key.length).forEach(c => { h += cb(c); }); return h; })()}</div>` : '';
-  const todo = d.todo.length ? `<div class="blk"><h4><i>${++step}</i>Udělej${dayDo(d) ? ' · ~' + fmtMin(dayDo(d)) : ''}</h4><div class="todo">${d.todo.map((t,ti) => todoItem(w.id+'.'+di+'.'+ti, t)).join('')}</div></div>` : '';
+  const key = (d.key.length || d.tables.length || (d.codes && d.codes.length)) ? `<div class="blk"><h4><i>\u0001</i>Co si odnést</h4>${w.id === 'gm' && d.d === '2G.6' ? archSvg() : ''}${(() => { const at = t => t.at === undefined ? 0 : t.at; let h = '', ul = []; const flush = () => { if (ul.length) { h += `<ul class="keys">${ul.join('')}</ul>`; ul = []; } }; const codes = d.codes || [], cb = c => `<div class="codeblk"><button type="button" class="btn sm codecopy" data-copy>Zkopírovat</button><pre><code>${esc(c.text)}</code></pre></div>`; d.key.forEach((k, i) => { d.tables.filter(t => at(t) === i).forEach(t => { flush(); h += tbl(t); }); codes.filter(c => c.at === i).forEach(c => { flush(); h += cb(c); }); ul.push(`<li><span>${fmt(k)}</span></li>`); }); flush(); d.tables.filter(t => at(t) >= d.key.length).forEach(t => { h += tbl(t); }); codes.filter(c => c.at >= d.key.length).forEach(c => { h += cb(c); }); return h; })()}</div>` : '';
+  const todo = d.todo.length ? `<div class="blk"><h4><i>\u0001</i>${prakt ? 'Vyzkoušejte ve SPOCKu' : 'Udělej'}${dayDo(d) ? ' · ~' + fmtMin(dayDo(d)) : ''}</h4><div class="todo">${d.todo.map((t,ti) => todoItem(w.id+'.'+di+'.'+ti, t)).join('')}</div></div>` : '';
   const xpLeft = d.todo.filter((_,ti) => !S.got['task.'+w.id+'.'+di+'.'+ti]).length * XP.task + (S.got['lesson.'+w.id+'.'+di] ? 0 : XP.lesson);
   const next = di + 1 < w.days.length
     ? `<button class="btn ${done ? 'primary' : ''}" type="button" data-lesson="${di+1}">Další lekce: ${esc(w.days[di+1].d)} →</button>`
@@ -668,7 +703,7 @@ function lessonPanel(w, di){
       <div class="lp-ht"><span class="eyebrow">Lekce ${esc(d.d)} · ~${fmtMin(dayLearn(d) + dayDo(d))}${xpLeft ? ' · ještě ' + xpLeft + ' XP' : ' · hotovo'}</span><h2>${fmt(d.t)}</h2></div>
     </div>
     <div class="lp-prog"><span class="bar"><i style="width:${Math.round(lessonPct(w, di)*100)}%"></i></span><span class="num">${d.cards && d.cards.length ? cardsDone(w, di) + '/' + d.cards.length + ' karet · ' : ''}${dn}/${d.todo.length} úkolů</span></div>
-    <div class="dbody">${learn}${cards}${key}${todo}${extra}</div>
+    <div class="dbody">${(() => { let n = 0; return (prakt ? learn + todo + cards + key : learn + cards + key + todo).replace(/<i>\u0001<\/i>/g, () => '<i>' + (++n) + '</i>'); })()}${extra}</div>
     <div class="lp-foot">${di > 0 ? `<button class="btn" type="button" data-lesson="${di-1}">← ${esc(w.days[di-1].d)}</button>` : '<span></span>'}${next}</div>
   </section>`;
 }
