@@ -40,6 +40,8 @@ Web je stránka na claude.ai (artifact). Po sloučení změny do `main` se **sá
 
 **Bez Clauda:** hotový soubor si stáhnete z GitHubu. V repozitáři otevřete **Actions → Kontroly → poslední běh na `main` → Artifacts → spock-user-onboarding**. V balíčku je `spock-user-onboarding.html` a složka `media/`. Soubor a obě média dejte vedle sebe na interní web (SharePoint, Confluence, webový server). Mimo claude.ai funguje všechno kromě chatu se Spockem.
 
+**Oprávnění stránky:** web potřebuje na claude.ai tři oprávnění: `sample` (chat se Spockem), `db` (měření a zpětná vazba) a `user` se jmény (dashboard). Pravidla databáze: `track` a `feedback` čtou jen vlastník a editoři, každý člověk zapisuje jen svůj dokument; `todo` čte a píše jen vlastník a editoři. Při publikaci je Claude předává nástroji Artifact, bez nich se měření tiše vypne.
+
 **Verze:** v patičce webu je commit tutoriálu, datum a vydání SPOCKu, podle kterého je tutoriál napsaný. Podle ní poznáte, jestli je publikovaná nejnovější verze.
 
 ## Co je kde

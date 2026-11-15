@@ -10,7 +10,9 @@ Věci, které nejde vyřešit v repozitáři ani je nemůže udělat Claude. Jso
   - Výsledek:
 - [ ] **Rozhodnout, jak poběží chat se Spockem pro celou banku.** Na claude.ai funguje každému s přístupem ke Claudovi. Mimo claude.ai je potřeba model schválený IT a malá serverová služba, nebo jen agent Spock průvodce v GitHub Copilotu.
   - Výsledek:
-- [ ] **Sdílet web** kolegům přes menu Sdílet na stránce webu (jmenovitě nebo organizaci, ne „komukoli s odkazem“).
+- [ ] **Sdílet web** kolegům přes menu Sdílet na stránce webu (jmenovitě nebo organizaci, ne „komukoli s odkazem“). **Sdílejte jako Přispěvatel (Contributor).** Kdo má jen čtení, toho web neměří a jeho zpětná vazba se neuloží (dostane ji jen do schránky).
+- [ ] **Ověřit, že smíte měřit průchod jmenovitě.** Web zaznamenává u každého přihlášeného člověka návštěvy, kliknutí, odpovědi, čas, zařízení a dotazy na Spocka a vy je v Dashboardu vidíte po jménech. Jde o sledování zaměstnanců: zeptejte se pověřence pro ochranu osobních údajů nebo bezpečnosti ČS, jestli je to v pořádku a jestli stačí oznámení v patičce webu. Když ne, napište Claudovi, ať měření vypne nebo anonymizuje.
+  - Výsledek:
 
 ## B. Vlastnictví a provoz
 
@@ -31,7 +33,8 @@ Věci, které nejde vyřešit v repozitáři ani je nemůže udělat Claude. Jso
 
 ## D. Později, podle potřeby
 
-- [ ] **Sledování pokroku napříč lidmi.** Pokrok je jen v prohlížeči každého uživatele: nevidíte, kolik lidí co dokončilo ani kde odpadají. Na claude.ai jde doplnit sdílená databáze stránky (po rozhodnutí, jestli se smí sbírat pokrok jmenovitě). Mimo claude.ai je potřeba interní služba.
-- [ ] **Sběr dotazníku.** Odpovědi se teď kopírují do schránky a posílají ručně. Rozhodněte, kam mají chodit.
+- [ ] **Procházet Dashboard a zpětnou vazbu**, ideálně jednou týdně: kde se lidé ztrácejí, které karty dělají potíže, otevřená zpětná vazba. Vyřízenou odškrtněte. Postup přepisu do repozitáře je v [TODO-ZPETNA-VAZBA.md](TODO-ZPETNA-VAZBA.md).
+- [ ] **Měření mimo claude.ai.** Dashboard i zpětná vazba fungují jen na claude.ai. Když web přesunete na interní server, je potřeba interní služba pro sběr dat.
+- [ ] **Sběr dotazníku.** Odpovědi z dotazníku na stránce Připravenost se pořád kopírují do schránky. Tlačítko Zpětná vazba už chodí do Dashboardu.
 - [ ] **České titulky nebo komentář k videu.** Video je anglicky.
 - [ ] **Audit přístupnosti** (WCAG) někým, kdo to dělá. Automatický test hlídá jen názvy ovládacích prvků.

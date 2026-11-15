@@ -6,7 +6,10 @@ const {chromium}=require('playwright');const fs=require('fs');const path=require
 const ROOT=path.resolve(__dirname,'..','..');const DIST=path.join(ROOT,'web','dist');
 const html=fs.readFileSync(path.join(DIST,'spock-user-onboarding.html'),'utf8');
 for(const f of fs.readdirSync(path.join(ROOT,'web','media')))fs.copyFileSync(path.join(ROOT,'web','media',f),path.join(DIST,f));
-const stub=`<script>window.__sent=[];window.claude={use:async n=>{if(n!=='sample')return null;const f=async(msgs,o)=>{window.__sent.push(msgs);await new Promise(r=>setTimeout(r,50));return {text:'Task spustíte přes **Command Palette**: Tasks: Run Task.',truncated:false};};f.limits=async()=>({tools:false});return f;}};</script>`;
+const stub=`<script>window.__sent=[];window.__db={'track/u_kolega':{v:1,first:Date.now()-9e8,last:Date.now()-5e8,visits:{'2026-11-01':2},secs:{'2026-11-01':900},dev:{mobile:true,w:390,h:844},role:'pm',prog:{xp:120,pct:12,loc:'l0/0.2',mods:{l0:[9,31,1,4,0,9,22]}},pv:{'l0/0.1':3,'l0/0.2':2},tm:{'l0/0.1':600},clicks:{'modul l0':2,'modul l3':1},locked:{l3:1},quiz:{},wrong:['l0.0.1','l0.1.0'],perf:{load:[820],fcp:[640],render:[12],size:480000,errs:[]},spock:{n:2,tin:30000,tout:400,ms:[2100,3400],err:0},ev:[[Date.now()-5e8,'view','l0/0.2']]},'feedback/u_kolega':{items:[{id:'f1',at:Date.now()-5e8,loc:'l0/0.2',where:'Poznejte SPOCK › 0.2',kind:'nejasne',text:'Nerozumím rozdílu Q a G brány.',fix:'Přidat příklad.',role:'pm'}]}};
+const __fdb={doc:p=>({id:p.split('/').pop(),path:p,get:async()=>({id:p.split('/').pop(),exists:p in window.__db,data:()=>window.__db[p]}),set:async d=>{window.__db[p]=JSON.parse(JSON.stringify(d))}}),collection:p=>{const q={limit:()=>q,get:async()=>{const docs=Object.keys(window.__db).filter(k=>k.startsWith(p+'/')&&k.slice(p.length+1).indexOf('/')<0).map(k=>({id:k.slice(p.length+1),exists:true,data:()=>window.__db[k]}));return {docs,size:docs.length,empty:!docs.length}}};return q}};
+const __fuser={me:async()=>({id:'u_ja',name:'Já',isOwner:true,canEdit:true}),id:async()=>'u_ja',isOwner:async()=>true,profiles:async ids=>Object.fromEntries(ids.map(i=>[i,{id:i,name:i==='u_ja'?'Já Vlastník':'Kolega Testovací'}]))};
+window.claude={use:async n=>{if(n==='db')return __fdb;if(n==='user')return __fuser;if(n!=='sample')return null;const f=async(msgs,o)=>{window.__sent.push(msgs);await new Promise(r=>setTimeout(r,50));return {text:'Task spustíte přes **Command Palette**: Tasks: Run Task.',truncated:false};};f.limits=async()=>({tools:false});return f;}};</script>`;
 fs.writeFileSync(path.join(DIST,'e2e.html'),'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+stub+'</head><body style="margin:0">'+html+'</body></html>');
 const R=[];const ok=(n,c,d='')=>{R.push([c?'PASS':'FAIL',n,d]);};
 (async()=>{const b=await chromium.launch();
@@ -128,6 +131,22 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
   ok(T('odznak Kamarád Spocka'), !!(await st()).badges['got.spock']);
   await dismiss();await p.locator('#g-x').click();}
  else ok(T('chat Spock se otevře'), false);
+ // měření, zpětná vazba a dashboard (databáze a uživatel jsou v testu nahrazené)
+ await dismiss();await p.evaluate(()=>document.querySelector('#home-btn').click());await p.waitForTimeout(100);
+ await p.locator('[data-fbopen]').click();await p.waitForTimeout(100);
+ await p.fill('#fb-text','Test: karta je nejasná');await p.fill('#fb-fix','Zkrátit ji');await p.locator('#fb-form button[type=submit]').click();await p.waitForTimeout(250);
+ const fbd=await p.evaluate(()=>window.__db['feedback/u_ja']);
+ ok(T('zpětná vazba se uloží s místem a návrhem'), !!fbd && fbd.items.length===1 && fbd.items[0].fix==='Zkrátit ji' && !!fbd.items[0].where, fbd?JSON.stringify(fbd.items[0]).slice(0,90):'');
+ await dismiss();await p.locator('#pill-dash').click();await p.waitForTimeout(600);
+ const trd=await p.evaluate(()=>window.__db['track/u_ja']);
+ ok(T('průchod se zaznamená: stránky, kliknutí, kvíz, pokrok'), !!trd && Object.keys(trd.pv).length>5 && Object.keys(trd.clicks).length>5 && trd.ev.length>20 && !!trd.quiz['l0:quiz'] && trd.prog.mods.l0[0]===trd.prog.mods.l0[1], trd?`stránek ${Object.keys(trd.pv).length}, druhů kliknutí ${Object.keys(trd.clicks).length}, kroků ${trd.ev.length}`:'nic');
+ ok(T('dotaz na Spocka se započítá s odhadem tokenů'), !!trd && trd.spock.n>=1 && trd.spock.tin>10000, trd?JSON.stringify(trd.spock).slice(0,80):'');
+ const dtx=await p.locator('#dash').innerText().catch(()=>'');
+ ok(T('dashboard ukáže lidi, trychtýř, výkon a tokeny'), dtx.includes('Kolega Testovací') && dtx.includes('Trychtýř cesty') && dtx.includes('Výkon a rychlost') && dtx.includes('Spock a tokeny') && await p.locator('.ds-tile').count()>=20);
+ ok(T('dashboard ukáže zpětnou vazbu jako úkoly'), await p.locator('.ds-fbi').count()===2 && dtx.includes('Přidat příklad'));
+ await p.locator('.ds-fbi input').first().check();await p.waitForTimeout(200);
+ ok(T('odškrtnutí zpětné vazby se uloží'), Object.keys((await p.evaluate(()=>window.__db['todo/state']||{done:{}})).done).length===1);
+ ok(T('dashboard bez přetékání'), (await ov())<=0);
  // trvalost
  await dismiss();const before=await st();await p.reload();await p.waitForTimeout(300);const after=await st();
  ok(T('pokrok přežije obnovení stránky'), before.xp===after.xp && after.role==='gm', 'před '+before.xp+' po '+after.xp+' role '+after.role);
