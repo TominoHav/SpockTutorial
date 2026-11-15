@@ -77,7 +77,7 @@ BUILD = {'src': _src, 'size': {'js': _sz(['app.js', 'sim.js', 'track.js']), 'css
          'counts': {'moduly': len(_data['W']), 'lekce': sum(len(w['days']) for w in _data['W']), 'karty': sum(len(d.get('cards', [])) for w in _data['W'] for d in w['days']),
                     'ukoly': sum(len(d['todo']) for w in _data['W'] for d in w['days']), 'kviz': sum(len(w['quiz']) for w in _data['W'])},
          'edit': _edit, 'e2e': _rep}
-app = (open('app.js',encoding='utf-8').read() + '\n' + open('sim.js',encoding='utf-8').read() + '\n' + open('track.js',encoding='utf-8').read()).replace('__DATA__', json.dumps(json.load(open(os.path.join('dist','data.json'),encoding='utf-8')), ensure_ascii=False))
+app = (open('app.js',encoding='utf-8').read() + '\n' + open('sim.js',encoding='utf-8').read() + '\n' + open('track.js',encoding='utf-8').read()).replace('__DATA__', "JSON.parse('" + json.dumps(json.load(open(os.path.join('dist','data.json'),encoding='utf-8')), ensure_ascii=False, separators=(',',':')).replace('\\', '\\\\').replace("'", "\\'").replace('</', '<\\/') + "')")
 # verze v patičce: commit tutoriálu a vydání SPOCKu, podle kterého je napsaný
 import subprocess
 def _git(*a):
@@ -91,6 +91,17 @@ foot = '<footer class="ver"><span class="ver-n">Tutoriál zaznamenává váš pr
 tail = "\ndocument.querySelector('#app').insertAdjacentHTML('afterend', " + json.dumps(foot, ensure_ascii=False) + ");" + "\n$('#g-fab').insertAdjacentHTML('afterbegin', spockSVG('fab'));\n$('#g-head-bot').outerHTML = spockSVG('head');\n$('#home-btn').addEventListener('click', () => go('home'));\nrender();\n})();\n</script>\n"
 _rel_ = _rel
 BUILD['spock'] = _rel_
+# výkon: písmo se načte až po prvním vykreslení (neblokuje ho), styly bez komentářů a zbytečných mezer
+_font = "(function(){const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap';document.head.append(l);})();\n"
+assert "render();\n})();" in tail
+tail = tail.replace("render();\n})();", "render();\n" + _font + "})();")
+def _mincss(m):
+    c = _re.sub(r'/\*.*?\*/', '', m.group(1), flags=_re.S)
+    c = _re.sub(r'\s*\n\s*', '\n', c)
+    c = _re.sub(r'[ \t]*([{};])[ \t]*', r'\1', c)
+    c = _re.sub(r';}', '}', c)
+    return '<style>' + c.strip() + '</style>'
+head = _re.sub(r'<style>(.*?)</style>', _mincss, head, flags=_re.S)
 out = head + app + "\n\n" + bot + tail
 BUILD['size']['html'] = len(out.encode('utf-8'))
 out = out.replace('__BUILD__', json.dumps(BUILD, ensure_ascii=False))
