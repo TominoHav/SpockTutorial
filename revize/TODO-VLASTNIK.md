@@ -10,6 +10,8 @@ Věci, které nejde vyřešit v repozitáři ani je nemůže udělat Claude. Jso
   - Výsledek:
 - [ ] **Rozhodnout, jak poběží chat se Spockem pro celou banku.** Na claude.ai funguje každému s přístupem ke Claudovi. Mimo claude.ai je potřeba model schválený IT a malá serverová služba, nebo jen agent Spock průvodce v GitHub Copilotu.
   - Výsledek:
+- [ ] **Posoudit licenci hlasu ve videích.** Videa „SPOCK krok za krokem“ namluvil syntetický hlas `en-us-ryan` (nástroj Piper). Jeho licence je CC BY-NC-SA 4.0: jen nekomerční použití a uvedení zdroje (RyanSpeech). Ověřte u právníků nebo bezpečnosti ČS, jestli se smí použít pro interní školení. Když ne, napište Claudovi, ať videa namluví jiným hlasem (například `libritts`, CC BY 4.0), nebo vrátí verze bez zvuku.
+  - Výsledek:
 - [ ] **Sdílet web** kolegům přes menu Sdílet na stránce webu (jmenovitě nebo organizaci, ne „komukoli s odkazem“). **Sdílejte jako Přispěvatel (Contributor).** Kdo má jen čtení, toho web neměří a jeho zpětná vazba se neuloží (dostane ji jen do schránky).
 - [ ] **Ověřit, že smíte měřit průchod jmenovitě.** Web zaznamenává u každého přihlášeného člověka návštěvy, kliknutí, odpovědi, čas, zařízení a dotazy na Spocka a vy je v Dashboardu vidíte po jménech. Jde o sledování zaměstnanců: zeptejte se pověřence pro ochranu osobních údajů nebo bezpečnosti ČS, jestli je to v pořádku a jestli stačí oznámení v patičce webu. Když ne, napište Claudovi, ať měření vypne nebo anonymizuje.
   - Výsledek:
@@ -27,6 +29,7 @@ Věci, které nejde vyřešit v repozitáři ani je nemůže udělat Claude. Jso
 
 - [ ] **Odborná kontrola obsahu** podle [ODBORNA-KONTROLA.md](ODBORNA-KONTROLA.md) (289 položek, asi 8 hodin, rozdělit mezi GM, PM, SWE, PD a SPOCK core tým). Odpovědi u karet a kvízů se 14. 11. 2026 přeformulovaly, ověřte hlavně je.
 - [ ] **Pilot s 3–5 nováčky** podle [PILOT-S-NOVACKY.md](PILOT-S-NOVACKY.md). Role v REDIMu ať si objednají týden předem.
+- [ ] **Ověřit odpovědi u úkolů „Ověření z VS Code“ proti `csas-dev/spock-pilot`.** Správné odpovědi (stav ukázkového běhu, počet řešení a variant MVP, datum podpisu G1, verze `brief-fields`, počty políček tasků) jsou ověřené proti kopii `SPOCK-Workflow-1.0` verze 1.16.1. Když se interní repozitář liší, uživatelé správnou odpověď nenajdou a úkol neodškrtnou.
 - [ ] **Vyzkoušet agenta Spock průvodce** ve VS Code s GitHub Copilotem: otevřít repozitář tutoriálu v samostatném okně, vybrat „Spock průvodce“, napsat „Co mám dělat dál?“. Ověřit, že se objeví ve výběru, odpovídá z lekcí a zapisuje jen `POKROK.md`.
 - [ ] **Vyzkoušet web na skutečných zařízeních:** iPhone, telefon s Androidem, iPad a firemní notebook s firemním prohlížečem. Dosud se testovalo jen v emulaci.
 - [ ] **Ověřit, že kolegové mají přístup ke Claudovi** (kvůli chatu se Spockem), a zkusit chat pod cizím účtem.

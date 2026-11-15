@@ -69,6 +69,11 @@
   1. Otevřete `RUN-STATE.md` ukázkového běhu `fixtures/2026-09-spending-insights/`.
   2. U fáze 1 najděte řádek `know_how:` a verzi `brief-fields` (v tomto běhu `brief-fields@0.4`).
   3. Porovnejte ji s aktuální verzí ve zdroji (`product/brief-fields.md`, dnes 0.7). Zapište si, co se mezi verzemi změnilo (blok historie v hlavičce).
+  - *Ověření:* Jakou verzi `brief-fields` četla fáze 1 ukázkového běhu `2026-09-spending-insights`?
+    - [x] 0.4
+    - [ ] 0.1
+    - [ ] 1.0
+  - *Nápověda:* V `RUN-STATE.md` najděte u fáze 1 řádek `know_how` a položku `brief-fields@…`.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 

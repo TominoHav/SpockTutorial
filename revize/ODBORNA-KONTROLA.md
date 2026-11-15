@@ -477,7 +477,7 @@ Kontrolní seznam všech karet (161), kvízových otázek (72) a úkolů tutori�
 - [ ] Karta „Metoda: Opportunity Solution Tree“ · otázka: Proč se nemá skočit rovnou k řešení? → správně: Protože řešení má sloužit ověřené příležitosti, ne prvnímu nápadu
 - [ ] Karta „Co SPOCK nedělá“ · otázka: Co od SPOCKu na konci běhu dostanete? → správně: Iniciativu připravenou pro delivery
 - [ ] Karta „Pilot a kdo SPOCK vlastní“ · otázka: Na koho se obrátíte s otázkou k přístupu do pilotu? → správně: Na SPOCK core tým
-- [ ] Úkoly lekce 0.1 (2): Pusťte si video o SPOCKu; Vyzkoušejte SPOCK nanečisto · kroky a čas sedí
+- [ ] Úkoly lekce 0.1 (3): Pusťte si video o SPOCKu; Podívejte se na hotový běh krok za krokem; Vyzkoušejte SPOCK nanečisto · kroky a čas sedí
 
 ### 0.2 Agenti, tasky a brány
 

@@ -263,3 +263,8 @@ button.pill{font:inherit;cursor:pointer;border:1px solid var(--line)}button.pill
 .ds-vt{display:block;color:var(--ink-3);font-size:12px;max-width:260px}
 .ds-vtodo{cursor:default;border-left-color:var(--pink)}.ds-vtodo>span:first-child{font-weight:800;color:var(--pink)}
 .ds-okline{border:1px solid var(--line);border-left:4px solid #1a8f5a;border-radius:12px;background:var(--surface);padding:12px 14px;margin:0}
+/* ověření z VS Code u úkolu */
+.tchk{margin:10px 0 2px;border:1px dashed var(--blue-2);border-radius:12px;padding:12px 14px;display:grid;gap:8px;background:color-mix(in srgb,var(--blue-2) 5%,var(--surface))}
+.tchk.seen{border-color:var(--purple);background:color-mix(in srgb,var(--purple) 5%,var(--surface))}
+.tchk-l{font-size:11.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--blue-2)}.tchk.seen .tchk-l{color:var(--purple)}
+.titem.has-chk input:disabled{opacity:.45}

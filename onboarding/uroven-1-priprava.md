@@ -128,18 +128,33 @@ Na firemním počítači neinstalujete z internetu, ale z katalogu: **Solveo** n
   2. **Windows (Solveo):** Visual Studio Code → prostředí **Workstation** → **Moje zařízení** → vyberte svůj počítač → košík → objednat.
   3. **Mac (Self Service+):** Catalog → Visual Studio Code → nainstalovat.
   4. Ověření: VS Code se otevře a **Cmd+Shift+P** (Mac) nebo **Ctrl+Shift+P** (Windows) otevře Command Palette. Esc ji zavře.
+  - *Ověření:* Co se stane, když ve VS Code stisknete Cmd+Shift+P nebo Ctrl+Shift+P?
+    - [x] Nahoře se otevře řádek pro hledání příkazů
+    - [ ] Dole se otevře terminál
+    - [ ] Otevře se nastavení VS Code
+  - *Nápověda:* Zkuste zkratku přímo ve VS Code. Hledáte Command Palette.
 - [ ] **Nainstalujte Git** (10 min, z firemního katalogu)
   - *Proč:* Gitem SPOCK naklonujete a později jedním taskem aktualizujete. Bez Gitu kontrola nastavení ohlásí, že kopii nejde aktualizovat (`SETUP.md` §2 a §8).
   1. **Mac:** Git obvykle už máte. Když chybí, je v Self Service+.
   2. **Windows:** objednejte **Git** v Solveo (obsahuje i Git Bash).
   3. Ověření: restartujte VS Code a v terminálu napište `git --version`. Musí vypsat číslo verze.
   4. Doporučené: `git config --global user.name "Jméno Příjmení"` a `git config --global user.email "vas.email@…"` (firemní e-mail).
+  - *Ověření:* Co vypíše `git --version` v terminálu VS Code?
+    - [x] `git version` a číslo verze
+    - [ ] `command not found`
+    - [ ] Nic, příkaz jen skončí
+  - *Nápověda:* Když Git chybí nebo terminál příkaz nezná, zavřete a znovu otevřete VS Code a zkuste to znovu.
 - [ ] **Nainstalujte Node.js 22** (10 min, z firemního katalogu)
   - *Proč:* Každý task SPOCKu (kontroly, zápisy, podpisy) spouští Node skript. Bez Node žádný task nefunguje.
   1. Potřebujete **Node.js verze 22**.
   2. **Mac:** v REDIMu objednejte roli `APP_INSTALL_MACOS_NODEJS` (dlaždice Windows). Po schválení v Self Service+ klikněte u položky **Upload inventory to Yaml** na **Run**, počkejte na dokončení, pak vyhledejte **Node** a nainstalujte ho.
   3. **Windows:** objednejte Node.js v Solveo (položka katalogu je odkázaná v *Technical setup instructions*, část 7).
   4. Ověření: ve VS Code otevřete Terminal → New Terminal a napište `node -v`. Musí vypsat `v22.…` (nebo `v20.…`).
+  - *Ověření:* Čím začíná číslo, které vypíše `node --version`?
+    - [x] `v22`
+    - [ ] `v18`
+    - [ ] `v16`
+  - *Nápověda:* SPOCK potřebuje Node.js 22. Jinou verzi přeinstalujte z firemního katalogu.
 - [ ] **Nainstalujte caauth-cli a ověřte SSH certifikát** (20 min, až po schválení role `CSIN\CAAUTH_USR`)
   - *Proč:* K repozitáři SPOCKu se v ČS připojujete přes SSH certifikát. Bez něj SPOCK nenaklonujete.
   1. **Mac:** nainstalujte **caauth-cli** ze Self Service+.
@@ -239,22 +254,41 @@ Ve výběru agenta musí být **přesně šest agentů SPOCKu**. Vedle nich uvid
   2. Ručně: Command Palette → **Git: Clone** → vložte `git@github.com:csas-dev/spock-pilot.git` → přihlaste se účtem ČS, když se VS Code zeptá.
   3. Uložte kopii na svůj disk, ne do sdílené složky. Pak zvolte **Open** a autorům důvěřujte.
   4. Ověření: v Exploreru vlevo vidíte přímo složky `.github` a `.vscode`.
+  - *Ověření:* Které dvě složky vidíte v Exploreru vlevo hned nahoře?
+    - [x] `.github` a `.vscode`
+    - [ ] `src` a `dist`
+    - [ ] `spock-pilot` a v ní teprve další složky
+  - *Nápověda:* Když vidíte jen složku `spock-pilot`, máte otevřenou složku o úroveň výš. Otevřete přímo tu, která obsahuje `.github` a `.vscode`.
 - [ ] **Ověřte soubor surface** (5 min, ve VS Code)
   - *Proč:* Soubor `surface` říká SPOCKu, v jakém nástroji pracujete. Dokud v něm není `copilot`, SPOCK běh nezaloží.
   1. V Exploreru vlevo otevřete `.github/surface`.
   2. Když v něm je `unset`, přepište ho na `copilot` a uložte (Cmd+S nebo Ctrl+S). Task `SPOCK: check my setup` s volbou GitHub Copilot ho zapíše také.
   3. Ověření: soubor obsahuje jen slovo `copilot`.
+  - *Ověření:* Co je v souboru `.github/surface`, když je nastavený správně?
+    - [x] `copilot`
+    - [ ] `unset`
+    - [ ] `vscode`
 - [ ] **Spusťte SPOCK: check my setup** (15 min, ve VS Code)
   - *Proč:* Kontrola ověří Node, Git, vaši kopii, agenty a model najednou. Dokud SPOCK neví, v jakém nástroji pracujete, nezaloží žádný běh (`SETUP.md` §4).
   1. Command Palette → `run task` → **Tasks: Run Task** → `check my setup` → **SPOCK: check my setup**.
   2. Na otázku, jaký nástroj používáte, vyberte **GitHub Copilot**.
   3. Dole v panelu Terminal opravte vše, co je *missing*, a task spouštějte znovu, dokud poslední řádek nehlásí, že je vše na místě.
   4. Žádný task `SPOCK:` v seznamu? Máte otevřenou jinou složku nebo jste autorům nedůvěřovali. Vraťte se k předchozímu úkolu.
+  - *Ověření:* Na co se task zeptá v políčku nahoře?
+    - [x] Jaký nástroj používáte
+    - [ ] Jak se jmenujete a jakou máte roli
+    - [ ] Jak se má jmenovat běh
+  - *Nápověda:* Task otevře jedno políčko. Spusťte ho a podívejte se.
 - [ ] **Zkontrolujte šest agentů** (5 min, ve VS Code)
   - *Proč:* Agent navíc nebo chybějící agent znamená jinou konfiguraci, než SPOCK předpokládá, a výsledky by neplatily (`TESTER-GUIDE.md` §2.2).
   1. Otevřete výběr agenta v Copilot Chatu.
   2. Musí tam být přesně těchto šest agentů SPOCKu: **Business Analyst, Competitive Analysis, Methodology Coach, Opportunity Designer, Product Manager, Workflow Support**. Vedle nich uvidíte i vestavěné režimy **Agent, Ask, Plan** a firemního agenta **CSAS Copilot Ecosystem Architect**. Ty k SPOCKu nepatří a pro práci se SPOCKem je nevybírejte.
   3. Když nějaký chybí nebo přebývá, zastavte se a pošlete týmu CoE Product Management screenshot výběru se jmény agentů.
+  - *Ověření:* Kolik agentů SPOCKu vidíte ve výběru agenta?
+    - [x] Šest
+    - [ ] Pět
+    - [ ] Sedm nebo víc
+  - *Nápověda:* Jiný počet než šest je nález. Zastavte se a pošlete screenshot týmu CoE Product Management.
 - [ ] **Nastavte model a zkontrolujte náhled dokumentů** (5 min, ve VS Code)
   - *Proč:* Agenti nevidí, jaký model běží. A jedno rozšíření umí zkazit náhled dokumentů SPOCKu.
   1. Ve výběru modelu v chatu zvolte **Claude Sonnet 5**, effort **High** a kontext **1M** (`SETUP.md` §6).
@@ -308,30 +342,54 @@ Spocka, průvodce z tohoto webu, máte i jako agenta **Spock průvodce** v GitHu
   1. Otevřete `specifications/onboarding/TASKS.md`.
   2. Vypište si tři tasky s řádkem „Opens N boxes“ a tři s „Opens no box“.
   3. U každého jednou větou: proč ho asi spouští člověk, nebo proč ho smí spustit agent?
+  - *Ověření:* Kolik políček podle `TASKS.md` otevírá `SPOCK: start a run`?
+    - [x] Tři
+    - [ ] Jedno
+    - [ ] Žádné
+  - *Nápověda:* V `specifications/onboarding/TASKS.md` najděte nadpis tasku a řádek „Opens … boxes“.
 - [ ] **Založte si deník** (5 min, mimo VS Code)
   - *Proč:* Do deníku si zapisujete, co agent udělal jinak, než jste čekali. Z těchhle zápisků vzniká zpětná vazba pro tým CoE Product Management (úroveň 4).
   1. Vytvořte si soubor `denik.md` **mimo** složku SPOCKu.
   2. První zápis: datum, verze SPOCKu (nahoře v `SETUP.md`, např. 1.16.1), model, který jste zvolili, a výsledek `check my setup`.
 - [ ] **Projděte ukázkový běh** (60 min, ve VS Code)
   - *Proč:* Uvidíte, jak vypadá správný výstup každé fáze, a na vlastním běhu pak poznáte odchylku.
-  1. Otevřete `fixtures/2026-09-spending-insights/README.md`. Tento běh je česky a je hotový (7/7). Kdo radši čte anglicky, může použít `fixtures/2026-01-mortgage-onboarding/`.
-  2. Otevírejte postupně dokumenty ve složkách `1-brief` až `7-initiative`. Ve `1-brief` najdete i `initiative-screen.md` (regulatorní screening, A1b). Vznikl podle starších pravidel: od 1. září 2026 fáze 1 screening nedělá a regulace se posuzuje až u konkrétních řešení ve fázi 4 (`STAGE-1-SPEC.md`). Ve svém běhu ho neuvidíte.
-  3. U každé fáze si zapište jednou větou, co z ní vzešlo.
+  1. Pusťte si {{video:krok-za-krokem}}. Uvidíte stejný běh fázi po fázi dřív, než ho otevřete. Komentář je anglicky, titulky česky.
+  2. Otevřete `fixtures/2026-09-spending-insights/README.md`. Tento běh je česky a je hotový. Kdo radši čte anglicky, může použít `fixtures/2026-01-mortgage-onboarding/`.
+  3. Otevírejte postupně dokumenty ve složkách `1-brief` až `7-initiative`. Ve `1-brief` najdete i `initiative-screen.md` (regulatorní screening, A1b). Vznikl podle starších pravidel: od 1. září 2026 fáze 1 screening nedělá a regulace se posuzuje až u konkrétních řešení ve fázi 4 (`STAGE-1-SPEC.md`). Ve svém běhu ho neuvidíte.
+  4. U každé fáze si zapište jednou větou, co z ní vzešlo.
+  - *Ověření:* Co říká `README.md` běhu `2026-09-spending-insights` o jeho stavu?
+    - [x] `complete`, přijaté fáze 7/7
+    - [ ] `running`, přijaté fáze 5/7
+    - [ ] `stale`, přijaté fáze 3/7
+  - *Nápověda:* Stav je hned pod nadpisem v `fixtures/2026-09-spending-insights/README.md`.
 - [ ] **Dohledejte jedno tvrzení zpět ke zdroji** (30 min, ve VS Code)
   - *Proč:* Dohledatelnost je hlavní slib SPOCKu. PM jím obhájí rozhodnutí, PD uvidí, na jakém výzkumu řešení stojí, a SWE, odkud se vzal požadavek.
   1. V `7-initiative/initiative.md` vyberte jedno kritérium úspěchu nebo jeden požadavek.
   2. Najděte ho v PRD (`6-prd/`), pak v rozpracovaném MVP (`5-mvp/`), ve vybraném řešení (soubor `…selected-solution.md` ve `4-solutions/`) a v příležitostech (`2-problems/`).
   3. Skončete u materiálu v `2-problems/1-problem-material.md`.
   4. Pozor: starší ukázkové běhy mají ve fázi 4 i soubory, které nové běhy nevytvářejí (např. `solution-scores`). Skóre řešení bylo zrušeno.
+  - *Ověření:* Kolik řešení je v sadě `4-solutions/1-solution-set.md` ukázkového běhu?
+    - [x] Pět (I1 až I5)
+    - [ ] Tři
+    - [ ] Deset
+  - *Nápověda:* Spočítejte nadpisy začínající `I1`, `I2`… v `4-solutions/1-solution-set.md`.
 - [ ] **Najděte v běhu podpisy** (10 min, ve VS Code)
   - *Proč:* Každé rozhodnutí má jméno a roli. Právě to vám dá jistotu, že výstup nikdo „nepodepsal za vás“.
   1. Otevřete `RUN-STATE.md` ukázkového běhu.
   2. Najděte, kdo a kdy podepsal G1 a G7.
+  - *Ověření:* Jaké datum má podpis G1 v `RUN-STATE.md` ukázkového běhu?
+    - [x] 28. 8. 2026
+    - [ ] 1. 9. 2026
+    - [ ] 15. 9. 2026
+  - *Nápověda:* Hledejte `G1` a řádek `decided_at` v `RUN-STATE.md`.
 - [ ] **Zeptejte se Methodology Coache** (10 min, ve VS Code)
   - *Proč:* Coach odpovídá jen z psaného kánonu metody, ne z paměti, a má říct, odkud odpověď bere.
   1. Nový chat → agent **Methodology Coach**.
   2. Zeptejte se: „Proč fáze 3 nemá rozhodnutí člověka?“
   3. Zkontrolujte, jestli odpověď odkazuje na konkrétní dokument.
+  - *Co jste viděli:* Odkázal Coach v odpovědi na konkrétní dokument nebo oddíl?
+    - [x] Ano, jmenoval, odkud odpověď bere
+    - [ ] Ne, odpověděl obecně bez zdroje
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 

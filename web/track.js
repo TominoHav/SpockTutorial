@@ -30,6 +30,8 @@ function tSnapshot(){
   const mods = {}; let done = 0, tot = 0;
   W.forEach(w => { const t = weekTotals(w); mods[w.id] = [t.done, t.tot, w.days.filter((_, di) => lessonDone(w, di)).length, w.days.length, quizPassed(w) ? 1 : 0, cardsAll(w), cardsTotal(w)]; if (applies(w) && w.id !== 'l1b') { done += t.done; tot += t.tot; } });
   T.prog = {xp:S.xp || 0, pct:tot ? Math.round(100 * done / tot) : 0, mods, loc:tLoc(), badges:Object.keys(S.badges || {}).filter(k => k.startsWith('got.')).length, streak:streak(), sim:!!(S.badges && S.badges.sim), video:!!S.seenVideo};
+  T.devs = Object.keys(S.proof || {}).filter(k => { const [wid, di, ti] = k.split('.'), w = W.find(x => x.id === wid), t = w && w.days[+di] && w.days[+di].todo[+ti]; return t && t.check && t.check.kind === 'seen' && S.proof[k] !== t.check.a; });
+  T.ptries = Object.assign({}, S.ptries || {});
   T.wrong = Object.keys(S.cards || {}).filter(k => { const [wid, di, ci] = k.split('.'), w = W.find(x => x.id === wid), c = w && w.days[+di] && w.days[+di].cards[+ci]; return c && S.cards[k] !== c.a; });
 }
 function tTick(){
@@ -266,6 +268,8 @@ function renderDash(){
   const stuckBy = {}; stuck.forEach(r => tInc(stuckBy, (r.prog || {}).loc || 'home'));
   const wrong = {}; rows.forEach(r => (r.wrong || []).forEach(k => tInc(wrong, k)));
   const answered = {}; rows.forEach(r => W.forEach(w => { /* počet lidí, kteří modul začali */ if (mod(r, w.id)[5] > 0) tInc(answered, w.id); }));
+  const devs = {}; rows.forEach(r => (r.devs || []).forEach(k => tInc(devs, k)));
+  const ptr = {}; rows.forEach(r => Object.entries(r.ptries || {}).forEach(([k, v]) => { if (v > 1) tInc(ptr, k, v); }));
   const lockedC = {}; rows.forEach(r => Object.entries(r.locked || {}).forEach(([k, v]) => tInc(lockedC, k, v)));
   const quizF = {}; rows.forEach(r => Object.entries(r.quiz || {}).forEach(([k, q]) => { const o = quizF[k] = quizF[k] || {tries:0, fails:0, people:0}; o.tries += q.tries || 0; o.fails += q.fails || 0; o.people++; }));
   const halfLessons = []; W.forEach(w => { const started = rows.filter(r => mod(r, w.id)[5] > 0 || mod(r, w.id)[0] > 0).length, fin = rows.filter(r => mod(r, w.id)[0] === mod(r, w.id)[1]).length; if (started) halfLessons.push([esc(w.title), started, fin, Math.round(100 * fin / started) + ' %']); });
@@ -307,6 +311,8 @@ function renderDash(){
       <div><h3>Karty s nejvíc špatnými odpověďmi</h3>${dTable(['Karta', 'Špatně'], top(wrong, 10).map(([k, v]) => [dCardLabel(k), v]), 'Zatím žádná špatná odpověď.')}</div>
       <div><h3>Moduly: začali a dokončili</h3>${dTable(['Modul', 'Začali', 'Dokončili', 'Dokončení'], halfLessons)}</div>
       <div><h3>Kvízy a skokové testy</h3>${dTable(['Test', 'Lidí', 'Pokusů', 'Nesplněno'], Object.entries(quizF).map(([k, q]) => { const [id, m] = k.split(':'), w = W.find(x => x.id === id); return [esc((m === 'jump' ? 'Skokový test: ' : 'Kvíz: ') + (w ? w.title : id)), q.people, q.tries, q.fails + (q.tries ? ' (' + Math.round(100 * q.fails / q.tries) + ' %)' : '')]; }), 'Zatím nikdo kvíz nespustil.')}</div>
+      <div><h3>Odchylky agentů, které lidé viděli ve VS Code</h3>${dTable(['Úkol', 'Lidí'], top(devs, 10).map(([k, v]) => [dClickLabel('úkol ' + k), v]), 'Nikdo zatím odchylku nenahlásil.')}</div>
+      <div><h3>Ověření z VS Code s nejvíc pokusy</h3>${dTable(['Úkol', 'Pokusů celkem'], top(ptr, 10).map(([k, v]) => [dClickLabel('úkol ' + k), v]), 'Zatím žádné ověření.')}</div>
       <div><h3>Kliknutí na zamčený modul</h3>${dTable(['Modul', 'Kliknutí'], top(lockedC, 9).map(([k, v]) => [esc((W.find(w => w.id === k) || {title:k}).title), v]), 'Nikdo neklikal na zamčený modul.')}</div>
     </div>
 

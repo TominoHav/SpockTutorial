@@ -61,6 +61,10 @@
   2. Na titulní stránce běhu ověřte, které fáze jsou teď stale.
   3. Přidejte nový soubor do `2-problems/supplied/` a vezměte ho taskem `SPOCK: add problem material` → `yes`.
   4. Nechte fázi 2 přepsat a schvalte ji. U fáze 3 zvažte: ponechat (`keep a later stage as it is`), nebo přepracovat?
+  - *Ověření:* Jak jsou po vrácení fáze 2 označené pozdější fáze, které už prošly bránou?
+    - [x] `stale`
+    - [ ] `accepted`
+    - [ ] Jsou smazané
 - [ ] **Zapište ruční úpravu** (15 min, ve VS Code)
   - *Proč:* Záznam má říkat pravdu o tom, kdo co napsal.
   1. Během review fáze ručně upravte jednu větu v dokumentu.
@@ -190,6 +194,9 @@ Nový vlastník otevře nový chat s agentem dané fáze, spustí `SPOCK: record
   - *Proč:* Naučíte se, kdy agent zůstane v řízeném běhu a kdy z něj odejde.
   1. Agentovi Product Manager napište: „Pojďme jen tak promyslet pár nápadů.“ Má pokračovat v řízeném běhu, ne odejít mimo něj.
   2. Pak napište: `free-roam: tři nápady, jak snížit odchody v onboardingu`. Výstup nemá mít skóre ani doporučení a nemá patřit k běhu.
+  - *Co jste viděli:* Přepnul agent do volného přemýšlení, když zpráva nezačínala `free-roam:`?
+    - [x] Ne, zůstal v řízeném běhu
+    - [ ] Ano, začal volně přemýšlet i bez `free-roam:`
 
 ## 3.5 — Údržba kopie a ukončení běhu
 

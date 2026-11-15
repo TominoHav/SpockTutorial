@@ -43,6 +43,11 @@
   - *Proč:* Uvidíte, kde ve hotovém běhu leží uživatelské otázky a kde chybí.
   1. Otevřete `fixtures/2026-09-spending-insights/2-problems/4-framed-opportunities.md`.
   2. U dvou příležitostí si zapište, pro koho jsou, co by chtělo ověřit testem a jakým (podle `method-canon.md` §13.4).
+  - *Ověření:* Kolik variant MVP je v `5-mvp/1-mvp-options.md` ukázkového běhu?
+    - [x] Tři (OPT-A až OPT-C)
+    - [ ] Dvě
+    - [ ] Šest
+  - *Nápověda:* Spočítejte nadpisy začínající `OPT-` v `5-mvp/1-mvp-options.md`.
 - [ ] **Zeptejte se Methodology Coache na trio** (10 min, ve VS Code)
   - *Proč:* Naučíte se Coache používat na otázky k metodě, místo abyste hádali.
   1. Agent **Methodology Coach** → „Co dělá PD v triu a co z toho pilot nedělá?“

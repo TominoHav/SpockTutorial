@@ -9,6 +9,7 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 **0.1 — Co SPOCK dělá a proč**
 
 - [ ] 0.1 Pusťte si video o SPOCKu
+- [ ] 0.1 Podívejte se na hotový běh krok za krokem
 - [ ] 0.1 Vyzkoušejte SPOCK nanečisto
 
 **0.2 — Agenti, tasky a brány**

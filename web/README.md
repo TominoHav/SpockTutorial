@@ -46,6 +46,17 @@ Web je stránka na claude.ai (artifact). Po sloučení změny do `main` se **sá
 
 **Verze:** v patičce webu je commit tutoriálu, datum a vydání SPOCKu, podle kterého je tutoriál napsaný. Podle ní poznáte, jestli je publikovaná nejnovější verze.
 
+## Videa „SPOCK krok za krokem“
+
+Jedno dlouhé video přes všech sedm fází a sedm krátkých klipů po fázích. Ukazují hotový ukázkový běh ze SPOCKu (`fixtures/2026-09-spending-insights`). Mají anglický komentář syntetickým hlasem a české titulky přímo v obraze.
+
+- Scény, texty a titulky: `nastroje/video/video.html` (pole `SC`).
+- Výroba: `node nastroje/video/record.js` vykreslí snímky v prohlížeči a ffmpeg z nich složí `web/media/spock-krok-za-krokem.mp4` a `spock-faze-1.mp4` až `spock-faze-7.mp4` i s náhledy. Jeden klip: `node nastroje/video/record.js faze-3`.
+- V lekci se video vloží zápisem `{{video:krok-za-krokem}}` nebo `{{video:faze-3}}`. Úvodní video je `{{video}}`.
+- **Anglický komentář:** text je v `nastroje/video/komentar-en.json`, jedna věta ke každému titulku. `python3 nastroje/video/komentar.py <hlas.onnx>` ho namluví syntetickým hlasem (nástroj Piper) a spočítá časování titulků podle délky vět. `node nastroje/video/record.js vse --en` pak vykreslí verze se zvukem do `web/dist/video-en/` (nejsou v gitu).
+- **Verze v tutoriálu jsou ty s komentářem** (rozhodnutí vlastníka tutoriálu z 15. 11. 2026). Po vykreslení se soubory z `web/dist/video-en/` zkopírují do `web/media/` pod názvy bez `-en`.
+- **Licence hlasu:** hlas `en-us-ryan` (Piper, data RyanSpeech) má licenci CC BY-NC-SA 4.0, tedy jen pro nekomerční použití. Použití v bance je potřeba posoudit, úkol je v `revize/TODO-VLASTNIK.md`. Jiný hlas stačí předat skriptu jako jiný soubor `.onnx` a videa vykreslit znovu.
+
 ## Co je kde
 
 | Soubor | Co dělá |

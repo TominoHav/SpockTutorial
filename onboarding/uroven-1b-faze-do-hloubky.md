@@ -175,9 +175,10 @@
 
 - [ ] **Rozeberte brief ukázkového běhu** (30 min, ve VS Code)
   - *Proč:* Uvidíte, jak vypadá cíl o čtyřech částech a záznam unknown.
-  1. Otevřete `fixtures/2026-09-savings-goals/1-brief/initiative-brief.md`.
-  2. Najděte produktový cíl, metriku, key result a vazbu. Je vazba mechanismus, nebo jen tvrzení?
-  3. Najděte sekci „What we could not establish“ a důvody unknown.
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-1}}. Komentář je anglicky, titulky česky.
+  2. Otevřete `fixtures/2026-09-savings-goals/1-brief/initiative-brief.md`.
+  3. Najděte produktový cíl, metriku, key result a vazbu. Je vazba mechanismus, nebo jen tvrzení?
+  4. Najděte sekci „What we could not establish“ a důvody unknown.
 - [ ] **Projděte Strategy Basis** (20 min, ve VS Code)
   - *Proč:* U G1 budete vybírat key result z tohoto seznamu.
   1. Otevřete `strategy-basis.md` §2 a projděte cíle a key resulty.
@@ -269,9 +270,10 @@
 
 - [ ] **Projděte řetěz fáze 2 v ukázkovém běhu** (40 min, ve VS Code)
   - *Proč:* Uvidíte, jak se z materiálu stane příležitost a kde se drží stopa.
-  1. Ve `fixtures/2026-09-savings-goals/2-problems/` projděte soubory 1 až 5 v tomto pořadí.
-  2. U jedné příležitosti z `5-prioritised-opportunities.md` dohledejte hypotézu, pozorování a položku materiálu.
-  3. Ověřte trust tag ručně: kolik různých původů, kolik z první ruky?
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-2}}. Komentář je anglicky, titulky česky.
+  2. Ve `fixtures/2026-09-savings-goals/2-problems/` projděte soubory 1 až 5 v tomto pořadí.
+  3. U jedné příležitosti z `5-prioritised-opportunities.md` dohledejte hypotézu, pozorování a položku materiálu.
+  4. Ověřte trust tag ručně: kolik různých původů, kolik z první ruky?
 - [ ] **Napište hypotézu, která neprojde testem tvaru** (10 min, ve VS Code)
   - *Proč:* Naučíte se poznat řešení převlečené za problém.
   1. Napište dvě věty o svém tématu: jednu, kterou by vyřešila jen jedna věc, a jednu, kterou by mohlo vyřešit víc věcí.
@@ -358,9 +360,10 @@
 
 - [ ] **Zkontrolujte jednu kartu konkurenta** (30 min, ve VS Code)
   - *Proč:* Fázi 3 nikdo nepodepisuje. Jediným čtenářem karet jste vy ve fázi 4.
-  1. Otevřete `fixtures/2026-09-savings-goals/3-competitive-analysis/2-competitor-cards.md`.
-  2. U jedné karty spočítejte nezávislé vydavatele a najděte primární zdroj.
-  3. Najděte datum výzkumu. Byla by karta dnes ještě čerstvá?
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-3}}. Komentář je anglicky, titulky česky.
+  2. Otevřete `fixtures/2026-09-savings-goals/3-competitive-analysis/2-competitor-cards.md`.
+  3. U jedné karty spočítejte nezávislé vydavatele a najděte primární zdroj.
+  4. Najděte datum výzkumu. Byla by karta dnes ještě čerstvá?
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -448,10 +451,11 @@
 
 - [ ] **Rozeberte jedno řešení a jeho compliance** (45 min, ve VS Code)
   - *Proč:* Sada řešení je jediný dokument, který u G4 čtete, a musíte v něm najít podstatné.
-  1. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/4-solutions/1-solution-set.md`.
-  2. U jednoho řešení projděte osm sekcí. Dodržuje *What it does*, že popisuje změnu chování, a ne mechanismus?
-  3. V sekci *Compliance* najděte počet touchpointů, oblasti ve hře a eskalační příznak.
-  4. Porovnejte `4-solutions/parts/SOL1.md` a `SOL1.compliance.md` se sestaveným dokumentem: kdo napsal kterou část?
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-4}}. Komentář je anglicky, titulky česky.
+  2. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/4-solutions/1-solution-set.md`.
+  3. U jednoho řešení projděte osm sekcí. Dodržuje *What it does*, že popisuje změnu chování, a ne mechanismus?
+  4. V sekci *Compliance* najděte počet touchpointů, oblasti ve hře a eskalační příznak.
+  5. Porovnejte `4-solutions/parts/SOL1.md` a `SOL1.compliance.md` se sestaveným dokumentem: kdo napsal kterou část?
 - [ ] **Najděte důvod volby** (10 min, ve VS Code)
   - *Proč:* Důvod je to, co z rozhodnutí zbude za dva roky.
   1. Otevřete `4-solutions/2-selected-solution.md` téhož běhu a najděte „Why this one“.
@@ -523,9 +527,10 @@
 
 - [ ] **Posuďte varianty MVP** (30 min, ve VS Code)
   - *Proč:* Jen vy poznáte, jestli jsou varianty opravdu různé způsoby, jak řešení postavit.
-  1. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/5-mvp/1-mvp-options.md`.
-  2. U každé varianty najděte, čím se liší. Je to skutečný rozdíl, nebo jen jiná míra?
-  3. V `2-expanded-mvp.md` najděte *What has to be handled* a jeho tři bloky.
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-5}}. Komentář je anglicky, titulky česky.
+  2. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/5-mvp/1-mvp-options.md`.
+  3. U každé varianty najděte, čím se liší. Je to skutečný rozdíl, nebo jen jiná míra?
+  4. V `2-expanded-mvp.md` najděte *What has to be handled* a jeho tři bloky.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -594,9 +599,10 @@
 
 - [ ] **Projděte PRD a jeho alignment statement** (30 min, ve VS Code)
   - *Proč:* U G6 souhlasíte s tím, podle čeho se bude stavět.
-  1. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/6-prd/1-prd-draft.md` a `2-prd-agreed.md`.
-  2. Najděte rozdíl mezi nimi: blok souhlasu.
-  3. U tří požadavků najděte měřítko, kterému slouží, a touchpointy, které nesou.
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-6}}. Komentář je anglicky, titulky česky.
+  2. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/6-prd/1-prd-draft.md` a `2-prd-agreed.md`.
+  3. Najděte rozdíl mezi nimi: blok souhlasu.
+  4. U tří požadavků najděte měřítko, kterému slouží, a touchpointy, které nesou.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -663,9 +669,10 @@
 
 - [ ] **Porovnejte iniciativu s PRD** (25 min, ve VS Code)
   - *Proč:* Tohle žádná kontrola nedělá a u G7 to musíte udělat vy.
-  1. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/7-initiative/initiative.md` a `6-prd/2-prd-agreed.md`.
-  2. U tří tvrzení v iniciativě najděte oporu v PRD.
-  3. Najděte Jira klíč a porovnejte iniciativu s její čitelnou kopií v `read/7-initiative/`.
+  1. Nejdřív se podívejte, jak tahle fáze vypadá na hotovém běhu: {{video:faze-7}}. Komentář je anglicky, titulky česky.
+  2. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/7-initiative/initiative.md` a `6-prd/2-prd-agreed.md`.
+  3. U tří tvrzení v iniciativě najděte oporu v PRD.
+  4. Najděte Jira klíč a porovnejte iniciativu s její čitelnou kopií v `read/7-initiative/`.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 

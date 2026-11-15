@@ -1,0 +1,135 @@
+<!doctype html><html lang="cs"><head><meta charset="utf-8"><title>SPOCK krok za krokem</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1280px;height:720px;overflow:hidden;background:#0b1b3f;color:#fff;font-family:Inter,"Inter Display",system-ui,sans-serif}
+.stage{position:absolute;inset:0;background:radial-gradient(900px 620px at 50% 46%,#12306e 0%,#0d2152 45%,#0a1838 100%);overflow:hidden}
+.ring{position:absolute;left:50%;top:46%;border:1px solid rgba(255,255,255,.06);border-radius:50%;transform:translate(-50%,-50%)}
+.scene{position:absolute;inset:0;padding:38px 64px 130px;display:none}
+.scene.on{display:block}
+.a{opacity:0;animation:rise .7s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--d,0)*1s)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.pop{opacity:0;animation:pop .5s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--d,0)*1s)}
+@keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+.grow{transform-origin:left center;animation:grow .9s ease both;animation-delay:calc(var(--d,0)*1s)}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.logo{width:150px;height:150px;border-radius:32px;background:#1068D2;display:grid;place-items:center}
+.logo svg{width:100%;height:100%}
+.hero{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;text-align:center;gap:22px;padding-bottom:110px}
+.hero .row{display:flex;align-items:center;gap:34px}
+.hero .wm{font-size:150px;font-weight:800;letter-spacing:.06em;line-height:1}
+.hero .bar{width:240px;height:4px;border-radius:4px;background:#5b9bff}
+.hero h1{font-size:40px;font-weight:700}
+.hero p{font-size:27px;color:#b8c7e6}
+.top{display:flex;align-items:center;gap:22px;margin-bottom:20px;padding-right:150px}
+.no{width:86px;height:86px;border-radius:22px;background:#1068D2;display:grid;place-items:center;font-size:44px;font-weight:800;flex:none}
+.top small{display:block;font-size:19px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8fb4ff}
+.top h2{font-size:50px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.agent{margin-left:auto;text-align:right;padding-top:14px;font-size:19px;color:#b8c7e6}.agent b{display:block;font-size:25px;color:#fff}
+.cols{display:grid;grid-template-columns:410px 1fr;gap:30px;align-items:start}
+.io{display:grid;gap:11px;align-content:start}
+.box{border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(255,255,255,.05);padding:12px 16px}
+.box small{display:block;font-size:15px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8fb4ff;margin-bottom:6px}
+.box b{font-size:21px;line-height:1.28;font-weight:600}
+.task{white-space:nowrap;font-family:"DejaVu Sans Mono",monospace;font-size:14.5px;background:rgba(0,0,0,.28);border-radius:8px;padding:6px 10px;display:inline-block;margin-top:4px;color:#d7e4ff}
+.doc{border-radius:16px;background:#f5f8fd;color:#0d1b33;padding:22px 26px;box-shadow:0 18px 50px rgba(0,0,0,.35);min-height:300px}
+.doc .fn{font-family:"DejaVu Sans Mono",monospace;font-size:15px;color:#5c6f8f;margin-bottom:10px}
+.doc h3{font-size:25px;font-weight:800;margin-bottom:10px;line-height:1.2}
+.doc p{font-size:19.5px;line-height:1.42;margin-bottom:8px}
+.doc ul{list-style:none;display:grid;gap:8px}
+.doc li{font-size:19px;line-height:1.3;padding:8px 13px;border-radius:10px;background:#e7eefb;display:flex;gap:10px;align-items:baseline}
+.doc li b{flex:none;color:#1068D2}
+.doc li.sel{background:#1068D2;color:#fff}.doc li.sel b{color:#fff}
+.tag{display:inline-block;font-size:14px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:99px;padding:3px 10px;margin-left:auto;flex:none}
+.tag.s{background:#d3f3e2;color:#0d6b3f}.tag.w{background:#fde7c7;color:#8a5200}
+.chips{display:flex;flex-wrap:wrap;gap:9px}.chips span{font-size:19px;font-weight:600;background:#e7eefb;border-radius:99px;padding:7px 14px}
+.gates{display:flex;align-items:center;gap:16px;margin-top:18px}
+.gate{display:flex;align-items:center;gap:12px;border-radius:99px;padding:9px 18px;font-size:20px;font-weight:700}
+.gate.q{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2)}
+.gate.g{background:#fff;color:#0d1b33}
+.gate.n{background:transparent;border:1px dashed rgba(255,255,255,.4);color:#b8c7e6}
+.gate i{font-style:normal;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:17px;background:#2fbf7a;color:#fff}
+.gate.g i{background:#1068D2}
+.arrow{font-size:26px;color:#8fb4ff}
+.chain{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:34px}
+.chain span{font-size:21px;font-weight:700;border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:10px 14px;background:rgba(255,255,255,.06)}
+.chain em{font-style:normal;color:#8fb4ff;font-size:22px}
+.cap{position:absolute;left:0;right:0;bottom:0;height:118px;background:linear-gradient(transparent,rgba(4,10,26,.92) 38%);display:grid;place-items:center;padding:26px 110px 18px;text-align:center}
+.cap span{font-size:28px;font-weight:600;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.prog{position:absolute;left:0;bottom:0;height:5px;background:#5b9bff}
+.mini{position:absolute;right:40px;top:22px;display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.1em;font-size:19px;opacity:.9}
+.mini .logo{width:36px;height:36px;border-radius:9px}
+</style></head><body>
+<div class="stage" id="stage">
+<div class="ring" style="width:420px;height:420px"></div><div class="ring" style="width:760px;height:760px"></div><div class="ring" style="width:1100px;height:1100px"></div><div class="ring" style="width:1460px;height:1460px"></div>
+<div id="scenes"></div>
+<div class="mini" id="mini"><span class="logo">LOGO</span>SPOCK</div>
+<div class="cap"><span id="cap"></span></div><div class="prog" id="prog"></div>
+</div>
+<script>if (new URLSearchParams(location.search).get('en')) document.write('<script src="audio/timing.js"><\/script>');</script>
+<script>
+const LOGO = '<svg viewBox="0 0 100 100"><path d="M55.1 20.4 C54.5 20.1 53.9 20.1 53.3 20.4 C52.7 20.6 52.0 21.3 51.5 21.9 C51.0 22.5 51.2 19.9 50.6 24.1 C50.0 28.3 48.6 42.7 47.9 46.9 C47.2 51.1 46.8 48.8 46.3 49.1 C45.8 49.5 45.2 49.3 44.8 49.0 C44.3 48.7 44.6 50.8 43.6 47.5 C42.6 44.2 39.8 32.6 38.8 29.2 C37.8 25.8 37.9 27.6 37.4 27.1 C36.9 26.6 36.6 26.3 36.0 26.2 C35.4 26.1 34.1 26.2 33.5 26.6 C32.9 27.1 32.3 28.0 32.1 28.9 C31.9 29.8 32.0 30.6 32.3 32.1 C32.6 33.6 33.6 36.8 33.8 37.8 C34.0 38.8 33.5 38.1 33.3 38.2 C33.0 38.3 32.7 38.3 32.3 38.2 C31.9 38.1 31.5 37.5 31.1 37.4 C30.7 37.3 30.3 37.3 29.8 37.5 C29.3 37.7 28.6 38.4 28.3 38.8 C28.0 39.2 27.9 39.5 27.8 40.0 C27.7 40.5 27.2 39.2 27.8 41.7 C28.4 44.2 30.3 51.1 31.1 55.1 C31.9 59.1 32.2 63.3 32.6 65.9 C33.0 68.5 33.4 69.3 33.8 70.5 C34.2 71.7 34.4 72.3 35.0 73.2 C35.6 74.1 36.5 75.2 37.4 76.0 C38.3 76.8 39.2 77.5 40.3 78.1 C41.4 78.6 42.0 79.1 44.2 79.3 C46.4 79.5 51.5 79.5 53.7 79.3 C55.9 79.1 56.2 78.7 57.3 78.3 C58.3 77.9 58.9 77.7 60.0 76.8 C61.1 75.9 62.1 75.5 63.7 73.1 C65.4 70.7 68.3 64.9 69.9 62.6 C71.5 60.3 72.3 60.1 73.5 59.2 C74.7 58.3 76.2 57.6 77.1 57.1 C78.0 56.6 78.4 56.8 79.0 56.5 C79.6 56.2 80.5 55.7 80.7 55.1 C81.0 54.5 80.7 53.7 80.5 53.1 C80.3 52.5 80.0 52.1 79.5 51.6 C79.0 51.1 78.1 50.6 77.4 50.3 C76.8 50.0 76.5 50.0 75.6 50.0 C74.7 50.0 73.4 49.6 72.0 50.4 C70.6 51.2 68.0 54.0 67.0 54.8 C66.0 55.6 66.4 55.2 65.8 55.2 C65.2 55.2 64.0 55.3 63.5 55.1 C63.0 54.9 62.8 54.5 62.5 54.0 C62.2 53.5 61.8 53.2 61.6 52.1 C61.4 51.0 61.1 50.9 61.5 47.6 C61.9 44.3 63.6 35.8 64.0 32.4 C64.4 29.0 64.1 28.2 64.1 27.1 C64.0 26.0 64.1 26.4 63.7 26.0 C63.3 25.6 62.4 24.9 61.9 24.7 C61.4 24.5 61.5 24.4 61.0 24.6 C60.5 24.8 59.1 25.5 58.6 25.7 C58.1 25.9 58.0 26.2 57.7 25.6 C57.4 25.0 57.2 22.8 56.8 21.9 C56.4 21.0 55.7 20.6 55.1 20.4Z" fill="#fff"/></svg>';
+const gate = (cls, ic, tx, d) => `<span class="gate ${cls} pop" style="--d:${d}">${ic ? `<i>${ic}</i>` : ''}${tx}</span>`;
+const phase = (n, name, agent, input, output, tasks, doc, gates) => `
+  <div class="top a" style="--d:.2"><span class="no">${n}</span><div><small>Fáze ${n} ze 7</small><h2>${name}</h2></div><div class="agent">agent<b>${agent}</b></div></div>
+  <div class="cols"><div class="io">
+    <div class="box a" style="--d:1.2"><small>Co do fáze vstupuje</small><b>${input}</b></div>
+    <div class="box a" style="--d:3.2"><small>Co agent připraví</small><b>${output}</b></div>
+    <div class="box a" style="--d:${gates.td}"><small>Co spouštíte vy</small>${tasks.map(t => `<span class="task">${t}</span>`).join('<br>')}</div>
+  </div><div class="doc a" style="--d:5">${doc}</div></div>
+  <div class="gates">${gates.html}</div>`;
+const SC = [
+ {id:'uvod', dur:13, html:`<div class="hero"><div class="row a" style="--d:.2"><span class="logo">${LOGO}</span><span class="wm">SPOCK</span></div><span class="bar grow" style="--d:1"></span><h1 class="a" style="--d:1.5">Krok za krokem: sedm fází na hotovém běhu</h1><p class="a" style="--d:2.4">Ukázkový běh „Opakované platby“, od zadání po iniciativu</p></div>`,
+  caps:[[0.6,4.4,'SPOCK je AI asistent ve VS Code. Provede tým od nápadu až k iniciativě připravené k vývoji.'],[4.6,8.6,'Podíváme se na hotový ukázkový běh. Klient neví, které opakované platby mu odcházejí z účtu.'],[8.8,12.6,'V každé fázi agent připraví dokument, kontrola ho ověří a člověk rozhodne.']]},
+ {id:'faze-1', dur:27, html:phase(1,'Brief','Product Manager','Váš nápad a podklad k němu','Iniciativní zadání: co chceme změnit a pro koho',['SPOCK: start a run','SPOCK: approve what is in front of me'],
+  `<div class="fn">1-brief/initiative-brief.md</div><h3>Iniciativní zadání: opakované platby</h3><p class="a" style="--d:7"><b>Cílový stav.</b> Klient s běžným účtem ví, které opakované platby mu z účtu odcházejí, ještě než odejde další.</p><p class="a" style="--d:11.5"><b>Pro koho.</b> Retailoví klienti s běžným účtem a aktivní mobilní aplikací.</p><p class="a" style="--d:15.5">Dva ze sedmi volitelných údajů zůstaly neznámé a jsou tak označené, ne dopočítané.</p>`,
+  {td:19.5, html:gate('q','✓','Q1: kontrola prošla',20.5)+'<span class="arrow pop" style="--d:21.5">→</span>'+gate('g','✎','G1: podepisuje Product Manager',22.3)}),
+  caps:[[0.6,4.8,'Fáze 1, brief. Běh zakládáte vy taskem. Název, jméno a roli vyplníte sami.'],[5,10.8,'Agent Product Manager s vámi vede rozhovor a sepíše zadání. Cílový stav je změna pro klienta, ne řešení.'],[11,15.2,'Agent se ptá po jednom poli. Nic si nedomýšlí.'],[15.4,19.8,'Co nevíte, zapíše jako neznámé s důvodem. To je poctivé zadání, ne chyba.'],[20,26.6,'Agent spustí kontrolu a opraví, co našla. Brief pak schvalujete vy, svým jménem.']]},
+ {id:'faze-2', dur:27, html:phase(2,'Problémy a příležitosti','Opportunity Designer','Váš materiál ve složce supplied/: rozhovory, tikety, průzkumy','Příležitosti seřazené podle důkazů',['SPOCK: read in the problem material','SPOCK: approve what is in front of me'],
+  `<div class="fn">2-problems/5-prioritised-opportunities.md</div><h3>Co řešíme nejdřív</h3><ul><li class="a" style="--d:7"><b>O1</b>Klient nedokáže zjistit, které opakované platby mu odcházejí<span class="tag s">strong</span></li><li class="a" style="--d:9"><b>O4</b>Na nečekanou platbu se ptá, aby zjistil, co to bylo<span class="tag s">strong</span></li><li class="a" style="--d:13"><b>O2</b>Zrušená karta a předplatné, které běží dál<span class="tag w">weak</span></li><li class="a" style="--d:14.5"><b>O7</b>Neúplný seznam plateb na lince<span class="tag w">weak</span></li></ul>`,
+  {td:19.5, html:gate('q','✓','Q2: kontrola prošla',20.5)+'<span class="arrow pop" style="--d:21.5">→</span>'+gate('g','✎','G2: podepisuje PM nebo Researcher',22.3)}),
+  caps:[[0.6,5.2,'Fáze 2. Bez vašeho materiálu nezačne. Soubory dáte do složky supplied, do chatu nepatří.'],[5.4,11.4,'Agent z materiálu vytáhne pozorování a zformuluje příležitosti: potřeby klienta, ne řešení.'],[11.6,16.6,'Každá má značku důvěry. Strong znamená aspoň dva nezávislé zdroje a jeden z první ruky.'],[16.8,20.2,'Slabě podložené příležitosti zůstávají v záznamu. Nic se nezahazuje.'],[20.4,26.6,'Které příležitosti jsou primární, rozhodujete vy. Agent pořadí jen navrhuje.']]},
+ {id:'faze-3', dur:24, html:phase(3,'Trh','Competitive Analysis','Soubor trhu, který připravíte: organizace, odkazy a trendy','Profily konkurentů a syntéza: co trh už dělá',['SPOCK: what market material has been supplied'],
+  `<div class="fn">3-competitive-analysis/2-competitor-cards.md</div><h3>Deset profilů konkurentů</h3><div class="chips a" style="--d:7"><span>Air Bank</span><span>ČSOB</span><span>Komerční banka</span><span>mBank</span><span>Moneta</span><span>Raiffeisenbank</span><span>Monzo</span><span>Revolut</span><span>Starling Bank</span><span>Česká spořitelna</span></div><p class="a" style="--d:11.5;margin-top:14px"><b>Syntéza:</b> co trh ukazuje, kde neodpovídá a co se nepodařilo zjistit.</p><p class="a" style="--d:14.5">Každý profil stojí na nezávislých zdrojích, které agent opravdu otevřel.</p>`,
+  {td:17, html:gate('q','✓','Q3: kontrola prošla',18)+'<span class="arrow pop" style="--d:19">→</span>'+gate('n','','Žádný podpis: fázi přijímá brána',19.8)}),
+  caps:[[0.6,5.4,'Fáze 3, trh. Agent pracuje ze souboru trhu, který mu připravíte. Je to jediný agent, který smí na web.'],[5.6,11,'Ke každé organizaci vznikne profil: co nabízí, čím se liší a co je potvrzené, že nedělá.'],[11.2,16.6,'Syntéza říká, co trh s vašimi příležitostmi už dělá. Fáze 4 pak nevymýšlí naslepo.'],[16.8,23.6,'Pozor: fázi 3 nikdo nepodepisuje. Přijme ji kontrola a výsledek čtete vy ve fázi 4.']]},
+ {id:'faze-4', dur:27, html:phase(4,'Řešení','Product Manager','Příležitosti z fáze 2 a obraz trhu z fáze 3','Sada řešení a u každého regulatorní touchpointy',['SPOCK: record a decision I made','SPOCK: approve what is in front of me'],
+  `<div class="fn">4-solutions/1-solution-set.md</div><h3>Pět řešení, žádné skóre</h3><ul><li class="a" style="--d:6.6"><b>I1</b>Přehled opakovaných plateb v aplikaci</li><li class="a sel" style="--d:7.6"><b>I2</b>Upozornění před další platbou</li><li class="a" style="--d:8.6"><b>I3</b>Jeden pohled na inkasa, příkazy i předplatné</li><li class="a" style="--d:9.6"><b>I4</b>Zásah u obchodníka: zablokovat další platbu</li><li class="a" style="--d:10.6"><b>I5</b>Odpověď na otázku „co to bylo“ bez volání na linku</li></ul>`,
+  {td:19.5, html:gate('q','✓','Q4: kontrola prošla',20.5)+'<span class="arrow pop" style="--d:21.5">→</span>'+gate('g','✎','G4: řešení vybírá Product Manager',22.3)}),
+  caps:[[0.6,5.6,'Fáze 4. Teprve tady přicházejí řešení. Agent jich navrhne několik, každé nad jinou kombinací příležitostí.'],[5.8,11.4,'Řešení nemají skóre ani pořadí. Agent žádné nedoporučuje.'],[11.6,16.4,'U každého vidíte regulatorní touchpointy. Technickou složitost SPOCK nehodnotí, zeptejte se SWE.'],[16.6,20.2,'Tady bylo vybráno I2: upozornění před další platbou.'],[20.4,26.6,'Výběr jsou dva tasky: zapíšete volbu s důvodem a schválíte. Důvod se doslova přenese dál.']]},
+ {id:'faze-5', dur:24, html:phase(5,'MVP','Product Manager','Vybrané řešení z fáze 4','Varianty MVP a rozpracování té, kterou zvolíte',['SPOCK: record a decision I made','SPOCK: approve what is in front of me'],
+  `<div class="fn">5-mvp/1-mvp-options.md</div><h3>Tři varianty, žádná doporučená</h3><ul><li class="a" style="--d:6.6"><b>OPT-A</b>Jeden druh platby, zpráva bez akce</li><li class="a" style="--d:7.8"><b>OPT-B</b>Všechny tři druhy plateb, zpráva bez akce</li><li class="a" style="--d:9"><b>OPT-C</b>Jeden druh platby, zrušení přímo ze zprávy</li></ul><p class="a" style="--d:13;margin-top:14px"><b>Rozpracované MVP:</b> upozornění na karetní předplatné. Rozsah, hranice a co je záměrně mimo.</p>`,
+  {td:16.5, html:gate('q','✓','Q5: kontrola prošla',17.5)+'<span class="arrow pop" style="--d:18.5">→</span>'+gate('g','✎','G5b: podepisuje Product Manager',19.3)}),
+  caps:[[0.6,5.6,'Fáze 5 zmenší vybrané řešení na něco, co jde pilotovat.'],[5.8,11.6,'Agent navrhne tři varianty. Liší se tím, jak se řešení postaví. Můžete přidat až tři vlastní.'],[11.8,16.4,'Variantu zvolíte vy a agent rozpracuje jen ji. Nic nového do ní nepřidává.'],[16.6,23.6,'Rozhodujete dvakrát: nejdřív volba varianty, potom přijetí rozpracování.']]},
+ {id:'faze-6', dur:25, html:phase(6,'PRD','Business Analyst','Rozpracované MVP a všechno, na čem stojí','Požadavky s měřítky a akceptačními kritérii',['SPOCK: mark the PRD agreed','SPOCK: approve what is in front of me'],
+  `<div class="fn">6-prd/2-prd-agreed.md</div><h3>Odsouhlasené požadavky</h3><ul><li class="a" style="--d:6.6"><b>R1</b>Rozpoznání opakované platby</li><li class="a" style="--d:7.5"><b>R2</b>Zpráva tři dny před strhnutím</li><li class="a" style="--d:8.4"><b>R3</b>Obsah zprávy</li><li class="a" style="--d:9.3"><b>R4</b>Cesta ze zprávy do detailu platby</li><li class="a" style="--d:10.2"><b>R5</b>Vypnutí upozornění</li></ul>`,
+  {td:17.5, html:gate('q','✓','Q6: kontrola prošla',18.5)+'<span class="arrow pop" style="--d:19.5">→</span>'+gate('g','✎','G6: podepisuje Product Manager',20.3)}),
+  caps:[[0.6,5.4,'Fáze 6. Business Analyst složí šest vstupů do jednoho dokumentu: PRD.'],[5.6,11.2,'Každý požadavek jmenuje měřítko, kterému slouží. Požadavek bez měřítka je hned vidět.'],[11.4,17,'Odsouhlasené PRD je samostatný dokument. Vznikne doslova z draftu, až ho označíte taskem.'],[17.2,24.6,'Projděte PRD s celým triem. Technickou proveditelnost a cenu v něm SPOCK neposuzuje.']]},
+ {id:'faze-7', dur:25, html:phase(7,'Iniciativa','Business Analyst','Jen odsouhlasené PRD','Iniciativa v šabloně Product Management Guildy',['SPOCK: record the Jira key','SPOCK: approve what is in front of me'],
+  `<div class="fn">7-initiative/initiative.md</div><h3>[SPOCK-201] Upozornění na opakovanou platbu před jejím strhnutím</h3><div class="chips a" style="--d:7"><span>Insight</span><span>Byznys cíl</span><span>Outcome</span><span>Metriky úspěchu</span><span>Rozsah iniciativy</span><span>Akceptační kritéria</span><span>Závislosti</span><span>Rizika a mitigace</span><span>Otevřené otázky</span></div><p class="a" style="--d:12;margin-top:14px">Každé tvrzení pochází z odsouhlaseného PRD, nebo je označené jako předpoklad.</p>`,
+  {td:16.5, html:gate('q','✓','Q7: kontrola prošla',17.5)+'<span class="arrow pop" style="--d:18.5">→</span>'+gate('g','✎','G7: podepisuje PM · běh je hotový, 7/7',19.3)}),
+  caps:[[0.6,5.6,'Fáze 7 napíše dokument, který banka opravdu dostane: iniciativu podle šablony Guildy.'],[5.8,11.4,'Čte jen odsouhlasené PRD. Nic nového nevymýšlí.'],[11.6,16.6,'Jira klíč agent nikdy nevymyslí. Zadáte ho sami taskem, nebo napíšete none yet.'],[16.8,24.6,'Podpisem G7 je běh hotový. Do Jiry iniciativu přenesete vy.']]},
+ {id:'zaver', dur:17, html:`<div class="hero" style="gap:18px"><h1 class="a" style="--d:.3;font-size:46px">Každé tvrzení jde dohledat zpět ke zdroji</h1><div class="chain"><span class="pop" style="--d:1.4">Iniciativa</span><em class="pop" style="--d:1.9">←</em><span class="pop" style="--d:2.2">PRD</span><em class="pop" style="--d:2.7">←</em><span class="pop" style="--d:3">MVP</span><em class="pop" style="--d:3.5">←</em><span class="pop" style="--d:3.8">Řešení</span><em class="pop" style="--d:4.3">←</em><span class="pop" style="--d:4.6">Příležitosti</span><em class="pop" style="--d:5.1">←</em><span class="pop" style="--d:5.4">Váš materiál</span></div><span class="bar grow" style="--d:8;margin-top:26px"></span><h1 class="a" style="--d:8.6;font-size:54px">Agenti připravují. Vy rozhodujete.</h1><p class="a" style="--d:10.4">Zelená brána hlídá formu a stopu ke zdroji. Kvalitu discovery posuzujete vy.</p></div>`,
+  caps:[[0.6,7.6,'Sedm fází, šest podpisů. Od iniciativy se dá dojít zpět až k větě v původním materiálu.'],[7.8,12,'SPOCK nerozhoduje za vás. Připraví podklady a hlídá, že nic nevzniklo z ničeho.'],[12.2,16.6,'Teď si to vyzkoušejte ve VS Code na vlastním běhu.']]}
+];
+/* Komentář: když existuje nastroje/video/audio/timing.js, titulky a délky scén se řídí délkou namluvených vět. */
+if (window.__TIMING) SC.forEach(sc => { const t = window.__TIMING[sc.id]; if (!t) return; sc.dur = t.dur; sc.caps = sc.caps.map((c, i) => t.caps[i] ? [t.caps[i][0], t.caps[i][1], c[2]] : c); });
+const q = new URLSearchParams(location.search), only = q.get('scene');
+const list = only ? SC.filter(s => s.id === only) : SC;
+const total = list.reduce((n, s) => n + s.dur, 0);
+document.getElementById('scenes').innerHTML = list.map(s => `<div class="scene" data-id="${s.id}">${s.html}</div>`).join('');
+document.querySelectorAll('.logo').forEach(l => { if (l.textContent === 'LOGO') l.innerHTML = LOGO; });
+window.__total = total; window.__scenes = SC.map(s => ({id:s.id, dur:s.dur}));
+/* deterministické vykreslení času t (v sekundách): animace se nepouštějí, jen se nastaví jejich čas */
+window.__seek = t => {
+  let acc = 0, cur = list[list.length - 1], lt = cur.dur;
+  for (const s of list) { if (t < acc + s.dur) { cur = s; lt = t - acc; break; } acc += s.dur; }
+  document.querySelectorAll('.scene').forEach(el => el.classList.toggle('on', el.dataset.id === cur.id));
+  const el = document.querySelector('.scene.on');
+  const fade = Math.min(1, lt / .4, (cur.dur - lt) / .4); el.style.opacity = Math.max(0, fade);
+  el.getAnimations({subtree:true}).forEach(a => { a.pause(); a.currentTime = lt * 1000; });
+  const c = cur.caps.find(c => lt >= c[0] && lt < c[1]); document.getElementById('cap').textContent = c ? c[2] : '';
+  document.getElementById('prog').style.width = (100 * t / total) + '%';
+  document.getElementById('mini').style.display = (cur.id === 'uvod' || cur.id === 'zaver') ? 'none' : 'flex';
+};
+window.__seek(0);
+</script></body></html>

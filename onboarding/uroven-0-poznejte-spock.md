@@ -96,6 +96,9 @@ SPOCK je **interní nástroj České spořitelny v pilotu**. Vlastní a rozvíj�
   - *Proč:* Za dvě minuty uvidíte celý příběh SPOCKu v obrazech.
   1. Klikněte na {{video}}. Video se pustí přímo tady, trvá 2 minuty 26 sekund a je anglicky s českým komentářem.
   2. Až dohraje, úkol odškrtněte.
+- [ ] **Podívejte se na hotový běh krok za krokem** (4 min, jen na webu)
+  - *Proč:* Uvidíte na skutečných dokumentech, co v každé ze sedmi fází vznikne a kdo ji podepisuje.
+  1. Klikněte na {{video:krok-za-krokem}}. Komentář je anglicky, titulky česky.
 - [ ] **Vyzkoušejte SPOCK nanečisto** (5 min, jen na webu)
   - *Proč:* Zažijete celý běh od briefu po iniciativu dřív, než cokoli instalujete.
   1. Klikněte na {{nanecisto}} a projděte všech 7 fází. Najdete ho i na úvodní stránce a v Opoře.
