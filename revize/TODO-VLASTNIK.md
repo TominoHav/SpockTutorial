@@ -33,6 +33,7 @@ Věci, které nejde vyřešit v repozitáři ani je nemůže udělat Claude. Jso
 
 ## D. Později, podle potřeby
 
+- [ ] **Po každé publikaci otevřít v Dashboardu záložku Verze a kvalita.** Tím se verze zapíše do historie a uvidíte, jestli prošly testy a co se zhoršilo (velikost, rychlost, tokeny). Bez otevření se verze do historie nedostane.
 - [ ] **Procházet Dashboard a zpětnou vazbu**, ideálně jednou týdně: kde se lidé ztrácejí, které karty dělají potíže, otevřená zpětná vazba. Vyřízenou odškrtněte. Postup přepisu do repozitáře je v [TODO-ZPETNA-VAZBA.md](TODO-ZPETNA-VAZBA.md).
 - [ ] **Měření mimo claude.ai.** Dashboard i zpětná vazba fungují jen na claude.ai. Když web přesunete na interní server, je potřeba interní služba pro sběr dat.
 - [ ] **Sběr dotazníku.** Odpovědi z dotazníku na stránce Připravenost se pořád kopírují do schránky. Tlačítko Zpětná vazba už chodí do Dashboardu.

@@ -56,6 +56,26 @@ head = head.replace('placeholder="Např. Jak mám začít se SPOCKem?"', 'placeh
 head = head.replace('<b>Průvodce SPOCK</b>', '<b>Spock</b>').replace('Zná celý tento onboarding. Odpovídá z vašeho Claude účtu.', 'Průvodce onboardingem. Zná všechny lekce a odpovídá z vašeho Claude účtu.')
 head = head.replace('aria-label="Průvodce SPOCK onboardingem"', 'aria-label="Spock, průvodce onboardingem"')
 os.makedirs('dist', exist_ok=True)
+import hashlib, glob as _glob
+_srcs = ['app.js', 'sim.js', 'track.js'] + sorted(_glob.glob('*.css')) + ['base-head.html', os.path.join('dist', 'data.json')]
+_src = hashlib.sha1(b''.join(open(f, 'rb').read() for f in _srcs)).hexdigest()[:12]
+_tok = lambda n: round(n / 3.5)
+_sz = lambda fs: sum(os.path.getsize(f) for f in fs)
+_data = json.load(open(os.path.join('dist', 'data.json'), encoding='utf-8'))
+_les = sorted(_glob.glob(os.path.join('..', 'onboarding', '*.md')))
+_edit = {'lekce': _tok(_sz(_les)), 'aplikace': _tok(_sz(['app.js', 'sim.js', 'track.js'])), 'vzhled': _tok(_sz(sorted(_glob.glob('*.css')) + ['base-head.html'])),
+         'testy': _tok(_sz(sorted(_glob.glob(os.path.join('..', 'nastroje', '*.py'))) + [os.path.join('..', 'nastroje', 'e2e', 'journey.js')])),
+         'top': sorted([[os.path.basename(f), _tok(os.path.getsize(f))] for f in _les + ['app.js', 'sim.js', 'track.js']], key=lambda x: -x[1])[:8]}
+_edit['celkem'] = _edit['lekce'] + _edit['aplikace'] + _edit['vzhled'] + _edit['testy']
+_rep = None
+try:
+    _r = json.load(open(os.path.join('dist', 'e2e-report.json'), encoding='utf-8'))
+    if _r.get('src') == _src: _rep = _r
+except Exception: pass
+BUILD = {'src': _src, 'size': {'js': _sz(['app.js', 'sim.js', 'track.js']), 'css': _sz(sorted(_glob.glob('*.css'))), 'data': os.path.getsize(os.path.join('dist', 'data.json'))},
+         'counts': {'moduly': len(_data['W']), 'lekce': sum(len(w['days']) for w in _data['W']), 'karty': sum(len(d.get('cards', [])) for w in _data['W'] for d in w['days']),
+                    'ukoly': sum(len(d['todo']) for w in _data['W'] for d in w['days']), 'kviz': sum(len(w['quiz']) for w in _data['W'])},
+         'edit': _edit, 'e2e': _rep}
 app = (open('app.js',encoding='utf-8').read() + '\n' + open('sim.js',encoding='utf-8').read() + '\n' + open('track.js',encoding='utf-8').read()).replace('__DATA__', json.dumps(json.load(open(os.path.join('dist','data.json'),encoding='utf-8')), ensure_ascii=False))
 # verze v patičce: commit tutoriálu a vydání SPOCKu, podle kterého je napsaný
 import subprocess
@@ -63,10 +83,15 @@ def _git(*a):
     try: return subprocess.run(['git', *a], capture_output=True, text=True, cwd=HERE).stdout.strip()
     except Exception: return ''
 _ver = _git('log', '-1', '--format=%h') or 'neznámá'; _date = _git('log', '-1', '--format=%cd', '--date=format:%-d. %-m. %Y')
+BUILD.update({'ver': _ver, 'date': _date, 'ts': int(_git('log', '-1', '--format=%ct') or 0) * 1000, 'title': _git('log', '-1', '--format=%s')[:120]})
 _sv = open(os.path.join('..', 'SPOCK-VERZE.md'), encoding='utf-8').read()
 _rel = (_re.search(r'^release:\s*(\S+)', _sv, _re.M) or [None, '?'])[1]
 foot = '<button class="fb-fab" type="button" data-fbopen>Zpětná vazba</button><footer class="ver"><span class="ver-n">Tutoriál zaznamenává váš průchod (návštěvy, kliknutí, odpovědi, dotazy na Spocka) pro vlastníka tutoriálu, aby ho mohl zlepšovat.</span>Tutoriál: verze ' + _ver + (' z ' + _date if _date else '') + ' · napsaný podle SPOCKu ' + _rel + '</footer>'
 tail = "\ndocument.querySelector('#app').insertAdjacentHTML('afterend', " + json.dumps(foot, ensure_ascii=False) + ");" + "\n$('#g-fab').insertAdjacentHTML('afterbegin', spockSVG('fab'));\n$('#g-head-bot').outerHTML = spockSVG('head');\n$('#home-btn').addEventListener('click', () => go('home'));\nrender();\n})();\n</script>\n"
+_rel_ = _rel
+BUILD['spock'] = _rel_
 out = head + app + "\n\n" + bot + tail
+BUILD['size']['html'] = len(out.encode('utf-8'))
+out = out.replace('__BUILD__', json.dumps(BUILD, ensure_ascii=False))
 open(os.path.join('dist','spock-user-onboarding.html'),'w',encoding='utf-8').write(out)
 print(len(out))

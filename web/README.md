@@ -36,11 +36,13 @@ End-to-end test projde cestu uživatele na počítači i na mobilu: simulaci, v�
 
 Web je stránka na claude.ai (artifact). Po sloučení změny do `main` se **sám neaktualizuje**.
 
+**Pořadí při publikaci:** sestavit (`parse.py`, `build.py`), pustit `node nastroje/e2e/journey.js`, a **znovu** `build.py`. Test zapíše zprávu `web/dist/e2e-report.json` (výsledky, rychlost v testu, velikost kontextu Spocka) a druhé sestavení ji vloží do stránky. Dashboard ji ukáže v záložce **Verze a kvalita** a zapíše verzi do historie, když ji vlastník poprvé otevře. Když se zdroje po testu změní, zpráva se nevloží a záložka hlásí, že testy pro tuto verzi neběžely.
+
 **S Claudem (běžná cesta):** v Claude Code napište „Sestav web z main a publikuj ho na stejnou adresu“. Claude web sestaví, pustí testy a zeptá se na souhlas. Adresa webu a stránky s architekturou je v [ARCHITEKTURA.md](../ARCHITEKTURA.md).
 
 **Bez Clauda:** hotový soubor si stáhnete z GitHubu. V repozitáři otevřete **Actions → Kontroly → poslední běh na `main` → Artifacts → spock-user-onboarding**. V balíčku je `spock-user-onboarding.html` a složka `media/`. Soubor a obě média dejte vedle sebe na interní web (SharePoint, Confluence, webový server). Mimo claude.ai funguje všechno kromě chatu se Spockem.
 
-**Oprávnění stránky:** web potřebuje na claude.ai tři oprávnění: `sample` (chat se Spockem), `db` (měření a zpětná vazba) a `user` se jmény (dashboard). Pravidla databáze: `track` a `feedback` čtou jen vlastník a editoři, každý člověk zapisuje jen svůj dokument; `todo` čte a píše jen vlastník a editoři. Při publikaci je Claude předává nástroji Artifact, bez nich se měření tiše vypne.
+**Oprávnění stránky:** web potřebuje na claude.ai tři oprávnění: `sample` (chat se Spockem), `db` (měření a zpětná vazba) a `user` se jmény (dashboard). Pravidla databáze: `track` a `feedback` čtou jen vlastník a editoři, každý člověk zapisuje jen svůj dokument; `todo` a `versions` čtou a píší jen vlastník a editoři. Při publikaci je Claude předává nástroji Artifact, bez nich se měření tiše vypne.
 
 **Verze:** v patičce webu je commit tutoriálu, datum a vydání SPOCKu, podle kterého je tutoriál napsaný. Podle ní poznáte, jestli je publikovaná nejnovější verze.
 

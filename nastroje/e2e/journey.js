@@ -11,7 +11,7 @@ const __fdb={doc:p=>({id:p.split('/').pop(),path:p,get:async()=>({id:p.split('/'
 const __fuser={me:async()=>({id:'u_ja',name:'Já',isOwner:true,canEdit:true}),id:async()=>'u_ja',isOwner:async()=>true,profiles:async ids=>Object.fromEntries(ids.map(i=>[i,{id:i,name:i==='u_ja'?'Já Vlastník':'Kolega Testovací'}]))};
 window.claude={use:async n=>{if(n==='db')return __fdb;if(n==='user')return __fuser;if(n!=='sample')return null;const f=async(msgs,o)=>{window.__sent.push(msgs);await new Promise(r=>setTimeout(r,50));return {text:'Task spustíte přes **Command Palette**: Tasks: Run Task.',truncated:false};};f.limits=async()=>({tools:false});return f;}};</script>`;
 fs.writeFileSync(path.join(DIST,'e2e.html'),'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+stub+'</head><body style="margin:0">'+html+'</body></html>');
-const R=[];const ok=(n,c,d='')=>{R.push([c?'PASS':'FAIL',n,d]);};
+const T0=Date.now();const LAB={};let CTX=null,SRC='';const R=[];const ok=(n,c,d='')=>{R.push([c?'PASS':'FAIL',n,d]);};
 (async()=>{const b=await chromium.launch();
 for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  const ctx=await b.newContext({viewport:{width:W,height:H}});await ctx.grantPermissions(['clipboard-read','clipboard-write']);
@@ -23,6 +23,8 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  const ov=async()=>p.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
  await p.goto('file://'+path.join(DIST,'e2e.html'));await p.waitForTimeout(400);
  const T=s=>tag+': '+s;
+ LAB[tag]={load:await p.evaluate(()=>{const n=performance.getEntriesByType('navigation')[0];return n?Math.round(n.domContentLoadedEventEnd):null})};
+ SRC=await p.evaluate(()=>__kviz.build().src);
  ok(T('nováček vidí úvod „Seznamte se se SPOCKem“'), await p.locator('.hx-first h1').innerText().then(t=>t.includes('Seznamte')));
  ok(T('úvod: na mobilu jeden sloupec, na počítači dva'), (await p.evaluate(()=>getComputedStyle(document.querySelector('.hx-first')).gridTemplateColumns.split(' ').length))===(W>980?2:1));
  // simulace
@@ -147,6 +149,14 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  await p.locator('.ds-fbi input').first().check();await p.waitForTimeout(200);
  ok(T('odškrtnutí zpětné vazby se uloží'), Object.keys((await p.evaluate(()=>window.__db['todo/state']||{done:{}})).done).length===1);
  ok(T('dashboard bez přetékání'), (await ov())<=0);
+ // záložka Verze a kvalita
+ await p.locator('[data-dash="tab:ver"]').click();await p.waitForTimeout(300);
+ const vtx=await p.locator('#dash').innerText().catch(()=>'');
+ ok(T('záložka Verze a kvalita ukáže testy, výkon a tokeny verze'), vtx.includes('End-to-end testy') && vtx.includes('Náročnost na tokeny') && vtx.includes('Historie verzí'));
+ ok(T('verze se zapíše do historie'), Object.keys(await p.evaluate(()=>window.__db)).some(k=>k.startsWith('versions/')));
+ ok(T('záložka Verze bez přetékání'), (await ov())<=0);
+ {const r=((await p.evaluate(()=>window.__db['track/u_ja']))||{perf:{render:[]}}).perf.render.slice().sort((a,b)=>a-b);LAB[tag].render=r.length?r[Math.floor(r.length/2)]:null;LAB[tag].renderP90=r.length?r[Math.min(r.length-1,Math.floor(r.length*.9))]:null;}
+ if(!CTX)CTX=await p.evaluate(()=>__kviz.ctx());
  // trvalost
  await dismiss();const before=await st();await p.reload();await p.waitForTimeout(300);const after=await st();
  ok(T('pokrok přežije obnovení stránky'), before.xp===after.xp && after.role==='gm', 'před '+before.xp+' po '+after.xp+' role '+after.role);
@@ -157,4 +167,5 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  ok(T('ovládací prvky mají název'), a11y.length===0, a11y.slice(0,3).join(' | '));
  await ctx.close();}
 await b.close();
-const f=R.filter(r=>r[0]==='FAIL');R.forEach(r=>console.log(r[0],r[1],r[2]||''));console.log(`\nCELKEM ${R.length}, PASS ${R.length-f.length}, FAIL ${f.length}`);process.exit(f.length?1:0);})();
+const f=R.filter(r=>r[0]==='FAIL');
+fs.writeFileSync(path.join(DIST,'e2e-report.json'),JSON.stringify({src:SRC,at:Date.now(),total:R.length,pass:R.length-f.length,fail:f.length,failed:f.map(r=>r[1]+(r[2]?' ('+String(r[2]).slice(0,120)+')':'')),durMs:Date.now()-T0,lab:LAB,ctx:CTX}));R.forEach(r=>console.log(r[0],r[1],r[2]||''));console.log(`\nCELKEM ${R.length}, PASS ${R.length-f.length}, FAIL ${f.length}`);process.exit(f.length?1:0);})();

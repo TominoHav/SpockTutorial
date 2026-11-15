@@ -1,5 +1,6 @@
 const KEY = 'spock-user-onboarding-v1';
 const DATA = __DATA__;
+const BUILD = __BUILD__;
 let {W, GLOSS, CHEAT, CHEAT_INTRO, DIAG, DIAG_INTRO, PRINCIPLES, MISTAKES, READY} = DATA;
 const ROLES = {pm:'Product Manager', pd:'Product Designer', se:'Software Engineer', gm:'Guild Master'};
 const ROLE_WHO = {pm:'Vedete produkt nebo iniciativu a rozhodujete, co se bude stavět.', pd:'Děláte výzkum s klienty a navrhujete, jak bude produkt fungovat a vypadat.', se:'Posuzujete, co jde technicky postavit, a pak to stavíte.', gm:'Spravujete PM metodiku banky a pomáháte komunitě produktových manažerů.'};
@@ -226,7 +227,7 @@ function startSession(wid, mode){
   renderSession();
 }
 /* jen pro automatický test: čtení stavu kvízu */
-window.__kviz = {mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
+window.__kviz = {build: () => BUILD, ctx: () => { const v = view, out = {}; W.forEach(w => { view = Object.assign({}, v, {name:'week', week:w.id}); out[w.id] = rules().length; }); view = v; return out; }, mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
 function sesQ(){ const w = W.find(x => x.id === SES.wid), qi = SES.qs[SES.i]; return {w, qi, q:SES.items[qi]}; }
 function renderSession(){
   let ov = document.getElementById('ses');

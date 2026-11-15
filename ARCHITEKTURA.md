@@ -29,7 +29,7 @@ Plné šipky: kudy teče obsah. Čárkované: údržba, která hlídá aktuálno
 | Sestavený web ke stažení | GitHub Actions → Kontroly → běh na `main` → Artifacts |
 | Měsíční kontrola aktuálnosti | naplánovaná úloha Clauda, 1. v měsíci v 8:56, navázaná na jedno sezení |
 | Měření průchodu a zpětná vazba | databáze stránky na claude.ai: `track/<člověk>` a `feedback/<člověk>`, vidí je jen vlastník a editoři; kód ve `web/track.js` |
-| Dashboard | na webu, tlačítko Dashboard v horní liště, jen pro vlastníka |
+| Dashboard | na webu, tlačítko Dashboard v horní liště, jen pro vlastníka. Záložky: **Lidé a průchod** a **Verze a kvalita** (testy, výkon, tokeny a historie verzí, `versions/<verze>` v databázi stránky) |
 | Úkoly, které musí udělat lidé | [revize/TODO-VLASTNIK.md](revize/TODO-VLASTNIK.md) |
 
 Web se po sloučení změny **sám nepublikuje**. Postup je ve [web/README.md](web/README.md). Verze je v patičce webu.
@@ -70,7 +70,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
-| [#29](https://github.com/TominoHav/SpockTutorial/pull/29) | Aplikace, Údržba | Měření průchodu, zpětná vazba jako úkoly a dashboard vlastníka: návštěvy, trychtýř, kde se lidé ztrácejí, kliknutí, výkon, odhad tokenů Spocka | 15. 11. 2026 |
+| [#29](https://github.com/TominoHav/SpockTutorial/pull/29) | Aplikace, Údržba | Měření průchodu, zpětná vazba jako úkoly a dashboard vlastníka: návštěvy, trychtýř, kde se lidé ztrácejí, kliknutí, výkon, odhad tokenů Spocka; záložka Verze a kvalita: testy, zhoršení výkonu a náročnost na tokeny u každé verze | 15. 11. 2026 |
 | [#28](https://github.com/TominoHav/SpockTutorial/pull/28) | Údržba, Aplikace | Automatické kontroly na GitHubu, verze v patičce webu, postup publikace, kontrola struktury modulů, seznam úkolů pro vlastníka | 15. 11. 2026 |
 | [#27](https://github.com/TominoHav/SpockTutorial/pull/27) | Obsah, Aplikace, Údržba | Odpovědi nejdou uhodnout podle délky a pořadí, příručka a přepínač lekcí v menu u všech modulů, rozdělené dlouhé karty 2G.6, e2e průchod všemi 9 moduly | 14. 11. 2026 |
 | [#26](https://github.com/TominoHav/SpockTutorial/pull/26) | Obsah, Údržba | Kontrolní seznam odborné kontroly (287 položek), scénář pilotu s nováčky, kratší úkoly v Přípravě a u PM | 14. 11. 2026 |

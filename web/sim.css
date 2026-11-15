@@ -256,3 +256,10 @@ body:has(#ses) .fb-fab,body:has(.cel) .fb-fab,body:has(.vidov) .fb-fab{display:n
 @media (max-width:640px){.ds-hr{grid-template-columns:1fr auto}.ds-hl{grid-column:1/-1}.fb-fab{font-size:12.5px;padding:8px 12px}}
 button.pill{font:inherit;cursor:pointer;border:1px solid var(--line)}button.pill:hover{border-color:var(--blue-2)}
 .ds-nw{white-space:nowrap}@media (min-width:981px){.fb-fab{left:auto;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(150px + env(safe-area-inset-bottom,0px))}}
+.ds-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.ds-tabs button{font:inherit;font-weight:700;font-size:14.5px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);border-radius:99px;padding:8px 16px;cursor:pointer}
+.ds-tabs button.on{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
+.ds-bad{color:var(--pink);font-weight:700}.ds-good{color:#1a8f5a;font-weight:700}
+.ds-vt{display:block;color:var(--ink-3);font-size:12px;max-width:260px}
+.ds-vtodo{cursor:default;border-left-color:var(--pink)}.ds-vtodo>span:first-child{font-weight:800;color:var(--pink)}
+.ds-okline{border:1px solid var(--line);border-left:4px solid #1a8f5a;border-radius:12px;background:var(--surface);padding:12px 14px;margin:0}
