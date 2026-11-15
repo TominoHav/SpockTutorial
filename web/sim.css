@@ -216,9 +216,6 @@ body.noscroll{overflow:hidden}
 #lpanel{scroll-margin-top:calc(84px + env(safe-area-inset-top,0px))}
 .ver{max-width:1280px;margin:8px auto 0;padding:14px 16px calc(90px + env(safe-area-inset-bottom,0px));font-size:12.5px;color:var(--ink-3);text-align:center}
 /* zpětná vazba */
-.fb-fab{position:fixed;left:max(14px,env(safe-area-inset-left,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:29;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:9px 14px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.14)}
-.fb-fab:hover{border-color:var(--blue-2)}
-body:has(#ses) .fb-fab,body:has(.cel) .fb-fab,body:has(.vidov) .fb-fab{display:none}
 .fb{position:fixed;inset:0;z-index:95;background:rgba(6,10,20,.6);display:grid;place-items:center;padding:14px}
 .fb-in{position:relative;width:min(560px,100%);max-height:calc(100vh - 28px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:8px}
 .fb-in h2{margin:0;font-size:20px}.fb-in p{margin:0}.fb-in label{font-weight:700;font-size:14px;margin-top:6px}
@@ -253,9 +250,9 @@ body:has(#ses) .fb-fab,body:has(.cel) .fb-fab,body:has(.vidov) .fb-fab{display:n
 .ds-fbi input{width:18px;height:18px;margin-top:3px}.ds-fbi small{display:block;color:var(--ink-3);font-size:12.5px;margin:2px 0 6px}
 .ds-fbt,.ds-fbf{display:block;overflow-wrap:anywhere}.ds-fbf{margin-top:4px;color:var(--ink-2)}
 .ds-who{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:14px}
-@media (max-width:640px){.ds-hr{grid-template-columns:1fr auto}.ds-hl{grid-column:1/-1}.fb-fab{font-size:12.5px;padding:8px 12px}}
+@media (max-width:640px){.ds-hr{grid-template-columns:1fr auto}.ds-hl{grid-column:1/-1}}
 button.pill{font:inherit;cursor:pointer;border:1px solid var(--line)}button.pill:hover{border-color:var(--blue-2)}
-.ds-nw{white-space:nowrap}@media (min-width:981px){.fb-fab{left:auto;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(150px + env(safe-area-inset-bottom,0px))}}
+.ds-nw{white-space:nowrap}
 .ds-tabs{display:flex;gap:6px;flex-wrap:wrap}
 .ds-tabs button{font:inherit;font-weight:700;font-size:14.5px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);border-radius:99px;padding:8px 16px;cursor:pointer}
 .ds-tabs button.on{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
@@ -268,3 +265,5 @@ button.pill{font:inherit;cursor:pointer;border:1px solid var(--line)}button.pill
 .tchk.seen{border-color:var(--purple);background:color-mix(in srgb,var(--purple) 5%,var(--surface))}
 .tchk-l{font-size:11.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--blue-2)}.tchk.seen .tchk-l{color:var(--purple)}
 .titem.has-chk input:disabled{opacity:.45}
+.fb-pill{gap:6px;color:var(--ink)}.fb-pill svg{flex:none}.lp-fb{margin:14px 0 0;font-size:14px;text-align:center}
+@media (max-width:640px){.fb-pill .fb-t{display:none}.fb-pill{padding:6px 9px}}

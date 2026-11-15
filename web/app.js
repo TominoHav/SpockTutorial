@@ -708,6 +708,7 @@ function lessonPanel(w, di){
     </div>
     <div class="lp-prog"><span class="bar"><i style="width:${Math.round(lessonPct(w, di)*100)}%"></i></span><span class="num">${d.cards && d.cards.length ? cardsDone(w, di) + '/' + d.cards.length + ' karet · ' : ''}${dn}/${d.todo.length} úkolů</span></div>
     <div class="dbody">${(() => { let n = 0; return (prakt ? learn + todo + cards + key : learn + cards + key + todo).replace(/<i>\u0001<\/i>/g, () => '<i>' + (++n) + '</i>'); })()}${extra}</div>
+    <p class="lp-fb"><button class="linkbtn" type="button" data-fbopen>Něco v této lekci nesedí nebo je nejasné? Napište nám</button></p>
     <div class="lp-foot">${di > 0 ? `<button class="btn" type="button" data-lesson="${di-1}">← ${esc(w.days[di-1].d)}</button>` : '<span></span>'}${next}</div>
   </section>`;
 }
