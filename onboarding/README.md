@@ -1,6 +1,6 @@
 # SPOCK User Onboarding
 
-Onboarding pro **uživatele** SPOCKu: Product Managera, Product Designera, Software Engineera a Guild Mastera, správce PM metodiky. Vede od první instalace až na úroveň **superusera**, který SPOCK ovládá bez nápovědy, pozná, když se agent chová špatně, a provede jím kolegy.
+Onboarding pro **uživatele** SPOCKu: Product Managera, Product Designera, Software Engineera a Guild Mastera, správce know-how. Vede od první instalace až na úroveň **superusera**, který SPOCK ovládá bez nápovědy, pozná, když se agent chová špatně, a provede jím kolegy.
 
 **Zkratky rolí v celém onboardingu:** **PM** = Product Manager, **PD** = Product Designer, **SWE** = Software Engineer, **GM** = Guild Master.
 
@@ -29,7 +29,7 @@ Příručka  Fáze do hloubky    volitelně, hlavně GM a superuser
 | 2 | [Product Manager](role-pm.md) | PM | 6–8 h | Projít vlastní běh od briefu po iniciativu a podepsat každé rozhodnutí. |
 | 2 | [Product Designer](role-designer.md) | PD | 4–5 h | Dodat výzkum do fáze 2, posoudit příležitosti a přispět k řešení, MVP a PRD. |
 | 2 | [Software Engineer](role-engineer.md) | SWE | 4–5 h | Posoudit proveditelnost před výběrem řešení, přečíst PRD a záznamy běhu. |
-| 2 | [Guild Master](role-guild-master.md) | GM, správce PM metodiky | 6–7 h | Metodicky posoudit běh, změnit know-how správným postupem, odhadnout dopad změny na architekturu SPOCKu a vést komunitu PM. |
+| 2 | [Guild Master](role-guild-master.md) | GM, správce know-how | 6–7 h | Metodicky posoudit běh, změnit know-how správným postupem, odhadnout dopad změny na architekturu SPOCKu a vést komunitu PM. |
 | 3 | [Pokročilý](uroven-3-pokrocily.md) | všichni | 3–4 h | Vrátit fázi, vyřešit neprošlou bránu, předat běh kolegovi, aktualizovat kopii. |
 | 4 | [Superuser](uroven-4-superuser.md) | všichni | 4–6 h | Prověřit chování agentů, poslat použitelný nález a provést kolegu onboardingem. |
 | Příručka | [Fáze do hloubky](uroven-1b-faze-do-hloubky.md) | volitelně, hlavně GM a superuser | 8–10 h | U každé fáze vysvětlit kroky, pravidla, bránu, rozhodnutí a to, co fáze záměrně nedělá a neopraví. |

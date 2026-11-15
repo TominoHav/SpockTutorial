@@ -58,10 +58,13 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 - [ ] 1.5 Najděte v TASKS.md tři tasky, které otevírají políčka
 - [ ] 1.5 Založte si deník
-- [ ] 1.5 Projděte ukázkový běh
-- [ ] 1.5 Dohledejte jedno tvrzení zpět ke zdroji
 - [ ] 1.5 Najděte v běhu podpisy
 - [ ] 1.5 Zeptejte se Methodology Coache
+
+**1.6 — Ukázkový běh od briefu po iniciativu**
+
+- [ ] 1.6 Projděte ukázkový běh
+- [ ] 1.6 Dohledejte jedno tvrzení zpět ke zdroji
 
 - [ ] Kvíz: Úroveň 1: Příprava
 
@@ -199,9 +202,9 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 ## Úroveň 2: Guild Master
 
-**2G.1 — Kde metodika ve SPOCKu žije**
+**2G.1 — Kde know-how ve SPOCKu žije a kdo ho vlastní**
 
-- [ ] 2G.1 Zmapujte know-how oblastí Method a Product
+- [ ] 2G.1 Zmapujte know-how své oblasti
 - [ ] 2G.1 Najděte, které verze know-how běh četl
 
 **2G.2 — Šablona Guildy a co z ní SPOCK dělá**
@@ -215,19 +218,19 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 **2G.4 — Změna know-how**
 
-- [ ] 2G.4 Napište návrh změny metodiky
+- [ ] 2G.4 Napište návrh změny know-how
 - [ ] 2G.4 Proveďte změnu se SWE
 
-**2G.5 — Vedení komunity PM**
+**2G.5 — Vedení komunity**
 
 - [ ] 2G.5 Najděte vzor ve zpětné vazbě
 - [ ] 2G.5 Připravte 30minutové intro pro Guildu
 
-**2G.6 — Architektura pro správce metodiky**
+**2G.6 — Architektura pro správce know-how**
 
 - [ ] 2G.6 Zmapujte dopad jedné změny
 - [ ] 2G.6 Projděte jeden tah ve vlastním běhu a určete, kdo co dělal
-- [ ] 2G.6 Vysvětlete kolegovi z PM komunity tři pojistky
+- [ ] 2G.6 Vysvětlete kolegovi z komunity tři pojistky
 
 - [ ] Kvíz: Úroveň 2: Guild Master
 

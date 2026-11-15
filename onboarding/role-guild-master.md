@@ -1,16 +1,16 @@
-# Úroveň 2: Guild Master, správce PM metodiky (6–7 h)
+# Úroveň 2: Guild Master, správce know-how (6–7 h)
 
-**Cíl:** Víte, kde ve SPOCKu žije produktová metodika a kdo ji vlastní. Umíte metodicky posoudit hotový běh (tu polovinu bran, kterou žádný automat nehodnotí), navrhnout a provést změnu know-how správným postupem a vést komunitu PM, kteří se SPOCKem pracují.
+**Cíl:** Víte, kde ve SPOCKu žije know-how, jak je rozdělené do pěti oblastí a kdo je vlastní. Umíte ve své oblasti posoudit hotový běh (tu polovinu bran, kterou žádný automat nehodnotí), navrhnout a provést změnu know-how správným postupem a vést komunitu lidí, kteří se SPOCKem pracují.
 
-**Proč:** Kontroly SPOCKu hlídají, že dokumenty jsou mechanicky v pořádku. **Jestli je outcome dobře formulovaný a příležitosti jsou ty správné, neposuzuje žádná kontrola**: posuzovaná pravidla nečte žádný automatický soudce (`BUSINESS-LOGIC-OVERVIEW.md` §6). Know-how oblastí **Method** a **Product** vlastní Česká spořitelna a osoba v ČS, která je udržuje, zatím není jmenovaná (`specifications/onboarding/KNOW-HOW-OWNERS.md` §1). Šablona iniciativy Product Management Guildy je pro SPOCK závazná (`initiative-template.md`). Guild Master je člověk, který tohle drží pohromadě.
+**Proč:** Kontroly SPOCKu hlídají, že dokumenty jsou mechanicky v pořádku. **Jestli je outcome dobře formulovaný, příležitosti ty správné a regulatorní část úplná, neposuzuje žádná kontrola**: posuzovaná pravidla nečte žádný automatický soudce (`BUSINESS-LOGIC-OVERVIEW.md` §6). Know-how je rozdělené do pěti oblastí: **Compliance, Market, Method, Product a Writing**. Všechny vlastní Česká spořitelna. Osoba v ČS, která oblast udržuje, zatím není jmenovaná u žádné z nich, rozdělení ale platí už teď (`specifications/onboarding/KNOW-HOW-OWNERS.md` §1). Modul je pro každého, kdo některou oblast drží nebo ji držet bude, ať přichází z produktového managementu, designu, nebo z compliance. Příklady jsou nejčastěji z oblastí Method a Product, postup je pro všech pět oblastí stejný.
 
-**Než začnete:** Mějte hotové úrovně 0 a 1 a ideálně i [role-pm.md](role-pm.md). Při revizi mějte po ruce [příručku Fáze do hloubky](uroven-1b-faze-do-hloubky.md). Metodiku nejde posuzovat bez vlastního běhu.
+**Než začnete:** Mějte hotové úrovně 0 a 1 a ideálně i modul role, která s vaší oblastí pracuje nejvíc (například [role-pm.md](role-pm.md)). Při revizi mějte po ruce [příručku Fáze do hloubky](uroven-1b-faze-do-hloubky.md). Know-how nejde posuzovat bez vlastního běhu.
 
-> Guild Master mění **zdroj** know-how v `specifications/definitions/know-how/`. Nikdy neupravuje `.github/`: kopii pro agenty generuje a ověřuje SWE (`KNOW-HOW-OWNERS.md` §3–4).
+> Guild Master mění **zdroj** know-how své oblasti v `specifications/definitions/know-how/`. Nikdy neupravuje `.github/`: kopii pro agenty generuje a ověřuje SWE (`KNOW-HOW-OWNERS.md` §3–4).
 
-## 2G.1 — Kde metodika ve SPOCKu žije
+## 2G.1 — Kde know-how ve SPOCKu žije a kdo ho vlastní
 
-### Karty (asi 8 min, jen na webu)
+### Karty (asi 10 min, jen na webu)
 
 #### Know-how: co agenti čtou a nikdy nepíší
 
@@ -24,7 +24,15 @@
 
 #### Pět oblastí, zdroj jen jeden
 
-**Pět oblastí:** Compliance, Market, Method, Product a Writing. Pro PM metodiku jsou klíčové **Method** (Method Canon, Evidence Standards, Opportunity Framing, Discovery Craft) a **Product** (Brief Fields, PRD Template, Initiative Template, Strategy Basis a Stage Shapes).
+**Know-how má pět oblastí** a každá rozhoduje o něčem jiném (`KNOW-HOW-OWNERS.md` §1):
+
+| Oblast | O čem rozhoduje | Osoba v ČS |
+|---|---|---|
+| **Compliance** | Kterých regulatorních oblastí se řešení dotýká a co říká compliance část | zatím nejmenována, má být z compliance |
+| **Market** | Jak se zkoumá konkurence a trendy a kde se smí hledat | zatím nejmenována |
+| **Method** | Co je důkaz, jak z problémů vznikají příležitosti a metoda každé fáze | zatím nejmenována |
+| **Product** | Co musí obsahovat brief, řešení, PRD a iniciativa a strategie, se kterou se měří | zatím nejmenována |
+| **Writing** | Jak agenti mluví s člověkem a jak se čte každý dokument | zatím nejmenována |
 
 **Zdroj je jen jeden:** `specifications/definitions/know-how/`. Kopie v `.github/know-how/` se generuje. Úprava kopie selže v kontrole `C41` a při dalším generování zmizí.
 
@@ -33,6 +41,21 @@
 - [x] Selže kontrola a změna zmizí
 
 **Proč:** `.github/know-how/` je generovaná kopie. Zdroj je jen `specifications/definitions/know-how/`.
+
+#### Vlastnictví je rozdělené, jména zatím chybí
+
+**Každou oblast vlastní Česká spořitelna** a ke každé jmenuje jednu osobu, která ji udržuje. Jméno zatím chybí u všech pěti. Dokud chybí, nedrží oblast nikdo mimo ČS ani nikdo za ČS (`KNOW-HOW-OWNERS.md`, úvod).
+
+**V hlavičce každého dokumentu:** `Owner` je Česká spořitelna a `Written by` je autor z pilotního týmu, který dokument napsal, ale nevlastní ho. Až jmenovaná osoba projde celý dokument, změní se `Status` na *Approved* a k `Owner` přibude její jméno (§4 krok 3).
+
+**Víc do hloubky:** Osoba pro Compliance má být z compliance, ne z produktu. Kartu Compliance postavil pilotní tým z karty, kterou dodala ČS. Karty GDPR, ICT a bezpečnost a Legal napsal pilotní tým z veřejného práva a ČS je zatím nepotvrdila (§1).
+
+**Otázka:** V hlavičce know-how stojí `Written by:` autor z pilotního týmu. Vlastní ten dokument?
+- [ ] Ano, kdo dokument napsal, ten ho vlastní
+- [x] Ne, vlastní ho Česká spořitelna, autor ho jen napsal
+- [ ] Vlastní ho agent, který ho čte
+
+**Proč:** `Owner` je u každého dokumentu Česká spořitelna. `Written by` jen říká, kdo text napsal.
 
 #### Každá změna má novou verzi
 
@@ -59,13 +82,13 @@
 
 ### Úkoly
 
-- [ ] **Zmapujte know-how oblastí Method a Product** (30 min, ve VS Code)
+- [ ] **Zmapujte know-how své oblasti** (30 min, ve VS Code)
   - *Proč:* Tohle jsou dokumenty, za které budete odpovídat. Musíte vědět, v jakém stavu jsou.
-  1. Otevřete každý soubor ve `specifications/definitions/know-how/method/` a `…/product/`.
-  2. Z hlavičky si zapište **Version**, **Status** a **Owner** (např. Method Canon: 0.4, For review).
+  1. Vyberte oblast, kterou držíte nebo budete držet: `compliance/`, `market/`, `method/`, `product/` nebo `writing/` ve `specifications/definitions/know-how/`. Když to ještě nevíte, vezměte `method/` a `product/`.
+  2. Otevřete každý soubor oblasti a z hlavičky si zapište **Version**, **Status**, **Owner** a **Written by** (např. Method Canon: 0.4, For review).
   3. Označte si, které mají status *Approved* a které ještě ne. Schválení je práce jmenované osoby v ČS (`KNOW-HOW-OWNERS.md` §4 krok 3).
 - [ ] **Najděte, které verze know-how běh četl** (15 min, ve VS Code)
-  - *Proč:* Když se změní metodika, potřebujete vědět, které běhy vznikly podle staré verze.
+  - *Proč:* Když se změní know-how, potřebujete vědět, které běhy vznikly podle staré verze.
   1. Otevřete `RUN-STATE.md` ukázkového běhu `fixtures/2026-09-spending-insights/`.
   2. U fáze 1 najděte řádek `know_how:` a verzi `brief-fields` (v tomto běhu `brief-fields@0.4`).
   3. Porovnejte ji s aktuální verzí ve zdroji (`product/brief-fields.md`, dnes 0.7). Zapište si, co se mezi verzemi změnilo (blok historie v hlavičce).
@@ -230,7 +253,7 @@
 
 ### Úkoly
 
-- [ ] **Napište návrh změny metodiky** (45 min, ve VS Code)
+- [ ] **Napište návrh změny know-how** (45 min, ve VS Code)
   - *Proč:* Návrh vás donutí promyslet dopad dřív, než se cokoli změní, a dá týmu CoE Product Management i SWE co revidovat.
   1. Z revize v 2G.3 nebo z porovnání v 2G.2 vyberte jeden problém.
   2. Napište: problém, kterého dokumentu se týká, co přesně změníte, novou verzi a jak poznáte, že změna funguje (na kterém běhu ji ověříte).
@@ -245,13 +268,13 @@
 
 - 📄 **`KNOW-HOW-OWNERS.md`** §4 („How a change is made“)
 
-## 2G.5 — Vedení komunity PM
+## 2G.5 — Vedení komunity
 
 ### Karty (asi 6 min, jen na webu)
 
 #### Mezery v kánonu jsou signál
 
-**Methodology Coach** odpovídá jen z Method Canonu. Co v kánonu není, neřekne. Mezery, na které PM narážejí, jsou pro vás signál ke změně.
+**Methodology Coach** odpovídá jen z Method Canonu. Co v kánonu není, neřekne. Mezery, na které lidé narážejí, jsou pro vás signál ke změně. Totéž platí pro ostatní oblasti: opakovaná otázka nebo opakovaná oprava výstupu ukazuje na mezeru v know-how.
 
 **Otázka:** PM se opakovaně ptají Methodology Coache na věc, kterou neumí odpovědět. Co to pro vás je?
 - [ ] Chyba agenta, kterou nahlásím
@@ -271,27 +294,27 @@
 
 #### Opakované výjimky
 
-**Výjimky označené „the workflow looks wrong“** se sčítají v `SPOCK: how the workflow performed`. Opakující se výjimka u stejné kontroly je podnět k revizi metodiky nebo kontroly.
+**Výjimky označené „the workflow looks wrong“** se sčítají v `SPOCK: how the workflow performed`. Opakující se výjimka u stejné kontroly je podnět k revizi know-how nebo kontroly.
 
 **Otázka:** Tři PM podepsali výjimku u stejné kontroly s „the workflow looks wrong“. Co uděláte?
 - [ ] Nic, podepsané výjimky jsou běžná věc
-- [x] Projdu, jestli nejde o chybu metodiky nebo kontroly
+- [x] Projdu, jestli nejde o chybu know-how nebo kontroly
 
 **Proč:** Opakující se výjimka je podnět k revizi.
 
 ### Úkoly
 
 - [ ] **Najděte vzor ve zpětné vazbě** (30 min, ve VS Code)
-  - *Proč:* Jeden nález je náhoda, tři stejné jsou úkol pro metodiku.
+  - *Proč:* Jeden nález je náhoda, tři stejné jsou úkol pro správce oblasti.
   1. Spusťte `SPOCK: how the workflow performed` nad běhy, které máte k dispozici.
-  2. Projděte deníky a nálezy PM z vaší komunity.
-  3. Zapište jeden opakující se vzor a rozhodněte: materiál, metodika, nebo workflow (to předáte týmu CoE Product Management)?
+  2. Projděte deníky a nálezy lidí z vaší komunity (PM, PD i SWE).
+  3. Zapište jeden opakující se vzor a rozhodněte: materiál, know-how (které oblasti?), nebo workflow (to předáte týmu CoE Product Management)?
 - [ ] **Připravte 30minutové intro pro Guildu** (45 min, ve VS Code)
-  - *Proč:* PM se SPOCK naučí rychleji od vás než z dokumentace.
+  - *Proč:* Lidé se SPOCK naučí rychleji od vás než z dokumentace.
   1. Osnova: co SPOCK dělá (7 fází), kde rozhoduje člověk, co výstup dokazuje a co ne a kde je onboarding.
   2. Jako ukázku použijte vlastní revizi z 2G.3.
 
-## 2G.6 — Architektura pro správce metodiky
+## 2G.6 — Architektura pro správce know-how
 
 ### Karty (asi 14 min, jen na webu)
 
@@ -360,12 +383,12 @@ Tři pojistky drží agenta a kontrolu od sebe:
 
 #### Běh si pamatuje, workflow se mění vydáním
 
-Dvě pravidla, která se přímo týkají vašich změn metodiky:
+Dvě pravidla, která se přímo týkají vašich změn know-how:
 
 - **Běh si pamatuje, podle čeho vznikl.** Zapisuje verzi každého know-how, které agent četl. Proto musí mít každá změna know-how novou verzi.
 - **Workflow se mění jen novým vydáním.** Úprava souborů SPOCKu v pracovní kopii shodí kontrolu C189.
 
-**Otázka:** Kdy se vaše změna metodiky dostane k uživatelům?
+**Otázka:** Kdy se vaše změna know-how dostane k uživatelům?
 - [ ] Hned po uložení souboru
 - [x] Až s novým vydáním SPOCKu
 - [ ] Po restartu VS Code
@@ -374,19 +397,21 @@ Dvě pravidla, která se přímo týkají vašich změn metodiky:
 
 #### Devět vrstev, vaše je jedna
 
-**SPOCK má devět vrstev.** Vy vlastníte jednu (know-how), ostatní mění SWE:
+**SPOCK má devět vrstev.** Vaše je jedna, know-how, a z ní vaše oblast. Ostatní mění SWE. Čtyři, které potkáte nejčastěji:
 
 | Vrstva | Kde žije | Co dělá |
 |---|---|---|
-| Pravidla pro všechny | `.github/copilot-instructions.md`, `.github/instructions/` | Pracovní řád: piš jen do běhu, nic nedomýšlej, sám nic neschvaluj |
-| Agenti (6) | `.github/agents/*.agent.md` | Kdo agent je a jaké má nástroje |
+| **Know-how (22 v 5 oblastech)** | zdroj `specifications/definitions/know-how/` | **Co znamená „dobře“: metoda, šablony, regulace, trh a styl. Vaše vrstva** |
 | Skilly (17) | `.github/skills/*/SKILL.md` | Postup krok za krokem pro jeden dokument |
-| **Know-how (22 v 5 oblastech)** | zdroj `specifications/definitions/know-how/` | **Co znamená „dobře“: metodika, šablony, regulace. Vaše vrstva** |
-| Kontrakty | `.github/workflow-contracts/*.yaml` | Pořadí fází a kritéria bran |
-| Registry | `.github/registry/*.yaml` | Seznam všeho, co existuje: agenti, skilly, kontroly, povolený web |
 | Kontroly | `.github/scripts/check.mjs`, `gates.mjs` | Kód, který po agentovi ověří výstup (Q brány) |
-| Hlídače | `.github/hooks/step-guards.json` → `step-guard.mjs` | Za běhu zastaví špatný krok dřív, než se stane |
-| Tasky (46) | `.vscode/tasks.json` | Tlačítka `SPOCK: …`. Políčka pro jméno a roli vyplní jen člověk |
+| Hlídače | `.github/hooks/step-guards.json` | Za běhu zastaví špatný krok dřív, než se stane |
+
+**Víc do hloubky:**
+- **Pravidla pro všechny** (`.github/copilot-instructions.md`, `.github/instructions/`): pracovní řád, piš jen do běhu, nic nedomýšlej, sám nic neschvaluj.
+- **Agenti (6)** (`.github/agents/*.agent.md`): kdo agent je a jaké má nástroje.
+- **Kontrakty** (`.github/workflow-contracts/*.yaml`): pořadí fází a kritéria bran.
+- **Registry** (`.github/registry/*.yaml`): seznam všeho, co existuje: agenti, skilly, kontroly, povolený web.
+- **Tasky (46)** (`.vscode/tasks.json`): tlačítka `SPOCK: …`. Políčka pro jméno a roli vyplní jen člověk.
 
 **Otázka:** Kterou vrstvu vlastní Guild Master?
 - [ ] Kontroly
@@ -408,20 +433,19 @@ Dvě pravidla, která se přímo týkají vašich změn metodiky:
 | Methodology Coach | radí | jen čte |
 | Workflow Support | radí | jen čte |
 
-**Hlídače: co který zastaví.** Každé jejich rozhodnutí se zapisuje do `.github/.guard/decisions.jsonl` ve vaší kopii (soubor není v gitu):
+**Hlídače** za běhu zastaví špatný krok dřív, než se stane. Každé jejich rozhodnutí se zapisuje do `.github/.guard/decisions.jsonl` ve vaší kopii (soubor není v gitu).
 
-| Kdy | Hlídač | Co dělá |
-|---|---|---|
-| Start chatu | `SessionStart` | Dá agentovi poznámku o stavu běhu a o tom, co smí |
-| Vaše zpráva | `SG7` | Když jste mezitím spustili task, předá agentovi jeho výstup |
-| Před zápisem | `write` | Odmítne zápis mimo běžící fázi, do `.github/` a `.vscode/`, do schválené fáze, do `supplied/` a do souborů, které píše workflow |
-| Před zápisem | `SG3` | Odmítne zápis dokumentu, když agent v tomto chatu neotevřel jeho skill |
-| Před čtením | `checker` | Agent nesmí číst kód kontrol |
-| Před taskem | `SG1` | Agent nesmí spustit task s políčky pro člověka |
-| Před taskem | smyčka | Stejný task potřetí bez změny v běhu → zastaví |
-| Před webem | `SG4` | Ve fázi 3 nepustí hledání před úvodní zprávou fáze |
-| Po tasku | `SG2` | Dá agentovi celý výstup tasku: „jednej podle celého“ |
-| Konec tahu | `SG5`, `SG6` | Vrátí tah, když agent chce po člověku, co má udělat sám, nebo když žádosti o schválení chybí povinné věty |
+**Víc do hloubky:**
+- **Start chatu** (`SessionStart`): dá agentovi poznámku o stavu běhu a o tom, co smí.
+- **Vaše zpráva** (`SG7`): když jste mezitím spustili task, předá agentovi jeho výstup.
+- **Před zápisem** (`write`): odmítne zápis mimo běžící fázi, do `.github/` a `.vscode/`, do schválené fáze, do `supplied/` a do souborů, které píše workflow.
+- **Před zápisem** (`SG3`): odmítne zápis dokumentu, když agent v tomto chatu neotevřel jeho skill.
+- **Před čtením** (`checker`): agent nesmí číst kód kontrol.
+- **Před taskem** (`SG1`): agent nesmí spustit task s políčky pro člověka.
+- **Před taskem** (smyčka): stejný task potřetí bez změny v běhu zastaví.
+- **Před webem** (`SG4`): ve fázi 3 nepustí hledání před úvodní zprávou fáze.
+- **Po tasku** (`SG2`): dá agentovi celý výstup tasku, „jednej podle celého“.
+- **Konec tahu** (`SG5`, `SG6`): vrátí tah, když agent chce po člověku, co má udělat sám, nebo když žádosti o schválení chybí povinné věty.
 
 **Otázka:** Který agent jediný smí na web?
 - [ ] Product Manager
@@ -467,9 +491,13 @@ Dvě pravidla, která se přímo týkají vašich změn metodiky:
 | Stage 4 Shapes | 1 | `ideation` |
 | PRD Template | 1 | `prd` |
 | Initiative Template | 1 | `initiative-authoring` |
+| Agent Interaction (Writing) | 16 | každý skill, který mluví s člověkem |
+| Documentation Standards, Output Voice (Writing) | 13 | každý skill, který píše dokument |
+| Competitive Analysis Standards (Market) | 3 | `landscape-mapping`, `deep-dive`, `synthesis` |
+| Čtyři regulatorní karty, Compliance Guidelines (Compliance) | 4 | `ideation`, `mvp-option-design`, `mvp-expansion`, `prd` |
 
 **Víc do hloubky:**
-- **Co z mapy plyne:** změna Method Canonu zasáhne celý běh od briefu po iniciativu, změna PRD Template jen fázi 6. Čím víc skillů know-how čte, tím pečlivěji změnu ověřujte a tím víc běhů ji uvidí. Methodology Coach (`methodology-guidance`) čte celou oblast Method, takže změnu Method uslyší PM i v odpovědích na otázky.
+- **Co z mapy plyne:** změna Method Canonu zasáhne celý běh od briefu po iniciativu, změna PRD Template jen fázi 6. Čím víc skillů know-how čte, tím pečlivěji změnu ověřujte a tím víc běhů ji uvidí. Methodology Coach (`methodology-guidance`) čte celou oblast Method, takže změnu Method uslyší lidé i v odpovědích na otázky. Změna v oblasti Writing se projeví skoro v každém dokumentu, změna regulatorní karty ve fázích 4 až 6.
 
 **Otázka:** Která změna zasáhne víc běhu?
 - [x] Změna Method Canonu
@@ -489,8 +517,8 @@ Dvě pravidla, která se přímo týkají vašich změn metodiky:
   1. Ve cvičném běhu projděte fázi 1 až po schválení G1.
   2. Otevřete `.github/.guard/decisions.jsonl` a najděte rozhodnutí hlídačů z tohoto chatu (podle času).
   3. K devíti krokům tahu výše si zapište, co jste u každého viděli.
-- [ ] **Vysvětlete kolegovi z PM komunity tři pojistky** (15 min, ve VS Code)
-  - *Proč:* PM přicházejí s otázkou „proč agent tohle nechce udělat“. Odpověď má být krátká a bez techniky.
+- [ ] **Vysvětlete kolegovi z komunity tři pojistky** (15 min, ve VS Code)
+  - *Proč:* Lidé přicházejí s otázkou „proč agent tohle nechce udělat“. Odpověď má být krátká a bez techniky.
   1. Připravte si tři věty: agent píše, kód kontroluje, člověk podepisuje; a hlídače zastaví špatný krok dřív, než se stane.
   2. Ke každé větě dejte jeden příklad z vlastního běhu.
 

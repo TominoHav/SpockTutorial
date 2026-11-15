@@ -11,7 +11,7 @@ MODS = [
  ('pm','role-pm.md','purple','pm','Úroveň 2 · PM','Product Manager','Vlastní běh od briefu po iniciativu a každý podpis.'),
  ('pd','role-designer.md','purple','pd','Úroveň 2 · PD','Product Designer','Výzkum do fáze 2, trust tag, řešení, MVP a uživatelská část PRD.'),
  ('se','role-engineer.md','purple','se','Úroveň 2 · SWE','Software Engineer','Proveditelnost před G4, PRD jako vstup pro delivery, čtení kontrol.'),
- ('gm','role-guild-master.md','purple','gm','Úroveň 2 · GM','Guild Master','Správce PM metodiky: metodická revize běhů, změny know-how, komunita PM.'),
+ ('gm','role-guild-master.md','purple','gm','Úroveň 2 · GM','Guild Master','Správce know-how: revize běhů ve své oblasti, změny know-how, komunita.'),
  ('l3','uroven-3-pokrocily.md','indigo',None,'Úroveň 3','Pokročilý','Vrácení fáze, neprošlá brána, předání běhu, free-roam a aktualizace.'),
  ('l4','uroven-4-superuser.md','blue',None,'Úroveň 4','Superuser','Co výstup dokazuje, sondy chování agentů, nálezy a mentoring.'),
 ]
