@@ -159,6 +159,7 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  await p.locator('.ds-fbi input').first().check();await p.waitForTimeout(200);
  ok(T('odškrtnutí zpětné vazby se uloží'), Object.keys((await p.evaluate(()=>window.__db['todo/state']||{done:{}})).done).length===1);
  ok(T('dashboard bez přetékání'), (await ov())<=0);
+ ok(T('nečinnost se do času na stránce nepočítá'), (await p.evaluate(()=>__kviz.idle(30)))<=2);
  // záložka Verze a kvalita
  await p.locator('[data-dash="tab:ver"]').click();await p.waitForTimeout(300);
  const vtx=await p.locator('#dash').innerText().catch(()=>'');

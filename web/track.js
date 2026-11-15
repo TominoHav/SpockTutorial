@@ -2,7 +2,7 @@
 /* ---------- měření průchodu, zpětná vazba a dashboard vlastníka ----------
    Data jdou do sdílené databáze stránky na claude.ai: jeden dokument na člověka (track/<id>) a jeho zpětná vazba (feedback/<id>).
    Ukládají se jen identifikátory lidí, jména dohledá dashboard při zobrazení. Mimo claude.ai (nebo bez práva zápisu) se nic neměří. */
-const TRK = {db:null, user:null, uid:null, owner:false, ok:false, doc:null, dirty:false, busy:false, cur:null, curAt:0, lastClick:''};
+const TRK = {act:Date.now(), db:null, user:null, uid:null, owner:false, ok:false, doc:null, dirty:false, busy:false, cur:null, curAt:0, lastClick:''};
 const tNow = () => Date.now(), tDay = () => dKey(0);
 const tInc = (o, k, n) => { o[k] = (o[k] || 0) + (n === undefined ? 1 : n); };
 const tPush = (a, v, max) => { a.push(v); while (a.length > max) a.shift(); };
@@ -36,8 +36,10 @@ function tSnapshot(){
 }
 function tTick(){
   const T = TRK.doc; if (!T || !TRK.cur) return;
-  const s = Math.min(600, Math.round((tNow() - TRK.curAt) / 1000)); if (s <= 0) return;
-  tInc(T.tm, TRK.cur, s); tInc(T.secs, tDay(), s); TRK.curAt = tNow(); TRK.dirty = true;
+  /* počítá se jen aktivní čas: nejvýš 60 s po poslední akci (klik, psaní, posun, přehrávání videa) */
+  const now = tNow(), end = Math.min(now, (TRK.act || TRK.curAt) + 60000), s = Math.round((end - TRK.curAt) / 1000);
+  TRK.curAt = now; if (s <= 0) return;
+  tInc(T.tm, TRK.cur, s); tInc(T.secs, tDay(), s); TRK.dirty = true;
 }
 function trackView(){
   const T = TRK.doc; if (!T) return;
@@ -79,6 +81,7 @@ function tClickKey(el){
   if ('openSpock' in d || el.id === 'g-fab') return 'Spock';
   if (d.sim) return 'simulace ' + d.sim;
   if ('fbopen' in d) return 'zpětná vazba';
+  if (el.id === 'home-btn') return 'domů (logo)';
   if (el.tagName === 'SUMMARY') return 'rozbalit: ' + (el.textContent || '').trim().slice(0, 40);
   return (el.tagName === 'A' ? 'odkaz: ' : 'tlačítko: ') + ((el.getAttribute('aria-label') || el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 40) || el.className || '?');
 }
@@ -90,7 +93,9 @@ document.addEventListener('click', e => {
   trk('klik', k);
 }, true);
 window.addEventListener('error', e => { const T = TRK.doc; if (T) { tPush(T.perf.errs, [tNow(), String(e.message || 'chyba').slice(0, 160), tLoc()], 20); TRK.dirty = true; } });
-document.addEventListener('visibilitychange', () => { if (document.hidden) { tFlush(); } else { TRK.curAt = tNow(); } });
+['pointerdown', 'keydown', 'scroll', 'touchstart', 'wheel'].forEach(ev => window.addEventListener(ev, () => { TRK.act = tNow(); }, {passive:true, capture:true}));
+document.addEventListener('timeupdate', () => { TRK.act = tNow(); }, true);
+document.addEventListener('visibilitychange', () => { if (document.hidden) { tFlush(); } else { TRK.curAt = tNow(); TRK.act = tNow(); } });
 window.addEventListener('pagehide', () => { tFlush(); });
 
 (async () => {
@@ -149,7 +154,7 @@ function fbOpen(){
   ov.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   ov.querySelector('#fb-form').addEventListener('submit', async e => {
     e.preventDefault();
-    const item = {id:'f' + tNow().toString(36) + Math.random().toString(36).slice(2, 6), at:tNow(), loc:tLoc(), where:ov.querySelector('#fb-where').textContent, kind:ov.querySelector('#fb-kind').value, text:ov.querySelector('#fb-text').value.trim(), fix:ov.querySelector('#fb-fix').value.trim(), role:S.role || null, ver:(document.querySelector('.ver') || {}).textContent || ''};
+    const item = {id:'f' + tNow().toString(36) + Math.random().toString(36).slice(2, 6), at:tNow(), loc:tLoc(), where:ov.querySelector('#fb-where').textContent, kind:ov.querySelector('#fb-kind').value, text:ov.querySelector('#fb-text').value.trim(), fix:ov.querySelector('#fb-fix').value.trim(), role:S.role || null, ver:BUILD.ver || ''};
     if (!item.text) return;
     const msg = ov.querySelector('#fb-msg'); msg.textContent = 'Odesílám…';
     let sent = false;

@@ -20,6 +20,17 @@ for p in [('.claude', 'skills', 'spock-onboarding', 'SKILL.md'), ('.github', 'ag
     t = rd(*p)
     for f in re.findall(r'`((?:uroven|role)-[\w-]+\.md)`', t):
         if f not in [m[1] for m in mods]: bad.append(f"{'/'.join(p)}: odkazuje na {f}, který mezi moduly není")
+# videa v lekcích musí mít soubor a náhled ve web/media
+for fn in sorted(os.listdir(os.path.join(ROOT, 'onboarding'))):
+    if not fn.endswith('.md'): continue
+    t = rd('onboarding', fn)
+    for vid in set(re.findall(r'\{\{video:([a-z0-9-]+)\}\}', t)):
+        for f in (f'spock-{vid}.mp4', f'spock-{vid}-poster.jpg'):
+            if not os.path.exists(os.path.join(ROOT, 'web', 'media', f)): bad.append(f'{fn}: video {vid} nemá soubor web/media/{f}')
+    # ověření u úkolů: aspoň dvě možnosti a právě jedna správná
+    for m in re.finditer(r'^  - \*(Ověření|Co jste viděli):\* (.+)\n((?:    - \[[ x]\] .+\n?)*)', t, re.M):
+        o = re.findall(r'^    - \[([ x])\]', m.group(3), re.M)
+        if len(o) < 2 or o.count('x') != 1: bad.append(f'{fn}: ověření „{m.group(2)[:50]}“ má {len(o)} možností a {o.count("x")} správných')
 print(f'Moduly: {len(mods)}.', 'Struktura sedí.' if not bad else 'Nesedí:')
 for b in bad: print(' -', b)
 sys.exit(1 if bad else 0)
