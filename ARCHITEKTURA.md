@@ -4,20 +4,22 @@ Z čeho se tutoriál skládá, kudy teče změna od SPOCKu až na web a které �
 
 ## Jak to do sebe zapadá
 
-Jediný zdroj obsahu jsou lekce v markdownu. Web i průvodce v Claude Code z nich čtou. Údržba hlídá, aby lekce odpovídaly SPOCKu.
+Jediný zdroj obsahu jsou lekce v markdownu. Web i oba průvodci z nich čtou. Údržba hlídá, aby lekce odpovídaly SPOCKu a web fungoval.
 
 ```mermaid
 flowchart LR
   S["Repozitář SPOCKu<br/>zdroj pravdy"] -->|podle něj| O["Obsah: onboarding/<br/>lekce v markdownu"]
-  O --> A["Aplikace: web/<br/>parse.py → data.json → build.py"]
-  A -->|publikace na váš pokyn| W["Publikovaný web<br/>soukromá adresa"]
+  O --> A["Web na claude.ai<br/>lekce, videa, chat Spock,<br/>měření a dashboard"]
   O --> P["Průvodce v Claude Code<br/>/spock-onboarding"]
-  S -.->|porovnává| U["Údržba<br/>SPOCK-VERZE.md<br/>kontrola-aktualnosti.py<br/>/spock-aktualnost"]
+  O --> G["Spock průvodce<br/>v GitHub Copilotu"]
+  S -.->|měsíčně porovnává| U["Údržba<br/>kontrola aktuálnosti<br/>/spock-aktualnost"]
   U -.->|navrhne úpravy| O
+  O -.->|při každé změně| K["Automatické kontroly<br/>struktura, odpovědi,<br/>e2e test webu"]
   U --> V["Vy: schvalujete<br/>pull request a publikaci"]
+  K --> V
 ```
 
-Plné šipky: kudy teče obsah. Čárkované: údržba, která hlídá aktuálnost vůči SPOCKu.
+Plné šipky: kudy teče obsah. Čárkované: údržba a kontroly, které hlídají aktuálnost a kvalitu.
 
 ## Kde co běží
 
@@ -60,9 +62,9 @@ Každá změna jde na vlastní větev a do pull requestu. Do hlavní větve se s
 
 1. **Obsah se mění jen v markdownu.** Web se z něj sestavuje, HTML se ručně neupravuje.
 2. **Nový úkol na konec lekce, nová lekce na konec modulu.** Pořadí úkolů je klíč uloženého pokroku uživatelů.
-3. **Každé tvrzení o SPOCKu má oporu ve SPOCKu.** Odkazy kontroluje skript, chování se ověřuje spuštěním tasků na kopii SPOCKu.
-4. **Nic se neslučuje ani nepublikuje bez schválení.** Větev, pull request, schválení, pak sloučení.
-5. **Web je soukromý.** Otevře ho jen ten, s kým ho vlastník sdílí z menu stránky. Pokrok se ukládá jen v prohlížeči uživatele.
+3. **Každé tvrzení o SPOCKu má oporu ve SPOCKu.** Odkazy kontroluje skript, odpovědi u ověření z VS Code jsou z kopie SPOCKu.
+4. **Nic se neslučuje ani nepublikuje bez schválení.** Větev, pull request, zelené kontroly, schválení, pak sloučení.
+5. **Web je soukromý.** Otevře ho jen ten, s kým ho vlastník sdílí z menu stránky. Pokrok se ukládá v prohlížeči uživatele, průchod se měří jmenovitě a vidí ho jen vlastník a editoři.
 
 ## Historie změn
 
@@ -70,6 +72,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
+| [#37](https://github.com/TominoHav/SpockTutorial/pull/37) | Údržba | Architektura aktuální: schéma s oběma průvodci, webem s dashboardem a automatickými kontrolami, upravená pravidla; stránka s architekturou čitelná na mobilu | 15. 11. 2026 |
 | [#36](https://github.com/TominoHav/SpockTutorial/pull/36) | Aplikace | Kontakty na úvodní stránce: řádky SPOCK a Spock spojené do jednoho | 15. 11. 2026 |
 | [#35](https://github.com/TominoHav/SpockTutorial/pull/35) | Obsah | Kontakty: řádek Metodika nahrazen řádkem SPOCK (CoE Product Management a CoE Product Design) | 15. 11. 2026 |
 | [#34](https://github.com/TominoHav/SpockTutorial/pull/34) | Obsah | Kontakty: Tomáš Havlíček u Onboarding Tutorialu, metodika patří týmu CoE Product Management (komentář Tomáše Havlíčka) | 15. 11. 2026 |
