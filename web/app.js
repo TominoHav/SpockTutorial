@@ -352,7 +352,7 @@ function startSession(wid, mode){
   renderSession();
 }
 /* jen pro automatický test: čtení stavu kvízu */
-window.__kviz = {streak: () => streak(), state: fn => { fn(S); save(); return true; },
+window.__kviz = {liveNow: () => dashLive(), streak: () => streak(), state: fn => { fn(S); save(); return true; },
   /* vyplní modul až na jeden úkol bez ověření a vrátí, kde zůstal: test ho pak odškrtne opravdovým kliknutím */
   almost: wid => { const w = W.find(x => x.id === wid); let left = null; S.qpass = S.qpass || {};
     for (let di = w.days.length - 1; di >= 0 && !left; di--) for (let ti = w.days[di].todo.length - 1; ti >= 0; ti--) if (!w.days[di].todo[ti].check) { left = [di, ti]; break; }
