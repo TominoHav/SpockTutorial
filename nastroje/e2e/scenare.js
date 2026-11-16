@@ -109,11 +109,16 @@ for(const [name,w,h,scheme] of [['tablet',768,1024,'light'],['tablet na šířku
 runs.push(scenario('expresní cesta',async()=>{
  const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
  await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=se]').click();await settle(p,50);
- ok('expresní cesta: po výběru role je nabídka s délkou do 2 hodin', await p.locator('.exb [data-express=on]').count()===1 && /1 h \d+ min|\d+ min/.test(await p.locator('.exb h3').innerText()));
- await p.locator('[data-express=on]').click();await settle(p,50);
- ok('expresní cesta: má 7 kroků a ukazuje další krok', await p.locator('.exb-steps li').count()===7 && (await p.locator('.exb-h h3').innerText()).includes('nanečisto'));
+ ok('expresní cesta: po výběru role banner nabídne rozcestí, celá cesta a expres do 2 hodin', await p.locator('.hx .exfork .exf').count()===2 && /1 h \d+ min/.test(await p.locator('.exfork .exf.fast').innerText()));
+ ok('expresní cesta: v rozcestí je zaměřená první volba (klávesnice)', await p.evaluate(()=>document.activeElement&&document.activeElement.matches('.exfork .exf')));
+ await p.locator('.exfork [data-express=on]').click();await settle(p,50);
+ ok('expresní cesta: banner ukazuje další krok a v úvodu je jen jedno hlavní tlačítko', (await p.locator('.hx-next.ex .hx-nt').innerText()).includes('nanečisto') && await p.locator('.hx .btn.primary').count()===1 && await p.locator('.exfork').count()===0);
+ ok('expresní cesta: má 7 kroků v rozbalovacím seznamu a 7 dílků postupu', await p.locator('.exall .exlist li').count()===7 && await p.locator('.hx-next.ex .exseg i').count()===7);
+ await p.locator('.exsw-l [data-express=off]').click();await settle(p,50);
+ ok('expresní cesta: jde přepnout na celou cestu a zpět odkazem v banneru', await p.locator('.hx-next.ex').count()===0 && await p.locator('.hx .exsw-l [data-express=on]').count()===1);
+ await p.locator('.hx .exsw-l [data-express=on]').click();await settle(p,50);
  const home=async()=>{await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel,.notice'))e.remove();document.querySelector('#home-btn').click();});await settle(p,50);};
- const next=()=>p.evaluate(()=>{const b=document.querySelector('.exb .exb-h .btn.primary');const v=b&&b.dataset.express;b&&b.click();return v||'';});
+ const next=()=>p.evaluate(()=>{const b=document.querySelector('.hx-next.ex .hx-cta .btn.primary');const v=b&&b.dataset.express;b&&b.click();return v||'';});
  // 1) simulace
  ok('expresní cesta: první krok spustí simulaci', (await next())==='step:sim' && await p.locator('#sim').count()===1);
  for(const st of ['next','o-sol','o-ok','sign','load','sign','next','sol-1','why-2','sign','mvp-0','sign','sign','sign','trace','finish']){await p.locator(`[data-sim="${st}"]`).first().click();await settle(p);}
@@ -139,7 +144,7 @@ runs.push(scenario('expresní cesta',async()=>{
  const st=await loadState(p);
  ok('expresní cesta: po všech krocích odznak Expres a 50 XP navíc', st.got&&st.got['express']===true&&st.badges&&st.badges['got.express'], JSON.stringify(Object.keys(st.got||{}).filter(k=>/expr/.test(k))));
  await home();
- ok('expresní cesta: úvod nabídne pokračovat Přípravou', (await p.locator('.exb').innerText()).includes('Pokračovat Přípravou'));
+ ok('expresní cesta: úvod nabídne pokračovat Přípravou', (await p.locator('.hx-next.ex').innerText()).includes('Pokračovat Přípravou'));
  ok('expresní cesta: bez chyb v konzoli', errs.length===0, errs.slice(0,2).join(' | '));
  await ctx.close();
 }));

@@ -9,8 +9,8 @@ const {buildE2E,browserType}=require('./fixture');const fs=require('fs');const p
 const ROOT=path.resolve(__dirname,'..','..');const DIST=path.join(ROOT,'web','dist');const F='file://'+path.join(DIST,'spock-user-onboarding.html');
 let AXE;try{AXE=fs.readFileSync(require.resolve('axe-core/axe.min.js'),'utf8');}catch(e){console.error('Chybí axe-core. Spusťte: npm install --no-save axe-core@4.10.2');process.exit(1);}
 const R=[];const ok=(n,c,d='')=>R.push([c?'PASS':'FAIL',n,d]);
-const VIEWS=['home','lesson','badges','map','diag','gloss','cheat','ready'];
-const open=(p,v)=>p.evaluate(v=>{if(v==='home')document.querySelector('#home-btn').click();else if(v==='lesson')document.querySelector('[data-week=l0]').click();else{const e=document.querySelector('[data-go='+v+']');e&&e.click();}},v);
+const VIEWS=['home','expres','lesson','badges','map','diag','gloss','cheat','ready'];
+const open=(p,v)=>p.evaluate(v=>{if(v==='home')document.querySelector('#home-btn').click();else if(v==='expres'){document.querySelector('[data-express=on]').click();const d=document.querySelector('.exall');if(d)d.open=true;}else if(v==='lesson')document.querySelector('[data-week=l0]').click();else{const e=document.querySelector('[data-go='+v+']');e&&e.click();}},v);
 (async()=>{buildE2E();const FX='file://'+path.join(DIST,'e2e.html');const b=await browserType().launch();
 for(const [dev,w,h] of [['mobil',390,844],['počítač',1280,850]]){
  // 1) průchody rolí
