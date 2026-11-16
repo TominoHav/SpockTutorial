@@ -105,6 +105,44 @@ for(const [name,w,h,scheme] of [['tablet',768,1024,'light'],['tablet na šířku
   await ctx.close();
  }));
 }
+// 7) expresní cesta: od výběru role po odznak Expres
+runs.push(scenario('expresní cesta',async()=>{
+ const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
+ await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=se]').click();await settle(p,50);
+ ok('expresní cesta: po výběru role je nabídka s délkou do 2 hodin', await p.locator('.exb [data-express=on]').count()===1 && /1 h \d+ min|\d+ min/.test(await p.locator('.exb h3').innerText()));
+ await p.locator('[data-express=on]').click();await settle(p,50);
+ ok('expresní cesta: má 7 kroků a ukazuje další krok', await p.locator('.exb-steps li').count()===7 && (await p.locator('.exb-h h3').innerText()).includes('nanečisto'));
+ const home=async()=>{await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel,.notice'))e.remove();document.querySelector('#home-btn').click();});await settle(p,50);};
+ const next=()=>p.evaluate(()=>{const b=document.querySelector('.exb .exb-h .btn.primary');const v=b&&b.dataset.express;b&&b.click();return v||'';});
+ // 1) simulace
+ ok('expresní cesta: první krok spustí simulaci', (await next())==='step:sim' && await p.locator('#sim').count()===1);
+ for(const st of ['next','o-sol','o-ok','sign','load','sign','next','sol-1','why-2','sign','mvp-0','sign','sign','sign','trace','finish']){await p.locator(`[data-sim="${st}"]`).first().click();await settle(p);}
+ await home();
+ // 2–4) karty lekcí 0.1–0.3
+ for(const step of ['step:l0c0','step:l0c1','step:l0c2']){
+  const v=await next();await p.waitForSelector('.lpanel');
+  for(let i=0;i<12;i++){const n=await p.evaluate(()=>{const o=document.querySelector('.lpanel .lcard.cur .lc-opt:not([disabled])');if(o){o.click();return 1}return 0});await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});if(!n)break;await settle(p);}
+  ok(`expresní cesta: krok ${step} otevře správnou lekci a karty jdou projít`, v===step);
+  await home();
+ }
+ // 5) video
+ ok('expresní cesta: krok s videem pustí video krok za krokem', (await next())==='step:vid' && await p.locator('.vidov video').count()===1);
+ await p.keyboard.press('Escape');await home();
+ // 6) lekce 1.1 (Příprava je jinak zamčená, expresní cesta ji otevře k nahlédnutí)
+ ok('expresní cesta: lekce 1.1 se otevře, i když Příprava ještě není odemčená', (await next())==='step:l1' && (await p.locator('.lpanel .lp-head').innerText()).includes('1.1'));
+ for(let i=0;i<8;i++){const n=await p.evaluate(()=>{const o=document.querySelector('.lpanel .lcard.cur .lc-opt:not([disabled])');if(o){o.click();return 1}const t=document.querySelector('.lpanel input[data-todo]:not(:checked):not([disabled])');if(t){t.click();return 1}return 0});await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});if(!n)break;await settle(p);}
+ await p.evaluate(()=>__kviz.state(S=>{const w=0;for(let t=0;t<6;t++)S.todo['l1.0.'+t]=true;}));
+ await home();
+ // 7) tahák
+ ok('expresní cesta: poslední krok otevře tahák tasků', (await next())==='step:cheat' && await p.locator('.main h1').innerText().then(t=>/tah/i.test(t)));
+ await settle(p,100);
+ const st=await loadState(p);
+ ok('expresní cesta: po všech krocích odznak Expres a 50 XP navíc', st.got&&st.got['express']===true&&st.badges&&st.badges['got.express'], JSON.stringify(Object.keys(st.got||{}).filter(k=>/expr/.test(k))));
+ await home();
+ ok('expresní cesta: úvod nabídne pokračovat Přípravou', (await p.locator('.exb').innerText()).includes('Pokračovat Přípravou'));
+ ok('expresní cesta: bez chyb v konzoli', errs.length===0, errs.slice(0,2).join(' | '));
+ await ctx.close();
+}));
 // 6) videa: soubory existují, jsou to MP4, mají náhled a okno je pustí
 runs.push(scenario('videa',async()=>{
  const media=path.join(path.resolve(__dirname,'..','..'),'web','media');const mp4=fs.readdirSync(media).filter(f=>f.endsWith('.mp4'));

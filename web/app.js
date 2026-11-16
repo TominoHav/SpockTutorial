@@ -241,12 +241,14 @@ const BADGES = [
   ['spock','Kamarád Spocka','Zeptejte se Spocka na první otázku.', () => !!S.badges.spock],
   ['xp500','500 XP','Nasbírejte 500 XP.', () => S.xp >= 500],
   ['xp1000','1000 XP','Nasbírejte 1000 XP.', () => S.xp >= 1000],
+  ['express','Expres','Dokončete expresní cestu.', () => !!S.got['express']],
   ['path','Cesta hotová','Dokončete celou svou cestu až po úroveň 3.', () => !!S.role && ['l0','l1',S.role,'l3'].every(id => modPct(W.find(w => w.id === id)) === 1)],
   ['superuser','Superuser','Jen pro Guild Mastery: dokončete i úroveň 4.', () => S.role === 'gm' && pathIds().every(id => modPct(W.find(w => w.id === id)) === 1)]
 ];
 /* odznak Superuser vidí jen Guild Master, ostatní role mají o odznak méně */
 const myBadges = () => BADGES.filter(b => b[0] !== 'superuser' || S.role === 'gm');
 function checkBadges(){
+  try { exCheck(); } catch (e) {}
   myBadges().forEach(([id, name, how, test]) => {
     if (S.badges['got.' + id]) return;
     let ok = false; try { ok = test(); } catch(e) {}
@@ -938,6 +940,46 @@ function heroFirst(){
     <p class="hx-note">Nic neinstalujete. Začíná se tady na webu.</p>
   </div>${heroArt('Ahoj, jsem Spock')}</section>`;
 }
+/* ---------- expresní cesta: to nejnutnější pro start se SPOCKem za zhruba 1 h 40 min ----------
+   Kroky z existujících lekcí: v úrovni 0 jen karty (bez úkolů), v Přípravě objednání rolí. Zbytek cesty zůstává na později. */
+const EXPRESS = [
+  {id:'sim', t:'Vyzkoušejte SPOCK nanečisto', d:'Celý běh od nápadu po iniciativu ve zkratce.', min:5, done:() => !!(S.badges && S.badges.sim), go:'sim'},
+  {id:'l0c0', t:'Co SPOCK dělá a proč', d:'Lekce 0.1, jen karty.', min:15, w:'l0', l:0, cards:true},
+  {id:'l0c1', t:'Agenti, tasky a brány', d:'Lekce 0.2, jen karty.', min:15, w:'l0', l:1, cards:true},
+  {id:'l0c2', t:'Pět pravidel, která se neporušují', d:'Lekce 0.3.', min:10, w:'l0', l:2, cards:true},
+  {id:'vid', t:'Video: SPOCK krok za krokem', d:'Hotový běh všemi sedmi fázemi za 4 minuty.', min:5, done:() => !!(S.vids && S.vids['krok-za-krokem']), video:'krok-za-krokem'},
+  {id:'l1', t:'Objednejte si přístupy', d:'Lekce 1.1: role v REDIMu. Schválení trvá pár dní, proto hned.', min:45, w:'l1', l:0},
+  {id:'cheat', t:'Tahák tasků', d:'Které tasky budete používat a kdy.', min:5, done:() => !!(S.exSeen && S.exSeen.cheat), go:'cheat'}
+];
+const exDone = st => { if (st.done) return st.done(); const w = W.find(x => x.id === st.w); if (!w) return false; const d = w.days[st.l]; return st.cards ? (d.cards || []).every((_, ci) => cardAns(st.w + '.' + st.l + '.' + ci) !== undefined) : lessonDone(w, st.l); };
+const exMin = () => EXPRESS.reduce((n, st) => n + st.min, 0);
+function exCheck(){
+  if (!S.express || S.got['express']) return;
+  if (EXPRESS.every(exDone)) { award('express', 50, 'expresní cesta'); S.badges['got.express'] = dKey(0); save(); celebrate({kind:'module', title:'Expresní cesta hotová!', text:'Znáte to nejnutnější a přístupy jsou objednané. Až dorazí, pokračujte Přípravou: instalace, Copilot a první běh. Celá cesta na vás počká.'}); }
+}
+function exOpen(st){
+  try { trk('expres', st.id); } catch (e) {}
+  if (st.go === 'sim') return simStart();
+  if (st.video) return playVideo(st.video);
+  if (st.go) { if (st.go === 'cheat') { S.exSeen = Object.assign({}, S.exSeen, {cheat:1}); save(); setTimeout(exCheck, 0); } return go(st.go); }
+  view.lesson = st.l; view.lessonOf = st.w; go('week', {week:st.w, peek:st.w});
+}
+function expressCard(){
+  if (!S.role) return '';
+  const done = EXPRESS.filter(exDone).length, nx = EXPRESS.find(st => !exDone(st)), m = exMin(), on = !!S.express;
+  if (!on) return `<section class="exb"><div><span class="eyebrow">Nemáte teď čas na celou cestu?</span><h3>Expresní cesta · ${fmtMin(m)}</h3><p>${EXPRESS.length} kroků, to nejnutnější pro start: co SPOCK dělá, agenti a brány, pět pravidel, video hotového běhu a objednání přístupů. Celá cesta zůstane, pokrok se započítá.</p></div><button class="btn" type="button" data-express="on">Zvolit expresní cestu</button></section>`;
+  return `<section class="exb on" aria-label="Expresní cesta"><div class="exb-h"><div><span class="eyebrow">Expresní cesta · ${done} z ${EXPRESS.length} · ~${fmtMin(EXPRESS.filter(st => !exDone(st)).reduce((n, st) => n + st.min, 0))} zbývá</span><h3>${nx ? 'Další krok: ' + esc(nx.t) : 'Hotovo. Pokračujte Přípravou.'}</h3></div>${nx ? `<button class="btn primary" type="button" data-express="step:${nx.id}">${done ? 'Pokračovat' : 'Začít'} →</button>` : `<button class="btn primary" type="button" data-week="l1">Pokračovat Přípravou →</button>`}</div>
+    <span class="bar exb-bar"><i style="width:${Math.round(done / EXPRESS.length * 100)}%"></i></span>
+    <ol class="exb-steps">${EXPRESS.map(st => { const ok = exDone(st); return `<li class="${ok ? 'done' : nx && nx.id === st.id ? 'here' : ''}"><button type="button" class="exb-st" data-express="step:${st.id}"><span class="exb-ck" aria-hidden="true">${ok ? '✓' : ''}</span><span><b>${esc(st.t)}</b><small>${esc(st.d)} · ~${st.min} min</small></span></button></li>`; }).join('')}</ol>
+    <p class="muted exb-off"><button class="linkbtn" type="button" data-express="off">Skrýt expresní cestu</button> · Celá cesta i pokrok zůstávají.</p></section>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-express]'); if (!b) return;
+  const v = b.dataset.express;
+  if (v === 'on') { S.express = true; save(); try { trk('expres', 'zvolena'); } catch (err) {} render(); const c = document.querySelector('.exb.on'); if (c) c.scrollIntoView({block:'center'}); return; }
+  if (v === 'off') { S.express = false; save(); render(); return; }
+  const st = EXPRESS.find(x => 'step:' + x.id === v); if (st) exOpen(st);
+});
 function startBlock(){
   return `<section class="startb"><div class="sec-h"><h2 id="role-h">Začněte: vyberte svou roli</h2><p>Role určí, který modul vás čeká na úrovni 2.</p></div>${roleCards()}
     <div class="startb-go"><button class="btn primary" type="button" data-week="l0" ${S.role ? '' : 'disabled'}>Začít úrovní 0: Poznejte SPOCK →</button><span class="muted">${S.role ? 'Role: ' + esc(ROLES[S.role]) : 'Nejdřív vyberte roli.'}</span></div></section>`;
@@ -971,9 +1013,9 @@ function heroStable(){
 }
 function homeV4(){
   /* nováček: jedna hlavní akce (nanečisto) v úvodu, pak výběr role a cesta; vysvětlení a opora sbalené níž */
-  if (isFirst()) return heroFirst() + startBlock() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora', true);
+  if (isFirst()) return heroFirst() + startBlock() + expressCard() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora', true);
   const l1 = W.find(w => w.id === 'l1'), showSvy = l1 && modPct(l1) === 1 && !(S.survey && S.survey.at);
-  return heroStable() + questCard() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
+  return heroStable() + expressCard() + questCard() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
 }
 function renderHome(){ app.innerHTML = homeV4(); }
 document.addEventListener('click', e => {
@@ -984,6 +1026,7 @@ document.addEventListener('click', e => {
 });
 /* Video v okně: pustí se odkudkoli (tlačítko {{video}} v úkolu) */
 function playVideo(id){
+  S.vids = S.vids || {}; if (!S.vids[id || 'intro']) { S.vids[id || 'intro'] = 1; save(); try { trk('video', id || 'intro'); } catch (e) {} setTimeout(exCheck, 0); }
   const ov = document.createElement('div'); ov.className = 'vidov'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','Video: Co je SPOCK');
   ov.innerHTML = `<div class="vidov-in"><button type="button" class="g-x vidov-x" aria-label="Zavřít video">×</button>${vidTag(id)}</div>`;
   document.body.append(ov);
