@@ -73,7 +73,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
-| [#44](https://github.com/TominoHav/SpockTutorial/pull/44) | Aplikace | Vesmírná cesta: světy a překážky pro každou úroveň, postavička na mapě, v cíli Spock, šatna a závěrečný animovaný příběh cesty | 16. 11. 2026 |
+| [#44](https://github.com/TominoHav/SpockTutorial/pull/44) | Aplikace | Vesmírná cesta: světy a překážky, postavička na mapě, šatna a ozvučený příběh cesty; u překážek přeskočitelné minihry, po každé úrovni přeskočitelné shrnutí | 16. 11. 2026 |
 | [#43](https://github.com/TominoHav/SpockTutorial/pull/43) | Aplikace | Hra: postup v hodnostech s odměnami (vzhledy Spocka, zmrazení série), tři denní výzvy s truhlou, shrnutí po lekci, oslavy povýšení a sérií | 16. 11. 2026 |
 | [#42](https://github.com/TominoHav/SpockTutorial/pull/42) | Obsah | Úroveň 4 Superuser jen pro Guild Mastery; ostatním rolím cesta končí úrovní 3. Lekce 3.6: co výstup dokazuje a jak nahlásit nález. Hra: odznak Cesta hotová, nejvyšší hodnost Mistr na 1700 XP. Opora podle změn | 16. 11. 2026 |
 | [#41](https://github.com/TominoHav/SpockTutorial/pull/41) | Aplikace | Výkon: písmo neblokuje první vykreslení, data lekcí přes JSON.parse, styly bez komentářů a mezer, videa se nenačítají předem | 16. 11. 2026 |

@@ -275,7 +275,7 @@ function msgNext(){
 }
 function showCel(){
   /* během kvízu a skokového testu oslavy počkají na jeho konec; naráz je vidět jen jedna */
-  const c = CEL[0]; if (!c || SES || document.querySelector('.cel')) return;
+  const c = CEL[0]; if (!c || SES || STORY || MG || document.querySelector('.cel')) return;
   const ov = document.createElement('div'); ov.className = 'cel'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label', c.title);
   const big = c.kind === 'module' || c.kind === 'badge' || c.kind === 'unlock' || c.kind === 'rank' || c.kind === 'streak';
   ov.innerHTML = `<canvas class="confetti" aria-hidden="true"></canvas><div class="cel-card ${c.kind}">${spockSVG('big')}
@@ -283,14 +283,16 @@ function showCel(){
     <h2>${esc(c.title)}</h2><p>${esc(c.text || '')}</p>
     ${c.sum ? `<div class="cel-sum">${c.sum.map(x => `<div><b class="num">${x[0]}</b><span>${x[1]}</span></div>`).join('')}</div>` : ''}
     <div class="cel-stats"><span>${FLAME}<b>${streak()}</b> série</span><span><b>${S.xp}</b> XP celkem</span><span><b>${rank().name}</b> hodnost</span></div>
-    <div class="cel-acts">${c.fin ? '<button class="btn primary cel-fin" type="button">Obléknout postavičku a odletět</button><button class="btn cel-go" type="button">Později</button>' : c.quiz ? '<button class="btn primary cel-quiz" type="button">Spustit kvíz</button><button class="btn cel-go" type="button">Později</button>' : '<button class="btn primary cel-go" type="button">Pokračovat</button>'}</div></div>`;
+    <div class="cel-acts">${c.mod ? `<button class="btn primary cel-recap" type="button">Přehrát shrnutí úrovně</button><button class="btn cel-game" type="button">Zahrát minihru</button>${c.fin ? '<button class="btn cel-fin" type="button">Obléknout postavičku a odletět</button>' : ''}<button class="btn cel-go" type="button">Přeskočit</button>` : c.quiz ? '<button class="btn primary cel-quiz" type="button">Spustit kvíz</button><button class="btn cel-go" type="button">Později</button>' : '<button class="btn primary cel-go" type="button">Pokračovat</button>'}</div></div>`;
   document.body.append(ov);
   const done = () => { ov.remove(); CEL.shift(); showCel(); };
   ov.querySelector('.cel-go').onclick = done;
+  const cr = ov.querySelector('.cel-recap'); if (cr) cr.onclick = () => { done(); playRecap(c.mod); };
+  const cg = ov.querySelector('.cel-game'); if (cg) cg.onclick = () => { done(); playGame(c.mod); };
   const cf = ov.querySelector('.cel-fin'); if (cf) cf.onclick = () => { CEL.length = 1; done(); openWardrobe(); };
   const cq = ov.querySelector('.cel-quiz'); if (cq) cq.onclick = () => { CEL.length = 1; done(); startSession(c.quiz, 'quiz'); };
   ov.addEventListener('keydown', e => { if (e.key === 'Escape') done(); });
-  (ov.querySelector('.cel-fin') || ov.querySelector('.cel-quiz') || ov.querySelector('.cel-go')).focus();
+  (ov.querySelector('.cel-recap') || ov.querySelector('.cel-quiz') || ov.querySelector('.cel-go')).focus();
   confetti(ov.querySelector('.confetti'), big ? 160 : 90);
 }
 function confetti(cv, n){
@@ -389,7 +391,7 @@ function endSession(ok){
 }
 function checkModuleDone(w){
   if (w && modPct(w) === 1 && award('module.' + w.id, XP.module, 'modul')) { const wd = pathIds().includes(w.id) ? worldOf(w) : null, nx = nextOnPath();
-    celebrate({kind:'module', title: wd ? 'Překážka překonána: ' + wd.foe : 'Modul hotový: ' + w.title, text: (wd ? wd.win + ' ' : '') + (nx ? 'Další svět: ' + worldOf(nx).n + '.' : pathDone() ? 'Jste u cíle. Spock na vás čeká s lodí.' : ''), fin: !!wd && pathDone()}); }
+    celebrate({kind:'module', title: wd ? 'Překážka překonána: ' + wd.foe : 'Modul hotový: ' + w.title, text: (wd ? wd.win + ' ' : '') + (nx ? 'Další svět: ' + worldOf(nx).n + '.' : pathDone() ? 'Jste u cíle. Spock na vás čeká s lodí.' : ''), fin: !!wd && pathDone(), mod: w.id}); }
 }
 document.addEventListener('click', e => {
   if (!SES) return;
@@ -460,7 +462,7 @@ function spaceMap(){
       <h3>${wd.n}</h3><p class="sw-m">${esc(w.role ? w.title : w.lab + ' · ' + w.title)}</p>
       <p class="sw-foe ${done ? 'won' : ''}">${done ? 'Překonáno: ' : 'Překážka: '}${wd.foe}</p>
       <span class="sw-bar" aria-label="Hotovo ${Math.round(pct*100)} %"><i style="width:${Math.round(pct*100)}%"></i></span>
-      <button class="linkbtn" type="button" data-week="${w.id}">${lbl}</button></li>`;
+      <button class="linkbtn" type="button" data-week="${w.id}">${lbl}</button>${done ? `<span class="sw-x"><button class="linkbtn" type="button" data-recap="${w.id}">Shrnutí</button><button class="linkbtn" type="button" data-mgame="${w.id}">Minihra</button></span>` : ''}</li>`;
   }).join('');
   return `<div class="spmap"><div class="sp-stars" aria-hidden="true"></div>
     <ol class="sp-route ${S.role === 'gm' ? 'five' : ''}">${items}
@@ -502,40 +504,138 @@ function storyScenes(){
   sc.push({k:'end', h:'Odlet', t:'Postavička se setkala se Spockem a společně odlétají k dalším iniciativám. Agenti připravují, vy rozhodujete.'});
   return sc;
 }
+/* zvuk: tichý podkres a tóny z Web Audio, komentář čte hlas prohlížeče (když má český). Jde vypnout. */
+const SND = {ctx:null, nodes:[], voice:null};
+const sndOn = () => S.sound !== false;
+function pickVoice(){ try { const v = speechSynthesis.getVoices(); SND.voice = v.find(x => /^cs/i.test(x.lang)) || null; } catch (e) {} }
+try { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; } catch (e) {}
+function sndStart(){
+  if (!sndOn() || SND.ctx) return;
+  try {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    const ctx = SND.ctx = new C(), out = ctx.createGain(); out.gain.value = 0; out.connect(ctx.destination);
+    out.gain.linearRampToValueAtTime(.05, ctx.currentTime + 2);
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 520; lp.connect(out);
+    [[110, 'sine'], [164.8, 'sine'], [220.4, 'triangle']].forEach(([f, t], n) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = t; o.frequency.value = f; g.gain.value = n === 2 ? .12 : .5; o.connect(g); g.connect(lp); o.start(); SND.nodes.push(o); });
+    const lfo = ctx.createOscillator(), lg = ctx.createGain(); lfo.frequency.value = .12; lg.gain.value = 140; lfo.connect(lg); lg.connect(lp.frequency); lfo.start(); SND.nodes.push(lfo);
+    SND.out = out;
+  } catch (e) { SND.ctx = null; }
+}
+function sndStop(){
+  try { speechSynthesis.cancel(); } catch (e) {}
+  const ctx = SND.ctx; if (!ctx) return; SND.ctx = null;
+  try { SND.out.gain.linearRampToValueAtTime(0, ctx.currentTime + .4); setTimeout(() => { SND.nodes.forEach(n => { try { n.stop(); } catch (e) {} }); SND.nodes = []; ctx.close(); }, 500); } catch (e) {}
+}
+function blip(kind){
+  if (!sndOn()) return;
+  try {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    const ctx = SND.ctx || (SND.tmp = SND.tmp || new C()), o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime;
+    const f = kind === 'ok' ? [523, 784] : kind === 'bad' ? [196, 147] : [392, 440];
+    o.type = kind === 'bad' ? 'sawtooth' : 'sine'; o.frequency.setValueAtTime(f[0], t); o.frequency.linearRampToValueAtTime(f[1], t + .16);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(kind === 'bad' ? .05 : .09, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .32);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + .34);
+  } catch (e) {}
+}
+/* přečte text; onend se zavolá po dočtení, nebo hned, když hlas není */
+function say(text, onend){
+  let done = false; const fin = () => { if (!done) { done = true; onend && onend(); } };
+  if (!sndOn() || !SND.voice || !window.SpeechSynthesisUtterance) return false;
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g, ' ')); u.lang = SND.voice.lang; u.voice = SND.voice; u.rate = 1; u.onend = fin; u.onerror = fin; speechSynthesis.speak(u); return true; } catch (e) { return false; }
+}
+/* přehrávač scén: závěrečný příběh i shrnutí úrovně. Běží sám, jde pozastavit, krokovat, ztlumit a kdykoli přeskočit. */
 let STORY = null;
-function playStory(){
-  if (!pathDone()) { toast('Příběh se přehraje, až dokončíte celou cestu.'); return; }
-  try { trk('příběh', 'spuštěn'); } catch (e) {}
-  const sc = storyScenes(), still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function playScenes(sc, label, what){
+  try { trk(what, 'spuštěno'); } catch (e) {}
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let ov = document.getElementById('story'); if (ov) ov.remove();
-  ov = document.createElement('div'); ov.id = 'story'; ov.className = 'story'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','Příběh vaší cesty'); document.body.append(ov);
+  ov = document.createElement('div'); ov.id = 'story'; ov.className = 'story'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label', label); document.body.append(ov);
   document.body.classList.add('noscroll');
   STORY = {i:0, n:sc.length, paused:still, h:null};
-  const close = () => { clearTimeout(STORY.h); ov.remove(); STORY = null; document.body.classList.remove('noscroll'); render(); };
+  sndStart();
+  const close = () => { clearTimeout(STORY.h); sndStop(); ov.remove(); STORY = null; document.body.classList.remove('noscroll'); render(); showCel(); };
   const show = () => {
     const s = sc[STORY.i], last = STORY.i === sc.length - 1;
-    const art = s.k === 'world' ? `<span class="st-planet" style="--pc:${s.c}"></span><span class="st-foe">${s.foe}</span><span class="st-ship fly">${shipSVG()}</span><span class="st-guide">${spockSVG('fab')}</span>`
+    const art = s.k === 'world' ? `<span class="st-planet" style="--pc:${s.c}"></span>${s.foe ? `<span class="st-foe">${s.foe}</span>` : ''}<span class="st-ship fly">${shipSVG()}</span><span class="st-guide">${spockSVG('fab')}</span>`
       : s.k === 'start' ? `<span class="st-ship idle">${shipSVG()}</span><span class="st-av walk">${avatarSVG()}</span><span class="st-guide">${spockSVG('fab')}</span>`
       : s.k === 'stats' ? `<span class="st-av center">${avatarSVG(null, 'big')}</span><span class="st-guide center">${spockSVG('big')}</span>`
       : `<span class="st-ship away">${shipSVG()}</span><span class="st-wave">${spockSVG('fab')}</span>`;
     ov.innerHTML = `<div class="st-stage k-${s.k}"><div class="sp-stars" aria-hidden="true"></div><div class="st-art" aria-hidden="true">${art}</div>
-      <div class="st-cap"><span class="eyebrow">Příběh vaší cesty · ${STORY.i + 1}/${sc.length}</span><h2>${s.h}</h2><p>${s.t}</p></div>
+      <div class="st-cap"><span class="eyebrow">${label} · ${STORY.i + 1}/${sc.length}</span><h2>${s.h}</h2>${s.t ? `<p>${s.t}</p>` : ''}${s.list ? `<ul>${s.list.map(x => `<li>${x}</li>`).join('')}</ul>` : ''}</div>
       <div class="st-bar"><span class="bar"><i style="width:${Math.round((STORY.i + 1) / sc.length * 100)}%"></i></span>
         <button class="btn sm" type="button" data-st="prev" ${STORY.i ? '' : 'disabled'}>Zpět</button>
         <button class="btn sm" type="button" data-st="pause">${STORY.paused ? 'Přehrát' : 'Pozastavit'}</button>
+        <button class="btn sm" type="button" data-st="snd" aria-pressed="${sndOn()}">${sndOn() ? 'Zvuk: zapnutý' : 'Zvuk: vypnutý'}</button>
         <button class="btn sm primary" type="button" data-st="next">${last ? 'Dokončit' : 'Další'}</button>
-        <button class="btn sm" type="button" data-st="close" aria-label="Zavřít příběh">Zavřít</button></div></div>`;
-    clearTimeout(STORY.h);
-    if (!STORY.paused && !last) STORY.h = setTimeout(() => { STORY.i++; show(); }, 6500);
+        <button class="btn sm" type="button" data-st="close">Přeskočit</button></div></div>`;
+    clearTimeout(STORY.h); blip('step');
+    const text = s.h + '. ' + (s.t || '') + ' ' + (s.list || []).join('. '), i0 = STORY.i;
+    const adv = ms => { clearTimeout(STORY.h); if (!STORY.paused && !last) STORY.h = setTimeout(() => { if (STORY && STORY.i === i0) { STORY.i++; show(); } }, ms); };
+    const spoken = !STORY.paused && say(text, () => adv(900));
+    adv(spoken ? Math.max(9000, text.length * 110) : Math.max(6500, text.length * 55));
     const nb = ov.querySelector('[data-st=next]'); if (nb) nb.focus({preventScroll:true});
   };
   ov.addEventListener('click', e => { const b = e.target.closest('[data-st]'); if (!b || !STORY) return; const a = b.dataset.st;
     if (a === 'close' || (a === 'next' && STORY.i === sc.length - 1)) return close();
-    if (a === 'next') STORY.i++; else if (a === 'prev') STORY.i = Math.max(0, STORY.i - 1); else if (a === 'pause') STORY.paused = !STORY.paused;
+    if (a === 'next') STORY.i++; else if (a === 'prev') STORY.i = Math.max(0, STORY.i - 1);
+    else if (a === 'pause') { STORY.paused = !STORY.paused; if (STORY.paused) { try { speechSynthesis.cancel(); } catch (e) {} } }
+    else if (a === 'snd') { S.sound = !sndOn(); save(); if (sndOn()) sndStart(); else sndStop(); }
     show(); });
   ov.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   show();
 }
+function playStory(){
+  if (!pathDone()) { toast('Příběh se přehraje, až dokončíte celou cestu.'); return; }
+  playScenes(storyScenes(), 'Příběh vaší cesty', 'příběh');
+}
+/* shrnutí úrovně: co se člověk v každé lekci naučil (názvy karet, u lekcí bez karet úkoly) */
+function recapScenes(w){
+  const wd = worldOf(w) || {n:w.title, c:'#A54CB2', foe:''}, nm = esc(w.role ? w.title : w.lab + ' · ' + w.title);
+  const sc = [{k:'start', h:'Shrnutí: ' + nm, t:`${wd.n}. Připomeňte si za minutu, co jste se tu naučili. Shrnutí můžete kdykoli přeskočit.`}];
+  w.days.forEach(d => { const pts = (d.cards && d.cards.length ? d.cards.map(c => plain(c.t)) : d.todo.map(t => 'Vyzkoušeli jste: ' + plain(t.t))).slice(0, 5); sc.push({k:'world', c:wd.c, h:'Lekce ' + esc(d.d) + ': ' + plain(d.t), list:pts.map(esc)}); });
+  sc.push({k:'stats', h:'To je celá úroveň', t:`${w.days.length} lekcí za vámi. ${wd.win || ''}`});
+  return sc;
+}
+function playRecap(wid){ const w = W.find(x => x.id === wid); if (w) playScenes(recapScenes(w), 'Shrnutí úrovně', 'shrnutí ' + wid); }
+/* minihra u překážky: pět rychlých rozhodnutí z látky úrovně; špatná volba nevadí, Spock napoví. Jde přeskočit. */
+let MG = null;
+function playGame(wid){
+  const w = W.find(x => x.id === wid); if (!w) return;
+  const pool = []; w.days.forEach(d => (d.cards || []).forEach(c => { if (c.q && c.o && c.o.length > 1) pool.push(c); }));
+  if (!pool.length) { toast('Tahle úroveň minihru nemá.'); return; }
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  MG = {w, wd: worldOf(w) || {n:w.title, foe:'Překážka', c:'#A54CB2'}, qs: pool.slice(0, 5), i:0, miss:0, hint:''};
+  try { trk('minihra', wid + ' spuštěna'); } catch (e) {}
+  document.body.classList.add('noscroll'); mgRender();
+}
+function mgClose(){ const ov = document.getElementById('mg'); if (ov) ov.remove(); MG = null; document.body.classList.remove('noscroll'); render(); showCel(); }
+function mgRender(){
+  let ov = document.getElementById('mg');
+  if (!ov) { ov = document.createElement('div'); ov.id = 'mg'; ov.className = 'story mg'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','Minihra: ' + MG.wd.foe); document.body.append(ov); }
+  const g = MG, n = g.qs.length, end = g.i >= n;
+  const track = `<div class="mg-track" aria-label="Postup ${Math.min(g.i, n)} z ${n}"><span class="mg-ship" style="left:${Math.min(g.i, n) / n * 100}%">${shipSVG()}</span>${g.qs.map((_, k) => `<i class="${k < g.i ? 'on' : ''}"></i>`).join('')}<span class="mg-goal" style="--pc:${g.wd.c}"></span></div>`;
+  if (end) {
+    ov.innerHTML = `<div class="st-stage mg-stage"><div class="sp-stars" aria-hidden="true"></div><div class="mg-top"><span class="eyebrow">Minihra · ${g.wd.n}</span><h2>Proletěli jste: ${g.wd.foe}</h2></div>${track}
+      <div class="mg-end">${spockSVG('big')}<p>${g.miss ? `Spock vám napověděl ${g.miss}×. Kurz jste udrželi.` : 'Bez jediné nápovědy. Čistý průlet!'}</p><button class="btn primary" type="button" data-mg="close">Pokračovat</button></div></div>`;
+    ov.querySelector('[data-mg=close]').focus(); return;
+  }
+  const c = g.qs[g.i], order = g.order || (g.order = c.o.map((_, k) => k).sort(() => Math.random() - .5));
+  ov.innerHTML = `<div class="st-stage mg-stage"><div class="sp-stars" aria-hidden="true"></div>
+    <div class="mg-top"><span class="eyebrow">Minihra · ${g.wd.n} · ${g.i + 1}/${n}</span><h2>Překážka: ${g.wd.foe}</h2><button class="btn sm" type="button" data-mg="close">Přeskočit minihru</button></div>${track}
+    <div class="mg-q"><p class="mg-ask">${fmt(c.q)}</p><div class="mg-opts">${order.map((oi, k) => `<button type="button" class="mg-opt" style="--d:${k * .6}s" data-mg="a:${oi}">${fmt(c.o[oi])}</button>`).join('')}</div>
+      ${g.hint ? `<p class="mg-hint" role="status"><b>Spock radí:</b> ${fmt(g.hint)}</p>` : '<p class="mg-hint muted">Vyberte správný kurz. Špatná volba nevadí, Spock napoví.</p>'}</div></div>`;
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-mg],[data-mgame],[data-recap]'); if (!t) return;
+  if (t.dataset.mgame) return playGame(t.dataset.mgame);
+  if (t.dataset.recap) return playRecap(t.dataset.recap);
+  if (!MG) return;
+  if (t.dataset.mg === 'close') { const fin = MG.i >= MG.qs.length, wid = MG.w.id; if (fin) award('mg.' + wid, 15, 'minihra'); try { trk('minihra', wid + (fin ? ' dohrána' : ' přeskočena')); } catch (err) {} return mgClose(); }
+  const oi = +t.dataset.mg.split(':')[1], c = MG.qs[MG.i];
+  if (oi === c.a) { blip('ok'); MG.i++; MG.hint = ''; MG.order = null; } else { blip('bad'); MG.miss++; MG.hint = c.why || 'Zkuste jiný kurz.'; }
+  mgRender();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && MG) mgClose(); });
 
 /* ---------- profil a odznaky ---------- */
 function renderBadges(){
@@ -566,7 +666,7 @@ function renderBadges(){
     <div class="sec-h"><h2>Odznaky</h2></div>
     <div class="badges">${myBadges().map(([id,name,how]) => { const got = S.badges['got.' + id]; return `<div class="badge ${got?'on':''}"><span class="bd"><span>${got ? '★' : LOCK}</span></span><b>${esc(name)}</b><span>${esc(how)}</span>${got ? `<small>${esc(got.split('-').reverse().join('. '))}</small>` : ''}</div>`; }).join('')}</div>
     <div class="sec-h"><h2>Jak se získává XP</h2></div>
-    <dl class="kv"><dt>Karta správně</dt><dd>+5 XP</dd><dt>Úkol</dt><dd>+${XP.task} XP, s ověřením z VS Code +5 navíc</dd><dt>Denní výzva</dt><dd>+${QXP} XP, truhla za všechny tři +${QCHEST} XP</dd><dt>Celá lekce</dt><dd>+${XP.lesson} XP navíc</dd><dt>Kvíz napoprvé</dt><dd>+${XP.quizFirst} XP za otázku, na další pokus +${XP.quizRetry}</dd><dt>Celý modul</dt><dd>+${XP.module} XP</dd><dt>Skokový test</dt><dd>+${XP.jump} XP a odemčený modul</dd><dt>Bod připravenosti</dt><dd>+${XP.ready} XP</dd></dl>`);
+    <dl class="kv"><dt>Karta správně</dt><dd>+5 XP</dd><dt>Úkol</dt><dd>+${XP.task} XP, s ověřením z VS Code +5 navíc</dd><dt>Minihra u překážky</dt><dd>+15 XP za dohrání</dd><dt>Denní výzva</dt><dd>+${QXP} XP, truhla za všechny tři +${QCHEST} XP</dd><dt>Celá lekce</dt><dd>+${XP.lesson} XP navíc</dd><dt>Kvíz napoprvé</dt><dd>+${XP.quizFirst} XP za otázku, na další pokus +${XP.quizRetry}</dd><dt>Celý modul</dt><dd>+${XP.module} XP</dd><dt>Skokový test</dt><dd>+${XP.jump} XP a odemčený modul</dd><dt>Bod připravenosti</dt><dd>+${XP.ready} XP</dd></dl>`);
 }
 document.addEventListener('click', e => { const k = e.target.closest('[data-setskin]'); if (k) { S.skin = k.dataset.setskin; save(); applySkin(); renderBadges(); } });
 document.addEventListener('click', e => { const g = e.target.closest('[data-goal]'); if (g) { S.goal = +g.dataset.goal; save(); renderBadges(); updatePills(); } });
