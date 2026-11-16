@@ -111,11 +111,10 @@ jobs:
           path: web/dist/e2e-chyby/
           retention-days: 14
 
-  # Safari (WebKit): cesta uživatele na počítači. Zatím informativní, neblokuje sloučení.
+  # Safari (WebKit): cesta uživatele na počítači i mobilu (iPhone, iPad, Mac)
   safari:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

@@ -56,7 +56,7 @@ Běží na GitHubu při každém pull requestu a po sloučení do `main`. Když 
 | `nastroje/e2e/scenare.js` | Výpadek chatu, nedostupná databáze, chybějící právo zápisu, pokrok ze dvou zařízení, ovládání klávesnicí (Tab, Enter, Escape, viditelné zaměření), tablet, tablet na šířku, široký monitor, tmavý režim, platnost videí | 34 |
 | `nastroje/e2e/pristupnost.js` | Průchod za každou roli; WCAG 2 A a AA (axe-core) na osmi stránkách, v dashboardu, simulaci, minihře a příběhu, světlý i tmavý režim; dotykové plochy na mobilu | 80 |
 | `nastroje/e2e/vykon.js` | Rozpočty: velikost stránky (700 kB, po kompresi 230 kB), první vykreslení, vykreslení lekce a opory, procesor po 15 s nečinnosti, počet prvků; dashboard s 500 smyšlenými lidmi | 10 |
-| Safari (WebKit) | `journey.js` v jádru Safari na počítači i mobilu. Zatím informativní, neblokuje sloučení | 2 × cesta |
+| Safari (WebKit) | `journey.js` v jádru Safari na počítači i mobilu (iPhone, iPad, Mac). Chrome a Edge pokrývá Chromium | 2 × 101 |
 
 Testovací prostředí (smyšlená databáze, vlastník, chat) je v `nastroje/e2e/fixture.js`. Každý scénář běží ve vlastním prohlížeči: když jeden spadne, ostatní doběhnou a selhání se zapíše. U každého neprošlého testu se uloží snímek obrazovky do `web/dist/e2e-chyby/` a na GitHubu je ke stažení u běhu kontrol. Testy nečekají pevné pauzy, ale na vykreslení stránky. Testovací háčky (`window.__kviz`) jsou jen v testovacím sestavení, ne ve stránce pro uživatele. Na GitHubu běží čtyři úlohy souběžně (obsah, web, přístupnost a výkon, Safari).
 
