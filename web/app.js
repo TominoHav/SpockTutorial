@@ -97,7 +97,7 @@ function updatePills(){
   $('#pill-days').innerHTML = '<span class="dot"></span>' + (S.role ? ROLES[S.role] : 'Vyberte svou roli');
   const ps = $('#pill-streak'); if (ps) { ps.hidden = !S.xp; ps.innerHTML = FLAME + '<b>' + st + '</b>'; ps.classList.toggle('lit', lit); ps.title = 'Série: ' + st + ' dní' + (lit ? '' : ' · dnes ještě nic'); }
   const px = $('#pill-xp'); if (px) { px.hidden = !S.xp; px.innerHTML = `<span class="ring sm" style="--p:${Math.min(100, todayXP()/S.goal*100)}"></span><b>${S.xp}</b> XP`; px.title = 'Dnes ' + todayXP() + ' z ' + S.goal + ' XP · ' + rank().name; }
-  $('#pill-prog').textContent = 'Hotovo ' + overall() + ' %';
+  $('#pill-prog').innerHTML = '<span class="pp-l">Hotovo </span>' + overall() + ' %'; $('#pill-prog').title = 'Hotovo z vaší cesty';
 }
 function toast(msg){ notice({kind:'info', title:msg}); }
 
@@ -489,7 +489,7 @@ function spaceMap(){
       <span class="sw-pl" style="--pc:${wd.c}"><span>${done ? '✓' : locked ? LOCK : i}</span></span>
       <h3>${wd.n}</h3><p class="sw-m">${esc(w.role ? w.title : w.lab + ' · ' + w.title)}</p>
       <p class="sw-foe ${done ? 'won' : ''}">${done ? 'Překonáno: ' : 'Překážka: '}${wd.foe}</p>
-      <span class="sw-bar" aria-label="Hotovo ${Math.round(pct*100)} %"><i style="width:${Math.round(pct*100)}%"></i></span>
+      <span class="sw-prog" aria-label="Hotovo ${Math.round(pct*100)} %"><span class="sw-bar"><i style="width:${Math.round(pct*100)}%"></i></span><b class="num">${Math.round(pct*100)} %</b></span>
       <button class="linkbtn" type="button" data-week="${w.id}">${lbl}</button>${done ? `<span class="sw-x"><button class="linkbtn" type="button" data-recap="${w.id}">Shrnutí</button><button class="linkbtn" type="button" data-mgame="${w.id}">Minihra</button></span>` : ''}</li>`;
   }).join('');
   return `<div class="spmap"><div class="sp-stars" aria-hidden="true"></div>
@@ -1191,11 +1191,14 @@ function railPathD(active){
   const hereId = (nextOnPath() || {}).id;
   const items = pathMods().map(m => {
     const st = modState(m), on = m.id === active, p = modPct(m);
-    const sub = st === 'lock' ? 'Zamčeno' : Math.round(p*100) + ' % · ' + m.days.filter((_,di) => lessonDone(m, di)).length + '/' + m.days.length;
-    return `<li class="pd-s st-${st} c-${m.c} ${on?'on':''}"><button type="button" class="pd-sb" data-week="${m.id}" ${on?'aria-current="step"':''}><span class="pd-node">${st === 'done' ? '' : ringSvg(p, 'var(--c)')}<span class="pd-in">${st === 'lock' ? LOCK : st === 'done' ? '✓' : esc(shortLab(m))}</span></span><span class="pd-sn"><b>${esc(m.title)}</b><small>${sub}</small></span>${(hereId ? m.id === hereId : on) ? `<span class="pd-spock">${spockSVG('fab')}</span>` : ''}</button>${on && aw && aw.id === m.id ? `<div class="pd-in-card">${pdCard(m)}</div>` : ''}</li>`;
+    const sub = st === 'lock' ? 'Zamčeno' : '<span class="pd-pc">' + Math.round(p*100) + ' %</span><span class="pd-ls"> · ' + m.days.filter((_,di) => lessonDone(m, di)).length + '/' + m.days.length + '</span>';
+    return `<li class="pd-s st-${st} c-${m.c} ${on?'on':''}"><button type="button" class="pd-sb" data-week="${m.id}" ${on?'aria-current="step"':''}><span class="pd-node">${st === 'done' ? '' : ringSvg(p, 'var(--c)')}<span class="pd-in">${st === 'lock' ? LOCK : st === 'done' ? '✓' : esc(shortLab(m))}</span></span><span class="pd-lv">Úroveň ${esc(shortLab(m))}</span><span class="pd-sn"><b>${esc(m.title)}</b><small>${sub}</small></span>${(hereId ? m.id === hereId : on) ? `<span class="pd-spock">${spockSVG('fab')}</span>` : ''}</button>${on && aw && aw.id === m.id ? `<div class="pd-in-card">${pdCard(m)}</div>` : ''}</li>`;
   }).join('');
   const mob = aw ? `<div class="pd-mob-card">${pdCard(aw)}</div>` : '';
-  return `<div class="pdr"><span class="grp">Cesta</span><ol class="pd-line">${items}</ol>${mob}</div>`;
+  /* na mobilu jsou v řadě jen kroky; název, procenta a lekce vybrané (nebo rozdělané) úrovně jsou na jednom řádku pod nimi */
+  const cm = aw && pathIds().includes(aw.id) ? aw : pathMods().find(m => m.id === hereId) || pathMods()[0];
+  const cap = cm ? `<p class="pd-cap c-${cm.c}"><b>${esc(cm.role ? 'Úroveň 2' : cm.lab)} · ${esc(cm.title)}</b><span>${isLocked(cm) ? 'zamčeno' : Math.round(modPct(cm)*100) + ' % · ' + cm.days.filter((_,di) => lessonDone(cm, di)).length + '/' + cm.days.length + ' lekcí'}</span></p>` : '';
+  return `<div class="pdr"><span class="grp">Cesta</span><ol class="pd-line">${items}</ol>${cap}${mob}</div>`;
 }
 
 function shell(active, body){

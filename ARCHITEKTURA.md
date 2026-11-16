@@ -73,7 +73,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
-| [#46](https://github.com/TominoHav/SpockTutorial/pull/46) | Testy | Doplněné e2e scénáře: nabídka v oslavě po dokončení úrovně, mluvený komentář se zkušebním českým hlasem, zmrazení série | 16. 11. 2026 |
+| [#46](https://github.com/TominoHav/SpockTutorial/pull/46) | Aplikace | Přehlednější mobil: lišta úrovní (jen kroky a jeden řádek s názvem a procenty), statistiky a profil v mřížce, mapa s procenty, kratší hlavička; doplněné e2e scénáře (oslava úrovně, mluvený komentář, zmrazení série) | 16. 11. 2026 |
 | [#45](https://github.com/TominoHav/SpockTutorial/pull/45) | Aplikace | Vzhledy Spocka podle hodnosti: vlastní barvy a doplněk (šátek, sluchátka, medaile, hvězdy, koruna s pláštěm, trysky) místo přebarvení | 16. 11. 2026 |
 | [#44](https://github.com/TominoHav/SpockTutorial/pull/44) | Aplikace | Vesmírná cesta: světy a překážky, postavička na mapě, šatna a ozvučený příběh cesty; u překážek přeskočitelné minihry, po každé úrovni přeskočitelné shrnutí | 16. 11. 2026 |
 | [#43](https://github.com/TominoHav/SpockTutorial/pull/43) | Aplikace | Hra: postup v hodnostech s odměnami (vzhledy Spocka, zmrazení série), tři denní výzvy s truhlou, shrnutí po lekci, oslavy povýšení a sérií | 16. 11. 2026 |
