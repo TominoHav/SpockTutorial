@@ -34,11 +34,24 @@ Věci, které nejde vyřešit v repozitáři ani je nemůže udělat Claude. Jso
 - [ ] **Vyzkoušet web na skutečných zařízeních:** iPhone, telefon s Androidem, iPad a firemní notebook s firemním prohlížečem. Dosud se testovalo jen v emulaci.
 - [ ] **Ověřit, že kolegové mají přístup ke Claudovi** (kvůli chatu se Spockem), a zkusit chat pod cizím účtem.
 
+## E. Přesun na vlastní server banky
+
+Dnes web běží na claude.ai: identitu, databázi (pokrok, měření, zpětná vazba) a chat se Spockem poskytuje claude.ai. Pokrok je od listopadu 2026 uložený pod účtem každého člověka (`data/users/<člověk>/progress`), takže se dá pokračovat i z jiného zařízení. Na vlastním serveru je potřeba tyto části nahradit. Domluvit s IT banky:
+
+- [ ] **Hosting stránky.** Kde poběží (interní web server), kdo ho spravuje a jak se na něj publikuje nová verze. Stránka je jeden soubor HTML a složka `media/`.
+- [ ] **Přihlášení přes firemní identitu.** Jednotné přihlášení, aby web věděl, kdo je kdo. Bez něj nejde ukládat pokrok pod účtem ani měřit průchod.
+- [ ] **Úložiště pokroku.** Jeden záznam na člověka, asi 50 kB. Načíst při otevření, uložit při změně. V kódu je to jedno místo: funkce `pLoad` a `pPush` ve `web/track.js`.
+- [ ] **Úložiště měření a zpětné vazby pro dashboard.** Jeden záznam na člověka (nejvýš asi 20 kB, posledních 300 kroků), zpětná vazba a stav vyřízení. Při 500 lidech asi 10 MB. Dashboard potřebuje načíst všechny záznamy a pak jen změněné (podle času poslední aktivity).
+- [ ] **Chat se Spockem.** Dnes používá Claude přes účet každého uživatele. Na vlastním serveru potřebuje schválený přístup k jazykovému modelu, nebo se vypne.
+- [ ] **Bezpečnost a ochrana osobních údajů.** Měření je jmenovité (kdo, kdy, kam klikal). Projít s bezpečností a pověřencem pro ochranu osobních údajů, doba uchování, kdo vidí dashboard.
+- [ ] **Převod pokroku z claude.ai.** Lidé, kteří začnou na claude.ai, by po přesunu neměli začínat znovu. Domluvit jednorázový převod záznamů `data/users/*/progress` a `track/*`.
+  - Kontakt v IT: · Termín:
+
 ## D. Později, podle potřeby
 
 - [ ] **Po každé publikaci otevřít v Dashboardu záložku Verze a kvalita.** Tím se verze zapíše do historie a uvidíte, jestli prošly testy a co se zhoršilo (velikost, rychlost, tokeny). Bez otevření se verze do historie nedostane.
 - [ ] **Procházet Dashboard a zpětnou vazbu**, ideálně jednou týdně: kde se lidé ztrácejí, které karty dělají potíže, otevřená zpětná vazba. Vyřízenou odškrtněte. Postup přepisu do repozitáře je v [TODO-ZPETNA-VAZBA.md](TODO-ZPETNA-VAZBA.md).
-- [ ] **Měření mimo claude.ai.** Dashboard i zpětná vazba fungují jen na claude.ai. Když web přesunete na interní server, je potřeba interní služba pro sběr dat.
+- [ ] **Měření mimo claude.ai.** Dashboard i zpětná vazba fungují jen na claude.ai. Při přesunu na interní server viz část E.
 - [ ] **Sběr dotazníku.** Odpovědi z dotazníku na stránce Připravenost se pořád kopírují do schránky. Tlačítko Zpětná vazba už chodí do Dashboardu.
 - [ ] **České titulky nebo komentář k videu.** Video je anglicky.
 - [ ] **Audit přístupnosti** (WCAG) někým, kdo to dělá. Automatický test hlídá jen názvy ovládacích prvků.

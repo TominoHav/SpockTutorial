@@ -58,7 +58,8 @@ let LAYERS = [
 /* ---------- stav ---------- */
 let S = {todo:{}, quiz:{}, ready:{}, role:null, cards:{}};
 try { const raw = localStorage.getItem(KEY); if (raw) { const p = JSON.parse(raw); if (p && typeof p === 'object') S = Object.assign(S, p); } } catch(e) {}
-function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
+/* pokrok se ukládá do prohlížeče a (je-li člověk přihlášený) i do jeho soukromé části databáze, viz pSync v track.js */
+function save(){ S._at = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} try { pSync(); } catch(e) {} }
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -893,6 +894,8 @@ function nextLessonInfo(){
   const li = curLesson(w); return {w, li: li >= 0 ? li : null, d: li >= 0 ? w.days[li] : null};
 }
 function continueBtn(cls){
+  const pw = S.pos && W.find(w => w.id === S.pos.w), pd = pw && pw.days[S.pos.l];
+  if (pd && applies(pw) && !isLocked(pw) && !lessonDone(pw, S.pos.l)) return `<button class="btn primary ${cls||''}" type="button" data-golesson="${pw.id}:${S.pos.l}">Pokračovat, kde jste skončil(a): lekce ${esc(pd.d)} →</button>`;
   const n = nextLessonInfo(); if (!n) return `<button class="btn primary ${cls||''}" type="button" data-go="badges">Celá cesta hotová · profil</button>`;
   return n.d ? `<button class="btn primary ${cls||''}" type="button" data-golesson="${n.w.id}:${n.li}">Pokračovat: lekce ${esc(n.d.d)} →</button>` : `<button class="btn primary ${cls||''}" type="button" data-quiz="${n.w.id}">Pokračovat: kvíz modulu ${esc(n.w.title)} →</button>`;
 }
@@ -1287,6 +1290,8 @@ function render(){
   else if (view.name === 'cheat') renderCheat();
   else if (view.name === 'badges') renderBadges();
   updatePills();
+  /* poslední místo pro „Pokračovat tam, kde jste skončil(a)“ */
+  if (view.name === 'week' && typeof view.lesson === 'number' && (!S.pos || S.pos.w !== view.week || S.pos.l !== view.lesson)) { S.pos = {w:view.week, l:view.lesson}; save(); }
   try { trackRender(performance.now() - t0); trackView(); } catch (e) {}
 }
 function go(name, extra){
