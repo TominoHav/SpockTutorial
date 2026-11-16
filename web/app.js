@@ -526,10 +526,15 @@ function storyScenes(){
   const mods = pathIds().map(id => W.find(w => w.id === id)).filter(w => w && modPct(w) === 1);
   const first = Object.keys(S.days).filter(k => S.days[k] > 0).sort()[0], cz = k => k ? k.split('-').reverse().map(Number).join('. ') : '';
   const lessons = mods.reduce((n, w) => n + w.days.length, 0), tasks = mods.reduce((n, w) => n + w.days.reduce((m, d) => m + d.todo.length, 0), 0);
-  const sc = [{k:'start', h:'Start', t:`${first ? cz(first) + ': ' : ''}malá postavička nastupuje do lodi. Cíl: naučit se discovery se SPOCKem. Na palubě čeká průvodce Spock.`}];
+  const pl = (n, a, b, c) => n + ' ' + (n === 1 ? a : n > 1 && n < 5 ? b : c);
+  const nb = myBadges().filter(b => S.badges['got.' + b[0]]).length;
+  const sc = [{k:'start', h:'Start', t:`${first ? cz(first) + ': ' : ''}malá postavička nastupuje do lodi. Cíl: naučit se discovery se SPOCKem. Průvodce Spock jí radí na dálku a čeká na ni v cíli.`}];
   mods.forEach((w, i) => { const wd = worldOf(w); sc.push({k:'world', c:wd.c, n:i, h:wd.n, foe:wd.foe, t:`${esc(w.role ? w.title : w.lab + ' · ' + w.title)}. Překážka: ${wd.foe}. ${wd.win}`}); });
-  sc.push({k:'stats', h:'Co jste na cestě zvládli', t:`${mods.length} světů, ${lessons} lekcí a ${tasks} úkolů. ${S.xp} XP, hodnost ${rank().name}, ${myBadges().filter(b => S.badges['got.' + b[0]]).length} odznaků.`});
-  sc.push({k:'end', h:'Odlet', t:'Postavička se setkala se Spockem a společně odlétají k dalším iniciativám. Agenti připravují, vy rozhodujete.'});
+  sc.push({k:'meet', party:true, banner:'Dokázali jste to!', h:'Setkání se Spockem', t:'Postavička doletěla do cíle. Spock jí podává ruku a předává vlajku posádky: od teď vedete discovery sami. Agenti připravují, vy rozhodujete.'});
+  const fd = Object.keys(S.days).filter(k => S.days[k] > 0).sort().pop();
+  sc.push({k:'stats', party:true, banner:'Absolvent onboardingu SPOCKu', h:'Co jste na cestě zvládli', t:`${pl(mods.length, 'svět', 'světy', 'světů')}, ${pl(lessons, 'lekce', 'lekce', 'lekcí')} a ${pl(tasks, 'úkol', 'úkoly', 'úkolů')}. ${S.xp} XP, hodnost ${rank().name}, ${pl(nb, 'odznak', 'odznaky', 'odznaků')}.`,
+    medal:{role: S.role ? ROLES[S.role] : '', date: cz(fd), xp: S.xp, rank: rank().name}});
+  sc.push({k:'end', party:true, banner:'Šťastnou cestu, posádko!', h:'Odlet', t:'Postavička a Spock nastupují do lodi a společně odlétají k dalším iniciativám.'});
   return sc;
 }
 /* zvuk: tichý podkres a tóny z Web Audio, komentář čte hlas prohlížeče (když má český). Jde vypnout. */
@@ -572,6 +577,51 @@ function say(text, onend){
   try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g, ' ')); u.lang = SND.voice.lang; u.voice = SND.voice; u.rate = 1; u.onend = fin; u.onerror = fin; speechSynthesis.speak(u); return true; } catch (e) { return false; }
 }
 /* přehrávač scén: závěrečný příběh i shrnutí úrovně. Běží sám, jde pozastavit, krokovat, ztlumit a kdykoli přeskočit. */
+/* oslava v cíli: posádka agentů, medaile absolventa, ohňostroj a fanfára */
+function crowd(){
+  return SKINS.slice(1, 7).map((k, i) => `<span class="cw" style="--d:${(i * .17).toFixed(2)}s">${spockSVG('fab', Object.assign({}, k, {f:'', b:'', noAnt:false}))}</span>`).join('');
+}
+function medalSVG(m){
+  m = m || {};
+  return `<svg class="medal" viewBox="0 0 200 240" aria-hidden="true">
+    <path d="M62 0 L100 70 L138 0 L118 0 L100 34 L82 0 Z" fill="#E15079"/><path d="M82 0 L100 34 L118 0" fill="#A54CB2"/>
+    <circle cx="100" cy="140" r="86" fill="#B86E12"/><circle cx="100" cy="140" r="78" fill="url(#mg1)"/>
+    <defs><radialGradient id="mg1" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFF3C4"/><stop offset=".5" stop-color="#F2B544"/><stop offset="1" stop-color="#C8811C"/></radialGradient></defs>
+    <circle cx="100" cy="140" r="64" fill="none" stroke="#FFF3C4" stroke-width="2" stroke-dasharray="3 5"/>
+    <text x="100" y="118" text-anchor="middle" font-size="13" font-weight="800" fill="#7A4A0C" letter-spacing="2">ABSOLVENT</text>
+    <text x="100" y="146" text-anchor="middle" font-size="26" font-weight="900" fill="#5A3608">SPOCK</text>
+    <text x="100" y="166" text-anchor="middle" font-size="11" font-weight="700" fill="#7A4A0C">${esc(m.role || '')}</text>
+    <text x="100" y="184" text-anchor="middle" font-size="10" font-weight="600" fill="#7A4A0C">${esc(m.date || '')}</text>
+  </svg>`;
+}
+function fanfare(){
+  if (!sndOn()) return;
+  try {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    const ctx = SND.ctx || (SND.tmp = SND.tmp || new C()), t0 = ctx.currentTime + .05;
+    [[523,0,.18],[659,.16,.18],[784,.32,.18],[1047,.5,.7],[784,.5,.7],[659,.5,.7]].forEach(([f, d, len]) => {
+      const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(.0001, t0 + d); g.gain.exponentialRampToValueAtTime(.08, t0 + d + .03); g.gain.exponentialRampToValueAtTime(.0001, t0 + d + len);
+      o.connect(g); g.connect(ctx.destination); o.start(t0 + d); o.stop(t0 + d + len + .05);
+    });
+  } catch (e) {}
+}
+function fireworks(cv){
+  if (!cv || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const ctx = cv.getContext('2d'), r = cv.getBoundingClientRect(), W2 = cv.width = r.width, H2 = cv.height = r.height;
+  const cols = ['#F2B544','#E15079','#7DE3F4','#9BE8C0','#C9B6FF','#FFF3C4'], P = [];
+  let t = 0, next = 0;
+  (function f(){
+    if (!cv.isConnected) return;
+    if (t >= next && t < 420) { const x = W2 * (.15 + Math.random() * .7), y = H2 * (.1 + Math.random() * .35), c = cols[Math.random() * cols.length | 0];
+      for (let i = 0; i < 46; i++) { const a = Math.PI * 2 * i / 46, v = 2 + Math.random() * 2.6; P.push({x, y, vx:Math.cos(a) * v, vy:Math.sin(a) * v, l:60 + Math.random() * 25, c}); }
+      next = t + 26 + Math.random() * 30; }
+    ctx.clearRect(0, 0, W2, H2);
+    for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; p.x += p.vx; p.y += p.vy; p.vy += .045; p.vx *= .985; p.l--; if (p.l <= 0) { P.splice(i, 1); continue; }
+      ctx.globalAlpha = Math.min(1, p.l / 30); ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x, p.y, 2.2, 0, 7); ctx.fill(); }
+    t++; if (t < 520 || P.length) requestAnimationFrame(f);
+  })();
+}
 let STORY = null;
 function playScenes(sc, label, what){
   try { trk(what, 'spuštěno'); } catch (e) {}
@@ -584,11 +634,15 @@ function playScenes(sc, label, what){
   const close = () => { clearTimeout(STORY.h); sndStop(); ov.remove(); STORY = null; document.body.classList.remove('noscroll'); render(); showCel(); };
   const show = () => {
     const s = sc[STORY.i], last = STORY.i === sc.length - 1;
-    const art = s.k === 'world' ? `<span class="st-planet" style="--pc:${s.c}"></span>${s.foe ? `<span class="st-foe">${s.foe}</span>` : ''}<span class="st-ship fly">${shipSVG()}</span><span class="st-guide">${spockSVG('fab')}</span>`
-      : s.k === 'start' ? `<span class="st-ship idle">${shipSVG()}</span><span class="st-av walk">${avatarSVG()}</span><span class="st-guide">${spockSVG('fab')}</span>`
-      : s.k === 'stats' ? `<span class="st-av center">${avatarSVG(null, 'big')}</span><span class="st-guide center">${spockSVG('big')}</span>`
-      : `<span class="st-ship away">${shipSVG()}</span><span class="st-wave">${spockSVG('fab')}</span>`;
+    const flag = '<svg class="st-flag" viewBox="0 0 40 60" aria-hidden="true"><line x1="5" y1="4" x2="5" y2="58" stroke="#C9D2E3" stroke-width="3" stroke-linecap="round"/><path d="M6 6 L36 12 L6 26 Z" fill="#E15079"/><circle cx="15" cy="15" r="3.4" fill="#fff"/></svg>';
+    const scene = s.k === 'world' ? `<span class="st-planet" style="--pc:${s.c}"></span>${s.foe ? `<span class="st-foe">${s.foe}</span>` : ''}<span class="st-ship fly">${shipSVG()}</span><span class="st-comm"><span class="st-comm-l">Spock radí</span>${spockSVG('fab')}</span>`
+      : s.k === 'start' ? `<span class="st-ship idle">${shipSVG()}</span><span class="st-av walk">${avatarSVG()}</span><span class="st-comm"><span class="st-comm-l">Spock na příjmu</span>${spockSVG('fab')}</span>`
+      : s.k === 'meet' ? `<span class="st-rays"></span><span class="st-crowd">${crowd()}</span><span class="st-ground"></span><span class="st-ship landed">${shipSVG()}</span><span class="st-av meet">${avatarSVG(null, 'big')}</span><span class="st-guide meet">${spockSVG('big')}</span><span class="st-hand"></span><span class="st-flagbox">${flag}</span>`
+      : s.k === 'stats' ? `<span class="st-rays"></span><span class="st-medal">${medalSVG(s.medal)}</span><span class="st-av duo">${avatarSVG(null, 'big')}</span><span class="st-guide duo">${spockSVG('big')}</span>`
+      : `<span class="st-trail"></span><span class="st-crew away"><span class="st-crew-av">${avatarSVG()}</span><span class="st-crew-sp">${spockSVG('fab')}</span>${shipSVG()}</span>`;
+    const art = `<div class="st-scene">${scene}</div>`;
     ov.innerHTML = `<div class="st-stage k-${s.k}"><div class="sp-stars" aria-hidden="true"></div><div class="st-art" aria-hidden="true">${art}</div>
+      ${s.banner ? `<div class="st-banner" aria-hidden="true"><span>${s.banner}</span></div>` : ''}${s.party ? '<canvas class="st-fw" aria-hidden="true"></canvas>' : ''}
       <div class="st-cap"><span class="eyebrow">${label} · ${STORY.i + 1}/${sc.length}</span><h2>${s.h}</h2>${s.t ? `<p>${s.t}</p>` : ''}${s.list ? `<ul>${s.list.map(x => `<li>${x}</li>`).join('')}</ul>` : ''}</div>
       <div class="st-bar"><span class="bar"><i style="width:${Math.round((STORY.i + 1) / sc.length * 100)}%"></i></span>
         <button class="btn sm" type="button" data-st="prev" ${STORY.i ? '' : 'disabled'}>Zpět</button>
@@ -596,7 +650,7 @@ function playScenes(sc, label, what){
         <button class="btn sm" type="button" data-st="snd" aria-pressed="${sndOn()}">${sndOn() ? 'Zvuk: zapnutý' : 'Zvuk: vypnutý'}</button>
         <button class="btn sm primary" type="button" data-st="next">${last ? 'Dokončit' : 'Další'}</button>
         <button class="btn sm" type="button" data-st="close">Přeskočit</button></div></div>`;
-    clearTimeout(STORY.h); blip('step');
+    clearTimeout(STORY.h); if (s.party) { fanfare(); fireworks(ov.querySelector('.st-fw')); } else blip('step');
     const text = s.h + '. ' + (s.t || '') + ' ' + (s.list || []).join('. '), i0 = STORY.i;
     const adv = ms => { clearTimeout(STORY.h); if (!STORY.paused && !last) STORY.h = setTimeout(() => { if (STORY && STORY.i === i0) { STORY.i++; show(); } }, ms); };
     const spoken = !STORY.paused && say(text, () => adv(900));
