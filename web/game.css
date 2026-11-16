@@ -131,3 +131,41 @@
 .hp-ref{margin:14px 0 0;font-size:14px}
 .cel-acts{display:grid;gap:8px}.cel-quiz{width:100%;justify-content:center;padding:12px;font-size:15px;border-radius:12px}.qlaunch.qlock{opacity:.75}.ses-n{font-size:13px;color:var(--ink-3,#667);white-space:nowrap}
 .cel-acts{width:100%}body:has(#ses) .notices{display:none}
+/* ---------- odměny: vzhledy Spocka, hodnosti, denní výzvy, shrnutí lekce ---------- */
+.spock>*{filter:var(--skin,none)}
+body[data-skin=duha] .spock>*{animation:skinHue 8s linear infinite}
+@keyframes skinHue{to{filter:hue-rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){body[data-skin=duha] .spock>*{animation:none;filter:hue-rotate(200deg)}}
+.cel-sum{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px;width:100%}
+.cel-sum div{display:grid;gap:2px;padding:10px 6px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.cel-sum b{font-size:20px;font-weight:800}
+.cel-sum span{font-size:12px;color:var(--ink-2)}
+.quests{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:14px 16px;margin:16px 0 0}
+.qs-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.qs-h h3{margin:0;font-size:16px}
+.qs-chest{font-size:12.5px;font-weight:700;color:var(--ink-2);background:var(--surface-2);border-radius:99px;padding:4px 10px}
+.qs-chest.open{background:color-mix(in srgb,#E8962E 20%,var(--surface));color:var(--ink)}
+.quests ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.quests li{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(60px,1fr) auto auto;align-items:center;gap:10px;font-size:14px}
+.quests li.done .qs-t{color:var(--ink-2)}
+.quests .bar{height:8px}
+@media (max-width:560px){.quests li{grid-template-columns:minmax(0,1fr) auto auto}.quests li .bar{grid-column:1/-1;grid-row:2}}
+.ladder{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.ladder li{display:grid;grid-template-columns:34px minmax(0,1fr) auto;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:8px 12px;background:var(--surface)}
+.ladder li>div{display:grid}
+.ladder li>div span,.ld-r{font-size:13px;color:var(--ink-2)}
+.ld-n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;background:var(--surface-2);color:var(--ink-3)}
+.ladder li.done .ld-n{background:var(--ok);color:#fff}
+.ladder li.cur{border-color:var(--indigo);box-shadow:0 0 0 3px color-mix(in srgb,var(--indigo) 16%,transparent)}
+.ladder li.cur .ld-n{background:var(--indigo);color:#fff}
+.ladder li.todo{opacity:.75}
+@media (max-width:560px){.ladder li{grid-template-columns:34px minmax(0,1fr)}.ld-r{grid-column:2}}
+.skins{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.skin{display:grid;justify-items:center;gap:2px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 6px;font:inherit;color:var(--ink);cursor:pointer}
+.skin.on{border-color:var(--indigo);box-shadow:0 0 0 3px color-mix(in srgb,var(--indigo) 16%,transparent)}
+.skin:disabled{cursor:default;opacity:.6}
+.skin small{font-size:11.5px;color:var(--ink-3)}
+.sk-art{height:64px;display:grid;place-items:center}
+.sk-art .spock{width:52px;height:auto;overflow:visible}
+.sk-art .lockic{width:26px;height:26px;fill:var(--ink-3);stroke:var(--ink-3)}
+.pstats{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}

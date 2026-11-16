@@ -105,25 +105,85 @@ function toast(msg){ notice({kind:'info', title:msg}); }
 const XP = {task:10, quizFirst:15, quizRetry:5, reveal:5, lesson:20, module:100, jump:50, ready:5};
 /* hodnosti: Mistr dosáhne každá role na své cestě (PD ~2060 XP, PM ~2225); Superuser je jen pro Guild Mastery a bez úrovně 4 se na něj nedosáhne (GM bez ní ~2200 XP) */
 const RANKS_ALL = [[0,'Nováček'],[100,'Učeň'],[300,'Praktik'],[700,'Znalec'],[1200,'Expert'],[1700,'Mistr']];
-const ranks = () => S.role === 'gm' ? RANKS_ALL.concat([[2300,'Superuser']]) : RANKS_ALL;
-['xp','goal'].forEach(k => { if (typeof S[k] !== 'number') S[k] = k === 'goal' ? 50 : 0; });
-['days','got','badges','unlocked','tries','proof','ptries','cards'].forEach(k => { if (!S[k] || typeof S[k] !== 'object') S[k] = {}; });
+/* hodnost Superuser má navíc podmínku: hotová úroveň 4 (bonusové XP z výzev ji samo neotevře) */
+const suOk = () => { const w = W.find(x => x.id === 'l4'); return !!w && modPct(w) === 1; };
+const ranks = () => S.role === 'gm' ? RANKS_ALL.concat([[2300,'Superuser', suOk]]) : RANKS_ALL;
+['xp','goal','freeze'].forEach(k => { if (typeof S[k] !== 'number') S[k] = k === 'goal' ? 50 : 0; });
+['days','got','badges','unlocked','tries','proof','ptries','cards','frozen'].forEach(k => { if (!S[k] || typeof S[k] !== 'object') S[k] = {}; });
 const dKey = off => { const d = new Date(); d.setDate(d.getDate() - (off || 0)); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); };
 const todayXP = () => S.days[dKey(0)] || 0;
-function streak(){ let n = 0, off = todayXP() > 0 ? 0 : 1; while ((S.days[dKey(off)] || 0) > 0) { n++; off++; } return n; }
-function rank(){ const RANKS = ranks(); let cur = RANKS[0], next = null; for (const r of RANKS) { if (S.xp >= r[0]) cur = r; else { next = r; break; } } return {name:cur[1], at:cur[0], next, lvl:RANKS.indexOf(cur)+1}; }
+/* den se do série počítá, když v něm je XP, nebo když ho zakrylo zmrazení série */
+const dayOn = k => (S.days[k] || 0) > 0 || !!S.frozen[k];
+function streak(){ let n = 0, off = dayOn(dKey(0)) ? 0 : 1; while (dayOn(dKey(off))) { n++; off++; } return n; }
+function rank(){ const RANKS = ranks(); let cur = RANKS[0], next = null; for (const r of RANKS) { if (S.xp >= r[0] && (!r[2] || r[2]())) cur = r; else { next = r; break; } } return {name:cur[1], at:cur[0], next, lvl:RANKS.indexOf(cur)+1}; }
 const FLAME = `<svg class="flame" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5 5.5 5 10.5A5 5 0 0 1 7 12.5c0-2 1-3.5 2-4.5 0 2 1 3 2 3-1-3 0-6 1-9z"/></svg>`;
 const LOCK = `<svg class="lockic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke-width="2.4"/></svg>`;
 const HEART = `<svg class="heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.5-9.2C1 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 6 3.7 4.5 7.3C19.5 16.4 12 21 12 21z"/></svg>`;
 
 function award(key, amount, label){
   if (S.got[key]) return 0;
+  const lv0 = rank().lvl;
   S.got[key] = true; S.xp += amount;
   const t = dKey(0), before = S.days[t] || 0; S.days[t] = before + amount;
   save(); xpPop('+' + amount + ' XP' + (label ? ' · ' + label : ''));
   if (before < S.goal && S.days[t] >= S.goal) celebrate({kind:'goal', title:'Denní cíl splněn!', text:`Dnes máte ${S.days[t]} XP. Série: ${streak()} ${streak() === 1 ? 'den' : streak() < 5 ? 'dny' : 'dní'}.`});
+  questCount(key, amount); streakReward(); rankReward(lv0);
   checkBadges(); updatePills();
   return amount;
+}
+
+/* ---------- odměny: vzhledy Spocka za hodnosti, zmrazení série, denní výzvy ---------- */
+/* vzhled = filtr barev na postavičce; první je výchozí, další se odemykají s hodností (index = pořadí hodnosti) */
+const SKINS = [['klasik','Klasický','none'],['ocean','Oceán','hue-rotate(-110deg)'],['les','Les','hue-rotate(150deg) saturate(.9)'],['zlato','Zlato','sepia(1) saturate(3.2) hue-rotate(-12deg)'],['noc','Noc','grayscale(1) brightness(.8) contrast(1.25)'],['duha','Duha','hue-rotate(0deg)'],['plamen','Plamen','hue-rotate(45deg) saturate(1.4)']];
+const skinsOwned = () => SKINS.slice(0, Math.max(1, rank().lvl));
+function applySkin(){ const k = skinsOwned().find(x => x[0] === S.skin) || SKINS[0]; document.body.dataset.skin = k[0]; document.body.style.setProperty('--skin', k[2]); }
+const FREEZE_MAX = 2;
+function addFreeze(){ if (S.freeze >= FREEZE_MAX) return false; S.freeze++; return true; }
+/* při načtení: vynechané dny (nejvýš tolik, kolik je zmrazení) se zakryjí, když před nimi série byla */
+function useFreezes(){
+  let gap = 0; while (gap < FREEZE_MAX + 1 && !dayOn(dKey(gap + 1))) gap++;
+  if (!gap || gap > S.freeze || !dayOn(dKey(gap + 1))) return;
+  for (let i = 1; i <= gap; i++) S.frozen[dKey(i)] = 1;
+  S.freeze -= gap; save();
+  notice({kind:'goal', title:'Zmrazení zachránilo vaši sérii', text:`Série ${streak()} dní pokračuje. Zbývá zmrazení: ${S.freeze}.`});
+}
+function streakReward(){
+  const st = streak(); if (![3,7,14,30].includes(st) || S.got['streak.' + st]) return;
+  S.got['streak.' + st] = true; const f = addFreeze(); save();
+  celebrate({kind:'streak', title:`Série ${st} dní!`, text: f ? 'Odměna: zmrazení série. Když jeden den vynecháte, série nepropadne.' : 'Zmrazení série už máte plná (2 ze 2). Držte tempo.'});
+}
+function rankReward(lv0){
+  /* odměna za každou hodnost jen jednou, i když XP přibude ve vnořeném přičtení (výzva, truhla) */
+  const r = rank(); if (r.lvl <= lv0 || r.lvl <= (S.rankLvl || 1)) return; S.rankLvl = r.lvl;
+  const sk = SKINS[r.lvl - 1], f = addFreeze(); if (sk) S.skin = sk[0]; save(); applySkin();
+  celebrate({kind:'rank', title:'Nová hodnost: ' + r.name, text:(sk ? `Odměna: vzhled Spocka „${sk[1]}“` : 'Odměna') + (f ? ' a zmrazení série.' : '.') + ' Vzhled změníte v profilu.'});
+}
+/* denní výzvy: tři na den, začínají po výběru role; každá +10 XP, všechny tři otevřou truhlu +20 XP */
+const QUESTS = {xp:['Získejte dnes 30 XP', 30], cards:['Odpovězte správně na 3 karty', 3], tasks:['Splňte 1 úkol', 1], lesson:['Dokončete 1 lekci', 1], quiz:['Odpovězte v kvízu 3× napoprvé', 3]};
+const QXP = 10, QCHEST = 20;
+function dq(){
+  const t = dKey(0);
+  if (!S.dq || S.dq.day !== t) {
+    const w = nextOnPath(), li = w ? curLesson(w) : -1, d = w && li >= 0 ? w.days[li] : null;
+    const cardsLeft = d && d.cards ? d.cards.length - cardsDone(w, li) : 0, quizOpen = pathMods().some(m => quizReady(m) && !quizPassed(m));
+    const pool = [cardsLeft >= 3 ? 'cards' : null, quizOpen ? 'quiz' : null, 'tasks', 'lesson'].filter(Boolean);
+    S.dq = {day:t, ids:['xp'].concat(pool.slice(0, 2)), c:{}, done:{}, chest:false};
+  }
+  return S.dq;
+}
+const questProg = id => id === 'xp' ? todayXP() : (dq().c[id] || 0);
+function questCount(key, amount){
+  if (!S.role || /^dq/.test(key)) return;
+  const q = dq(), k = key.startsWith('card.') ? 'cards' : key.startsWith('task.') ? 'tasks' : key.startsWith('lesson.') ? 'lesson' : key.startsWith('quiz.') && amount === XP.quizFirst ? 'quiz' : null;
+  if (k) q.c[k] = (q.c[k] || 0) + 1;
+  q.ids.forEach(id => { if (!q.done[id] && questProg(id) >= QUESTS[id][1]) { q.done[id] = 1; save(); award('dq.' + q.day + '.' + id, QXP, 'výzva'); } });
+  if (!q.chest && q.ids.every(id => q.done[id])) { q.chest = true; save(); award('dqc.' + q.day, QCHEST, 'truhla'); notice({kind:'goal', title:'Denní výzvy splněny!', text:'V truhle bylo +' + QCHEST + ' XP. Zítra čekají nové.'}); }
+}
+function questCard(){
+  if (!S.role) return '';
+  const q = dq(), n = q.ids.filter(id => q.done[id]).length;
+  return `<section class="quests" aria-label="Dnešní výzvy"><div class="qs-h"><h3>Dnešní výzvy</h3><span class="qs-chest ${q.chest ? 'open' : ''}" title="Truhla za všechny tři výzvy">${q.chest ? 'Truhla otevřena · +' + QCHEST + ' XP' : 'Truhla · ' + n + '/3'}</span></div>
+    <ul>${q.ids.map(id => { const p = Math.min(questProg(id), QUESTS[id][1]), t = QUESTS[id][1]; return `<li class="${q.done[id] ? 'done' : ''}"><span class="qs-t">${q.done[id] ? '✓ ' : ''}${QUESTS[id][0]}</span><span class="bar"><i style="width:${Math.round(p / t * 100)}%"></i></span><span class="num">${p}/${t}</span><span class="tm xp ${q.done[id] ? 'got' : ''}">+${QXP} XP</span></li>`; }).join('')}</ul></section>`;
 }
 function xpPop(text){
   let el = document.getElementById('xp-pop');
@@ -171,6 +231,13 @@ function checkBadges(){
   });
 }
 
+/* shrnutí lekce pro oslavu: přesnost karet, splněné úkoly a dnešní XP */
+function lessonSum(w, di){
+  const d = w.days[di], cs = d.cards || [], ok = cs.filter((c, ci) => S.cards[w.id + '.' + di + '.' + ci] === c.a).length;
+  const out = []; if (cs.length) out.push([Math.round(ok / cs.length * 100) + ' %', 'karty napoprvé']);
+  if (d.todo.length) out.push([d.todo.length + '/' + d.todo.length, 'úkolů']);
+  out.push([todayXP() + '/' + S.goal, 'XP dnes']); return out;
+}
 /* oslavy: fronta, aby se nepřekrývaly */
 const CEL = [];
 /* Přes celou obrazovku jen přirozené předěly: lekce, modul, konec kvízu, odemčení. Odznaky a denní cíl
@@ -178,7 +245,7 @@ const CEL = [];
 const QUIET = ['badge', 'goal'];
 function celebrate(c){
   if (QUIET.includes(c.kind)) return notice(c);
-  CEL.push(c); if (CEL.length === 1) showCel();
+  CEL.push(c); showCel();
 }
 /* Všechny hlášky (role, odznak, denní cíl, zkopírováno) jdou jednou frontou na jedno místo a ukazují se po jedné. */
 const MSGQ = []; let msgOn = false, msgCur = null;
@@ -197,8 +264,8 @@ function msgNext(){
   else {
     n.type = 'button';
     n.innerHTML = `<span class="nt-ic" aria-hidden="true">${c.kind === 'goal' ? FLAME : '<span>★</span>'}</span><span class="nt-tx"><b>${esc(c.title)}</b><small>${esc(c.text || '')}</small></span>`;
-    n.title = c.kind === 'badge' ? 'Zobrazit odznaky' : 'Zobrazit profil';
-    n.addEventListener('click', () => { n.remove(); go('badges'); });
+    n.title = 'Zavřít';   /* kliknutí jen zavře: hláška leží nad obsahem a nesmí nikam přesměrovat */
+    n.addEventListener('click', () => msgCur && msgCur.end(0));
   }
   box.append(n);
   requestAnimationFrame(() => n.classList.add('in'));
@@ -207,13 +274,15 @@ function msgNext(){
   msgCur = {info, end: ms => { clearTimeout(h); h = setTimeout(out, ms); }};
 }
 function showCel(){
-  const c = CEL[0]; if (!c) return;
+  /* během kvízu a skokového testu oslavy počkají na jeho konec; naráz je vidět jen jedna */
+  const c = CEL[0]; if (!c || SES || document.querySelector('.cel')) return;
   const ov = document.createElement('div'); ov.className = 'cel'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label', c.title);
-  const big = c.kind === 'module' || c.kind === 'badge' || c.kind === 'unlock';
+  const big = c.kind === 'module' || c.kind === 'badge' || c.kind === 'unlock' || c.kind === 'rank' || c.kind === 'streak';
   ov.innerHTML = `<canvas class="confetti" aria-hidden="true"></canvas><div class="cel-card ${c.kind}">${spockSVG('big')}
     ${c.kind === 'badge' ? '<span class="cel-badge"><span>★</span></span>' : ''}
     <h2>${esc(c.title)}</h2><p>${esc(c.text || '')}</p>
-    <div class="cel-stats"><span>${FLAME}<b>${streak()}</b> série</span><span><b>${S.xp}</b> XP celkem</span><span><b>${rank().name}</b> úroveň</span></div>
+    ${c.sum ? `<div class="cel-sum">${c.sum.map(x => `<div><b class="num">${x[0]}</b><span>${x[1]}</span></div>`).join('')}</div>` : ''}
+    <div class="cel-stats"><span>${FLAME}<b>${streak()}</b> série</span><span><b>${S.xp}</b> XP celkem</span><span><b>${rank().name}</b> hodnost</span></div>
     <div class="cel-acts">${c.quiz ? '<button class="btn primary cel-quiz" type="button">Spustit kvíz</button><button class="btn cel-go" type="button">Později</button>' : '<button class="btn primary cel-go" type="button">Pokračovat</button>'}</div></div>`;
   document.body.append(ov);
   const done = () => { ov.remove(); CEL.shift(); showCel(); };
@@ -327,11 +396,11 @@ document.addEventListener('click', e => {
   else if (t.hasAttribute('data-scheck')) sesCheck();
   else if (t.hasAttribute('data-snext')) sesNext();
   else if (t.hasAttribute('data-sskip')) { SES.qs.push(SES.qs[SES.i]); SES.i++; SES.pick = null; if (SES.i >= SES.qs.length) endSession(true); else renderSession(); }
-  else if (t.hasAttribute('data-sclose')) { const ov = document.getElementById('ses'); if (ov) ov.remove(); SES = null; render(); }
+  else if (t.hasAttribute('data-sclose')) { const ov = document.getElementById('ses'); if (ov) ov.remove(); SES = null; render(); showCel(); }
 });
 document.addEventListener('keydown', e => {
   if (!SES) return;
-  if (e.key === 'Escape') { const ov = document.getElementById('ses'); if (ov) ov.remove(); SES = null; render(); return; }
+  if (e.key === 'Escape') { const ov = document.getElementById('ses'); if (ov) ov.remove(); SES = null; render(); showCel(); return; }
   const {q} = sesQ();
   if (!SES.checked && /^[1-6]$/.test(e.key) && q.o[+e.key-1] !== undefined) { SES.pick = +e.key-1; renderSession(); }
   else if (e.key === 'Enter' && !e.target.closest('button')) { e.preventDefault(); if (SES.checked) sesNext(); else if (SES.pick !== null) sesCheck(); }
@@ -343,14 +412,20 @@ function renderBadges(){
   const days = Array.from({length:7}, (_,i) => { const k = dKey(6-i), d = new Date(); d.setDate(d.getDate() - (6-i)); return {k, v:S.days[k] || 0, l:['Ne','Po','Út','St','Čt','Pá','So'][d.getDay()]}; });
   const max = Math.max(S.goal, ...days.map(d => d.v));
   app.innerHTML = shell('badges', `
-    <div class="mh c-indigo"><span class="eyebrow">Profil hráče</span><h1>${esc(r.name)} · úroveň ${r.lvl}</h1>
-      <div class="rankbar"><span class="bar"><i style="width:${Math.min(100, into/span*100)}%"></i></span><span class="lbl num">${r.next ? `${S.xp} / ${r.next[0]} XP do úrovně ${r.next[1]}` : `${S.xp} XP · nejvyšší úroveň`}</span></div></div>
+    <div class="mh c-indigo"><span class="eyebrow">Profil hráče</span><h1>${esc(r.name)} · hodnost ${r.lvl} z ${ranks().length}</h1>
+      <div class="rankbar"><span class="bar"><i style="width:${Math.min(100, into/span*100)}%"></i></span><span class="lbl num">${r.next ? `${S.xp} / ${r.next[0]} XP do hodnosti ${r.next[1]}` : `${S.xp} XP · nejvyšší hodnost`}</span></div></div>
     <div class="pstats">
       <div class="pstat">${FLAME}<b class="num">${streak()}</b><span>dní v sérii</span></div>
       <div class="pstat"><b class="num">${S.xp}</b><span>XP celkem</span></div>
       <div class="pstat"><span class="ring" style="--p:${Math.min(100, todayXP()/S.goal*100)}"></span><b class="num">${todayXP()}/${S.goal}</b><span>dnešní cíl</span></div>
       <div class="pstat"><b class="num">${myBadges().filter(b => S.badges['got.' + b[0]]).length}/${myBadges().length}</b><span>odznaků</span></div>
+      <div class="pstat" title="Zmrazení zakryje vynechaný den, aby série nepropadla. Získáte ho za povýšení a za sérii 3, 7, 14 a 30 dní."><b class="num">${S.freeze}/${FREEZE_MAX}</b><span>zmrazení série</span></div>
     </div>
+    ${questCard()}
+    <div class="sec-h"><h2>Postup v hodnostech</h2><p>Každá hodnost přináší nový vzhled Spocka a zmrazení série.</p></div>
+    <ol class="ladder">${ranks().map((x, i) => { const st = i + 1 < r.lvl ? 'done' : i + 1 === r.lvl ? 'cur' : 'todo'; return `<li class="${st}"><span class="ld-n">${st === 'done' ? '✓' : i + 1}</span><div><b>${esc(x[1])}</b><span>${x[0]} XP${x[2] ? ' a hotová úroveň 4' : ''}</span></div><span class="ld-r">${i ? 'Vzhled „' + SKINS[i][1] + '“ a zmrazení série' : 'Začátek cesty'}</span></li>`; }).join('')}</ol>
+    <div class="sec-h"><h2>Vzhled Spocka</h2><p>Odemčené vzhledy si můžete přepínat.</p></div>
+    <div class="skins">${SKINS.slice(0, ranks().length).map((k, i) => { const own = i < r.lvl; return `<button type="button" class="skin ${S.skin === k[0] || (!S.skin && !i) ? 'on' : ''}" ${own ? `data-setskin="${k[0]}"` : 'disabled'} aria-pressed="${S.skin === k[0]}"><span class="sk-art" style="--skin:${k[2]}">${own ? spockSVG('fab') : LOCK}</span><b>${k[1]}</b><small>${own ? 'odemčeno' : esc(ranks()[i][1])}</small></button>`; }).join('')}</div>
     <div class="sec-h"><h2>Posledních 7 dní</h2><p>Čárkovaná čára je váš denní cíl.</p></div>
     <div class="week7" style="--goal:${S.goal/max*100}%">${days.map(d => `<div class="d7"><span class="d7b"><i style="height:${d.v/max*100}%" class="${d.v >= S.goal ? 'ok' : ''}"></i></span><span class="d7v num">${d.v}</span><span class="d7l">${d.l}</span></div>`).join('')}</div>
     <div class="sec-h"><h2>Denní cíl</h2><p>Kolik XP chcete denně nasbírat.</p></div>
@@ -358,8 +433,9 @@ function renderBadges(){
     <div class="sec-h"><h2>Odznaky</h2></div>
     <div class="badges">${myBadges().map(([id,name,how]) => { const got = S.badges['got.' + id]; return `<div class="badge ${got?'on':''}"><span class="bd"><span>${got ? '★' : LOCK}</span></span><b>${esc(name)}</b><span>${esc(how)}</span>${got ? `<small>${esc(got.split('-').reverse().join('. '))}</small>` : ''}</div>`; }).join('')}</div>
     <div class="sec-h"><h2>Jak se získává XP</h2></div>
-    <dl class="kv"><dt>Úkol</dt><dd>+${XP.task} XP</dd><dt>Celá lekce</dt><dd>+${XP.lesson} XP navíc</dd><dt>Kvíz napoprvé</dt><dd>+${XP.quizFirst} XP za otázku, na další pokus +${XP.quizRetry}</dd><dt>Celý modul</dt><dd>+${XP.module} XP</dd><dt>Skokový test</dt><dd>+${XP.jump} XP a odemčený modul</dd><dt>Bod připravenosti</dt><dd>+${XP.ready} XP</dd></dl>`);
+    <dl class="kv"><dt>Karta správně</dt><dd>+5 XP</dd><dt>Úkol</dt><dd>+${XP.task} XP, s ověřením z VS Code +5 navíc</dd><dt>Denní výzva</dt><dd>+${QXP} XP, truhla za všechny tři +${QCHEST} XP</dd><dt>Celá lekce</dt><dd>+${XP.lesson} XP navíc</dd><dt>Kvíz napoprvé</dt><dd>+${XP.quizFirst} XP za otázku, na další pokus +${XP.quizRetry}</dd><dt>Celý modul</dt><dd>+${XP.module} XP</dd><dt>Skokový test</dt><dd>+${XP.jump} XP a odemčený modul</dd><dt>Bod připravenosti</dt><dd>+${XP.ready} XP</dd></dl>`);
 }
+document.addEventListener('click', e => { const k = e.target.closest('[data-setskin]'); if (k) { S.skin = k.dataset.setskin; save(); applySkin(); renderBadges(); } });
 document.addEventListener('click', e => { const g = e.target.closest('[data-goal]'); if (g) { S.goal = +g.dataset.goal; save(); renderBadges(); updatePills(); } });
 
 /* zamčený modul */
@@ -432,8 +508,8 @@ function profileCard(compact){
   const nb = todo.map(b => ({b, p:badgeProg(b[0])})).sort((x,y) => (y.p ? y.p[0]/y.p[1] : 0) - (x.p ? x.p[0]/x.p[1] : 0))[0];
   return `<section class="pcard">
     <div class="pc-head">
-      <div class="pc-me">${spockSVG('fab')}<div><span class="eyebrow">Profil hráče</span><h3>${esc(r.name)} · úroveň ${r.lvl}</h3>
-        <div class="rankbar"><span class="bar"><i style="width:${Math.min(100, into/span*100)}%"></i></span><span class="lbl num">${r.next ? `${S.xp} / ${r.next[0]} XP do úrovně ${r.next[1]}` : `${S.xp} XP · nejvyšší úroveň`}</span></div></div></div>
+      <div class="pc-me">${spockSVG('fab')}<div><span class="eyebrow">Profil hráče</span><h3>${esc(r.name)} · hodnost ${r.lvl}</h3>
+        <div class="rankbar"><span class="bar"><i style="width:${Math.min(100, into/span*100)}%"></i></span><span class="lbl num">${r.next ? `${S.xp} / ${r.next[0]} XP do hodnosti ${r.next[1]}` : `${S.xp} XP · nejvyšší hodnost`}</span></div></div></div>
       ${compact ? '' : `<div class="pc-stats"><span class="${todayXP() ? 'lit' : ''}">${FLAME}<b class="num">${streak()}</b>série</span><span><b class="num">${S.xp}</b>XP</span><span><span class="ring" style="--p:${Math.min(100, todayXP()/S.goal*100)}"></span><b class="num">${todayXP()}/${S.goal}</b>dnes</span></div>`}
     </div>
     <div class="pc-badges">
@@ -578,7 +654,7 @@ function homeV4(){
   /* nováček: jedna hlavní akce (nanečisto) v úvodu, pak výběr role a cesta; vysvětlení a opora sbalené níž */
   if (isFirst()) return heroFirst() + startBlock() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora', true);
   const l1 = W.find(w => w.id === 'l1'), showSvy = l1 && modPct(l1) === 1 && !(S.survey && S.survey.at);
-  return heroStable() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
+  return heroStable() + questCard() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
 }
 function renderHome(){ app.innerHTML = homeV4(); }
 document.addEventListener('click', e => {
@@ -925,7 +1001,7 @@ document.addEventListener('change', e => {
     if (w && t.checked) {
       const [, di] = t.dataset.todo.split('.').map(Number), d = w.days[di];
       if (d && lessonDone(w, di) && award('lesson.' + w.id + '.' + di, XP.lesson, 'lekce')) {
-        celebrate({kind:'lesson', title:'Lekce ' + d.d + ' hotová!', text:plain(d.t) + '. ' + (w.days[di+1] ? 'Na řadě je lekce ' + w.days[di+1].d + '.' : 'Na řadě je kvíz modulu.')});
+        celebrate({kind:'lesson', sum:lessonSum(w, di), title:'Lekce ' + d.d + ' hotová!', text:plain(d.t) + '. ' + (w.days[di+1] ? 'Na řadě je lekce ' + w.days[di+1].d + '.' : 'Na řadě je kvíz modulu.')});
         if (w.days[di+1]) view.lesson = di + 1;
       }
       checkModuleDone(w);
@@ -1045,7 +1121,7 @@ function progress(){
     w.days.forEach((d,di) => d.todo.forEach((t2,ti) => { if (!S.todo[w.id+'.'+di+'.'+ti] && open.length < 3) open.push(d.d+': '+t2.t); }));
     return w.lab+' '+w.title+(applies(w)?'':' (jiná role)')+': hotovo '+t.done+'/'+t.tot+(open.length ? '; další nehotové: '+open.join(' | ') : ''); });
   const now = view.name === 'week' ? (W.find(w => w.id === view.week)||{}).title : view.name;
-  return 'Role uživatele: ' + (S.role ? ROLES[S.role] : 'zatím nevybraná') + '. Hra: ' + S.xp + ' XP, úroveň ' + rank().name + ', série ' + streak() + ' dní, dnes ' + todayXP() + ' z ' + S.goal + ' XP. Zamčené moduly: ' + (W.filter(isLocked).map(w => w.title).join(', ') || 'žádné') + '. Uživatel má právě otevřeno: ' + now + '.\n' + lines.join('\n');
+  return 'Role uživatele: ' + (S.role ? ROLES[S.role] : 'zatím nevybraná') + '. Hra: ' + S.xp + ' XP, hodnost ' + rank().name + ', série ' + streak() + ' dní, dnes ' + todayXP() + ' z ' + S.goal + ' XP. Zamčené moduly: ' + (W.filter(isLocked).map(w => w.title).join(', ') || 'žádné') + '. Uživatel má právě otevřeno: ' + now + '.\n' + lines.join('\n');
 }
 function rules(){
   let r = `Jsi Spock, malý skákající průvodce onboardingem a mentor pro uživatele SPOCKu (agentní discovery workflow ve VS Code s GitHub Copilot Chat, které pro Českou spořitelnu vlastní tým CoE Product Management). Uživatel je Product Manager, Product Designer, Software Engineer nebo Guild Master (správce některé z pěti oblastí know-how) a učí se SPOCK POUŽÍVAT: tasky, agenty, podpisy a čtení výstupů. Není to builder, nic pod .github/ ani .vscode/ nemění. Guild Master navíc mění zdroj know-how ve specifications/definitions/know-how/ přesně podle KNOW-HOW-OWNERS.md §4; kopii pro agenty generuje a ověřuje engineer.
@@ -1152,3 +1228,6 @@ function gFiles(){
   };
   $('#g-files').addEventListener('click', ev => { const b = ev.target.closest('[data-gdel]'); if (b) { G.files.splice(+b.dataset.gdel, 1); gFiles(); } });
 })();
+/* po načtení: zvolený vzhled Spocka a případné zakrytí vynechaného dne zmrazením */
+if (!S.rankLvl) S.rankLvl = rank().lvl;   /* stávající uživatelé: odměny až od další hodnosti */
+applySkin(); try { useFreezes(); } catch (e) {}
