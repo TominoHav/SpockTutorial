@@ -105,6 +105,53 @@ for(const [name,w,h,scheme] of [['tablet',768,1024,'light'],['tablet na šířku
   await ctx.close();
  }));
 }
+// 8) offline režim: bez sítě jde dál hrát a učit se, po připojení se vše odešle
+runs.push(scenario('offline',async()=>{
+ const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
+ const clean=()=>p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});
+ const cards=async n=>{for(let i=0;i<n;i++){await clean();const k=await p.evaluate(()=>{const o=document.querySelector('.lpanel .lcard.cur .lc-opt:not([disabled])');if(o){o.click();return 1}return 0});if(!k)break;await settle(p);}await clean();};
+ await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=pm]').click();await settle(p,80);
+ ok('offline: online se štítek Offline neukazuje', await p.locator('#pill-net').isHidden());
+ await ctx.setOffline(true);await settle(p,50);
+ ok('offline: po ztrátě připojení je v hlavičce štítek Offline s vysvětlením', await p.locator('#pill-net').isVisible() && /pokrok se ukládá v zařízení/.test(await p.locator('#pill-net').getAttribute('title')));
+ const x0=(await loadState(p)).xp;
+ await p.locator('.exfork [data-golesson]').click();await p.waitForSelector('.lpanel');await cards(3);
+ const x1=(await loadState(p)).xp;
+ ok('offline: lekce a karty jdou dál, XP přibývají a ukládají se v zařízení', x1>x0, x0+' → '+x1);
+ await p.evaluate(()=>document.querySelector('[data-fbopen]').click());await p.waitForSelector('#fb-text');
+ await p.fill('#fb-text','Offline test: karta je nejasná');await p.locator('#fb-form button[type=submit]').click();await settle(p,80);
+ const q=await p.evaluate(()=>JSON.parse(localStorage.getItem('spock-fb-outbox')||'[]').length);
+ ok('offline: zpětná vazba se uloží do fronty v zařízení a okno se zavře', q===1 && await p.locator('#fb').count()===0, 'fronta '+q);
+ ok('offline: štítek ukazuje počet zpráv ve frontě', /· 1/.test(await p.locator('#pill-net').innerText()));
+ const sent0=await p.evaluate(()=>window.__sent.length);
+ await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,50);await p.evaluate(()=>document.querySelector('[data-open-spock]').click());await p.waitForSelector('#g-in');
+ await p.locator('#g-in').fill('Jak spustím task?');await p.locator('#g-send').click();await settle(p,80);
+ ok('offline: chat se Spockem vysvětlí, že je offline, nabídne tahák a otázku ponechá', await p.evaluate(()=>window.__sent.length)===sent0 && /offline/i.test(await p.locator('#g-log').innerText()) && await p.locator('#g-log [data-go=cheat]').count()===1 && await p.locator('#g-in').inputValue()==='Jak spustím task?');
+ await p.keyboard.press('Escape');
+ ok('offline: do databáze se nic nezapsalo', await p.evaluate(()=>!window.__db['feedback/u_ja']));
+ await ctx.setOffline(false);
+ await p.waitForFunction(()=>window.__db['feedback/u_ja']&&window.__db['data/users/u_ja/progress'],null,{timeout:8000}).catch(()=>{});
+ const db=await p.evaluate(()=>({fb:(window.__db['feedback/u_ja']||{}).items||[],pr:window.__db['data/users/u_ja/progress'],tr:window.__db['track/u_ja']}));
+ ok('offline: po připojení zmizí štítek a odejde zpětná vazba z fronty', await p.locator('#pill-net').isHidden() && db.fb.some(x=>x.text==='Offline test: karta je nejasná') && await p.evaluate(()=>!localStorage.getItem('spock-fb-outbox')), db.fb.length+' zpráv');
+ ok('offline: po připojení je pokrok z doby offline uložený pod účtem', db.pr && db.pr.state && db.pr.state.xp>=x1, db.pr&&db.pr.state&&db.pr.state.xp);
+ ok('offline: měření zaznamená výpadek i návrat připojení', !!db.tr && db.tr.ev.some(e=>e[1]==='připojení'&&e[2]==='offline') && db.tr.ev.some(e=>e[1]==='připojení'&&e[2]==='zpět online'));
+ ok('offline: bez chyb v konzoli', errs.length===0, errs.slice(0,2).join(' | '));
+ await ctx.close();
+}));
+// 9) spuštění bez připojení: aplikace se načte a po připojení se k účtu připojí sama
+runs.push(scenario('start offline',async()=>{
+ const ctx=await b.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
+ await p.goto(F);await ctx.setOffline(true);await p.reload();await p.waitForSelector('.startb [data-role]');
+ await p.locator('.startb [data-role=se]').click();await settle(p,80);
+ ok('start offline: role jde vybrat a úvod funguje', (await loadState(p)).role==='se');
+ ok('start offline: na mobilu je štítek Offline vidět jako kompaktní ikona', await p.locator('#pill-net').isVisible() && (await p.locator('#pill-net').boundingBox()).width<60);
+ await ctx.setOffline(false);
+ await p.waitForFunction(()=>window.__db['data/users/u_ja/progress'],null,{timeout:8000}).catch(()=>{});
+ const pr=await p.evaluate(()=>window.__db['data/users/u_ja/progress']);
+ ok('start offline: po připojení se aplikace sama připojí k účtu a uloží pokrok', !!(pr&&pr.state&&pr.state.role), JSON.stringify(pr&&pr.state&&pr.state.role));
+ ok('start offline: bez chyb v konzoli', errs.length===0, errs.slice(0,2).join(' | '));
+ await ctx.close();
+}));
 // 7) expresní cesta: od výběru role po odznak Expres
 runs.push(scenario('expresní cesta',async()=>{
  const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
