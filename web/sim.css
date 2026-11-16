@@ -448,17 +448,3 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var(--blue-2) 18%,transparent)}
 
 /* expresní cesta */
-.exb{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 18px;align-items:center;border:1px solid var(--line);border-left:4px solid #B57A00;border-radius:14px;background:var(--surface);padding:14px 18px;margin:16px 0}
-.exb h3{margin:2px 0 4px;font-size:18px}.exb p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.45}
-.exb.on{grid-template-columns:1fr;border-left-color:var(--ok)}
-.exb-h{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.exb-bar{height:8px}
-.exb-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
-.exb-st{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
-.exb-st:hover{border-color:var(--blue-2)}
-.exb-st b{display:block;font-size:14px}.exb-st small{display:block;font-size:12.5px;color:var(--ink-2);margin-top:2px}
-.exb-ck{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;background:var(--surface)}
-.exb-steps li.done .exb-ck{background:var(--ok);border-color:var(--ok)}
-.exb-steps li.here .exb-st{border-color:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 18%,transparent)}
-.exb-off{font-size:13px}
-@media (max-width:760px){.exb{grid-template-columns:1fr}}

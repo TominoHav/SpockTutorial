@@ -34,3 +34,31 @@
 .v4-gap{margin:0 0 26px}
 .hp-st.locked h3{opacity:1;color:var(--ink-2)}.hp-st.locked p{opacity:1;color:var(--ink-3)}
 @media (max-width:600px){.hx-first{padding:18px 16px;gap:12px}.hx-first .hx-art{width:120px;margin:-4px auto -8px}.hx-first .hx-art::before{inset:-6%}.hx-first .hx-cta{display:grid;grid-template-columns:1fr;width:100%}.hx-first .hx-cta .btn{width:100%;justify-content:center}}
+/* expresní cesta v banneru: rozcestí po výběru role, pak jeden další krok */
+:root{--ex:#8A5A00;--ex-line:#B57A00;--ex-cur:#E9B949}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ex:#F2C66B;--ex-line:#D9A030;--ex-cur:#B8862A}}
+:root[data-theme="dark"]{--ex:#F2C66B;--ex-line:#D9A030;--ex-cur:#B8862A}
+.hx-next.ex{border-left-color:var(--ex-line)}.hx-next.ex .hx-nl{color:var(--ex)}
+.exseg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.exseg i{height:8px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line)}.exseg i.ok{background:var(--ok);border-color:var(--ok)}.exseg i.cur{background:var(--ex-cur);border-color:var(--ex-line)}
+.exlist{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.exlist button{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;min-height:40px;text-align:left;font:inherit;font-size:14.5px;color:var(--ink);background:none;border:0;border-radius:10px;padding:6px 8px;cursor:pointer}
+.exlist button:hover{background:var(--surface-2)}
+.exl-ck{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;border:2px solid var(--line);color:var(--ink-3);background:var(--surface)}
+.exlist li.ok .exl-ck{background:var(--ok);border-color:var(--ok);color:#fff}.exlist li.ok .exl-t{color:var(--ink-2)}
+.exlist li.cur button{background:color-mix(in srgb,var(--ex-cur) 18%,var(--surface))}.exlist li.cur .exl-ck{border-color:var(--ex-line);color:var(--ex)}.exlist li.cur .exl-t{font-weight:700}.exlist li.cur .exl-m{color:var(--ink-2)}
+.exl-m{font-size:12.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.exall summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--blue-2);display:list-item;padding:6px 0;line-height:20px}.exall[open] summary{margin-bottom:6px}
+.exsw-l{margin:0;font-size:13.5px}
+/* rozcestí */
+.exfork{display:grid;gap:10px;max-width:620px}
+.exf-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.exf{display:grid;gap:4px;align-content:start;text-align:left;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--blue-2);border-radius:14px;padding:14px 16px;cursor:pointer}
+.exf.fast{border-top-color:var(--ex-line)}
+.exf:hover{box-shadow:0 6px 18px rgba(14,27,41,.10)}
+.exf-k{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.exf b{font-size:26px;letter-spacing:-.02em}.exf > span:nth-of-type(2){font-size:13.5px;color:var(--ink-2);line-height:1.4}
+.exf-go{margin-top:6px;font-weight:700;color:var(--blue-2)}.exf.fast .exf-go{color:var(--ex)}
+@media (max-width:600px){
+  .exf-opts{grid-template-columns:1fr}.exf{padding:12px 14px}.exf b{font-size:22px}
+  .hx-next.ex .hx-cta .btn.primary{width:100%;justify-content:center;white-space:normal}
+}

@@ -953,6 +953,36 @@ const EXPRESS = [
 ];
 const exDone = st => { if (st.done) return st.done(); const w = W.find(x => x.id === st.w); if (!w) return false; const d = w.days[st.l]; return st.cards ? (d.cards || []).every((_, ci) => cardAns(st.w + '.' + st.l + '.' + ci) !== undefined) : lessonDone(w, st.l); };
 const exMin = () => EXPRESS.reduce((n, st) => n + st.min, 0);
+const pathHours = () => { try { return Math.round(pathIds().reduce((n, id) => { const w = W.find(x => x.id === id); return n + (w ? w.days.reduce((m, d) => m + dayLearn(d) + dayDo(d), 0) : 0); }, 0) / 60); } catch (e) { return 15; } };
+/* Rozcestí jen pro toho, kdo ještě nic nezačal; ostatním stačí odkaz v banneru */
+const started = () => !!S.pos || W.some(w => modPct(w) > 0);
+const exNext = () => EXPRESS.find(st => !exDone(st));
+const exLeft = () => EXPRESS.filter(st => !exDone(st)).reduce((n, st) => n + st.min, 0);
+const exSeg = () => `<span class="exseg" aria-hidden="true">${EXPRESS.map(st => `<i class="${exDone(st) ? 'ok' : exNext() === st ? 'cur' : ''}"></i>`).join('')}</span>`;
+const exList = () => `<ol class="exlist">${EXPRESS.map((st, i) => { const ok = exDone(st), cur = exNext() === st; return `<li class="${ok ? 'ok' : cur ? 'cur' : ''}"><button type="button" data-express="step:${st.id}"><span class="exl-ck" aria-hidden="true">${ok ? '✓' : i + 1}</span><span class="exl-t">${esc(st.t)}</span><span class="exl-m">${st.min} min</span></button></li>`; }).join('')}</ol>`;
+/* Akční blok v banneru, když je expresní cesta zvolená */
+function exHeroAction(roleLine){
+  const nx = exNext(), done = EXPRESS.filter(exDone).length, i = nx ? EXPRESS.indexOf(nx) + 1 : 7;
+  return `<div class="hx-next ex">
+    <span class="hx-nl">${nx ? `Expresní cesta · krok ${i} ze ${EXPRESS.length}` : 'Expresní cesta hotová'}</span>
+    <b class="hx-nt">${nx ? esc(nx.t) : 'Znáte to nejnutnější'}</b>
+    <span class="hx-nm">${nx ? `${esc(nx.d.replace(/\.$/, ''))} · ~${nx.min} min · zbývá ~${fmtMin(exLeft())}` : 'Až dorazí přístupy, pokračujte Přípravou: instalace, Copilot a první běh.'}</span>
+    ${exSeg()}
+    <div class="hx-cta">${nx ? `<button class="btn primary" type="button" data-express="step:${nx.id}">${done ? 'Pokračovat' : 'Začít'}: ${esc(nx.t)} →</button>` : `<button class="btn primary" type="button" data-week="l1">Pokračovat Přípravou →</button>`}<button class="btn" type="button" data-open-spock>Zeptat se Spocka</button></div>
+    <details class="exall"><summary>Všech ${EXPRESS.length} kroků</summary>${exList()}</details>
+    <p class="exsw-l"><button class="linkbtn" type="button" data-express="off">Přepnout na celou cestu</button> <span class="muted">· pokrok zůstává</span></p>
+    ${roleLine}</div>`;
+}
+/* Rozcestí: dvě rovnocenné volby po výběru role, dokud se člověk nerozhodne */
+function exFork(roleLine){
+  const full = pathHours();
+  return `<div class="exfork" role="group" aria-label="Jak chcete začít">
+    <span class="hx-nl">Jak chcete začít?</span>
+    <div class="exf-opts">
+      <button type="button" class="exf full" data-express="full" data-golesson="l0:0"><span class="exf-k">Celá cesta</span><b>~${full} h</b><span>Všechny úrovně s praxí ve VS Code až po vlastní běh. Po 30 minutách denně.</span><span class="exf-go">Začít lekcí 0.1 →</span></button>
+      <button type="button" class="exf fast" data-express="on"><span class="exf-k">Expresní start</span><b>1 h 40 min</b><span>To nejnutnější: co SPOCK dělá, pravidla, video a objednání přístupů. Pokrok se započítá.</span><span class="exf-go">Začít expres →</span></button>
+    </div>${roleLine}</div>`;
+}
 function exCheck(){
   if (!S.express || S.got['express']) return;
   if (EXPRESS.every(exDone)) { award('express', 50, 'expresní cesta'); S.badges['got.express'] = dKey(0); save(); celebrate({kind:'module', title:'Expresní cesta hotová!', text:'Znáte to nejnutnější a přístupy jsou objednané. Až dorazí, pokračujte Přípravou: instalace, Copilot a první běh. Celá cesta na vás počká.'}); }
@@ -964,20 +994,12 @@ function exOpen(st){
   if (st.go) { if (st.go === 'cheat') { S.exSeen = Object.assign({}, S.exSeen, {cheat:1}); save(); setTimeout(exCheck, 0); } return go(st.go); }
   view.lesson = st.l; view.lessonOf = st.w; go('week', {week:st.w, peek:st.w});
 }
-function expressCard(){
-  if (!S.role) return '';
-  const done = EXPRESS.filter(exDone).length, nx = EXPRESS.find(st => !exDone(st)), m = exMin(), on = !!S.express;
-  if (!on) return `<section class="exb"><div><span class="eyebrow">Nemáte teď čas na celou cestu?</span><h3>Expresní cesta · ${fmtMin(m)}</h3><p>${EXPRESS.length} kroků, to nejnutnější pro start: co SPOCK dělá, agenti a brány, pět pravidel, video hotového běhu a objednání přístupů. Celá cesta zůstane, pokrok se započítá.</p></div><button class="btn" type="button" data-express="on">Zvolit expresní cestu</button></section>`;
-  return `<section class="exb on" aria-label="Expresní cesta"><div class="exb-h"><div><span class="eyebrow">Expresní cesta · ${done} z ${EXPRESS.length} · ~${fmtMin(EXPRESS.filter(st => !exDone(st)).reduce((n, st) => n + st.min, 0))} zbývá</span><h3>${nx ? 'Další krok: ' + esc(nx.t) : 'Hotovo. Pokračujte Přípravou.'}</h3></div>${nx ? `<button class="btn primary" type="button" data-express="step:${nx.id}">${done ? 'Pokračovat' : 'Začít'} →</button>` : `<button class="btn primary" type="button" data-week="l1">Pokračovat Přípravou →</button>`}</div>
-    <span class="bar exb-bar"><i style="width:${Math.round(done / EXPRESS.length * 100)}%"></i></span>
-    <ol class="exb-steps">${EXPRESS.map(st => { const ok = exDone(st); return `<li class="${ok ? 'done' : nx && nx.id === st.id ? 'here' : ''}"><button type="button" class="exb-st" data-express="step:${st.id}"><span class="exb-ck" aria-hidden="true">${ok ? '✓' : ''}</span><span><b>${esc(st.t)}</b><small>${esc(st.d)} · ~${st.min} min</small></span></button></li>`; }).join('')}</ol>
-    <p class="muted exb-off"><button class="linkbtn" type="button" data-express="off">Skrýt expresní cestu</button> · Celá cesta i pokrok zůstávají.</p></section>`;
-}
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-express]'); if (!b) return;
   const v = b.dataset.express;
-  if (v === 'on') { S.express = true; save(); try { trk('expres', 'zvolena'); } catch (err) {} render(); const c = document.querySelector('.exb.on'); if (c) c.scrollIntoView({block:'center'}); return; }
+  if (v === 'on') { S.express = true; save(); try { trk('expres', 'zvolena'); } catch (err) {} render(); window.scrollTo(0, 0); const f = document.querySelector('.hx-next.ex .btn.primary'); if (f) f.focus({preventScroll:true}); return; }
   if (v === 'off') { S.express = false; save(); render(); return; }
+  if (v === 'full') { S.express = false; save(); try { trk('expres', 'celá cesta'); } catch (err) {} return; } /* do první lekce otevře data-golesson */
   const st = EXPRESS.find(x => 'step:' + x.id === v); if (st) exOpen(st);
 });
 function startBlock(){
@@ -995,14 +1017,18 @@ function heroStable(){
   const roleLine = S.role
     ? `<div class="hx-role">Role: <b>${esc(ROLES[S.role])}</b> <button class="linkbtn" type="button" data-rolepick>změnit</button></div><div class="hx-rolepick" hidden>${roleBtns()}</div>`
     : `<div><div class="lbl hx-lbl">1. Vyberte svou roli</div>${roleBtns()}</div>`;
-  const action = first
+  const exOn = !first && S.express && S.role;
+  const exLink = !first && S.role && !S.express ? `<p class="exsw-l"><button class="linkbtn" type="button" data-express="on">Málo času? Expresní start za 1 h 40 min</button></p>` : '';
+  const action = exOn ? exHeroAction(roleLine) + miniStats()
+    : (!first && S.express === undefined && !started()) ? exFork(roleLine) + miniStats()
+    : first
     ? `<div class="hx-next first">${roleLine}<div class="hx-cta"><button class="btn primary" type="button" data-week="l0">${S.role ? '' : '2. '}Začít úrovní 0: Poznejte SPOCK →</button><button class="btn" type="button" data-open-spock>Zeptat se Spocka</button></div></div>`
     : `<div class="hx-next">
         <span class="hx-nl">Na řadě</span>
         <b class="hx-nt">${n ? (n.d ? esc(plain(n.d.t)) : 'Kvíz modulu') : 'Cesta je hotová'}</b>
         ${w ? `<span class="hx-nm">${esc(w.lab)} · ${esc(w.title)}${n.d ? ` · lekce ${esc(n.d.d)}, ~${fmtMin(dayLearn(n.d) + dayDo(n.d))}` : ''}</span><span class="cont-bar"><span class="bar"><i style="width:${p}%"></i></span><span class="num">${p} %</span></span>` : ''}
         <div class="hx-cta">${continueBtn()}<button class="btn" type="button" data-open-spock>Zeptat se Spocka</button></div>
-        ${roleLine}
+        ${exLink}${roleLine}
       </div>${miniStats()}`;
   return `<section class="hx"><div class="hx-txt">
     <span class="eyebrow">${first ? 'Vítejte v onboardingu SPOCKu' : 'Vítejte zpět'}</span>
@@ -1013,9 +1039,9 @@ function heroStable(){
 }
 function homeV4(){
   /* nováček: jedna hlavní akce (nanečisto) v úvodu, pak výběr role a cesta; vysvětlení a opora sbalené níž */
-  if (isFirst()) return heroFirst() + startBlock() + expressCard() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora', true);
+  if (isFirst()) return heroFirst() + startBlock() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora', true);
   const l1 = W.find(w => w.id === 'l1'), showSvy = l1 && modPct(l1) === 1 && !(S.survey && S.survey.at);
-  return heroStable() + expressCard() + questCard() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
+  return heroStable() + questCard() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
 }
 function renderHome(){ app.innerHTML = homeV4(); }
 document.addEventListener('click', e => {
@@ -1350,7 +1376,7 @@ document.addEventListener('click', e => {
   const t = e.target.closest('[data-week],[data-go],[data-phase],[data-layer],[data-q],[data-retry],[data-reveal],[data-role]');
   if (!t) return;
   if (t.tagName === 'A') e.preventDefault();
-  if (t.dataset.role) { S.role = t.dataset.role; save(); toast('Role: ' + ROLES[S.role]); award('welcome', 10, 'role'); checkBadges(); render(); /* přístupnost: po výběru role zaměřit další krok, ať se klávesnice neztratí */ const nx = document.querySelector('.hx [data-golesson], .hx [data-week=l0], [data-golesson]'); if (nx) nx.focus({preventScroll:true}); return; }
+  if (t.dataset.role) { S.role = t.dataset.role; save(); toast('Role: ' + ROLES[S.role]); award('welcome', 10, 'role'); checkBadges(); render(); /* přístupnost: po výběru role zaměřit další krok, ať se klávesnice neztratí */ const nx = document.querySelector('.exfork .exf, .hx [data-golesson], .hx [data-week=l0], [data-golesson]'); if (nx) nx.focus({preventScroll:true}); return; }
   if (t.dataset.week) return go(t.dataset.week === 'home' ? 'home' : 'week', {week:t.dataset.week});
   if (t.dataset.go === 'next') return go('week', {week:nextWeek().id});
   if (t.dataset.go) return go(t.dataset.go);
