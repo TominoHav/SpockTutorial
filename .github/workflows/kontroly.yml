@@ -11,17 +11,15 @@ permissions:
   contents: read
 
 jobs:
-  kontroly:
+  # Rychlé kontroly obsahu a sestavení (bez prohlížeče)
+  obsah:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
       - name: Struktura modulů
         run: python3 nastroje/kontrola-struktury.py
       - name: Odpovědi nejdou uhodnout podle délky
@@ -35,18 +33,41 @@ jobs:
           python3 nastroje/generuj-pokrok.py
           python3 nastroje/generuj-revizi.py
           git diff --exit-code -- onboarding/POKROK.md revize/ODBORNA-KONTROLA.md || (echo "Po změně lekcí spusťte nastroje/generuj-pokrok.py a nastroje/generuj-revizi.py a výsledek commitněte." && exit 1)
+
+  # Cesta uživatele a doplňkové scénáře v Chromiu (jádro Chrome a Edge)
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Sestavení webu
+        run: |
+          python3 web/parse.py
+          python3 web/build.py
       - name: Playwright
         run: |
-          npm install --no-save playwright@1.63.0 axe-core@4.10.2
+          npm install --no-save playwright@1.63.0
           npx playwright install --with-deps chromium
-      - name: End-to-end test webu
+      - name: Cesta uživatele (počítač, mobil, doplňky, pokrok v účtu)
         run: node nastroje/e2e/journey.js
-      - name: Přístupnost a průchod rolí (WCAG 2 A a AA, mobil i počítač, světlý i tmavý režim)
-        run: node nastroje/e2e/pristupnost.js
-      - name: Výkon s rozpočty (velikost, vykreslení, procesor v klidu)
-        run: node nastroje/e2e/vykon.js
+      - name: Scénáře (výpadky, dvě zařízení, klávesnice, tablet, tmavý režim, videa)
+        if: always()
+        run: node nastroje/e2e/scenare.js
       - name: Sestavení webu se zprávou o testech (záložka Verze a kvalita)
         run: python3 web/build.py
+      - name: Snímky obrazovky z neprošlých testů
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-chyby-chromium
+          path: web/dist/e2e-chyby/
+          retention-days: 14
       - name: Uložit sestavený web
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
@@ -56,3 +77,69 @@ jobs:
             web/dist/spock-user-onboarding.html
             web/media/
           retention-days: 90
+
+  # Přístupnost (WCAG 2 A a AA) a výkon s rozpočty
+  pristupnost-vykon:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Sestavení webu
+        run: |
+          python3 web/parse.py
+          python3 web/build.py
+      - name: Playwright a axe-core
+        run: |
+          npm install --no-save playwright@1.63.0 axe-core@4.10.2
+          npx playwright install --with-deps chromium
+      - name: Přístupnost a průchod rolí (stránky, dashboard, simulace, minihra, příběh; světlý i tmavý režim)
+        run: node nastroje/e2e/pristupnost.js
+      - name: Výkon s rozpočty (velikost, vykreslení, procesor v klidu, dashboard s 500 lidmi)
+        if: always()
+        run: node nastroje/e2e/vykon.js
+      - name: Snímky obrazovky z neprošlých testů
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-chyby-pristupnost
+          path: web/dist/e2e-chyby/
+          retention-days: 14
+
+  # Safari (WebKit): cesta uživatele na počítači i mobilu (iPhone, iPad, Mac)
+  safari:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Sestavení webu
+        run: |
+          python3 web/parse.py
+          python3 web/build.py
+      - name: Playwright s WebKitem
+        run: |
+          npm install --no-save playwright@1.63.0
+          npx playwright install --with-deps webkit
+      - name: Cesta uživatele v Safari (WebKit), počítač
+        run: E2E_BROWSER=webkit E2E_ONLY=počítač node nastroje/e2e/journey.js
+      - name: Cesta uživatele v Safari (WebKit), mobil
+        if: always()
+        run: E2E_BROWSER=webkit E2E_ONLY=mobil node nastroje/e2e/journey.js
+      - name: Snímky obrazovky z neprošlých testů
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-chyby-safari
+          path: web/dist/e2e-chyby/
+          retention-days: 14

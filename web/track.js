@@ -296,7 +296,7 @@ function dHeat(rows){
 }
 function dTable(head, rows, empty){
   if (!rows.length) return `<p class="muted">${empty || 'Zatím žádná data.'}</p>`;
-  return `<div class="tw ds-tw"><table><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  return `<div class="tw ds-tw" tabindex="0" role="region" aria-label="${esc(String(head[0]).replace(/<[^>]+>/g, ''))}: tabulka, posouvá se do strany"><table><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
 function dCardLabel(k){
   const [wid, di, ci] = k.split('.'), w = W.find(x => x.id === wid), d = w && w.days[+di], c = d && d.cards && d.cards[+ci];
@@ -476,7 +476,7 @@ function renderDashVer(){
   const todo = [];
   if (!e) todo.push(['Testy', 'Pro tuto verzi neběžely end-to-end testy, nebo se web po nich změnil. Spusťte testy a web sestavte znovu (postup je ve web/README.md).']);
   else (e.failed || []).forEach(f => todo.push(['Neprošel test', f]));
-  [['Přístupnost', cur.a11y, 'nastroje/e2e/pristupnost.js'], ['Výkon', cur.perf, 'nastroje/e2e/vykon.js']].forEach(([n, r, f]) => {
+  [['Scénáře', cur.scen, 'nastroje/e2e/scenare.js'], ['Přístupnost', cur.a11y, 'nastroje/e2e/pristupnost.js'], ['Výkon', cur.perf, 'nastroje/e2e/vykon.js']].forEach(([n, r, f]) => {
     if (!r) todo.push([n, 'Pro tuto verzi neběžel test ' + f + ', nebo se web po něm změnil.']);
     else (r.failed || []).forEach(x => todo.push([n + ': neprošlo', x]));
   });

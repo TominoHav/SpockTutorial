@@ -353,7 +353,8 @@ function startSession(wid, mode){
   renderSession();
 }
 /* jen pro automatický test: čtení stavu kvízu */
-window.__kviz = {liveNow: () => dashLive(), streak: () => streak(), state: fn => { fn(S); save(); return true; },
+/* testovací háčky: jen v testovacím sestavení (e2e.html nastaví window.__E2E), ne pro uživatele */
+if (window.__E2E) window.__kviz = {liveNow: () => dashLive(), streak: () => streak(), state: fn => { fn(S); save(); return true; },
   /* vyplní modul až na jeden úkol bez ověření a vrátí, kde zůstal: test ho pak odškrtne opravdovým kliknutím */
   almost: wid => { const w = W.find(x => x.id === wid); let left = null; S.qpass = S.qpass || {};
     for (let di = w.days.length - 1; di >= 0 && !left; di--) for (let ti = w.days[di].todo.length - 1; ti >= 0; ti--) if (!w.days[di].todo[ti].check) { left = [di, ti]; break; }
@@ -548,6 +549,7 @@ function sndStart(){
   try {
     const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
     const ctx = SND.ctx = new C(), out = ctx.createGain(); out.gain.value = 0; out.connect(ctx.destination);
+    if (ctx.state === 'suspended' && ctx.resume) ctx.resume().catch(() => {});   /* Safari spouští zvuk pozastavený */
     out.gain.linearRampToValueAtTime(.05, ctx.currentTime + 2);
     const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 520; lp.connect(out);
     [[110, 'sine'], [164.8, 'sine'], [220.4, 'triangle']].forEach(([f, t], n) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = t; o.frequency.value = f; g.gain.value = n === 2 ? .12 : .5; o.connect(g); g.connect(lp); o.start(); SND.nodes.push(o); });
@@ -564,7 +566,8 @@ function blip(kind){
   if (!sndOn()) return;
   try {
     const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
-    const ctx = SND.ctx || (SND.tmp = SND.tmp || new C()), o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime;
+    const ctx = SND.ctx || (SND.tmp = SND.tmp || new C()); if (ctx.state === 'suspended' && ctx.resume) ctx.resume().catch(() => {});
+    const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime;
     const f = kind === 'ok' ? [523, 784] : kind === 'bad' ? [196, 147] : [392, 440];
     o.type = kind === 'bad' ? 'sawtooth' : 'sine'; o.frequency.setValueAtTime(f[0], t); o.frequency.linearRampToValueAtTime(f[1], t + .16);
     g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(kind === 'bad' ? .05 : .09, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .32);
@@ -696,7 +699,7 @@ function mgRender(){
   let ov = document.getElementById('mg');
   if (!ov) { ov = document.createElement('div'); ov.id = 'mg'; ov.className = 'story mg'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','Minihra: ' + MG.wd.foe); document.body.append(ov); }
   const g = MG, n = g.qs.length, end = g.i >= n;
-  const track = `<div class="mg-track" aria-label="Postup ${Math.min(g.i, n)} z ${n}"><span class="mg-ship" style="left:${Math.min(g.i, n) / n * 100}%">${shipSVG()}</span>${g.qs.map((_, k) => `<i class="${k < g.i ? 'on' : ''}"></i>`).join('')}<span class="mg-goal" style="--pc:${g.wd.c}"></span></div>`;
+  const track = `<div class="mg-track" role="img" aria-label="Postup ${Math.min(g.i, n)} z ${n}"><span class="mg-ship" style="left:${Math.min(g.i, n) / n * 100}%">${shipSVG()}</span>${g.qs.map((_, k) => `<i class="${k < g.i ? 'on' : ''}"></i>`).join('')}<span class="mg-goal" style="--pc:${g.wd.c}"></span></div>`;
   if (end) {
     ov.innerHTML = `<div class="st-stage mg-stage"><div class="sp-stars" aria-hidden="true"></div><div class="mg-top"><span class="eyebrow">Minihra · ${g.wd.n}</span><h2>Proletěli jste: ${g.wd.foe}</h2></div>${track}
       <div class="mg-end">${spockSVG('big')}<p>${g.miss ? `Spock vám napověděl ${g.miss}×. Kurz jste udrželi.` : 'Bez jediné nápovědy. Čistý průlet!'}</p><button class="btn primary" type="button" data-mg="close">Pokračovat</button></div></div>`;
@@ -1304,7 +1307,7 @@ document.addEventListener('click', e => {
   const t = e.target.closest('[data-week],[data-go],[data-phase],[data-layer],[data-q],[data-retry],[data-reveal],[data-role]');
   if (!t) return;
   if (t.tagName === 'A') e.preventDefault();
-  if (t.dataset.role) { S.role = t.dataset.role; save(); toast('Role: ' + ROLES[S.role]); award('welcome', 10, 'role'); checkBadges(); return render(); }
+  if (t.dataset.role) { S.role = t.dataset.role; save(); toast('Role: ' + ROLES[S.role]); award('welcome', 10, 'role'); checkBadges(); render(); /* přístupnost: po výběru role zaměřit další krok, ať se klávesnice neztratí */ const nx = document.querySelector('.hx [data-golesson], .hx [data-week=l0], [data-golesson]'); if (nx) nx.focus({preventScroll:true}); return; }
   if (t.dataset.week) return go(t.dataset.week === 'home' ? 'home' : 'week', {week:t.dataset.week});
   if (t.dataset.go === 'next') return go('week', {week:nextWeek().id});
   if (t.dataset.go) return go(t.dataset.go);

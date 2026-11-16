@@ -79,7 +79,7 @@ def _report(name):
         r = json.load(open(os.path.join('dist', name), encoding='utf-8'))
         return r if r.get('src') == _src else None
     except Exception: return None
-BUILD = {'a11y': _report('pristupnost-report.json'), 'perf': _report('vykon-report.json'), 'src': _src, 'size': {'js': _sz(['app.js', 'sim.js', 'track.js']), 'css': _sz(sorted(_glob.glob('*.css'))), 'data': os.path.getsize(os.path.join('dist', 'data.json'))},
+BUILD = {'a11y': _report('pristupnost-report.json'), 'perf': _report('vykon-report.json'), 'scen': _report('scenare-report.json'), 'src': _src, 'size': {'js': _sz(['app.js', 'sim.js', 'track.js']), 'css': _sz(sorted(_glob.glob('*.css'))), 'data': os.path.getsize(os.path.join('dist', 'data.json'))},
          'counts': {'moduly': len(_data['W']), 'lekce': sum(len(w['days']) for w in _data['W']), 'karty': sum(len(d.get('cards', [])) for w in _data['W'] for d in w['days']),
                     'ukoly': sum(len(d['todo']) for w in _data['W'] for d in w['days']), 'kviz': sum(len(w['quiz']) for w in _data['W'])},
          'edit': _edit, 'e2e': _rep}
