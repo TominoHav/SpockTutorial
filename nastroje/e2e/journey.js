@@ -14,7 +14,9 @@ const scenario=async(name,fn)=>{try{await fn();}catch(e){R.push(['FAIL',name+': 
 /* cesta na počítači a na mobilu běží souběžně, každá ve vlastním kontextu prohlížeče */
 const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag])=>!process.env.E2E_ONLY||process.env.E2E_ONLY===tag).map(async([W,H,tag])=>{
  await scenario('cesta uživatele, '+tag,async()=>{
- const ctx=await b.newContext({viewport:{width:W,height:H}});await ctx.grantPermissions(['clipboard-read','clipboard-write']);
+ const WK=(process.env.E2E_BROWSER||'chromium')==='webkit';const ctx=await b.newContext({viewport:{width:W,height:H}});if(!WK)await ctx.grantPermissions(['clipboard-read','clipboard-write']);
+ /* Safari (WebKit) nedovolí testu číst schránku: zápis do schránky se tam ověří zachycením volání */
+ if(WK)await ctx.addInitScript(()=>{window.__clip='';try{Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async t=>{window.__clip=String(t)},readText:async()=>window.__clip}});}catch(e){}});
  // Bez zápisů do úložiště z testu: zápis z testu během obnovení stránky v Chromiu soupeří s ukládáním stránky.
  const p=await ctx.newPage();CUR=p;CURS[tag]=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));p.on('console',m=>{if(m.type()==='error')errs.push(m.text())});
  const st=()=>p.evaluate(()=>JSON.parse(localStorage.getItem('spock-user-onboarding-v1')||'{}'));
