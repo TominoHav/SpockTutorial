@@ -134,9 +134,31 @@ function award(key, amount, label){
 
 /* ---------- odměny: vzhledy Spocka za hodnosti, zmrazení série, denní výzvy ---------- */
 /* vzhled = filtr barev na postavičce; první je výchozí, další se odemykají s hodností (index = pořadí hodnosti) */
-const SKINS = [['klasik','Klasický','none'],['ocean','Oceán','hue-rotate(-110deg)'],['les','Les','hue-rotate(150deg) saturate(.9)'],['zlato','Zlato','sepia(1) saturate(3.2) hue-rotate(-12deg)'],['noc','Noc','grayscale(1) brightness(.8) contrast(1.25)'],['duha','Duha','hue-rotate(0deg)'],['plamen','Plamen','hue-rotate(45deg) saturate(1.4)']];
+/* vzhled = vlastní barvy a doplněk pro každou hodnost (index = pořadí hodnosti). b = vrstva za tělem, f = před tělem. */
+const SKINS = [
+  {k:'klasik', n:'Klasický', d:'jak ho znáte', g:['#E15079','#A54CB2','#372B91']},
+  {k:'ocean', n:'Oceán', d:'modrý se šátkem', g:['#4FD3EC','#1B7FC4','#12356E'], limb:'#12356E', hand:'#1B7FC4', tip:'#4FD3EC', eye:'#C8F6FF',
+    f:'<path d="M37 84 Q60 99 83 84 L81 92 Q60 106 39 92 Z" fill="#F2B544"/><path d="M72 95 L84 110 L71 106 Z" fill="#E8962E"/>'},
+  {k:'les', n:'Les', d:'zelený se sluchátky', g:['#C4EC7A','#3FA34D','#1D5B34'], limb:'#1D5B34', hand:'#3FA34D', tip:'#F2B544', eye:'#EFFFC2',
+    f:'<path d="M31 56 Q60 8 89 56" fill="none" stroke="#2B2F3A" stroke-width="4.5" stroke-linecap="round"/><rect x="24" y="52" width="10" height="17" rx="5" fill="#2B2F3A"/><rect x="86" y="52" width="10" height="17" rx="5" fill="#2B2F3A"/><path d="M29 68 Q32 84 46 82" fill="none" stroke="#2B2F3A" stroke-width="2.6" stroke-linecap="round"/><circle cx="47" cy="82" r="3" fill="#F2B544"/>'},
+  {k:'zlato', n:'Zlato', d:'zlatý s medailí', g:['#FFE99A','#F2B544','#B86E12'], limb:'#8A5410', hand:'#F2B544', tip:'#FFF3C4', eye:'#FFE99A',
+    f:'<path d="M52 80 L60 92 L68 80" fill="none" stroke="#D43C5E" stroke-width="4"/><circle cx="60" cy="94" r="8.5" fill="#FFF3C4" stroke="#B86E12" stroke-width="2"/><path d="M60 88.5l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6z" fill="#B86E12"/>'},
+  {k:'noc', n:'Noc', d:'půlnoční s hvězdami', g:['#4A5BB0','#1B2140','#0B0920'], limb:'#1B2140', hand:'#4A5BB0', tip:'#7DE3F4', eye:'#7DE3F4', glow:'#7DE3F4',
+    f:'<path d="M17 28l1.8 4.6 4.6 1.8-4.6 1.8L17 40.8l-1.8-4.6-4.6-1.8 4.6-1.8z" fill="#7DE3F4"/><path d="M103 22l1.4 3.6 3.6 1.4-3.6 1.4-1.4 3.6-1.4-3.6-3.6-1.4 3.6-1.4z" fill="#F2B544"/><path d="M100 96l1.2 3 3 1.2-3 1.2-1.2 3-1.2-3-3-1.2 3-1.2z" fill="#C9B6FF"/><path d="M20 100l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z" fill="#fff"/>'},
+  {k:'duha', n:'Duha', d:'duhový s korunou a pláštěm', g:['#FF5E7E','#F2B544','#39C6E0'], limb:'#372B91', hand:'#FF5E7E', tip:'#F2B544', eye:'#FFF3C4', noAnt:true,
+    b:'<path d="M32 58 L12 120 L60 104 L108 120 L88 58 Z" fill="#A54CB2" opacity=".55"/>',
+    f:'<path d="M45 30 L43 12 L52 21 L60 8 L68 21 L77 12 L75 30 Z" fill="#F2B544" stroke="#B86E12" stroke-width="1.6" stroke-linejoin="round"/><circle cx="60" cy="19" r="2.6" fill="#E15079"/>'},
+  {k:'plamen', n:'Plamen', d:'ohnivý s tryskami', g:['#FFD25E','#FF7A2F','#D91E4A'], limb:'#8E1436', hand:'#FF7A2F', tip:'#FFD25E', eye:'#FFF1B8',
+    b:'<path d="M32 58 L16 112 L60 100 L104 112 L88 58 Z" fill="#D91E4A" opacity=".5"/><path class="sp-jet" d="M38 120 Q44 142 44 146 Q44 142 50 120 Z" fill="#FFD25E"/><path class="sp-jet" d="M70 120 Q76 142 76 146 Q76 142 82 120 Z" fill="#FFD25E"/>',
+    f:'<path d="M48 26 Q52 14 60 6 Q58 16 66 18 Q72 20 72 28 Z" fill="#FF7A2F"/>', noAnt:true}
+];
 const skinsOwned = () => SKINS.slice(0, Math.max(1, rank().lvl));
-function applySkin(){ const k = skinsOwned().find(x => x[0] === S.skin) || SKINS[0]; document.body.dataset.skin = k[0]; document.body.style.setProperty('--skin', k[2]); }
+const curSkin = () => skinsOwned().find(x => x.k === S.skin) || SKINS[0];
+/* po změně vzhledu překreslit i Spocka, který na stránce stojí trvale (pomocník v rohu a hlavička chatu) */
+function applySkin(){
+  document.body.dataset.spockskin = curSkin().k;
+  try { const f = document.querySelector('#g-fab .spock'); if (f) f.outerHTML = spockSVG('fab'); const h = document.querySelector('#g-panel .spock'); if (h) h.outerHTML = spockSVG('head'); } catch (e) {}
+}
 const FREEZE_MAX = 2;
 function addFreeze(){ if (S.freeze >= FREEZE_MAX) return false; S.freeze++; return true; }
 /* při načtení: vynechané dny (nejvýš tolik, kolik je zmrazení) se zakryjí, když před nimi série byla */
@@ -155,8 +177,8 @@ function streakReward(){
 function rankReward(lv0){
   /* odměna za každou hodnost jen jednou, i když XP přibude ve vnořeném přičtení (výzva, truhla) */
   const r = rank(); if (r.lvl <= lv0 || r.lvl <= (S.rankLvl || 1)) return; S.rankLvl = r.lvl;
-  const sk = SKINS[r.lvl - 1], f = addFreeze(); if (sk) S.skin = sk[0]; save(); applySkin();
-  celebrate({kind:'rank', title:'Nová hodnost: ' + r.name, text:(sk ? `Odměna: vzhled Spocka „${sk[1]}“` : 'Odměna') + (f ? ' a zmrazení série.' : '.') + ' Vzhled změníte v profilu.'});
+  const sk = SKINS[r.lvl - 1], f = addFreeze(); if (sk) S.skin = sk.k; save(); applySkin();
+  celebrate({kind:'rank', title:'Nová hodnost: ' + r.name, text:(sk ? `Odměna: vzhled Spocka „${sk.n}“` : 'Odměna') + (f ? ' a zmrazení série.' : '.') + ' Vzhled změníte v profilu.'});
 }
 /* denní výzvy: tři na den, začínají po výběru role; každá +10 XP, všechny tři otevřou truhlu +20 XP */
 const QUESTS = {xp:['Získejte dnes 30 XP', 30], cards:['Odpovězte správně na 3 karty', 3], tasks:['Splňte 1 úkol', 1], lesson:['Dokončete 1 lekci', 1], quiz:['Odpovězte v kvízu 3× napoprvé', 3]};
@@ -330,7 +352,7 @@ function startSession(wid, mode){
   renderSession();
 }
 /* jen pro automatický test: čtení stavu kvízu */
-window.__kviz = {finish: () => { S.qpass = S.qpass || {}; pathMods().forEach(w => { w.days.forEach((d, di) => { d.todo.forEach((_, ti) => { S.todo[w.id+'.'+di+'.'+ti] = true; }); (d.cards || []).forEach((c, ci) => { S.cards[w.id+'.'+di+'.'+ci] = c.a; }); }); S.qpass[w.id] = S.qpass[w.id] || {at:Date.now(), right:5, total:5}; }); save(); render(); return pathDone(); }, path: () => pathIds(), badges: () => myBadges().map(b => b[0]), idle: mins => { const now = Date.now(), b = Object.values(TRK.doc.secs).reduce((n, x) => n + x, 0); tTick(); TRK.act = now - (mins + 2) * 60000; TRK.curAt = now - mins * 60000; tTick(); return Object.values(TRK.doc.secs).reduce((n, x) => n + x, 0) - b; }, check: (w, d, t) => { const m = W.find(x => x.id === w); return m.days[d].todo[t].check.a; }, build: () => BUILD, ctx: () => { const v = view, out = {}; W.forEach(w => { view = Object.assign({}, v, {name:'week', week:w.id}); out[w.id] = rules().length; }); view = v; return out; }, mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
+window.__kviz = {skins: () => SKINS.map(k => [k.n, k.d, spockSVG('fab', k)]), finish: () => { S.qpass = S.qpass || {}; pathMods().forEach(w => { w.days.forEach((d, di) => { d.todo.forEach((_, ti) => { S.todo[w.id+'.'+di+'.'+ti] = true; }); (d.cards || []).forEach((c, ci) => { S.cards[w.id+'.'+di+'.'+ci] = c.a; }); }); S.qpass[w.id] = S.qpass[w.id] || {at:Date.now(), right:5, total:5}; }); save(); render(); return pathDone(); }, path: () => pathIds(), badges: () => myBadges().map(b => b[0]), idle: mins => { const now = Date.now(), b = Object.values(TRK.doc.secs).reduce((n, x) => n + x, 0); tTick(); TRK.act = now - (mins + 2) * 60000; TRK.curAt = now - mins * 60000; tTick(); return Object.values(TRK.doc.secs).reduce((n, x) => n + x, 0) - b; }, check: (w, d, t) => { const m = W.find(x => x.id === w); return m.days[d].todo[t].check.a; }, build: () => BUILD, ctx: () => { const v = view, out = {}; W.forEach(w => { view = Object.assign({}, v, {name:'week', week:w.id}); out[w.id] = rules().length; }); view = v; return out; }, mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
 function sesQ(){ const w = W.find(x => x.id === SES.wid), qi = SES.qs[SES.i]; return {w, qi, q:SES.items[qi]}; }
 function renderSession(){
   let ov = document.getElementById('ses');
@@ -654,9 +676,9 @@ function renderBadges(){
     </div>
     ${questCard()}
     <div class="sec-h"><h2>Postup v hodnostech</h2><p>Každá hodnost přináší nový vzhled Spocka a zmrazení série.</p></div>
-    <ol class="ladder">${ranks().map((x, i) => { const st = i + 1 < r.lvl ? 'done' : i + 1 === r.lvl ? 'cur' : 'todo'; return `<li class="${st}"><span class="ld-n">${st === 'done' ? '✓' : i + 1}</span><div><b>${esc(x[1])}</b><span>${x[0]} XP${x[2] ? ' a hotová úroveň 4' : ''}</span></div><span class="ld-r">${i ? 'Vzhled „' + SKINS[i][1] + '“ a zmrazení série' : 'Začátek cesty'}</span></li>`; }).join('')}</ol>
+    <ol class="ladder">${ranks().map((x, i) => { const st = i + 1 < r.lvl ? 'done' : i + 1 === r.lvl ? 'cur' : 'todo'; return `<li class="${st}"><span class="ld-n">${st === 'done' ? '✓' : i + 1}</span><div><b>${esc(x[1])}</b><span>${x[0]} XP${x[2] ? ' a hotová úroveň 4' : ''}</span></div><span class="ld-r">${i ? 'Vzhled „' + SKINS[i].n + '“ (' + SKINS[i].d + ') a zmrazení série' : 'Začátek cesty'}</span></li>`; }).join('')}</ol>
     <div class="sec-h"><h2>Vzhled Spocka</h2><p>Odemčené vzhledy si můžete přepínat.</p></div>
-    <div class="skins">${SKINS.slice(0, ranks().length).map((k, i) => { const own = i < r.lvl; return `<button type="button" class="skin ${S.skin === k[0] || (!S.skin && !i) ? 'on' : ''}" ${own ? `data-setskin="${k[0]}"` : 'disabled'} aria-pressed="${S.skin === k[0]}"><span class="sk-art" style="--skin:${k[2]}">${own ? spockSVG('fab') : LOCK}</span><b>${k[1]}</b><small>${own ? 'odemčeno' : esc(ranks()[i][1])}</small></button>`; }).join('')}</div>
+    <div class="skins">${SKINS.slice(0, ranks().length).map((k, i) => { const own = i < r.lvl, on = curSkin().k === k.k; return `<button type="button" class="skin ${on ? 'on' : ''} ${own ? '' : 'lk'}" ${own ? `data-setskin="${k.k}"` : 'disabled'} aria-pressed="${on}"><span class="sk-art">${spockSVG('fab', k)}</span><b>${k.n}</b><small>${own ? k.d : LOCK + ' ' + esc(ranks()[i][1])}</small></button>`; }).join('')}</div>
     <div class="sec-h"><h2>Vaše postavička</h2><p>${pathDone() ? 'Cesta je u cíle. Postavičku můžete obléknout a znovu si přehrát příběh.' : 'Letí s vámi od světa ke světu. Šatna a závěrečný příběh se otevřou v cíli cesty.'}</p></div>
     <div class="avbox">${avatarSVG(null, 'big')}<div>${pathDone() ? '<button class="btn primary" type="button" data-wardrobe>Šatna</button> <button class="btn" type="button" data-story>Přehrát příběh cesty</button>' : `<span class="muted">${LOCK} Šatna a příběh: po dokončení cesty</span>`}</div></div>
     <div class="sec-h"><h2>Posledních 7 dní</h2><p>Čárkovaná čára je váš denní cíl.</p></div>
@@ -693,20 +715,23 @@ document.addEventListener('click', e => {
 
 /* ---------- Spock: postavička pro banner i pomocníka ---------- */
 let SP_N = 0;
-function spockSVG(cls){
-  const id = 'spg' + (++SP_N);
-  return `<svg class="spock ${cls||''}" viewBox="0 0 120 140" aria-hidden="true" focusable="false">
-    <defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E15079"/><stop offset=".55" stop-color="#A54CB2"/><stop offset="1" stop-color="#372B91"/></linearGradient></defs>
+function spockSVG(cls, skin){
+  const id = 'spg' + (++SP_N); let k = skin; if (!k) { try { k = curSkin(); } catch (e) { k = null; } } k = k || {k:'klasik', g:['#E15079','#A54CB2','#372B91']};
+  const vars = [k.limb && '--limb:' + k.limb, k.hand && '--hand:' + k.hand, k.tip && '--tip:' + k.tip, k.eye && '--eye:' + k.eye, k.hand && '--ant:' + k.hand].filter(Boolean).join(';');
+  return `<svg class="spock sk-${k.k} ${cls||''}" viewBox="0 0 120 140" aria-hidden="true" focusable="false" ${vars ? `style="${vars}"` : ''}>
+    <defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${k.g[0]}"/><stop offset=".55" stop-color="${k.g[1]}"/><stop offset="1" stop-color="${k.g[2]}"/></linearGradient></defs>
     <ellipse class="sp-shadow" cx="60" cy="133" rx="26" ry="5"/>
     <g class="sp-body">
+      ${k.b || ''}
       <g class="sp-legs"><line x1="49" y1="96" x2="44" y2="122"/><line x1="71" y1="96" x2="76" y2="122"/></g>
       <g class="sp-arm sp-arm-l"><line x1="28" y1="70" x2="12" y2="56"/><circle cx="11" cy="55" r="5"/></g>
       <g class="sp-arm sp-arm-r"><line x1="92" y1="70" x2="108" y2="54"/><circle cx="109" cy="53" r="5"/></g>
-      <line class="sp-ant" x1="60" y1="24" x2="60" y2="10"/><circle class="sp-tip" cx="60" cy="8" r="5"/>
+      ${k.noAnt ? '' : '<line class="sp-ant" x1="60" y1="24" x2="60" y2="10"/><circle class="sp-tip" cx="60" cy="8" r="5"/>'}
       <rect x="30" y="34" width="60" height="60" rx="16" transform="rotate(45 60 64)" fill="url(#${id})"/>
-      <rect x="35" y="50" width="50" height="28" rx="14" fill="#0C1B2A"/>
+      <rect x="35" y="50" width="50" height="28" rx="14" fill="#0C1B2A" ${k.glow ? `stroke="${k.glow}" stroke-width="1.6"` : ''}/>
       <g class="sp-eyes"><ellipse cx="50" cy="61" rx="4.5" ry="5.5"/><ellipse cx="70" cy="61" rx="4.5" ry="5.5"/></g>
       <path class="sp-smile" d="M53 70 Q60 75 67 70"/>
+      ${k.f || ''}
     </g>
   </svg>`;
 }

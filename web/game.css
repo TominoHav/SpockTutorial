@@ -132,10 +132,10 @@
 .cel-acts{display:grid;gap:8px}.cel-quiz{width:100%;justify-content:center;padding:12px;font-size:15px;border-radius:12px}.qlaunch.qlock{opacity:.75}.ses-n{font-size:13px;color:var(--ink-3,#667);white-space:nowrap}
 .cel-acts{width:100%}body:has(#ses) .notices{display:none}
 /* ---------- odměny: vzhledy Spocka, hodnosti, denní výzvy, shrnutí lekce ---------- */
-.spock>*{filter:var(--skin,none)}
-body[data-skin=duha] .spock>*{animation:skinHue 8s linear infinite}
+.spock.sk-duha>.sp-body>rect:first-of-type{animation:skinHue 8s linear infinite}
 @keyframes skinHue{to{filter:hue-rotate(360deg)}}
-@media (prefers-reduced-motion:reduce){body[data-skin=duha] .spock>*{animation:none;filter:hue-rotate(200deg)}}
+.sp-jet{animation:flame .3s ease-in-out infinite alternate;transform-origin:60px 120px}
+@media (prefers-reduced-motion:reduce){.spock.sk-duha>.sp-body>rect:first-of-type,.sp-jet{animation:none}}
 .cel-sum{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px;width:100%}
 .cel-sum div{display:grid;gap:2px;padding:10px 6px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
 .cel-sum b{font-size:20px;font-weight:800}
@@ -160,14 +160,14 @@ body[data-skin=duha] .spock>*{animation:skinHue 8s linear infinite}
 .ladder li.cur .ld-n{background:var(--indigo);color:#fff}
 .ladder li.todo{opacity:.75}
 @media (max-width:560px){.ladder li{grid-template-columns:34px minmax(0,1fr)}.ld-r{grid-column:2}}
-.skins{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.skins{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}
 .skin{display:grid;justify-items:center;gap:2px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 6px;font:inherit;color:var(--ink);cursor:pointer}
 .skin.on{border-color:var(--indigo);box-shadow:0 0 0 3px color-mix(in srgb,var(--indigo) 16%,transparent)}
 .skin:disabled{cursor:default;opacity:.6}
 .skin small{font-size:11.5px;color:var(--ink-3)}
-.sk-art{height:64px;display:grid;place-items:center}
+.sk-art{height:74px;display:grid;place-items:center}
 .sk-art .spock{width:52px;height:auto;overflow:visible}
-.sk-art .lockic{width:26px;height:26px;fill:var(--ink-3);stroke:var(--ink-3)}
+.skin small .lockic{width:11px;height:11px;vertical-align:-1px;fill:var(--ink-3);stroke:var(--ink-3)}.skin.lk .sk-art{opacity:.45;filter:grayscale(.6)}
 .pstats{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
 /* ---------- vesmírná cesta ---------- */
 .spmap{position:relative;border-radius:16px;background:radial-gradient(120% 140% at 15% 0%,#2A2470 0%,#141033 55%,#0B0920 100%);color:#fff;padding:26px 18px 20px;overflow:hidden}
