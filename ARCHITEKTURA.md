@@ -54,7 +54,7 @@ Běží na GitHubu při každém pull requestu a po sloučení do `main`. Když 
 |---|---|---|
 | `nastroje/e2e/journey.js` | Cesta uživatele na počítači i mobilu: simulace, role, karty, úkoly s ověřením, kvíz, zámky a skokový test, všech 9 modulů, opora, chat, dashboard, hra (výzvy, hodnosti, vzhledy), vesmírná mapa, minihry, shrnutí, šatna a příběh, oslava po dokončení úrovně, mluvený komentář se zkušebním hlasem, zmrazení série | 185 |
 | `nastroje/e2e/pristupnost.js` | Průchod za každou roli (PM, PD, SWE, GM) na mobilu i počítači; přístupnost podle WCAG 2 A a AA nástrojem axe-core na osmi stránkách ve světlém i tmavém režimu; dotykové plochy na mobilu aspoň 24 × 24 px | 56 |
-| `nastroje/e2e/vykon.js` | Rozpočty: velikost stránky (700 kB, po kompresi 230 kB), první vykreslení, vykreslení lekce (150 ms) a opory, procesor po 15 s nečinnosti, počet prvků na stránce | 7 |
+| `nastroje/e2e/vykon.js` | Rozpočty: velikost stránky (700 kB, po kompresi 230 kB), první vykreslení, vykreslení lekce (150 ms) a opory, procesor po 15 s nečinnosti, počet prvků na stránce; dashboard se 200 smyšlenými lidmi (záložka Pohyb do 600 ms, filtr do 300 ms) | 10 |
 
 Každý test zapíše zprávu do `web/dist/` a `build.py` ji přiloží do stránky, jen když test běžel nad stejnými zdroji. Dashboard pak na záložce **Verze a kvalita** ukáže, co neprošlo nebo neběželo.
 
@@ -91,6 +91,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
+| [#53](https://github.com/TominoHav/SpockTutorial/pull/53) | Aplikace | Výkon dashboardu: mezipaměť analýzy, rychlejší výpočty, seznam lidí po 50, živá aktualizace překreslí jen při nových datech a nechá rozbalené části; výkonový test dashboardu se 200 lidmi | 17. 11. 2026 |
 | [#52](https://github.com/TominoHav/SpockTutorial/pull/52) | Aplikace | Pohyb a problémová místa: filtry (období, role, zařízení), přehledová čísla s vysvětlením, grafy (mapa pohybu, kam lidé došli, problémová místa, aktivita v čase, délka sezení, typy chování) s popisky, výběr místa zúží cesty lidí, živá aktualizace každých 30 s | 17. 11. 2026 |
 | [#51](https://github.com/TominoHav/SpockTutorial/pull/51) | Aplikace | Dashboard: nová záložka Pohyb a problémová místa (automatické závěry, problémová místa s důvody, kam až lidé došli, přechody, vstupy a odchody, vzorce, bloudění, cesta každého člověka krok za krokem) a bohatší sběr kroků | 17. 11. 2026 |
 | [#50](https://github.com/TominoHav/SpockTutorial/pull/50) | Aplikace | Dashboard: kdy lidé tutoriál používají (první a poslední návštěva s časem, sezení od–do u každého člověka, přehled den × hodina) | 17. 11. 2026 |

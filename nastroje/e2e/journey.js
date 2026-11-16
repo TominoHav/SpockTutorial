@@ -184,6 +184,9 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  await p.locator('#dash [data-dash="flow:u_novak"]').click();await p.waitForTimeout(250);
  ok(T('pohyb: cesta člověka krok za krokem po sezeních, problémové kroky označené'), await p.locator('#dash .fl-ses').count()===2 && await p.locator('#dash .fl-who .fl-st.warn').count()>=2 && (await p.locator('#dash .fl-who').innerText()).includes('bloudí'));
  ok(T('pohyb: stránka nepřetéká'), (await ov())<=0);
+ await p.evaluate(()=>{const d=document.querySelector('#dash .fl-more');if(d)d.open=true;});await p.locator('#dash [data-dash="reload"]').count().then(async n=>{if(n)await p.locator('#dash [data-dash="reload"]').first().click();});
+ await p.evaluate(()=>window.__kvizReload&&0);await p.evaluate(async()=>{const b=document.createElement('button');b.dataset.dash='reload';document.querySelector('#dash').append(b);b.click();});await p.waitForTimeout(600);
+ ok(T('pohyb: živá aktualizace bez nových dat nepřekreslí stránku a nechá rozbalené tabulky'), (await p.locator('#dash .fl-live').innerText()).includes('beze změny') && await p.locator('#dash .fl-more[open]').count()===1);
  await p.locator('#dash [data-dash="tab:lide"]').click();await p.waitForTimeout(200);
  await p.locator('.ds-fbi input').first().check();await p.waitForTimeout(200);
  ok(T('odškrtnutí zpětné vazby se uloží'), Object.keys((await p.evaluate(()=>window.__db['todo/state']||{done:{}})).done).length===1);

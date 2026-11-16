@@ -218,16 +218,22 @@ async function dashLoad(){
       try { await TRK.db.doc('versions/' + BUILD.ver).set(rec); DASH.vers = DASH.vers.filter(v => v.ver !== BUILD.ver).concat([rec]); } catch (e) {}
     }
     DASH.vers.sort((a, b) => (a.ts || a.seen || 0) - (b.ts || b.seen || 0));
-    DASH.rows = tr.docs.map(d => Object.assign({id:d.id}, d.data()));
+    const rows = tr.docs.map(d => Object.assign({id:d.id}, d.data())), sig = rows.filter(r => DASH.withMe || r.id !== TRK.uid).map(r => r.id + ':' + (r.last || 0) + ':' + ((r.ev || []).length)).sort().join(',') + (DASH.withMe ? '|me' : '') + '|' + fb.docs.length;
+    DASH.same = DASH.rows && DASH.sig === sig; DASH.sig = sig;
+    DASH.rows = rows;   /* vlastní záznam se mění při každém uložení, do porovnání se počítá jen se Započítat i mě */
     DASH.fb = []; fb.docs.forEach(d => (d.data().items || []).forEach(it => DASH.fb.push(Object.assign({uid:d.id}, it))));
     DASH.fb.sort((a, b) => b.at - a.at);
     DASH.state = st.exists ? JSON.parse(JSON.stringify(st.data())) : {}; if (!DASH.state.done) DASH.state.done = {};
     const ids = [...new Set(DASH.rows.map(r => r.id).concat(DASH.fb.map(f => f.uid)))];
     try { const ps = await TRK.user.profiles(ids); ids.forEach(id => { DASH.names[id] = (ps[id] && ps[id].name) || ''; }); } catch (e) {}
-    DASH.at = tNow();
+    if (!DASH.same) DASH.at = tNow(); DASH.checked = tNow();
   } catch (e) { DASH.err = 'Data se nepodařilo načíst. Zkuste to znovu.'; }
   DASH.loading = false;
-  if (view.name === 'dash') renderDash();
+  if (view.name !== 'dash') return;
+  if (DASH.same) { const l = document.querySelector('.fl-live'); if (l) l.textContent = '● Živě · beze změny, ověřeno ' + dTime(DASH.checked); return; }
+  const open = [...document.querySelectorAll('#dash details[open]')].map(d => d.className);
+  renderDash();
+  open.forEach(c => { const d = document.querySelector('#dash details.' + String(c).split(' ')[0]); if (d) d.open = true; });
 }
 function dTile(label, value, sub){ return `<div class="ds-tile"><span class="ds-l">${label}</span><b class="num">${value}</b>${sub ? `<small>${sub}</small>` : ''}</div>`; }
 function dBars(rows, unit){
@@ -393,6 +399,7 @@ document.addEventListener('click', async e => {
   else if (cmd === 'frole') { FLF.role = arg; renderDash(); }
   else if (cmd === 'fdev') { FLF.dev = arg; renderDash(); }
   else if (cmd === 'fplace') { FLF.place = FLF.place === arg ? '' : arg; renderDash(); }
+  else if (cmd === 'allp') { DASH.allP = true; renderDash(); }
   else if (cmd === 'live') { DASH.live = DASH.live === false; renderDash(); if (DASH.live) dashLoad(); }
   else if (cmd === 'flow') { DASH.sel = arg || null; renderDash(); const el = document.querySelector('.fl-who'); if (el) el.scrollIntoView({block:'start'}); }
   else if (cmd === 'who') { DASH.sel = arg || null; renderDash(); const el = document.querySelector('.ds-who'); if (el) el.scrollIntoView({block:'start'}); }
@@ -499,7 +506,9 @@ function renderDashVer(){
    Z kroků každého člověka (zobrazení stránek, kliknutí, odpovědi, kvízy) se složí sezení a v nich cesta.
    Z cest se počítají přechody, vstupy a odchody, opakující se vzorce, bloudění a problémová místa. */
 const FL = {IDLE:18e5, CAP:6e5};
-function flKind(loc){ if (!loc) return 'jiné'; if (/^l|^pm|^pd|^se|^gm/.test(loc) && loc.includes('/')) return 'lekce'; return {home:'úvod', map:'opora', diag:'opora', gloss:'opora', cheat:'opora', ready:'opora', badges:'profil', sim:'simulace', ses:'kvíz', quiz:'kvíz', dash:'dashboard'}[loc] || 'jiné'; }
+const FLK = new Map();
+function flKind(loc){ let k = FLK.get(loc); if (k === undefined) { k = flKind0(loc); FLK.set(loc, k); } return k; }
+function flKind0(loc){ if (!loc) return 'jiné'; if (/^l|^pm|^pd|^se|^gm/.test(loc) && loc.includes('/')) return 'lekce'; return {home:'úvod', map:'opora', diag:'opora', gloss:'opora', cheat:'opora', ready:'opora', badges:'profil', sim:'simulace', ses:'kvíz', quiz:'kvíz', dash:'dashboard'}[loc] || 'jiné'; }
 const flShort = loc => { const [id, les] = String(loc).split('/'), w = W.find(x => x.id === id); if (w && les) { const d = w.days.find(x => x.d === les); return les + (d ? ' ' + plain(d.t) : ''); } return tLocLabel(loc); };
 /* cesta jednoho člověka: sezení → kroky {loc, from, dur, flags} */
 function flJourney(r){
@@ -552,7 +561,7 @@ function flAnalyze(rows){
   });
   // problémová místa: skóre z odchodů, chyb, bloudění, zamčených klepnutí a doby
   const med = a => { const b = a.slice().sort((x, y) => x - y); return b.length ? b[Math.floor(b.length / 2)] : 0; };
-  const allDw = Object.values(A.dwell).flat(), medAll = med(allDw);
+  let medAllV = null; const medAllF = () => medAllV === null ? (medAllV = med(Object.values(A.dwell).flat())) : medAllV;
   const lessonMin = loc => { const [id, les] = String(loc).split('/'), w = W.find(x => x.id === id), d = w && w.days.find(x => x.d === les); return d ? dayLearn(d) + dayDo(d) : 0; };
   A.places = Object.keys(A.visits).filter(l => l !== 'dash').map(loc => {
     const v = A.visits[loc], u = A.uniq[loc] || 0, ex = A.exit[loc] || 0, md = med(A.dwell[loc] || []), est = lessonMin(loc);
@@ -568,7 +577,7 @@ function flAnalyze(rows){
     if (pingN) why.push(['bloudění', `${pingN}× tam a zpět během minuty`]);
     if ((A.revisit[loc] || 0) >= 2 && u) why.push(['návraty', `${A.revisit[loc]} návratů od ${u} ${u === 1 ? 'člověka' : 'lidí'}`]);
     if (est && md > est * 60 * 1.6 && md > 120) why.push(['dlouho', `medián ${dDur(Math.round(md))}, odhad ${est} min`]);
-    else if (!est && medAll && md > medAll * 4 && md > 180) why.push(['dlouho', `medián ${dDur(Math.round(md))}, běžně ${dDur(Math.round(medAll))}`]);
+    else if (!est && md > 180 && medAllF() && md > medAllF() * 4) why.push(['dlouho', `medián ${dDur(Math.round(md))}, běžně ${dDur(Math.round(medAllF()))}`]);
     if (est && md < est * 60 * .15 && v >= 2 && flKind(loc) === 'lekce') why.push(['proletěno', `medián ${dDur(Math.round(md))} při odhadu ${est} min`]);
     const W8 = {odchod:3, chyby:1.5, ověření:2, kvíz:2, klikání:3, zámek:1, bloudění:2, návraty:1, dlouho:1.5, proletěno:1};
     const score = why.reduce((sc, [k]) => sc + W8[k], 0) * Math.log2(1 + u);
@@ -587,7 +596,6 @@ function flAnalyze(rows){
     if (all.some(st => st.rage)) P.tags.push(['frustrace', 'opakované klikání']);
     if (P.stuck && P.stuck.dur >= 3e5) P.tags.push(['zasekl(a) se', flShort(P.stuck.loc) + ' · ' + dDur(Math.round(P.stuck.dur / 1000))]);
   });
-  A.medAll = medAll;
   return A;
 }
 /* automatické závěry: věty, které shrnují, co z dat plyne */
@@ -652,9 +660,12 @@ function flDays(sess, days){
     <p class="fl-leg2"><span><i class="ok"></i>sezení bez problému</span><span><i class="bad"></i>sezení s problémem (chyba, bloudění, opakované klikání, zámek)</span></p>`;
 }
 function flKpi(label, val, what, cls){ return `<div class="fl-kpi ${cls || ''}"><span class="fl-kl">${label}</span><b class="num">${val}</b><span class="fl-kw">${what}</span></div>`; }
+let FLC = {key:'', A:null, rows:null};
 function renderDashFlow(){
-  const all = DASH.rows, base = DASH.withMe ? all : all.filter(r => r.id !== TRK.uid), rows = flFilter(base);
-  const A = flAnalyze(rows), sel = DASH.sel && A.persons.find(P => P.id === DASH.sel);
+  const key = [DASH.at, DASH.withMe, FLF.days, FLF.role, FLF.dev].join('|');
+  if (FLC.key !== key) { const all = DASH.rows, base = DASH.withMe ? all : all.filter(r => r.id !== TRK.uid), rows = flFilter(base); FLC = {key, rows, A:flAnalyze(rows)}; }
+  const rows = FLC.rows;
+  const A = FLC.A, sel = DASH.sel && A.persons.find(P => P.id === DASH.sel);
   const top = (o, n) => Object.entries(o).sort((a, b) => b[1] - a[1]).slice(0, n);
   const sess = A.persons.flatMap(P => P.J.map(x => { const st = x.steps; const bad = st.some(s2 => s2.wrong || s2.proofBad || s2.quizFail || s2.rage || s2.locked) || st.some((s2, i) => i > 1 && st[i - 2].loc === s2.loc); return {from:x.from, to:x.last, n:st.length, bad, lastLoc:st[st.length - 1].loc, id:P.id}; }));
   const medS = (() => { const d = sess.map(x => (x.to - x.from) / 1000).sort((a, b) => a - b); return d.length ? d[Math.floor(d.length / 2)] : 0; })();
@@ -719,10 +730,11 @@ function renderDashFlow(){
       <p class="fl-how">${Object.keys(tags).map(t => `<b>${esc(t)}</b>: ${esc(TAGD[t] || '')}`).join(' · ')}</p></section>
 
     <div class="sec-h"><h2>Cesta každého člověka</h2><p>${place ? `Jen lidé, kteří byli na místě <b>${esc(flShort(place.loc))}</b>. ` : ''}Klepněte na jméno a uvidíte celou cestu krok za krokem.</p></div>
-    ${dTable(['Kdo', 'Sezení', 'Kroků', 'Typ chování', 'Nejdéle'], persons.map(P => [
+    ${dTable(['Kdo', 'Sezení', 'Kroků', 'Typ chování', 'Nejdéle'], persons.slice(0, DASH.allP ? persons.length : 50).map(P => [
       `<button class="linkbtn" type="button" data-dash="flow:${esc(P.id)}">${dName(P.id)}${P.id === TRK.uid ? ' (vy)' : ''}</button>`, P.sessions, P.steps,
       P.tags.length ? P.tags.map(([t, d]) => `<span class="fl-tag" title="${esc(d)}">${esc(t)}</span>`).join(' ') : '<span class="muted">bez nápadností</span>',
       P.stuck ? esc(flShort(P.stuck.loc)) + ' · ' + dDur(Math.round(P.stuck.dur / 1000)) : '—']), 'Nikdo neodpovídá výběru.')}
+    ${persons.length > 50 && !DASH.allP ? `<p><button class="btn sm" type="button" data-dash="allp">Zobrazit všech ${persons.length} lidí</button></p>` : ''}
     ${sel ? `<div class="ds-who fl-who"><h3>Cesta: ${dName(sel.id)} <button class="btn sm" type="button" data-dash="flow:">Zavřít</button></h3>
       ${sel.tags.length ? `<p>${sel.tags.map(([t, d]) => `<span class="fl-tag">${esc(t)}: ${esc(d)}</span>`).join(' ')}</p>` : ''}
       ${sel.J.slice().reverse().slice(0, 20).map(x => `<div class="fl-ses"><span class="fl-sh">${dDate(x.from)} · ${dTime(x.from)}–${dTime(x.last)} · ${x.steps.length} kroků</span><div class="fl-path">${x.steps.map(flChip).join('<span class="fl-ar" aria-hidden="true">→</span>')}<span class="fl-end">konec</span></div></div>`).join('') || '<p class="muted">Žádné kroky.</p>'}</div>` : ''}
