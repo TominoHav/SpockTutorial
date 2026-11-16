@@ -54,4 +54,4 @@ Postupujte shora dolů. **Než cokoli zkusíte znovu, uložte si stav**: export 
 | Žádost o schválení fáze 3 | Fáze 3 nemá rozhodnutí člověka. |
 | Agent odpovídá v jiném jazyce než běh | Porušuje jazyk deklarovaný v briefu. |
 
-Jak nález poslat: [úroveň 4, lekce 4.4](uroven-4-superuser.md).
+Jak nález poslat: [úroveň 3, lekce 3.6](uroven-3-pokrocily.md). Nález obsahuje verzi SPOCKu, fázi a agenta, co jste udělali a co jste čekali. Přikládá se celá složka běhu jako ZIP a chat každé fáze exportovaný zvlášť. Posílá se týmu CoE Product Management.

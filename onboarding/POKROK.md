@@ -257,30 +257,31 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 - [ ] 3.5 Aktualizujte kopii
 
+**3.6 — Co výstup dokazuje a jak nahlásit nález**
+
+- [ ] 3.6 Připravte si „poctivé shrnutí“ pro kolegy
+- [ ] 3.6 Připravte si šablonu nálezu
+
 - [ ] Kvíz: Úroveň 3: Pokročilý
 
 ## Úroveň 4: Superuser
 
-**4.1 — Co výstup SPOCKu dokazuje a co ne**
+**4.1 — Prověřte chování agentů**
 
-- [ ] 4.1 Připravte si „poctivé shrnutí“ pro kolegy
+- [ ] 4.1 Sondy chování na cvičném běhu
+- [ ] 4.1 Projděte jeden scénář z balíčku
 
-**4.2 — Prověřte chování agentů**
+**4.2 — Měření a stav**
 
-- [ ] 4.2 Sondy chování na cvičném běhu
-- [ ] 4.2 Projděte jeden scénář z balíčku
+- [ ] 4.2 Přečtěte výkon workflow
 
-**4.3 — Měření a stav**
+**4.3 — Zpětná vazba týmu CoE Product Management**
 
-- [ ] 4.3 Přečtěte výkon workflow
+- [ ] 4.3 Pošlete jeden nález
 
-**4.4 — Zpětná vazba týmu CoE Product Management**
+**4.4 — Mentor a generálka**
 
-- [ ] 4.4 Pošlete jeden nález
-
-**4.5 — Mentor a generálka**
-
-- [ ] 4.5 Generálka: celý běh bez nápovědy
-- [ ] 4.5 Proveďte kolegu úrovněmi 0 a 1
+- [ ] 4.4 Generálka: celý běh bez nápovědy
+- [ ] 4.4 Proveďte kolegu úrovněmi 0 a 1
 
 - [ ] Kvíz: Úroveň 4: Superuser

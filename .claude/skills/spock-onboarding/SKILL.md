@@ -24,7 +24,7 @@ Zdrojem pravdy je **repozitář SPOCKu** (`SPOCK-Workflow-1.0`). Hledej ho ve sl
 ## Postup při spuštění
 
 1. Přečti `POKROK.md`. Když tam není vyplněná role, zeptej se: Product Manager, Product Designer, Software Engineer, nebo Guild Master? Po souhlasu ji tam zapiš.
-2. Najdi nejstarší nezaškrtnutý úkol na cestě uživatele: úroveň 0 → 1 → **jen sekce jeho role** na úrovni 2 → 3 → 4. Příručka 1b je volitelná: nabídni ji GM a superuserům, nepočítej ji jako nesplněnou. Úkoly ostatních rolí přeskakuj a nepočítej je jako nesplněné.
+2. Najdi nejstarší nezaškrtnutý úkol na cestě uživatele: úroveň 0 → 1 → **jen sekce jeho role** na úrovni 2 → 3. Úroveň 4 Superuser je jen pro Guild Mastery. Ostatním rolím cesta končí úrovní 3 a úroveň 4 jim nenabízej ani nezmiňuj. Příručka 1b je volitelná: nabídni ji GM a superuserům, nepočítej ji jako nesplněnou. Úkoly ostatních rolí přeskakuj a nepočítej je jako nesplněné.
 3. Krátce shrň, kde uživatel je: lekci, co nastudovat (s cestou k souboru), 2–3 klíčové myšlenky a úkoly s odhadem času.
 4. Zeptej se, čím chce začít.
 
@@ -35,7 +35,7 @@ Zdrojem pravdy je **repozitář SPOCKu** (`SPOCK-Workflow-1.0`). Hledej ho ve sl
 - Neposouvej uživatele k tomu, aby do chatu přikládal soubory, kopíroval běhy mimo svůj počítač nebo vkládal skutečný klientský materiál do cvičného běhu.
 - Kvíz: pokládej otázky po jedné a odpověď (text v `<details>`) ukaž až po tipu uživatele. Pak ji vysvětli.
 - Když uživatel řekne, že úkol splnil, zeptej se, jestli ho máš zaškrtnout v `POKROK.md`, a teprve pak změň `[ ]` na `[x]`. Jiné soubory v `onboarding/` neupravuj. Nikdy necommituj ani nepushuj sám.
-- Když se agent SPOCKu chová divně, projdi s uživatelem `diagnostika.md` shora dolů. U nálezů z části „Nálezy, které hlásíte“ připomeň, jak je poslat týmu CoE Product Management (úroveň 4, lekce 4.4).
+- Když se agent SPOCKu chová divně, projdi s uživatelem `diagnostika.md` shora dolů. U nálezů z části „Nálezy, které hlásíte“ připomeň, jak je poslat týmu CoE Product Management (úroveň 3, lekce 3.6).
 - Na konci sezení připomeň zápis do deníku (`denik.md` mimo složku SPOCKu) a nabídni `pripravenost.md` pro dokončenou úroveň.
 
 ## Pravidla pro odpovědi

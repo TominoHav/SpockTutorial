@@ -23,6 +23,8 @@
 | **RUN-STATE.md** | Záznam běhu: stav fází, podpisy, verze know-how. |
 | **Free-roam** | Práce mimo běh, bez bran a bez záznamu. Zpráva musí začínat doslovně `free-roam:`. |
 | **PM, PD, SWE, GM** | Zkratky rolí: Product Manager, Product Designer, Software Engineer a Guild Master, správce některé z pěti oblastí know-how. |
+| **Know-how** | Co agenti čtou a nikdy nepíší. Má pět oblastí: Compliance, Market, Method, Product a Writing. Všechny vlastní Česká spořitelna, osobu pro každou oblast teprve jmenuje. |
+| **Nález** | Chování SPOCKu, které se má nahlásit týmu CoE Product Management. Obsahuje verzi, fázi, agenta, co jste udělali a čekali, ZIP běhu a exportované chaty (lekce 3.6). |
 | **REDIM** | Interní systém ČS pro žádosti o oprávnění (role). Pro SPOCK: `CSIN\vcs_github_copilot`, `CSIN\GHB_DEV_SPOCK_WRITE`, `CSIN\CAAUTH_USR`. |
 | **Solveo / Self Service+** | Firemní katalogy softwaru: Solveo pro Windows, Self Service+ pro Mac. |
 | **caauth-cli** | Program, který nainstaluje SSH certifikát pro přístup k firemnímu GitHubu. |

@@ -28,7 +28,7 @@ function tSnapshot(){
   const T = TRK.doc; if (!T) return;
   T.last = tNow(); T.role = S.role || null;
   const mods = {}; let done = 0, tot = 0;
-  W.forEach(w => { const t = weekTotals(w); mods[w.id] = [t.done, t.tot, w.days.filter((_, di) => lessonDone(w, di)).length, w.days.length, quizPassed(w) ? 1 : 0, cardsAll(w), cardsTotal(w)]; if (applies(w) && w.id !== 'l1b') { done += t.done; tot += t.tot; } });
+  W.forEach(w => { const t = weekTotals(w); mods[w.id] = [t.done, t.tot, w.days.filter((_, di) => lessonDone(w, di)).length, w.days.length, quizPassed(w) ? 1 : 0, cardsAll(w), cardsTotal(w)]; if (counts(w)) { done += t.done; tot += t.tot; } });
   T.prog = {xp:S.xp || 0, pct:tot ? Math.round(100 * done / tot) : 0, mods, loc:tLoc(), badges:Object.keys(S.badges || {}).filter(k => k.startsWith('got.')).length, streak:streak(), sim:!!(S.badges && S.badges.sim), video:!!S.seenVideo};
   T.devs = Object.keys(S.proof || {}).filter(k => { const [wid, di, ti] = k.split('.'), w = W.find(x => x.id === wid), t = w && w.days[+di] && w.days[+di].todo[+ti]; return t && t.check && t.check.kind === 'seen' && S.proof[k] !== t.check.a; });
   T.ptries = Object.assign({}, S.ptries || {});
@@ -270,7 +270,7 @@ function renderDash(){
     ['Dokončili Přípravu', rows.filter(r => mod(r, 'l1')[0] === mod(r, 'l1')[1]).length],
     ['Dokončili modul své role', rows.filter(r => { const w = roleMod(r); return w && mod(r, w.id)[0] === mod(r, w.id)[1]; }).length],
     ['Dokončili Pokročilý', rows.filter(r => mod(r, 'l3')[0] === mod(r, 'l3')[1]).length],
-    ['Dokončili Superuser', rows.filter(r => mod(r, 'l4')[0] === mod(r, 'l4')[1]).length]];
+    ['Dokončili Superuser (jen GM)', rows.filter(r => mod(r, 'l4')[0] === mod(r, 'l4')[1]).length]];
   const funnel = steps.map((s, i) => [s[0], s[1], i && steps[i - 1][1] ? Math.round(100 * s[1] / steps[i - 1][1]) + ' % z předchozího' : '']);
   // kde se ztrácejí
   const stuck = rows.filter(r => now - r.last > 3 * 864e5 && (r.prog || {}).pct < 100);
