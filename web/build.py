@@ -22,9 +22,9 @@ extra_css = """
 .journey.four{grid-template-columns:repeat(4,minmax(0,1fr))}
 .journey.three{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media (max-width:1100px){.journey.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.jstep.other{opacity:.6}
+.jstep.other{opacity:.85}
 .jstep.other:hover{opacity:1}
-.rail button.dim{opacity:.55}
+.rail button.dim{color:var(--ink-3)}
 .tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px;margin-bottom:10px}
 .tw table{border-collapse:collapse;width:100%;font-size:14px}
 .tw th,.tw td{text-align:left;vertical-align:top;padding:8px 12px;border-bottom:1px solid var(--line)}

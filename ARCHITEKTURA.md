@@ -73,6 +73,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
+| [#48](https://github.com/TominoHav/SpockTutorial/pull/48) | Aplikace | Výkon a přístupnost: rychlejší vykreslení lekce, pozastavení animací při nečinnosti a mimo obrazovku, kontrast podle WCAG AA, jazyk stránky, větší dotykové plochy na mobilu | 16. 11. 2026 |
 | [#47](https://github.com/TominoHav/SpockTutorial/pull/47) | Aplikace | Oslavné finále cesty: scéna Setkání se Spockem s ohňostrojem, paprsky, posádkou agentů a fanfárou, medaile absolventa, společný odlet v lodi, správné skloňování | 16. 11. 2026 |
 | [#46](https://github.com/TominoHav/SpockTutorial/pull/46) | Aplikace | Přehlednější mobil: lišta úrovní (jen kroky a jeden řádek s názvem a procenty), statistiky a profil v mřížce, mapa s procenty, kratší hlavička; doplněné e2e scénáře (oslava úrovně, mluvený komentář, zmrazení série) | 16. 11. 2026 |
 | [#45](https://github.com/TominoHav/SpockTutorial/pull/45) | Aplikace | Vzhledy Spocka podle hodnosti: vlastní barvy a doplněk (šátek, sluchátka, medaile, hvězdy, koruna s pláštěm, trysky) místo přebarvení | 16. 11. 2026 |

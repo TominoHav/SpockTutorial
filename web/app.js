@@ -1160,7 +1160,8 @@ function renderWeek(id){
     <div class="qlaunch c-${w.c} ${qr ? '' : 'qlock'}">${spockSVG('fab')}<div><b>Kvíz modulu · ${Math.min(QN, w.quiz.length)} otázek ze ${w.quiz.length}</b><span>${qp ? `Splněno: ${S.qpass[w.id].right} z ${S.qpass[w.id].total} napoprvé.` : qr ? `Otázky se losují a míchají. Na splnění potřebujete ${Math.ceil(Math.min(QN, w.quiz.length) * QPASS)} z ${Math.min(QN, w.quiz.length)} napoprvé.` : `Karty: ${ca} z ${ct}.`}</span></div><button class="btn ${qr && !qp ? 'primary' : ''}" type="button" data-quiz="${w.id}" ${qr ? '' : 'disabled'}>${qp ? 'Zopakovat kvíz' : qr ? 'Spustit kvíz' : LOCK + ' Po kartách'}</button></div>
     ${qp ? `<details class="qreview"><summary>Všechny otázky kvízu s vysvětlením</summary><div class="quiz c-${w.c}">${quiz}</div></details>` : ''}
     <div class="navrow">${prev?`<button class="btn" type="button" data-week="${prev.id}">← ${esc(prev.title)}</button>`:'<span></span>'}${next?`<button class="btn ${qp ? 'primary' : ''}" type="button" data-week="${next.id}">${esc(next.title)} →</button>`:`<button class="btn primary" type="button" data-go="ready">Připravenost →</button>`}</div>`);
-  glossify(document.querySelector('.lpanel') || document.querySelector('.main'));
+  /* vysvětlivky až po vykreslení lekce, aby se lekce ukázala hned */
+  { const gr = document.querySelector('.lpanel') || document.querySelector('.main'), go = () => { if (gr.isConnected) glossify(gr); }; (window.requestIdleCallback || setTimeout)(go, {timeout:300}); }
   const um = document.querySelector('.unit-more');
   if (um) um.addEventListener('click', () => { const u = um.closest('.unit'), o = u.classList.toggle('open'); um.textContent = o ? 'Méně' : 'Více'; um.setAttribute('aria-expanded', o); });
   const pl = document.querySelector('.pd-line'), po = pl && pl.querySelector('.pd-s.on');
@@ -1547,3 +1548,15 @@ function gFiles(){
 /* po načtení: zvolený vzhled Spocka a případné zakrytí vynechaného dne zmrazením */
 if (!S.rankLvl) S.rankLvl = rank().lvl;   /* stávající uživatelé: odměny až od další hodnosti */
 applySkin(); try { useFreezes(); } catch (e) {}
+/* výkon: dekorativní animace (Spock, hvězdy, mapa) běží jen, když na ně člověk kouká. Po 15 s bez pohybu
+   a u prvků mimo obrazovku se pozastaví; pohyb myši, dotyk, posun nebo klávesa je zase rozběhne. */
+(function(){
+  let h = null; const wake = () => { document.body.classList.remove('calm'); clearTimeout(h); h = setTimeout(() => document.body.classList.add('calm'), 15000); };
+  ['pointermove','pointerdown','scroll','keydown','touchstart'].forEach(ev => addEventListener(ev, wake, {passive:true}));
+  wake();
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('offscreen', !e.isIntersecting)));
+  const watch = () => document.querySelectorAll('.hx-art,.spmap,.pc-me,.qlaunch').forEach(el => { if (!el.dataset.io) { el.dataset.io = 1; io.observe(el); } });
+  new MutationObserver(watch).observe(document.getElementById('app'), {childList:true}); watch();
+})();
+document.documentElement.lang = 'cs';   /* přístupnost: jazyk stránky pro čtečky obrazovky */

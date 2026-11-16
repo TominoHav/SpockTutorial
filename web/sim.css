@@ -318,3 +318,20 @@ body.msg-on .g-bubble{display:none}
 /* mobil: vše kromě planety v mapě patří do pravého sloupce; menší plovoucí Spock */
 @media (max-width:980px){.sw>*:not(.sw-pl):not(.sw-spock):not(.sw-me){grid-column:2}.sw-x{gap:16px}}
 @media (max-width:760px){.g-fab .spock{width:58px}.g-fab .g-bubble{font-size:12.5px}}
+
+/* přístupnost: kontrast a dotykové plochy (WCAG 2.1 AA) */
+.ladder li.todo{opacity:1}.ladder li.todo>div b{color:var(--ink-2)}
+.badge:not(.on){opacity:1}.badge:not(.on) span,.badge:not(.on) b{color:var(--ink-3)}
+.pc-b:not(.on){opacity:1}
+.tm.xp{color:var(--purple)}
+.where.web{color:var(--ok)}
+.cheat code,.tbl code,.tw code{font-size:max(12px,.88em)}
+@media (max-width:760px){
+  .top .pill,.top .brand{min-height:40px}
+  .linkbtn{display:inline-block;padding-block:8px;margin-block:-8px}
+  input[type=checkbox][data-todo],input[type=checkbox][data-ready]{width:22px;height:22px}
+  .unit-more{padding:8px 4px}
+  .tm,.where{font-size:12px}
+}
+/* odkazy v textu: na mobilu větší dotyková plocha bez změny řádkování */
+@media (max-width:760px){#app p a,#app li a,#app td a{display:inline-block;padding-block:4px;margin-block:-4px}}
