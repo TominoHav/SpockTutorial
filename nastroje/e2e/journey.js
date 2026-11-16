@@ -175,6 +175,19 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  if(!CTX)CTX=await p.evaluate(()=>__kviz.ctx());
  // trvalost
  await dismiss();const before=await st();await p.reload();await p.waitForTimeout(300);const after=await st();
+ await p.locator('#home-btn').click();await p.waitForTimeout(200);
+ ok(T('úvod: vesmírná mapa má svět pro každou úroveň cesty a cíl se Spockem'), await p.locator('.spmap .sw').count()===6 && await p.locator('.spmap .sw.end').count()===1);
+ ok(T('šatna je zamčená, dokud cesta není hotová'), await p.locator('[data-wardrobe]').count()===0);
+ await p.evaluate(()=>__kviz.finish());await p.waitForTimeout(300);await dismiss();
+ await p.locator('.spmap [data-wardrobe]').click();await p.waitForTimeout(200);
+ await p.locator('[data-av="acc:cape"]').click();await p.waitForTimeout(150);
+ ok(T('cíl cesty: šatna oblékne postavičku'), (await st()).av.acc==='cape' && await p.locator('#wardrobe .avatar').count()===1);
+ await p.locator('[data-fly]').click();await p.waitForTimeout(300);
+ ok(T('odlet spustí příběh cesty se scénou pro každý svět'), (await p.locator('#story .st-cap .eyebrow').innerText()).includes('1/8'));
+ for(let i=0;i<7;i++){await p.locator('#story [data-st=next]').click();await p.waitForTimeout(80);}
+ ok(T('příběh jde projít do konce a zavřít'), (await p.locator('#story .st-cap h2').innerText())==='Odlet');
+ await p.locator('#story [data-st=next]').click();await p.waitForTimeout(200);
+ ok(T('po příběhu se stránka vrátí a nepřetéká'), await p.locator('#story').count()===0 && (await ov())<=0);
  await p.evaluate(()=>document.querySelector('[data-go=badges]').click());await p.waitForTimeout(200);
  ok(T('profil: postup v hodnostech a odemčené vzhledy Spocka'), await p.locator('.ladder li').count()===7 && await p.locator('.skin[data-setskin]').count()>=2 && await p.locator('.ladder li.cur').count()===1);
  await p.locator('.skin[data-setskin]').nth(1).click();await p.waitForTimeout(150);

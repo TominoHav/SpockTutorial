@@ -169,3 +169,74 @@ body[data-skin=duha] .spock>*{animation:skinHue 8s linear infinite}
 .sk-art .spock{width:52px;height:auto;overflow:visible}
 .sk-art .lockic{width:26px;height:26px;fill:var(--ink-3);stroke:var(--ink-3)}
 .pstats{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+/* ---------- vesmírná cesta ---------- */
+.spmap{position:relative;border-radius:16px;background:radial-gradient(120% 140% at 15% 0%,#2A2470 0%,#141033 55%,#0B0920 100%);color:#fff;padding:26px 18px 20px;overflow:hidden}
+.sp-stars{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1.5px 1.5px at 12% 22%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 28% 68%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 44% 14%,#C9B6FF 50%,transparent 51%),radial-gradient(1px 1px at 58% 78%,#fff 50%,transparent 51%),radial-gradient(2px 2px at 71% 30%,#7DE3F4 50%,transparent 51%),radial-gradient(1px 1px at 83% 62%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 93% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 6% 84%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 36% 40%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 65% 52%,#F2B544 50%,transparent 51%);opacity:.8;animation:twinkle 5s ease-in-out infinite alternate}
+@keyframes twinkle{to{opacity:.45}}
+.sp-route{position:relative;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.sp-route.five{grid-template-columns:repeat(6,minmax(0,1fr))}
+.sp-route::before{content:"";position:absolute;left:8%;right:8%;top:62px;border-top:2px dashed rgba(255,255,255,.35)}
+.sw{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;padding-top:34px;min-width:0}
+.sw h3{font-size:14.5px;margin:6px 0 0;color:#fff}
+.sw-m{font-size:12px;color:rgba(255,255,255,.7);margin:0}
+.sw-foe{font-size:12px;color:#FFD9A0;margin:0;line-height:1.35}
+.sw-foe.won{color:#9BE8C0}
+.sw-pl{position:relative;z-index:1;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 28%,color-mix(in srgb,var(--pc) 55%,#fff),var(--pc) 55%,color-mix(in srgb,var(--pc) 60%,#000));box-shadow:0 0 0 4px rgba(255,255,255,.08),0 6px 18px rgba(0,0,0,.45);font-weight:800;color:#fff}
+.sw-pl::after{content:"";position:absolute;left:-9px;right:-9px;top:50%;height:10px;margin-top:-5px;border:2px solid rgba(255,255,255,.45);border-radius:50%;transform:rotate(-18deg)}
+.sw-pl .lockic{width:18px;height:18px;fill:#fff;stroke:#fff}
+.sw.locked .sw-pl{filter:grayscale(.85) brightness(.8)}
+.sw.locked h3,.sw.locked .sw-m{opacity:.75}
+.sw.tbd .sw-pl{background:none;border:2px dashed #C9B6FF}
+.sw-bar{width:70%;height:5px;border-radius:3px;background:rgba(255,255,255,.18);overflow:hidden;margin:2px 0}
+.sw-bar i{display:block;height:100%;background:linear-gradient(90deg,#F2B544,#9BE8C0)}
+.spmap .linkbtn{color:#fff;font-size:13.5px}
+.sw-me{position:absolute;top:-6px;left:50%;transform:translateX(-50%);z-index:2;animation:hover 2.4s ease-in-out infinite}
+.sw-me .avatar{width:30px;height:auto;overflow:visible;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
+@keyframes hover{50%{transform:translate(-50%,-5px)}}
+.sw-spock .spock{width:56px;height:auto;overflow:visible}
+.sw.end .btn{margin-top:4px}
+@media (max-width:980px){.spmap{padding:16px 14px}.sp-route,.sp-route.five{grid-template-columns:1fr;gap:12px}.sp-route::before{left:41px;right:auto;top:30px;bottom:30px;border-top:0;border-left:2px dashed rgba(255,255,255,.35)}
+  .sw{display:grid;grid-template-columns:56px minmax(0,1fr);column-gap:14px;row-gap:1px;text-align:left;justify-items:start;padding:0 0 0 14px;align-items:start}
+  .sw-pl,.sw-spock{grid-row:1/span 5}.sw h3{margin:0}.sw-me{top:-4px;left:auto;right:6px;transform:none;animation:none}.sw-bar{width:60%}}
+@media (prefers-reduced-motion:reduce){.sp-stars,.sw-me{animation:none}}
+/* postavička, šatna */
+.avatar.big{width:92px;height:auto;overflow:visible}
+.avbox{display:flex;align-items:center;gap:18px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px 18px}
+.avbox .lockic{width:14px;height:14px;vertical-align:-2px;fill:var(--ink-3);stroke:var(--ink-3)}
+.wd-card{width:min(460px,100%)}
+.wd-prev{padding:8px 0 2px}
+.wd-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;width:100%}
+.wd-row>span{font-size:13px;font-weight:700;color:var(--ink-2);min-width:74px;text-align:right}
+.wd-sw{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);background:var(--sw);cursor:pointer}
+.wd-sw.on{box-shadow:0 0 0 3px color-mix(in srgb,var(--sw) 40%,transparent);border-color:var(--ink)}
+/* závěrečný příběh */
+.story{position:fixed;inset:0;z-index:1300;background:#0B0920;color:#fff;display:grid}
+.st-stage{position:relative;display:grid;grid-template-rows:1fr auto auto;overflow:hidden;background:radial-gradient(120% 120% at 20% 0%,#2A2470 0%,#141033 55%,#0B0920 100%)}
+.st-art{position:relative;min-height:230px}
+.st-art>span{position:absolute}
+.st-planet{right:10%;top:16%;width:min(34vw,220px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 32% 28%,color-mix(in srgb,var(--pc) 55%,#fff),var(--pc) 55%,color-mix(in srgb,var(--pc) 55%,#000));box-shadow:0 0 60px color-mix(in srgb,var(--pc) 50%,transparent);animation:simIn .8s ease-out}
+.st-foe{right:10%;top:calc(16% + min(34vw,220px) + 10px);width:min(34vw,220px);text-align:center;font-size:13px;font-weight:700;color:#FFD9A0}
+.st-ship .ship{width:min(30vw,170px);height:auto;overflow:visible}
+.st-ship.fly{left:-30%;top:38%;animation:shipFly 6s ease-in-out forwards}
+.st-ship.idle{left:12%;bottom:8%}
+.st-ship.away{left:20%;top:55%;animation:shipAway 6s ease-in forwards}
+@keyframes shipFly{to{left:28%;top:30%}}
+@keyframes shipAway{to{left:110%;top:4%;transform:scale(.35)}}
+.ship-fl{animation:flame .25s ease-in-out infinite alternate;transform-origin:14px 30px}
+@keyframes flame{to{transform:scaleX(.6)}}
+.st-guide{left:6%;bottom:4%}
+.st-guide .spock,.st-wave .spock{width:70px;height:auto;overflow:visible}
+.st-guide.center{left:54%;bottom:8%}.st-guide.center .spock{width:120px}
+.st-av.walk{left:44%;bottom:10%;animation:avWalk 5s ease-in-out forwards}
+.st-av .avatar{width:54px;height:auto;overflow:visible}
+.st-av.center{left:30%;bottom:10%}
+@keyframes avWalk{to{left:20%}}
+.st-wave{left:8%;bottom:8%;animation:hover 1.6s ease-in-out infinite}
+.st-cap{position:relative;padding:0 max(20px,8vw) 14px;max-width:900px}
+.st-cap .eyebrow{color:#C9B6FF}
+.st-cap h2{font-size:clamp(24px,4vw,38px);margin:4px 0 6px;color:#fff}
+.st-cap p{font-size:clamp(15px,2vw,18px);line-height:1.5;color:rgba(255,255,255,.88);margin:0}
+.st-bar{position:relative;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px max(20px,8vw) calc(16px + env(safe-area-inset-bottom,0px))}
+.st-bar .bar{flex:1;min-width:120px;height:6px;background:rgba(255,255,255,.2)}
+@media (prefers-reduced-motion:reduce){.st-ship.fly{left:28%;top:30%;animation:none}.st-ship.away{animation:none}.st-av.walk,.st-wave,.ship-fl,.st-planet{animation:none}}
+@media (max-width:980px){.sw-me{right:auto;left:0;top:-14px}}
