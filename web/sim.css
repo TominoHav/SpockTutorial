@@ -335,3 +335,4 @@ body.msg-on .g-bubble{display:none}
 }
 /* odkazy v textu: na mobilu větší dotyková plocha bez změny řádkování */
 @media (max-width:760px){#app p a,#app li a,#app td a{display:inline-block;padding-block:4px;margin-block:-4px}}
+.rung .rn span{color:var(--surface)}

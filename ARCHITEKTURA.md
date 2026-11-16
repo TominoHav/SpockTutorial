@@ -9,12 +9,12 @@ Jediný zdroj obsahu jsou lekce v markdownu. Web i oba průvodci z nich čtou. �
 ```mermaid
 flowchart LR
   S["Repozitář SPOCKu<br/>zdroj pravdy"] -->|podle něj| O["Obsah: onboarding/<br/>lekce v markdownu"]
-  O --> A["Web na claude.ai<br/>lekce, videa, chat Spock,<br/>měření a dashboard"]
+  O --> A["Web na claude.ai<br/>lekce, hra a vesmírná cesta,<br/>videa, chat Spock,<br/>měření a dashboard"]
   O --> P["Průvodce v Claude Code<br/>/spock-onboarding"]
   O --> G["Spock průvodce<br/>v GitHub Copilotu"]
   S -.->|měsíčně porovnává| U["Údržba<br/>kontrola aktuálnosti<br/>/spock-aktualnost"]
   U -.->|navrhne úpravy| O
-  O -.->|při každé změně| K["Automatické kontroly<br/>struktura, odpovědi,<br/>e2e test webu"]
+  O -.->|při každé změně| K["Automatické kontroly<br/>struktura, odpovědi,<br/>e2e, přístupnost, výkon"]
   U --> V["Vy: schvalujete<br/>pull request a publikaci"]
   K --> V
 ```
@@ -31,7 +31,8 @@ Plné šipky: kudy teče obsah. Čárkované: údržba a kontroly, které hlída
 | Sestavený web ke stažení | GitHub Actions → Kontroly → běh na `main` → Artifacts |
 | Měsíční kontrola aktuálnosti | naplánovaná úloha Clauda, 1. v měsíci v 8:56, navázaná na jedno sezení |
 | Měření průchodu a zpětná vazba | databáze stránky na claude.ai: `track/<člověk>` a `feedback/<člověk>`, vidí je jen vlastník a editoři; kód ve `web/track.js` |
-| Dashboard | na webu, tlačítko Dashboard v horní liště, jen pro vlastníka. Záložky: **Lidé a průchod** a **Verze a kvalita** (testy, výkon, tokeny a historie verzí, `versions/<verze>` v databázi stránky) |
+| Dashboard | na webu, tlačítko Dashboard v horní liště, jen pro vlastníka. Záložky: **Lidé a průchod** a **Verze a kvalita** (e2e testy, přístupnost, výkon, tokeny a historie verzí, `versions/<verze>` v databázi stránky) |
+| Pokrok a hra uživatele | jen v prohlížeči uživatele (`localStorage`): odškrtnuté úkoly, XP, hodnost, série, vzhled Spocka, postavička, zvuk |
 | Úkoly, které musí udělat lidé | [revize/TODO-VLASTNIK.md](revize/TODO-VLASTNIK.md) |
 
 Web se po sloučení změny **sám nepublikuje**. Postup je ve [web/README.md](web/README.md). Verze je v patičce webu.
@@ -40,10 +41,24 @@ Web se po sloučení změny **sám nepublikuje**. Postup je ve [web/README.md](w
 
 | Vrstva | K čemu | Soubory |
 |---|---|---|
-| **Obsah** | Co se učí. Mění se nejčastěji. | `materialy/bootcamp/`: zdrojová PDF z bootcampu; `onboarding/*.md`: úrovně 0–4, moduly rolí PM, PD, SWE, GM a volitelná příručka Fáze do hloubky, lekce jako krátké karty s otázkou, úkoly se štítkem kde se dělají; tahák, slovník, diagnostika, zásady, připravenost; `POKROK.md` pro průvodce v Claude Code |
-| **Aplikace** | Jak se to ukazuje. Web ve stylu Duolinga. | `web/parse.py` čte lekce, `web/build.py` skládá stránku; `app.js` (cesta, lekce, kvízy, odznaky, chat se Spockem); `sim.js` (simulace SPOCK nanečisto, vysvětlivky, dotazník); `nastroje/video/` (výroba videí SPOCK krok za krokem); `track.js` (měření průchodu, zpětná vazba, dashboard vlastníka); `*.css`, `media/`. Návod v [web/README.md](web/README.md) |
-| **Údržba** | Aby tutoriál nezastaral, když se SPOCK mění. | [SPOCK-VERZE.md](SPOCK-VERZE.md): vydání a commit SPOCKu; `nastroje/spock-otisk.json`: otisk všech souborů SPOCKu v této verzi; `nastroje/kontrola-aktualnosti.py`: mechanická kontrola odkazů a změn; `nastroje/e2e/journey.js`: end-to-end test webu; `nastroje/generuj-pokrok.py`: přehled pokroku z lekcí; `nastroje/kontrola-struktury.py`: seznam modulů je všude stejný; `nastroje/kontrola-odpovedi.py`: hlídá, že se správná odpověď nedá uhodnout podle délky; `nastroje/generuj-revizi.py`: kontrolní seznam pro odbornou kontrolu (`revize/`); `/spock-aktualnost`: měsíční kontrola v Claude Code |
+| **Obsah** | Co se učí. Mění se nejčastěji. | `materialy/bootcamp/`: zdrojová PDF z bootcampu; `onboarding/*.md`: úrovně 0–3 pro všechny, modul role na úrovni 2 (PM, PD, SWE, GM), úroveň 4 Superuser jen pro Guild Mastery a volitelná příručka Fáze do hloubky; lekce jako krátké karty s otázkou, úkoly se štítkem, kde se dělají; tahák, slovník, diagnostika, zásady, připravenost; `POKROK.md` pro průvodce v Claude Code |
+| **Aplikace** | Jak se to ukazuje. | `web/parse.py` čte lekce, `web/build.py` skládá jednu stránku (styly bez komentářů, písmo až po vykreslení, zprávy z testů pro dashboard). `app.js`: lekce, kvízy a skokový test, chat se Spockem, **hra** (XP, hodnosti s odměnami, vzhledy Spocka, denní výzvy, zmrazení série, odznaky), **vesmírná cesta** (mapa světů a překážek, postavička, minihry, shrnutí úrovně, šatna a příběh s oslavou v cíli), zvuk a mluvený komentář. `sim.js`: simulace SPOCK nanečisto, vysvětlivky pojmů, dotazník. `track.js`: měření průchodu, zpětná vazba, dashboard vlastníka. `nastroje/video/`: výroba videí. `*.css`, `media/`. Návod v [web/README.md](web/README.md) |
+| **Údržba** | Aby tutoriál nezastaral a nerozbil se. | [SPOCK-VERZE.md](SPOCK-VERZE.md): vydání a commit SPOCKu; `nastroje/spock-otisk.json`: otisk všech souborů SPOCKu v této verzi; `nastroje/kontrola-aktualnosti.py`: mechanická kontrola odkazů a změn; **testy webu** v `nastroje/e2e/` (viz níže); `nastroje/generuj-pokrok.py`: přehled pokroku z lekcí; `nastroje/kontrola-struktury.py`: seznam modulů je všude stejný; `nastroje/kontrola-odpovedi.py`: správná odpověď se nedá uhodnout podle délky; `nastroje/generuj-revizi.py`: kontrolní seznam pro odbornou kontrolu (`revize/`); `/spock-aktualnost`: měsíční kontrola v Claude Code |
 | **Průvodci** | Kdo uživateli pomáhá. | `/spock-onboarding`: průvodce v Claude Code, zapisuje pokrok; agent **Spock průvodce** v GitHub Copilotu (`.github/agents/spock-pruvodce.agent.md`), stejná pravidla; Spock na webu: chat, který zná celý modul, ve kterém uživatel je, a přehled ostatních |
+
+## Automatické testy webu
+
+Běží na GitHubu při každém pull requestu a po sloučení do `main`. Když kterýkoli selže, kontroly jsou červené. Jdou pustit i ručně (postup ve [web/README.md](web/README.md)).
+
+| Test | Co hlídá | Kolik kontrol |
+|---|---|---|
+| `nastroje/e2e/journey.js` | Cesta uživatele na počítači i mobilu: simulace, role, karty, úkoly s ověřením, kvíz, zámky a skokový test, všech 9 modulů, opora, chat, dashboard, hra (výzvy, hodnosti, vzhledy), vesmírná mapa, minihry, shrnutí, šatna a příběh, oslava po dokončení úrovně, mluvený komentář se zkušebním hlasem, zmrazení série | 185 |
+| `nastroje/e2e/pristupnost.js` | Průchod za každou roli (PM, PD, SWE, GM) na mobilu i počítači; přístupnost podle WCAG 2 A a AA nástrojem axe-core na osmi stránkách ve světlém i tmavém režimu; dotykové plochy na mobilu aspoň 24 × 24 px | 56 |
+| `nastroje/e2e/vykon.js` | Rozpočty: velikost stránky (700 kB, po kompresi 230 kB), první vykreslení, vykreslení lekce (150 ms) a opory, procesor po 15 s nečinnosti, počet prvků na stránce | 7 |
+
+Každý test zapíše zprávu do `web/dist/` a `build.py` ji přiloží do stránky, jen když test běžel nad stejnými zdroji. Dashboard pak na záložce **Verze a kvalita** ukáže, co neprošlo nebo neběželo.
+
+Co testy neověří: jak zní mluvený komentář na konkrétním zařízení, jak rychlá je stránka u skutečných lidí (to měří dashboard) a jestli lekcím rozumí nováček (na to je pilot v `revize/PILOT-S-NOVACKY.md`).
 
 ## Kudy jde která změna
 
@@ -52,7 +67,8 @@ Každá změna jde na vlastní větev a do pull requestu. Do hlavní větve se s
 | Co se mění | Vrstva a kde | Co následuje |
 |---|---|---|
 | Text lekce, karta, úkol, kvíz | Obsah: `onboarding/*.md` (karty pod `### Karty`, `#### název`, otázka `**Otázka:**` a `- [x]`; u úkolu `- *Ověření:*` nebo `- *Co jste viděli:*` s možnostmi `- [x]`, volitelně `- *Nápověda:*` a `- *Když ne:*`) | Spustit `nastroje/kontrola-odpovedi.py` (správná odpověď nesmí být poznat podle délky), sestavit web, publikovat. Nový úkol nebo karta jen na konec lekce. |
-| Vzhled nebo funkce webu | Aplikace: `web/app.js`, `sim.js`, `*.css` | Sestavit web, otestovat počítač, mobil a tmavý režim, publikovat. |
+| Vzhled nebo funkce webu | Aplikace: `web/app.js`, `sim.js`, `*.css` | Sestavit web, pustit všechny tři testy z `nastroje/e2e/`, k nové funkci přidat kontrolu do `journey.js`, publikovat. |
+| Hra: body, hodnosti, odměny, světy a překážky | Aplikace: `web/app.js` (`XP`, `RANKS_ALL`, `SKINS`, `QUESTS`, `WORLDS`) | Přepočítat, že na nejvyšší hodnost dosáhne každá role na své cestě; pustit testy. |
 | Simulace, vysvětlivky pojmů, popisy rolí | Aplikace: `sim.js`, `app.js` | Texty jsou mimo markdown, proto je hlídá i měsíční kontrola. |
 | Přejmenovaný nebo nový soubor lekce | Průvodci: `.claude/skills/spock-onboarding/SKILL.md` a `.github/agents/spock-pruvodce.agent.md` | Oba průvodci mají seznam lekcí, upravit ho v obou. |
 | Nové vydání SPOCKu | Údržba: `/spock-aktualnost` | Zpráva se závažností, schválení, úprava lekcí, nový zápis v `SPOCK-VERZE.md`. |
@@ -64,7 +80,9 @@ Každá změna jde na vlastní větev a do pull requestu. Do hlavní větve se s
 2. **Nový úkol na konec lekce, nová lekce na konec modulu.** Pořadí úkolů je klíč uloženého pokroku uživatelů.
 3. **Každé tvrzení o SPOCKu má oporu ve SPOCKu.** Odkazy kontroluje skript, odpovědi u ověření z VS Code jsou z kopie SPOCKu.
 4. **Nic se neslučuje ani nepublikuje bez schválení.** Větev, pull request, zelené kontroly, schválení, pak sloučení.
-5. **Web je soukromý.** Otevře ho jen ten, s kým ho vlastník sdílí z menu stránky. Pokrok se ukládá v prohlížeči uživatele, průchod se měří jmenovitě a vidí ho jen vlastník a editoři.
+5. **Web projde testy přístupnosti a výkonu.** Kontrast a dotykové plochy podle WCAG 2 AA ve světlém i tmavém režimu, rozpočty na velikost a rychlost. Nová barva nebo větší stránka se pozná hned v kontrolách.
+6. **Úroveň 4 je jen pro Guild Mastery.** Ostatní role ji nevidí a jejich cesta i „Hotovo %“ končí úrovní 3.
+7. **Web je soukromý.** Otevře ho jen ten, s kým ho vlastník sdílí z menu stránky. Pokrok se ukládá v prohlížeči uživatele, průchod se měří jmenovitě a vidí ho jen vlastník a editoři.
 
 ## Historie změn
 
@@ -73,6 +91,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
+| [#49](https://github.com/TominoHav/SpockTutorial/pull/49) | Údržba | Automatické testy přístupnosti a výkonu v kontrolách na GitHubu a v dashboardu, oprava kontrastu diagnostiky v tmavém režimu, aktualizovaná architektura | 16. 11. 2026 |
 | [#48](https://github.com/TominoHav/SpockTutorial/pull/48) | Aplikace | Výkon a přístupnost: rychlejší vykreslení lekce, pozastavení animací při nečinnosti a mimo obrazovku, kontrast podle WCAG AA, jazyk stránky, větší dotykové plochy na mobilu | 16. 11. 2026 |
 | [#47](https://github.com/TominoHav/SpockTutorial/pull/47) | Aplikace | Oslavné finále cesty: scéna Setkání se Spockem s ohňostrojem, paprsky, posádkou agentů a fanfárou, medaile absolventa, společný odlet v lodi, správné skloňování | 16. 11. 2026 |
 | [#46](https://github.com/TominoHav/SpockTutorial/pull/46) | Aplikace | Přehlednější mobil: lišta úrovní (jen kroky a jeden řádek s názvem a procenty), statistiky a profil v mřížce, mapa s procenty, kratší hlavička; doplněné e2e scénáře (oslava úrovně, mluvený komentář, zmrazení série) | 16. 11. 2026 |

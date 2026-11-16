@@ -392,6 +392,10 @@ function renderDashVer(){
   const todo = [];
   if (!e) todo.push(['Testy', 'Pro tuto verzi neběžely end-to-end testy, nebo se web po nich změnil. Spusťte testy a web sestavte znovu (postup je ve web/README.md).']);
   else (e.failed || []).forEach(f => todo.push(['Neprošel test', f]));
+  [['Přístupnost', cur.a11y, 'nastroje/e2e/pristupnost.js'], ['Výkon', cur.perf, 'nastroje/e2e/vykon.js']].forEach(([n, r, f]) => {
+    if (!r) todo.push([n, 'Pro tuto verzi neběžel test ' + f + ', nebo se web po něm změnil.']);
+    else (r.failed || []).forEach(x => todo.push([n + ': neprošlo', x]));
+  });
   [[dSize, 'Stránka je větší', kB((P.size || {}).html) + ' → ' + kB((cur.size || {}).html) + '. Větší stránka se déle načítá, hlavně na mobilu.'],
    [dLoadD, 'Pomalejší načtení na počítači (v testu)', dMs(vLab(P, 'počítač', 'load')) + ' → ' + dMs(vLab(cur, 'počítač', 'load'))],
    [dLoadM, 'Pomalejší načtení na mobilu (v testu)', dMs(vLab(P, 'mobil', 'load')) + ' → ' + dMs(vLab(cur, 'mobil', 'load'))],
