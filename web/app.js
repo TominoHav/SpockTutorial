@@ -1052,11 +1052,12 @@ document.addEventListener('click', e => {
 });
 /* Video v okně: pustí se odkudkoli (tlačítko {{video}} v úkolu) */
 function playVideo(id){
-  S.vids = S.vids || {}; if (!S.vids[id || 'intro']) { S.vids[id || 'intro'] = 1; save(); try { trk('video', id || 'intro'); } catch (e) {} setTimeout(exCheck, 0); }
+  S.vids = S.vids || {}; const fresh = !S.vids[id || 'intro']; if (fresh) { S.vids[id || 'intro'] = 1; save(); try { trk('video', id || 'intro'); } catch (e) {} setTimeout(exCheck, 0); }
   const ov = document.createElement('div'); ov.className = 'vidov'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','Video: Co je SPOCK');
   ov.innerHTML = `<div class="vidov-in"><button type="button" class="g-x vidov-x" aria-label="Zavřít video">×</button>${vidTag(id)}</div>`;
   document.body.append(ov);
   const v = ov.querySelector('video'), close = () => { v.pause(); ov.remove(); };
+  v.addEventListener('error', () => { if (navigator.onLine) return; const vk = id || 'intro'; if (fresh && S.vids) { delete S.vids[vk]; save(); } ov.querySelector('.vidov-in').insertAdjacentHTML('beforeend', '<p class="vid-off" role="status">Video se bez připojení nenačte. Pusťte si ho, až budete online; ostatní lekce fungují dál.</p>'); }, true);
   ov.querySelector('.vidov-x').onclick = close;
   ov.addEventListener('click', e => { if (e.target === ov) close(); });
   ov.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
@@ -1570,6 +1571,7 @@ function gIntro(){
 const ERR = {rate_limited:'Teď je toho moc najednou. Zkuste to za chvíli.', session_expired:'Přihlaste se prosím znovu do Claude.', refused:'Na tohle průvodce neodpoví. Zkuste otázku formulovat jinak.', prompt_too_large:'Přiložené podklady jsou moc velké. Odeberte některé soubory.', empty_completion:'Odpověď přišla prázdná. Zkuste otázku zjednodušit.'};
 async function gAsk(q){
   q = String(q||'').trim(); if (!q || G.busy || !G.sample) return;
+  if (!navigator.onLine) { gAdd('u', esc(q)); $('#g-in').value = ''; gAdd('a', '<p><b>Jste offline.</b> Odpovím, až budete zase připojeni. Otázku tu nechám, stačí ji pak poslat znovu.</p><p>Mezitím pomůže <button class="g-link" type="button" data-go="cheat">tahák tasků</button>, <button class="g-link" type="button" data-go="diag">diagnostika</button> nebo <button class="g-link" type="button" data-go="gloss">slovníček</button>.</p>'); $('#g-in').value = q; try { trk('spock', 'offline'); } catch (e) {} return; }
   G.busy = true; document.body.classList.add('spock-busy'); $('#g-send').textContent = 'Stop'; $('#g-in').value = '';
   gAdd('u', esc(q)); G.turns.push({role:'user', content:q});
   if (!S.badges.spock) { S.badges.spock = true; save(); checkBadges(); }

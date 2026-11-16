@@ -104,14 +104,20 @@ document.addEventListener('timeupdate', () => { TRK.act = tNow(); }, true);
 document.addEventListener('visibilitychange', () => { if (document.hidden) { tFlush(); } else { TRK.curAt = tNow(); TRK.act = tNow(); } });
 window.addEventListener('pagehide', () => { tFlush(); });
 
-(async () => {
+/* Připojení k účtu a databázi. Bez sítě se nepovede; zkusí se znovu, jakmile je zařízení zpět online (viz offline režim níže). */
+async function tInit(){
+  if (TRK.ok || TRK.initing) return; TRK.initing = true;
+  try { await tInitRun(); } finally { TRK.initing = false; }
+  try { fbOutboxSend(); } catch (e) {}
+}
+async function tInitRun(){
   let db = null, user = null;
   try { db = await claude.use('db'); user = await claude.use('user'); } catch (e) {}
   if (!db || !user) return;
   let me = null; try { me = await user.me(); } catch (e) {}
   if (!me || !me.id) return;
   TRK.db = db; TRK.user = user; TRK.uid = me.id; TRK.owner = !!(me.isOwner || me.canEdit);
-  await pLoad(db, me.id);
+  if (!PROG.ready) await pLoad(db, me.id);
   let doc = null;
   try { const s = await db.doc('track/' + me.id).get(); doc = s.exists ? JSON.parse(JSON.stringify(s.data())) : null; } catch (e) { return; }
   const T = Object.assign(tBlank(), doc || {});
@@ -134,13 +140,14 @@ window.addEventListener('pagehide', () => { tFlush(); });
   TRK.doc = T; TRK.ok = true; TRK.dirty = true;
   trk('návštěva', T.dev.mobile ? 'mobil' : 'počítač');
   trackView(); await tFlush();
-  setInterval(tFlush, 20000);
+  if (!TRK.timer) TRK.timer = setInterval(tFlush, 20000);
   if (TRK.owner) {
     const pp = document.getElementById('pill-prog');
     if (pp && !document.getElementById('pill-dash')) pp.insertAdjacentHTML('afterend', '<button class="pill fb-pill" id="pill-dash" type="button" data-go="dash" aria-label="Dashboard: jak lidé procházejí tutoriálem a zpětná vazba" title="Dashboard: jak lidé procházejí tutoriálem a zpětná vazba"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="fb-t">Dashboard</span></button>');
     if (view.name !== 'week' && view.name !== 'home') render();
   }
-})();
+}
+tInit();
 
 /* ---------- zpětná vazba ---------- */
 const FB_KINDS = [['chyba','Chyba v obsahu'],['nejasne','Něčemu nerozumím'],['navrh','Návrh na zlepšení'],['technika','Něco nefunguje']];
@@ -176,6 +183,7 @@ function fbOpen(){
       } catch (err) {}
     }
     if (sent) { trk('zpětná vazba', item.kind); award('feedback.' + item.id, 10, 'zpětná vazba'); close(); toast('Díky. Zpětná vazba je u vlastníka tutoriálu.'); }
+    else if (!navigator.onLine || (TRK.uid && !TRK.ok) || NET.lost) { fbOutboxAdd(item); trk('zpětná vazba', item.kind + ' (ve frontě)'); close(); toast('Jste offline. Zpětnou vazbu odešlu sám, jakmile budete zase připojeni.'); }
     else {
       const txt = `Zpětná vazba k SPOCK tutoriálu\nKde: ${item.where}\nTyp: ${(FB_KINDS.find(k => k[0] === item.kind) || [])[1]}\nCo: ${item.text}\nNávrh: ${item.fix || '—'}`;
       try { await navigator.clipboard.writeText(txt); msg.textContent = 'Odeslat se nepodařilo. Text je ve schránce, pošlete ho prosím vlastníkovi tutoriálu.'; }
@@ -828,7 +836,7 @@ async function pLoad(db, uid){
       if (JSON.stringify(merged) !== before) { Object.keys(S).forEach(k => delete S[k]); Object.assign(S, merged); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} try { applySkin(); } catch (e) {} render(); }
       if ((remote.at || 0) < (S._at || 0) || JSON.stringify(remote.state) !== JSON.stringify(S)) pPush();
     } else if (Object.keys(S.todo || {}).length || S.role) pPush();
-  } catch (e) { PROG.ref = null; }
+  } catch (e) { PROG.ref = null; PROG.ready = false; }
 }
 function pSync(){ if (!PROG.ready || !PROG.ref) return; clearTimeout(PROG.h); PROG.h = setTimeout(pPush, 2000); }
 async function pPush(){
@@ -838,3 +846,48 @@ async function pPush(){
   PROG.busy = false;
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden && PROG.h) pPush(); });
+
+/* ---------- offline režim ----------
+   Hra, lekce, kvízy, minihry, výzvy i pokrok běží v zařízení (localStorage), takže bez sítě jde pokračovat.
+   Co síť potřebuje: synchronizace pokroku pod účtem, měření, zpětná vazba, chat se Spockem a videa.
+   Bez sítě: v hlavičce je štítek Offline, zpětná vazba čeká ve frontě v zařízení, chat to vysvětlí místo chyby.
+   Po připojení: znovu připojení k účtu (když se při startu nepovedlo), odeslání pokroku, měření a fronty. */
+const NET = {lost:false};
+const FB_OUT = 'spock-fb-outbox';
+function fbOutbox(){ try { const a = JSON.parse(localStorage.getItem(FB_OUT) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+function fbOutboxAdd(item){ const a = fbOutbox(); a.push(item); try { localStorage.setItem(FB_OUT, JSON.stringify(a.slice(-20))); } catch (e) {} netPill(); }
+async function fbOutboxSend(){
+  const a = fbOutbox(); if (!a.length || !TRK.ok || !navigator.onLine || NET.sending) return;
+  NET.sending = true;
+  try {
+    const ref = TRK.db.doc('feedback/' + TRK.uid), s = await ref.get();
+    const items = s.exists && Array.isArray(s.data().items) ? JSON.parse(JSON.stringify(s.data().items)) : [];
+    const have = new Set(items.map(x => x.id)); a.forEach(it => { if (!have.has(it.id)) items.push(it); });
+    await ref.set({items, last:tNow()});
+    try { localStorage.removeItem(FB_OUT); } catch (e) {}
+    a.forEach(it => { try { award('feedback.' + it.id, 10, 'zpětná vazba'); } catch (e) {} });
+    toast(a.length === 1 ? 'Zpětná vazba z doby offline je odeslaná.' : 'Zpětné vazby z doby offline (' + a.length + ') jsou odeslané.');
+  } catch (e) {}
+  NET.sending = false; netPill();
+}
+function netPill(){
+  const off = !navigator.onLine, q = fbOutbox().length;
+  let el = document.getElementById('pill-net');
+  if (!el) { const pp = document.getElementById('pill-prog'); if (!pp) return; pp.insertAdjacentHTML('beforebegin', '<span class="pill net-pill" id="pill-net" role="status" hidden></span>'); el = document.getElementById('pill-net'); }
+  el.hidden = !off;
+  el.innerHTML = '<span class="net-dot" aria-hidden="true"></span><span class="net-t">Offline</span>' + (q ? '<span class="net-q">· ' + q + '</span>' : '');
+  el.title = 'Jste offline. Lekce, kvízy a hra fungují dál a pokrok se ukládá v zařízení. Synchronizace pod účtem' + (q ? ', ' + q + ' zpětná vazba ve frontě' : '') + ' a chat se Spockem počkají na připojení.';
+  el.setAttribute('aria-label', el.title);
+}
+async function netBack(){
+  NET.lost = false; netPill();
+  try { trk('připojení', 'zpět online'); } catch (e) {}
+  await tInit();
+  try { if (TRK.ok) { TRK.dirty = true; await tFlush(); } } catch (e) {}
+  try { if (PROG.ref) await pPush(); } catch (e) {}
+  try { await fbOutboxSend(); } catch (e) {}
+  toast(PROG.ref ? 'Jste zpět online. Pokrok je uložený pod vaším účtem.' : 'Jste zpět online.');
+}
+window.addEventListener('offline', () => { NET.lost = true; netPill(); try { trk('připojení', 'offline'); } catch (e) {} toast('Jste offline. Můžete pokračovat, pokrok se ukládá v zařízení.'); });
+window.addEventListener('online', () => { netBack(); });
+setTimeout(netPill, 0);

@@ -448,3 +448,11 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var(--blue-2) 18%,transparent)}
 
 /* expresní cesta */
+/* offline režim: štítek v hlavičce a hláška u videa */
+.net-pill{display:inline-flex;align-items:center;gap:6px;background:var(--warn-bg,#FBF0D6);color:var(--warn-ink,#6E4800);border-color:transparent;font-weight:700}
+.net-pill[hidden]{display:none}
+.net-dot{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.8}
+.net-q{font-weight:600}
+.vid-off{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:var(--surface);color:var(--ink);font-size:14.5px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .net-pill{background:#352A12;color:#F2C66B}}:root[data-theme="dark"] .net-pill{background:#352A12;color:#F2C66B}
+@media (max-width:600px){.net-pill .net-t{display:none}.net-pill{padding-inline:10px}}
