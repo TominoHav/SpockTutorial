@@ -336,3 +336,15 @@ body.msg-on .g-bubble{display:none}
 /* odkazy v textu: na mobilu větší dotyková plocha bez změny řádkování */
 @media (max-width:760px){#app p a,#app li a,#app td a{display:inline-block;padding-block:4px;margin-block:-4px}}
 .rung .rn span{color:var(--surface)}
+
+/* dashboard: kdy lidé tutoriál používají */
+.ds-ago{display:block;font-size:12px}
+.ds-hours{display:grid;grid-template-columns:repeat(24,minmax(0,1fr));gap:2px;margin:8px 0 12px}
+.ds-hours span{position:relative;height:26px;border-radius:4px;background:color-mix(in srgb,var(--blue-2) calc(var(--a) * 100%),var(--surface-2))}
+.ds-hours i{position:absolute;left:0;bottom:-16px;font-style:normal;font-size:11px;color:var(--ink-3)}
+.ds-hours{margin-bottom:24px}
+.ds-heat{display:grid;grid-template-columns:28px repeat(24,minmax(0,1fr));gap:2px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px;overflow-x:auto}
+.ds-heat .hh{font-size:11px;color:var(--ink-3);text-align:left}
+.ds-heat .hd{font-size:12px;font-weight:700;color:var(--ink-2);align-self:center}
+.ds-heat .hc{height:18px;border-radius:3px;background:color-mix(in srgb,var(--blue-2) calc(var(--a) * 100%),var(--surface-2))}
+@media (max-width:760px){.ds-heat{grid-template-columns:24px repeat(24,minmax(9px,1fr))}}

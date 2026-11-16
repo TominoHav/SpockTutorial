@@ -6,7 +6,7 @@ const TRK = {act:Date.now(), db:null, user:null, uid:null, owner:false, ok:false
 const tNow = () => Date.now(), tDay = () => dKey(0);
 const tInc = (o, k, n) => { o[k] = (o[k] || 0) + (n === undefined ? 1 : n); };
 const tPush = (a, v, max) => { a.push(v); while (a.length > max) a.shift(); };
-function tBlank(){ return {v:1, first:tNow(), last:tNow(), visits:{}, secs:{}, dev:{}, role:null, prog:{}, pv:{}, tm:{}, clicks:{}, locked:{}, quiz:{}, wrong:[], perf:{load:[], fcp:[], render:[], size:0, errs:[]}, spock:{n:0, tin:0, tout:0, ms:[], err:0}, ev:[]}; }
+function tBlank(){ return {v:1, ses:[], first:tNow(), last:tNow(), visits:{}, secs:{}, dev:{}, role:null, prog:{}, pv:{}, tm:{}, clicks:{}, locked:{}, quiz:{}, wrong:[], perf:{load:[], fcp:[], render:[], size:0, errs:[]}, spock:{n:0, tin:0, tout:0, ms:[], err:0}, ev:[]}; }
 function tLoc(){
   if (view.name !== 'week') return view.name;
   const w = W.find(x => x.id === view.week); if (!w) return 'week';
@@ -39,7 +39,9 @@ function tTick(){
   /* počítá se jen aktivní čas: nejvýš 60 s po poslední akci (klik, psaní, posun, přehrávání videa) */
   const now = tNow(), end = Math.min(now, (TRK.act || TRK.curAt) + 60000), s = Math.round((end - TRK.curAt) / 1000);
   TRK.curAt = now; if (s <= 0) return;
-  tInc(T.tm, TRK.cur, s); tInc(T.secs, tDay(), s); TRK.dirty = true;
+  tInc(T.tm, TRK.cur, s); tInc(T.secs, tDay(), s);
+  const ss = T.ses[T.ses.length - 1]; if (ss) { ss[1] = end; ss[2] += s; }
+  TRK.dirty = true;
 }
 function trackView(){
   const T = TRK.doc; if (!T) return;
@@ -111,6 +113,9 @@ window.addEventListener('pagehide', () => { tFlush(); });
   ['visits','secs','pv','tm','clicks','locked','quiz'].forEach(k => { if (!T[k] || typeof T[k] !== 'object') T[k] = {}; });
   T.perf = Object.assign({load:[], fcp:[], render:[], size:0, errs:[]}, T.perf || {}); T.spock = Object.assign({n:0, tin:0, tout:0, ms:[], err:0}, T.spock || {}); T.ev = Array.isArray(T.ev) ? T.ev : [];
   tInc(T.visits, tDay());
+  /* sezení: [začátek, konec, aktivní sekundy]; nové začne po 30 min bez aktivity, uchová se posledních 100 */
+  if (!Array.isArray(T.ses)) T.ses = [];
+  { const ls = T.ses[T.ses.length - 1]; if (!ls || tNow() - ls[1] > 18e5) tPush(T.ses, [tNow(), tNow(), 0], 100); }
   if (!T.perfv || typeof T.perfv !== 'object') T.perfv = {};
   if (!T.perfv[BUILD.ver]) T.perfv[BUILD.ver] = {load:[], render:[]};
   Object.keys(T.perfv).slice(0, -6).forEach(k => delete T.perfv[k]);
@@ -183,6 +188,15 @@ const dP90 = a => { const b = (a || []).filter(x => typeof x === 'number').sort(
 const dSum = o => Object.values(o || {}).reduce((n, x) => n + (+x || 0), 0);
 const dMs = v => v === null ? '—' : v >= 1000 ? (v / 1000).toFixed(1).replace('.', ',') + ' s' : v + ' ms';
 const dDur = s => s >= 3600 ? Math.floor(s / 3600) + ' h ' + Math.round(s % 3600 / 60) + ' min' : s >= 60 ? Math.round(s / 60) + ' min' : s + ' s';
+const dTime = t => { const d = new Date(t); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+const dDate = t => { const d = new Date(t); return ['ne','po','út','st','čt','pá','so'][d.getDay()] + ' ' + d.getDate() + '. ' + (d.getMonth() + 1) + '. ' + d.getFullYear(); };
+/* sezení člověka; u starších záznamů bez nich se odvodí z časů kroků (mezera přes 30 min = nové sezení) */
+function dSessions(r){
+  if (Array.isArray(r.ses) && r.ses.length) return r.ses.map(x => ({from:x[0], to:Math.max(x[0], x[1]), secs:x[2] || 0}));
+  const ts = (r.ev || []).map(e => e[0]).filter(Number.isFinite).sort((a, b) => a - b), out = [];
+  ts.forEach(t => { const l = out[out.length - 1]; if (l && t - l.to <= 18e5) l.to = t; else out.push({from:t, to:t, secs:0, est:true}); });
+  return out;
+}
 const dAgo = t => { const d = Math.floor((tNow() - t) / 864e5); return d <= 0 ? 'dnes' : d === 1 ? 'včera' : 'před ' + d + ' dny'; };
 const dWhen = t => { const d = new Date(t); return d.getDate() + '. ' + (d.getMonth() + 1) + '. ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
 const dNum = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -223,6 +237,23 @@ function dHBars(rows, total){
   const rest = rows.length - (last + 2); let tail = '';
   if (rest > 1) { tail = `<p class="muted ds-rest">Dalších ${rest} kroků zatím nikdo: ${rows.slice(last + 2).map(r => esc(r[0])).join(', ')}.</p>`; rows = rows.slice(0, last + 2); }
   return `<div class="ds-hb">${rows.map(r => `<div class="ds-hr" title="${esc(r[0])}: ${dNum(r[1])}"><span class="ds-hl">${esc(r[0])}</span><span class="ds-ht"><i style="width:${Math.round(r[1] / max * 100)}%"></i></span><span class="ds-hv num">${dNum(r[1])}${r[2] ? ' <small>' + r[2] + '</small>' : ''}</span></div>`).join('')}${tail}</div>`;
+}
+function dWhoTimes(r){
+  const ss = dSessions(r).slice().reverse(), est = ss.some(x => x.est);
+  const hours = Array(24).fill(0); dSessions(r).forEach(x => { hours[new Date(x.from).getHours()] += x.secs || 60; });
+  const mx = Math.max(1, ...hours);
+  return `<div class="ds-who"><h3>Kdy aplikaci používal(a): ${dName(r.id)}</h3>
+    <p class="muted">Poprvé ${r.first ? dWhen(r.first) : '—'}, naposledy ${dWhen(r.last)} · ${ss.length} ${ss.length === 1 ? 'sezení' : 'sezení'}, aktivně ${dDur(dSum(r.secs))}${est ? ' · starší sezení jsou odvozená z kroků, bez aktivního času' : ''}</p>
+    <div class="ds-hours" aria-label="Rozložení podle hodiny dne">${hours.map((v, h) => `<span title="${h}:00–${h}:59 · ${dDur(v)}" style="--a:${v ? .15 + .85 * v / mx : 0}"><i>${h % 6 ? '' : h}</i></span>`).join('')}</div>
+    ${dTable(['Den', 'Od', 'Do', 'Délka', 'Aktivně'], ss.slice(0, 30).map(x => [dDate(x.from), dTime(x.from), dTime(x.to), dDur(Math.max(0, Math.round((x.to - x.from) / 1000))), x.est ? '—' : dDur(x.secs)]), 'Zatím žádné sezení.')}</div>`;
+}
+function dHeat(rows){
+  const g = Array.from({length:7}, () => Array(24).fill(0)); let any = 0;
+  rows.forEach(r => dSessions(r).forEach(x => { const d = new Date(x.from); g[(d.getDay() + 6) % 7][d.getHours()] += x.secs || 60; any++; }));
+  if (!any) return '<p class="muted ds-empty">Zatím žádná sezení.</p>';
+  const mx = Math.max(1, ...g.flat()), DN = ['Po','Út','St','Čt','Pá','So','Ne'];
+  return `<div class="ds-heat" role="img" aria-label="Kdy lidé tutoriál používají podle dne a hodiny"><span></span>${Array.from({length:24}, (_, h) => `<span class="hh">${h % 3 ? '' : h}</span>`).join('')}
+    ${g.map((row, d) => `<span class="hd">${DN[d]}</span>` + row.map((v, h) => `<span class="hc" title="${DN[d]} ${h}:00 · ${dDur(v)}" style="--a:${v ? .12 + .88 * v / mx : 0}"></span>`).join('')).join('')}</div>`;
 }
 function dTable(head, rows, empty){
   if (!rows.length) return `<p class="muted">${empty || 'Zatím žádná data.'}</p>`;
@@ -296,7 +327,7 @@ function renderDash(){
   const openFb = DASH.fb.filter(f => !DASH.state.done[f.id]);
   const sel = DASH.sel && all.find(r => r.id === DASH.sel);
   const people = rows.slice().sort((a, b) => b.last - a.last).map(r => [
-    `<button class="linkbtn" type="button" data-dash="who:${esc(r.id)}">${dName(r.id)}${r.id === TRK.uid ? ' (vy)' : ''}</button>`, r.role ? esc(ROLES[r.role]) : '—', dAgo(r.last), dNum(dSum(r.visits)), dDur(dSum(r.secs)),
+    `<button class="linkbtn" type="button" data-dash="who:${esc(r.id)}">${dName(r.id)}${r.id === TRK.uid ? ' (vy)' : ''}</button>`, r.role ? esc(ROLES[r.role]) : '—', r.first ? `<span class="ds-nw">${dWhen(r.first)}</span>` : '—', `<span class="ds-nw">${dWhen(r.last)}</span><small class="muted ds-ago">${dAgo(r.last)}</small>`, dNum(dSessions(r).length), dDur(dSum(r.secs)),
     `<span class="ds-nw"><span class="ds-pct"><i style="width:${(r.prog || {}).pct || 0}%"></i></span> ${(r.prog || {}).pct || 0} %</span>`, esc(tLocLabel((r.prog || {}).loc || 'home')), dNum((r.prog || {}).xp || 0), (r.dev || {}).mobile ? 'mobil' : 'počítač']);
   app.innerHTML = shell('dash', `<div id="dash">${dTabs()}
     <div class="mh c-indigo"><span class="eyebrow">Dashboard · jen pro vlastníka</span><h1>Jak lidé procházejí tutoriálem</h1>
@@ -325,9 +356,13 @@ function renderDash(){
       <div><h3>Kliknutí na zamčený modul</h3>${dTable(['Modul', 'Kliknutí'], top(lockedC, 9).map(([k, v]) => [esc((W.find(w => w.id === k) || {title:k}).title), v]), 'Nikdo neklikal na zamčený modul.')}</div>
     </div>
 
-    <div class="sec-h"><h2>Lidé</h2><p>Kliknutím na jméno uvidíte poslední kroky toho člověka.</p></div>
-    ${dTable(['Kdo', 'Role', 'Naposledy', 'Návštěv', 'Čas', 'Pokrok', 'Kde je', 'XP', 'Zařízení'], people, 'Zatím nikdo.')}
+    <div class="sec-h"><h2>Lidé</h2><p>Kliknutím na jméno uvidíte, kdy aplikaci používal(a) a jeho poslední kroky. Časy jsou ve vašem časovém pásmu.</p></div>
+    ${dTable(['Kdo', 'Role', 'Poprvé', 'Naposledy', 'Sezení', 'Čas', 'Pokrok', 'Kde je', 'XP', 'Zařízení'], people, 'Zatím nikdo.')}
+    ${sel ? dWhoTimes(sel) : ''}
     ${sel ? `<div class="ds-who"><h3>Poslední kroky: ${dName(sel.id)} <button class="btn sm" type="button" data-dash="who:">Zavřít</button></h3>${dTable(['Kdy', 'Co', 'Kde nebo na co'], (sel.ev || []).slice(-80).reverse().map(e => [dWhen(e[0]), esc(e[1]), e[1] === 'view' ? esc(tLocLabel(e[2])) : e[1] === 'klik' ? dClickLabel(e[2]) : esc(e[2])]), 'Žádné kroky.')}</div>` : ''}
+
+    <div class="sec-h"><h2>Kdy lidé tutoriál používají</h2><p>Aktivní čas podle dne v týdnu a hodiny začátku sezení. Čím tmavší, tím víc.</p></div>
+    ${dHeat(rows)}
 
     <div class="sec-h"><h2>Kam lidé klikají a co čtou</h2></div>
     <div class="ds-grid">

@@ -91,6 +91,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
+| [#50](https://github.com/TominoHav/SpockTutorial/pull/50) | Aplikace | Dashboard: kdy lidé tutoriál používají (první a poslední návštěva s časem, sezení od–do u každého člověka, přehled den × hodina) | 17. 11. 2026 |
 | [#49](https://github.com/TominoHav/SpockTutorial/pull/49) | Údržba | Automatické testy přístupnosti a výkonu v kontrolách na GitHubu a v dashboardu, oprava kontrastu diagnostiky v tmavém režimu, aktualizovaná architektura | 16. 11. 2026 |
 | [#48](https://github.com/TominoHav/SpockTutorial/pull/48) | Aplikace | Výkon a přístupnost: rychlejší vykreslení lekce, pozastavení animací při nečinnosti a mimo obrazovku, kontrast podle WCAG AA, jazyk stránky, větší dotykové plochy na mobilu | 16. 11. 2026 |
 | [#47](https://github.com/TominoHav/SpockTutorial/pull/47) | Aplikace | Oslavné finále cesty: scéna Setkání se Spockem s ohňostrojem, paprsky, posádkou agentů a fanfárou, medaile absolventa, společný odlet v lodi, správné skloňování | 16. 11. 2026 |
