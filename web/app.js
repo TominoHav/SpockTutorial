@@ -77,7 +77,7 @@ function fmt(s){
 const app = $('#app');
 let view = {name:'home', week:null, phase:0, layer:0};
 
-/* úroveň 4 Superuser je jen pro Guild Mastery; příručka 1b je volitelná a do „Hotovo %“ se nepočítá */
+/* úroveň 4 Superuser je jen pro Guild Mastery, ostatní role ji vůbec nevidí; příručka 1b je volitelná a do „Hotovo %“ se nepočítá */
 const GMONLY = 'l4';
 const applies = w => w.id === GMONLY ? S.role === 'gm' : (!w.role || w.role === S.role);
 const counts = w => applies(w) && w.id !== 'l1b';
@@ -103,13 +103,15 @@ function toast(msg){ notice({kind:'info', title:msg}); }
 
 /* ---------- hra: XP, série, úrovně, odznaky, zámky ---------- */
 const XP = {task:10, quizFirst:15, quizRetry:5, reveal:5, lesson:20, module:100, jump:50, ready:5};
-const RANKS = [[0,'Nováček'],[100,'Učeň'],[300,'Praktik'],[700,'Znalec'],[1200,'Expert'],[1700,'Mistr']];
+/* hodnosti: Mistr dosáhne každá role na své cestě (PD ~2060 XP, PM ~2225); Superuser je jen pro Guild Mastery a bez úrovně 4 se na něj nedosáhne (GM bez ní ~2200 XP) */
+const RANKS_ALL = [[0,'Nováček'],[100,'Učeň'],[300,'Praktik'],[700,'Znalec'],[1200,'Expert'],[1700,'Mistr']];
+const ranks = () => S.role === 'gm' ? RANKS_ALL.concat([[2300,'Superuser']]) : RANKS_ALL;
 ['xp','goal'].forEach(k => { if (typeof S[k] !== 'number') S[k] = k === 'goal' ? 50 : 0; });
 ['days','got','badges','unlocked','tries','proof','ptries','cards'].forEach(k => { if (!S[k] || typeof S[k] !== 'object') S[k] = {}; });
 const dKey = off => { const d = new Date(); d.setDate(d.getDate() - (off || 0)); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); };
 const todayXP = () => S.days[dKey(0)] || 0;
 function streak(){ let n = 0, off = todayXP() > 0 ? 0 : 1; while ((S.days[dKey(off)] || 0) > 0) { n++; off++; } return n; }
-function rank(){ let cur = RANKS[0], next = null; for (const r of RANKS) { if (S.xp >= r[0]) cur = r; else { next = r; break; } } return {name:cur[1], at:cur[0], next, lvl:RANKS.indexOf(cur)+1}; }
+function rank(){ const RANKS = ranks(); let cur = RANKS[0], next = null; for (const r of RANKS) { if (S.xp >= r[0]) cur = r; else { next = r; break; } } return {name:cur[1], at:cur[0], next, lvl:RANKS.indexOf(cur)+1}; }
 const FLAME = `<svg class="flame" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5 5.5 5 10.5A5 5 0 0 1 7 12.5c0-2 1-3.5 2-4.5 0 2 1 3 2 3-1-3 0-6 1-9z"/></svg>`;
 const LOCK = `<svg class="lockic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke-width="2.4"/></svg>`;
 const HEART = `<svg class="heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.5-9.2C1 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 6 3.7 4.5 7.3C19.5 16.4 12 21 12 21z"/></svg>`;
@@ -511,7 +513,7 @@ function pathBlock(title){
       ${pathStep('2','purple', mine ? esc(mine.title) : 'Vaše role', mine ? esc(mine.short) : 'PM, PD, SWE nebo GM.', mine ? [mine.id] : [], mine ? `<button class="linkbtn" type="button" data-week="${mine.id}">Otevřít</button>` : `<span class="muted">Nejdřív vyberte roli</span>`)}
       ${pathStep('3','indigo','Pokročilý','Vrácení fáze, výjimky, předání běhu.',['l3'],`<button class="linkbtn" type="button" data-week="l3">Otevřít</button>`)}
       ${S.role === 'gm' ? pathStep('4','blue','Superuser','Sondy chování, měření, mentoring.',['l4'],`<button class="linkbtn" type="button" data-week="l4">Otevřít</button>`) : ''}
-    </ol><p class="hp-ref muted">Volitelně: <button class="linkbtn" type="button" data-week="l1b">příručka Fáze do hloubky</button>, každá fáze podle své specifikace.${S.role === 'gm' ? '' : ' Úroveň 4 Superuser je jen pro Guild Mastery.'}</p></div></section>`;
+    </ol><p class="hp-ref muted">Volitelně: <button class="linkbtn" type="button" data-week="l1b">příručka Fáze do hloubky</button>, každá fáze podle své specifikace.</p></div></section>`;
 }
 function roleCards(){
   return `<div class="rcards">${W.filter(w => w.role).map(w => `<button type="button" class="rcard c-${w.c} ${S.role === w.role ? 'on' : ''}" data-role="${w.role}" aria-pressed="${S.role === w.role}"><span class="rc-dia"><span>${S.role === w.role ? '✓' : ROLE_SHORT[w.role]}</span></span><b>${esc(ROLES[w.role])}</b><span>${esc(ROLE_WHO[w.role])}</span></button>`).join('')}</div>`;
@@ -741,7 +743,7 @@ document.addEventListener('click', e => {
 });
 
 function renderWeek(id){
-  const w = W.find(x => x.id === id); if (!w) return renderHome();
+  const w = W.find(x => x.id === id); if (!w || (w.id === GMONLY && !applies(w))) return renderHome();   /* úroveň 4 vidí jen Guild Master */
   if (isLocked(w) && view.peek !== w.id) return renderLocked(w);
   const idx = W.indexOf(w);
   const cur = curLesson(w);
@@ -869,13 +871,11 @@ function shell(active, body){
     return `<button type="button" class="${active===w.id?'on':''} ${other?'dim':''} ${lk?'lk':''} c-${w.c}" data-week="${w.id}">${lk ? '<span class="dm lkic">' + LOCK + '</span>' : `<span class="dm ${cls}"></span>`}<span class="rl">${esc(w.role ? '2 · ' + w.title : w.lab.replace('Úroveň ','') + ' · ' + w.title)}</span><span class="rt num">${fmtH(weekTime(w).total)}</span></button>`;
   }).join('');
   const gw = W.find(w => w.id === 'l1b');
-  const sw = W.find(w => w.id === GMONLY);
-  const optl = sw && S.role !== 'gm' ? `<button type="button" class="${active===sw.id?'on':''} dim c-${sw.c}" data-week="${sw.id}"><span class="dm"></span><span class="rl">Superuser (jen GM)</span></button>` + sideLessons(sw, active) : '';
   const guide = gw ? `<button type="button" class="${active===gw.id?'on':''} c-${gw.c}" data-week="${gw.id}"><span class="dm"></span>Příručka: ${esc(gw.title)}</button>` + sideLessons(gw, active) : '';
   const ex = [['badges','Odznaky a profil','indigo'],['map','SPOCK v kostce','blue'],['diag','Diagnostika','purple'],['gloss','Slovníček','blue'],['cheat','Tahák tasků','blue'],['ready','Připravenost','indigo']]
     .concat(TRK.owner ? [['dash','Dashboard (jen vy)','indigo']] : [])
     .map(x => `<button type="button" class="${active===x[0]?'on':''} c-${x[2]}" data-go="${x[0]}"><span class="dm"></span>${x[1]}</button>`).join('');
-  return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more">${otherRoles(active)}${optl}<span class="grp">Opora</span>${guide}${ex}</div>`}</nav><section class="main">${body}</section></div>`;
+  return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more">${otherRoles(active)}<span class="grp">Opora</span>${guide}${ex}</div>`}</nav><section class="main">${body}</section></div>`;
 }
 
 function nextWeek(){
@@ -1028,6 +1028,7 @@ function focusMod(){ return (view.name === 'week' && W.find(x => x.id === view.w
 function kb(){
   const f = focusMod();
   const mods = W.map((w,i) => {
+    if (w.id === GMONLY && !applies(w)) return null;
     const base = {poradi:i+1, id:w.id, uroven:w.lab, nazev:w.title, pro_roli:w.role ? ROLES[w.role] : 'všichni', cil:plain(w.goal)};
     if (w !== f) return Object.assign(base, {detail:'jen přehled', lekce:w.days.map(d => ({lekce:d.d, tema:d.t, karty:(d.cards || []).map(c => plain(c.t)), ukoly:d.todo.map(t => t.t)}))});
     return Object.assign(base, {detail:'celý obsah', proc:plain(w.why), nez_zacnete:plain(w.before||''),
@@ -1037,10 +1038,10 @@ function kb(){
         karty:(d.cards || []).map(c => ({nazev:plain(c.t), text:(c.blocks || []).map(b => b.p !== undefined ? plain(b.p) : b.list ? b.list.map(plain).join(' | ') : b.olist ? b.olist.map(plain).join(' | ') : b.table ? b.table : b.code ? b.code : '').filter(Boolean), vic:[c.more ? plain(c.more) : ''].concat((c.moreList || []).map(plain)).filter(Boolean), otazka:plain(c.q), spravne:c.o[c.a] ? plain(c.o[c.a]) : '', proc:plain(c.why)})),
         ukoly:d.todo.map(t => ({ukol:t.t, minut:t.min, proc:plain(t.why), kroky:t.how.map(plain)}))}))});
   });
-  return JSON.stringify({moduly:mods, faze:PHASES, agenti:LAYERS, diagnostika:DIAG, chyby:MISTAKES, principy:PRINCIPLES, slovnicek:GLOSS, tahak:CHEAT});
+  return JSON.stringify({moduly:mods.filter(Boolean), faze:PHASES, agenti:LAYERS, diagnostika:DIAG, chyby:MISTAKES, principy:PRINCIPLES, slovnicek:GLOSS, tahak:CHEAT});
 }
 function progress(){
-  const lines = W.map(w => { const t = weekTotals(w); const open = [];
+  const lines = W.filter(w => w.id !== GMONLY || applies(w)).map(w => { const t = weekTotals(w); const open = [];
     w.days.forEach((d,di) => d.todo.forEach((t2,ti) => { if (!S.todo[w.id+'.'+di+'.'+ti] && open.length < 3) open.push(d.d+': '+t2.t); }));
     return w.lab+' '+w.title+(applies(w)?'':' (jiná role)')+': hotovo '+t.done+'/'+t.tot+(open.length ? '; další nehotové: '+open.join(' | ') : ''); });
   const now = view.name === 'week' ? (W.find(w => w.id === view.week)||{}).title : view.name;
@@ -1055,7 +1056,7 @@ Jak odpovídáš:
 - Tasky SPOCKu piš přesně jejich názvem v \`backticích\` a řekni, jaká políčka otevřou. Task s políčky na jméno, roli, důvod nebo rozhodnutí spouští vždy člověk, nikdy agent.
 - Nikdy neraď přikládat soubory do chatu Copilotu (kromě briefu ve fázi 1), posílat běhy přes git ani dávat skutečný klientský materiál do cvičného běhu.
 - Opírej se jen o PODKLADY níže (a přiložené soubory, jsou-li). Když tam odpověď není, řekni to na rovinu a poraď, kde ji najde (SETUP.md, TESTER-GUIDE.md, TASKS.md v kopii SPOCKu, agent Workflow Support nebo Methodology Coach, tým CoE Product Management). Nevymýšlej názvy souborů, tasků ani C-čísla.
-- Onboarding je hra jako Duolingo: XP za úkoly, lekce, kvízy a moduly, denní série a cíl, hodnosti od Nováčka po Mistra, odznaky a zamčené moduly (odemknou se na 80 % předchozího, nebo skokovým testem: 5 losovaných otázek z modulu, potřeba 4 správně). Kvíz modulu se odemkne po všech kartách modulu, losuje 5 otázek ze zásoby a je splněný při 4 z 5 správně napoprvé. Povzbuzuj, hlídej sérii a zmiň, kolik XP dalším krokem získá, ale nikdy kvůli hře nezkracuj práci ve SPOCKu.
+- Onboarding je hra jako Duolingo: XP za úkoly, lekce, kvízy a moduly, denní série a cíl, hodnosti od Nováčka po Mistra (Guild Master navíc Superuser), odznaky a zamčené moduly (odemknou se na 80 % předchozího, nebo skokovým testem: 5 losovaných otázek z modulu, potřeba 4 správně). Kvíz modulu se odemkne po všech kartách modulu, losuje 5 otázek ze zásoby a je splněný při 4 z 5 správně napoprvé. Povzbuzuj, hlídej sérii a zmiň, kolik XP dalším krokem získá, ale nikdy kvůli hře nezkracuj práci ve SPOCKu.
 - Když uživatel vloží výstup tasku nebo chybu, vysvětli, co znamená, a podle diagnostiky řekni, co udělat dál.`;
   if (G.tools) r += `\n- Máš nástroj open_section: když odpovídáš konkrétním modulem, lekcí nebo částí, otevři mu ji (jednou za odpověď).`;
   r += `\n\nPOSTUP UŽIVATELE:\n` + progress() + `\n\nPODKLADY (obsah onboardingu, JSON). Celý obsah máš jen u modulu „` + focusMod().title + `“ (detail: celý obsah), u ostatních jen přehled lekcí, karet a úkolů. Když se uživatel ptá na podrobnost z jiného modulu, odpověz z přehledu a obecných podkladů a nabídni mu ten modul otevřít (nástroj open_section); pak dostaneš jeho celý obsah. Odpovědi z kvízů neprozrazuj.\n` + kb();

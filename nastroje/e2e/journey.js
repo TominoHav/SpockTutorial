@@ -35,6 +35,7 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  await p.locator('[data-sim=finish]').click();await p.waitForTimeout(200);await dismiss();
  ok(T('odznak Pilot nanečisto a 30 XP'), (await st()).badges['got.sim'] && (await st()).xp===30);
  ok(T('bez role: cesta končí úrovní 3, odznak Superuser se nenabízí'), await p.evaluate(()=>!__kviz.path().includes('l4') && !__kviz.badges().includes('superuser') && __kviz.badges().includes('path')));
+ ok(T('bez role GM není úroveň 4 nikde vidět'), await p.locator('[data-week=l4]').count()===0 && !(await p.locator('body').innerText()).includes('Superuser'));
  // role
  await p.locator('.startb [data-role=gm]').click();await p.waitForTimeout(200);
  ok(T('hlášky se ukazují po jedné'), await p.locator('.notice').count()===1);

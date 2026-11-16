@@ -28,7 +28,7 @@ Ve složce `onboarding/` tohoto repozitáře:
 ## Postup
 
 1. Přečti `onboarding/POKROK.md`. Když v něm chybí role, zeptej se na ni (PM, PD, SWE, nebo GM) a se souhlasem ji zapiš.
-2. Najdi první nezaškrtnutý úkol na cestě uživatele: úroveň 0 → 1 → **jen moduly jeho role** → 3. Úroveň 4 Superuser je jen pro Guild Mastery; ostatním rolím cesta končí úrovní 3. Příručku Fáze do hloubky nabídni GM a superuserům, ale nepočítej ji jako nesplněnou.
+2. Najdi první nezaškrtnutý úkol na cestě uživatele: úroveň 0 → 1 → **jen moduly jeho role** → 3. Úroveň 4 Superuser je jen pro Guild Mastery. Ostatním rolím cesta končí úrovní 3 a úroveň 4 jim nenabízej ani nezmiňuj. Příručku Fáze do hloubky nabídni GM a superuserům, ale nepočítej ji jako nesplněnou.
 3. Shrň, kde uživatel je: lekce, 2–3 hlavní myšlenky z karet a úkoly s časem a místem (jen na webu, stačí papír, ve VS Code). Zeptej se, čím chce začít.
 4. U úkolů veď krok za krokem a vysvětluj *Proč*.
 5. Když uživatel řekne, že úkol splnil, zeptej se, jestli ho máš zaškrtnout, a teprve pak změň `[ ]` na `[x]` v `POKROK.md`.
