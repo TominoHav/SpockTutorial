@@ -389,6 +389,11 @@ document.addEventListener('click', async e => {
   const [cmd, arg] = [b.dataset.dash.split(':')[0], b.dataset.dash.split(':').slice(1).join(':')];
   if (cmd === 'reload') { DASH.rows = DASH.rows || null; await dashLoad(); }
   else if (cmd === 'tab') { DASH.tab = arg; renderDash(); window.scrollTo({top:0}); }
+  else if (cmd === 'fdays') { FLF.days = +arg; renderDash(); }
+  else if (cmd === 'frole') { FLF.role = arg; renderDash(); }
+  else if (cmd === 'fdev') { FLF.dev = arg; renderDash(); }
+  else if (cmd === 'fplace') { FLF.place = FLF.place === arg ? '' : arg; renderDash(); }
+  else if (cmd === 'live') { DASH.live = DASH.live === false; renderDash(); if (DASH.live) dashLoad(); }
   else if (cmd === 'flow') { DASH.sel = arg || null; renderDash(); const el = document.querySelector('.fl-who'); if (el) el.scrollIntoView({block:'start'}); }
   else if (cmd === 'who') { DASH.sel = arg || null; renderDash(); const el = document.querySelector('.ds-who'); if (el) el.scrollIntoView({block:'start'}); }
   else if (cmd === 'md') { try { await navigator.clipboard.writeText(dashMd()); toast('Zkopírováno. Vložte do revize/TODO-ZPETNA-VAZBA.md'); } catch (err) { toast('Kopírování se nepodařilo'); } }
@@ -604,50 +609,150 @@ function flChip(st){
   const marks = [st.wrong && `${st.wrong}× špatně`, st.proofBad && `${st.proofBad}× ověření`, st.quizFail && 'kvíz nesplněn', st.quizOk && 'kvíz splněn', st.rage && 'opakované klikání', st.locked && 'zamčeno', st.fb && 'zpětná vazba'].filter(Boolean);
   return `<span class="fl-st k-${flKind(st.loc)} ${warn ? 'warn' : ''} ${st.end ? 'last' : ''}" title="${esc(tLocLabel(st.loc))} · ${dDur(Math.round(st.dur / 1000))}${marks.length ? ' · ' + marks.join(', ') : ''}"><b>${esc(flShort(st.loc))}</b><small>${dDur(Math.round(st.dur / 1000))}${marks.length ? ' · ' + esc(marks.join(', ')) : ''}</small></span>`;
 }
+/* filtry záložky Pohyb: období, role, zařízení; vybrané problémové místo zúží cesty lidí */
+const FLF = {days:0, role:'', dev:'', place:''};
+function flFilter(rows){
+  const since = FLF.days ? tNow() - FLF.days * 864e5 : 0;
+  return rows.filter(r => (!FLF.role || r.role === FLF.role) && (!FLF.dev || (FLF.dev === 'mobil') === !!(r.dev || {}).mobile))
+    .map(r => since ? Object.assign({}, r, {ev:(r.ev || []).filter(e => e[0] >= since)}) : r);
+}
+const FL_KINDS = [['úvod','Úvod'],['lekce','Lekce'],['kvíz','Kvíz'],['opora','Opora'],['profil','Profil'],['simulace','Simulace'],['jiné','Jiné']];
+const flTip = (t) => ` data-tip="${esc(t)}" tabindex="0"`;
+/* graf: mapa pohybu mezi typy stránek (uzly = typy, šipky = přechody) */
+function flMapSvg(A){
+  const kv = {}, kt = {};
+  Object.entries(A.visits).forEach(([l, n]) => { const k = flKind(l); if (k !== 'dashboard') kv[k] = (kv[k] || 0) + n; });
+  Object.entries(A.trans).forEach(([t, n]) => { const [a, b] = t.split('→').map(flKind); if (a === 'dashboard' || b === 'dashboard') return; const k = a + '→' + b; kt[k] = (kt[k] || 0) + n; });
+  const nodes = FL_KINDS.filter(([k]) => kv[k]); if (!nodes.length) return '<p class="muted ds-empty">Zatím žádný pohyb.</p>';
+  const W2 = 480, H2 = 300, cx = W2 / 2, cy = H2 / 2 - 6, R = 92, mx = Math.max(...Object.values(kv)), tmx = Math.max(1, ...Object.values(kt));
+  const pos = {}; nodes.forEach(([k], i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / nodes.length; pos[k] = [cx + Math.cos(a) * R * 1.75, cy + Math.sin(a) * R]; });
+  const rad = k => 18 + 20 * Math.sqrt(kv[k] / mx), slot = k => FL_KINDS.findIndex(x => x[0] === k) + 1;
+  const edges = Object.entries(kt).filter(([k]) => { const [a, b] = k.split('→'); return a !== b && pos[a] && pos[b]; }).sort((x, y) => x[1] - y[1]).map(([k, n]) => {
+    const [a, b] = k.split('→'), [x1, y1] = pos[a], [x2, y2] = pos[b], dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L;
+    const sx = x1 + ux * rad(a), sy = y1 + uy * rad(a), ex = x2 - ux * (rad(b) + 6), ey = y2 - uy * (rad(b) + 6), qx = (sx + ex) / 2 - uy * 26, qy = (sy + ey) / 2 + ux * 26, w = 1.5 + 7 * n / tmx;
+    return `<path d="M${sx.toFixed(1)} ${sy.toFixed(1)} Q${qx.toFixed(1)} ${qy.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" class="fl-edge" stroke-width="${w.toFixed(1)}" marker-end="url(#flarr)"${flTip(FL_KINDS.find(x => x[0] === a)[1] + ' → ' + FL_KINDS.find(x => x[0] === b)[1] + ': ' + n + '×')}/>`;
+  }).join('');
+  const nd = nodes.map(([k, lab]) => { const [x, y] = pos[k], self = kt[k + '→' + k] || 0;
+    return `<g class="fl-node"${flTip(lab + ': ' + kv[k] + ' návštěv' + (self ? ', ' + self + '× přechod uvnitř (např. lekce → lekce)' : ''))}><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${rad(k).toFixed(1)}" style="fill:var(--fl-${slot(k)})"/><text x="${x.toFixed(1)}" y="${(y + rad(k) + 16).toFixed(1)}" text-anchor="middle" class="fl-nl">${lab}</text><text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle" class="fl-nv">${kv[k]}</text></g>`; }).join('');
+  return `<svg class="fl-map" viewBox="0 0 ${W2} ${H2}" role="img" aria-label="Mapa pohybu mezi typy stránek"><defs><marker id="flarr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="fl-arrh"/></marker></defs>${edges}${nd}</svg>`;
+}
+/* graf: vodorovné pruhy s popiskem a hodnotou */
+function flBars(items, opts){
+  opts = opts || {}; if (!items.length) return `<p class="muted ds-empty">${opts.empty || 'Zatím žádná data.'}</p>`;
+  const mx = Math.max(1, ...items.map(x => x.n));
+  return `<div class="fl-bars">${items.map(x => `<div class="fl-br ${x.cls || ''}" ${x.cmd ? `role="button" data-dash="${esc(x.cmd)}"` : ''}${flTip(x.tip || (x.label + ': ' + x.n))}><span class="fl-bl">${esc(x.label)}</span><span class="fl-bt"><i style="width:${x.n ? Math.max(2, Math.round(x.n / mx * 100)) : 0}%;${x.color ? 'background:' + x.color : ''}"></i></span><span class="fl-bv num">${x.val || x.n}</span>${x.note ? `<span class="fl-bn">${x.note}</span>` : ''}</div>`).join('')}</div>`;
+}
+/* graf: sloupce v čase, dvě skupiny na sobě (bez problému / s problémem) */
+function flDays(sess, days){
+  const keys = Array.from({length:days}, (_, i) => dKey(days - 1 - i)), ok = {}, bad = {};
+  sess.forEach(x => { const k = (() => { const d = new Date(x.from); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); })(); (x.bad ? bad : ok)[k] = ((x.bad ? bad : ok)[k] || 0) + 1; });
+  const mx = Math.max(1, ...keys.map(k => (ok[k] || 0) + (bad[k] || 0)));
+  if (!keys.some(k => ok[k] || bad[k])) return '<p class="muted ds-empty">V tomhle období zatím žádná sezení.</p>';
+  return `<div class="fl-cols">${keys.map(k => { const a = ok[k] || 0, b = bad[k] || 0; return `<div class="fl-col"${flTip(k.split('-').reverse().join('. ') + ': ' + (a + b) + ' sezení, z toho ' + b + ' s problémem')}><span class="fl-cv num">${a + b || ''}</span><span class="fl-cs"><i class="bad" style="height:${b / mx * 100}%"></i><i class="ok" style="height:${a / mx * 100}%"></i></span><span class="fl-cl">${k.slice(8)}.</span></div>`; }).join('')}</div>
+    <p class="fl-leg2"><span><i class="ok"></i>sezení bez problému</span><span><i class="bad"></i>sezení s problémem (chyba, bloudění, opakované klikání, zámek)</span></p>`;
+}
+function flKpi(label, val, what, cls){ return `<div class="fl-kpi ${cls || ''}"><span class="fl-kl">${label}</span><b class="num">${val}</b><span class="fl-kw">${what}</span></div>`; }
 function renderDashFlow(){
-  const all = DASH.rows, rows = DASH.withMe ? all : all.filter(r => r.id !== TRK.uid);
+  const all = DASH.rows, base = DASH.withMe ? all : all.filter(r => r.id !== TRK.uid), rows = flFilter(base);
   const A = flAnalyze(rows), sel = DASH.sel && A.persons.find(P => P.id === DASH.sel);
   const top = (o, n) => Object.entries(o).sort((a, b) => b[1] - a[1]).slice(0, n);
+  const sess = A.persons.flatMap(P => P.J.map(x => { const st = x.steps; const bad = st.some(s2 => s2.wrong || s2.proofBad || s2.quizFail || s2.rage || s2.locked) || st.some((s2, i) => i > 1 && st[i - 2].loc === s2.loc); return {from:x.from, to:x.last, n:st.length, bad, lastLoc:st[st.length - 1].loc, id:P.id}; }));
+  const medS = (() => { const d = sess.map(x => (x.to - x.from) / 1000).sort((a, b) => a - b); return d.length ? d[Math.floor(d.length / 2)] : 0; })();
+  const badPct = sess.length ? Math.round(sess.filter(x => x.bad).length / sess.length * 100) : 0;
+  const pingS = A.persons.reduce((n, P) => n + (P.ping ? 1 : 0), 0);
+  const exitLesson = sess.filter(x => flKind(x.lastLoc) === 'lekce').length;
   const fromTot = {}; Object.entries(A.trans).forEach(([k, n]) => { const f = k.split('→')[0]; fromTot[f] = (fromTot[f] || 0) + n; });
-  const bar = (n, mx) => `<span class="ds-nw"><span class="ds-pct"><i style="width:${Math.round(n / Math.max(1, mx) * 100)}%"></i></span> ${n}</span>`;
-  const trans = top(A.trans, 15), tMax = trans[0] ? trans[0][1] : 1;
-  const tagCls = {odchod:'bad', chyby:'bad', ověření:'bad', kvíz:'bad', klikání:'bad', zámek:'warn', bloudění:'warn', návraty:'warn', dlouho:'warn', proletěno:'info'};
+  const place = FLF.place && A.places.find(p => p.loc === FLF.place);
+  const persons = A.persons.filter(P => !FLF.place || P.J.some(x => x.steps.some(st => st.loc === FLF.place))).sort((a, b) => b.steps - a.steps);
+  // kam až lidé došli
+  const reachL = []; ['l0', 'l1', 'pm', 'pd', 'se', 'gm', 'l3', 'l4'].forEach(id => { const w = W.find(x => x.id === id); if (w && (!w.role || !FLF.role || w.role === FLF.role)) w.days.forEach(d => { const k = id + '/' + d.d; if (A.reached[k] || id === 'l0') reachL.push([k, A.reached[k] || 0, w]); }); });
+  let prevN = null; const reach = reachL.map(([k, n, w]) => { const drop = prevN && n < prevN && !w.role ? Math.round((prevN - n) / prevN * 100) : 0; prevN = n; return {label:d2(k), n, val:n + (n === 1 ? ' člověk' : ' lidí'), note: drop ? `<span class="fl-tag ${drop >= 40 ? 'bad' : 'warn'}">−${drop} %</span>` : '', tip:tLocLabel(k) + ': otevřelo ' + n + (drop ? ', propad ' + drop + ' % proti předchozí lekci' : ''), cls: drop >= 40 ? 'drop' : ''}; });
+  function d2(k){ return flShort(k); }
+  // problémová místa jako pruhy podle skóre, barva podle hlavního důvodu
+  const RC = {odchod:'var(--fl-2)', chyby:'var(--fl-8)', 'ověření':'var(--fl-8)', 'kvíz':'var(--fl-7)', 'klikání':'var(--fl-5)', 'zámek':'var(--fl-4)', 'bloudění':'var(--fl-4)', 'návraty':'var(--fl-1)', dlouho:'var(--fl-1)', proletěno:'var(--fl-3)'};
+  const placeBars = A.places.slice(0, 10).map(p => ({label:flShort(p.loc), n:Math.round(p.score * 10) / 10, val:p.u + (p.u === 1 ? ' člověk' : ' lidí'), color:RC[p.why[0][0]], note:p.why.slice(0, 2).map(([k]) => `<span class="fl-tag">${esc(k)}</span>`).join(' '), tip:tLocLabel(p.loc) + ' · ' + p.why.map(w => w[1]).join(' · '), cmd:'fplace:' + p.loc, cls: FLF.place === p.loc ? 'on' : ''}));
+  // délka sezení a typy chování
+  const B = [['do 1 min', 60], ['1–5 min', 300], ['5–15 min', 900], ['15–30 min', 1800], ['přes 30 min', Infinity]], bc = B.map(() => 0);
+  sess.forEach(x => { const d = (x.to - x.from) / 1000; bc[B.findIndex(b => d < b[1])]++; });
+  const tags = {}; A.persons.forEach(P => P.tags.forEach(([t]) => { tags[t] = (tags[t] || 0) + 1; }));
+  const TAGD = {'vrací se':'3 a víc sezení', 'odešel brzy':'jedno krátké sezení a už se nevrátil(a)', 'bloudí':'opakovaně tam a zpět mezi stránkami', 'proletí lekce':'většina lekcí pod 30 s', 'hledá v opoře':'brzy otevřel(a) oporu, nejspíš něco hledá', 'chybuje':'4 a víc chyb', 'frustrace':'opakované klikání na stejné místo', 'zasekl(a) se':'na jednom kroku přes 5 minut'};
+  const sel2 = (v, cur, lab) => `<button type="button" class="rolebtn ${cur === v ? 'on' : ''}" aria-pressed="${cur === v}" data-dash="${lab}:${v}">`;
   app.innerHTML = shell('dash', `<div id="dash">${dTabs()}
     <div class="mh c-indigo"><span class="eyebrow">Dashboard · jen pro vlastníka</span><h1>Pohyb a problémová místa</h1>
-      <p>Jak se lidé po aplikaci opravdu pohybují: ${dNum(A.people)} ${A.people === 1 ? 'člověk' : 'lidí'}, ${dNum(A.sessions)} sezení, ${dNum(A.steps)} kroků. Sezení končí po 30 minutách bez aktivity. <label class="ds-chk"><input type="checkbox" data-dash="me" ${DASH.withMe ? 'checked' : ''}> Započítat i mě</label></p></div>
+      <p>Jak se lidé po aplikaci opravdu pohybují a kde mají potíže. Najeďte myší nebo klepněte na kterýkoli graf a uvidíte čísla. <span class="fl-live" role="status">${DASH.live === false ? 'Živá aktualizace vypnutá' : '● Živě'} · data z ${dWhen(DASH.at)}</span> <button class="btn sm" type="button" data-dash="live">${DASH.live === false ? 'Zapnout živou aktualizaci' : 'Pozastavit'}</button></p></div>
 
-    <div class="sec-h"><h2>Co z dat plyne</h2><p>Automatické závěry, seřazené od nejdůležitějšího.</p></div>
+    <div class="fl-filters" role="group" aria-label="Filtry">
+      <span class="fl-fl">Období</span>${[[0, 'vše'], [7, '7 dní'], [14, '14 dní'], [30, '30 dní']].map(([v, l]) => sel2(String(v), String(FLF.days), 'fdays') + l + '</button>').join('')}
+      <span class="fl-fl">Role</span>${[['', 'všechny'], ['pm', 'PM'], ['pd', 'PD'], ['se', 'SWE'], ['gm', 'GM']].map(([v, l]) => sel2(v, FLF.role, 'frole') + l + '</button>').join('')}
+      <span class="fl-fl">Zařízení</span>${[['', 'vše'], ['mobil', 'mobil'], ['pc', 'počítač']].map(([v, l]) => sel2(v, FLF.dev, 'fdev') + l + '</button>').join('')}
+      <label class="ds-chk"><input type="checkbox" data-dash="me" ${DASH.withMe ? 'checked' : ''}> Započítat i mě</label>
+    </div>
+
+    <div class="fl-kpis">
+      ${flKpi('Lidé', dNum(A.people), 'kolik lidí se v tomto výběru pohybovalo')}
+      ${flKpi('Sezení', dNum(A.sessions), 'jedno sezení končí po 30 min bez aktivity')}
+      ${flKpi('Typické sezení', dDur(Math.round(medS)), 'medián délky jednoho sezení')}
+      ${flKpi('Sezení s problémem', badPct + ' %', 'chyba, bloudění, opakované klikání nebo zámek', badPct >= 40 ? 'bad' : badPct >= 20 ? 'warn' : 'ok')}
+      ${flKpi('Konec uprostřed lekce', sess.length ? Math.round(exitLesson / sess.length * 100) + ' %' : '—', 'podíl sezení, která skončila v lekci, ne na úvodu', sess.length && exitLesson / sess.length >= .5 ? 'warn' : '')}
+      ${flKpi('Bloudí', pingS + ' z ' + A.people, 'lidé, kteří přeskakují tam a zpět', pingS && pingS / Math.max(1, A.people) >= .3 ? 'warn' : '')}
+    </div>
+
+    <div class="sec-h"><h2>Co z dat plyne</h2><p>Závěry spočítané z dat, seřazené od nejdůležitějšího.</p></div>
     <ul class="fl-ins">${flInsights(A).map(x => `<li>${x}</li>`).join('')}</ul>
 
-    <div class="sec-h"><h2>Problémová místa</h2><p>Místa, kde lidé odcházejí, chybují, bloudí nebo se zasekávají. Pořadí podle závažnosti a počtu lidí.</p></div>
-    ${A.places.length ? `<ol class="fl-places">${A.places.slice(0, 12).map((p, i) => `<li><span class="fl-rank">${i + 1}</span><div><b>${esc(tLocLabel(p.loc))}</b><span class="muted">${p.u} ${p.u === 1 ? 'člověk' : 'lidí'} · ${p.v} návštěv · medián ${dDur(Math.round(p.md))}${p.est ? ' (odhad ' + p.est + ' min)' : ''}</span><span class="fl-why">${p.why.map(([k, t]) => `<span class="fl-tag ${tagCls[k] || ''}">${esc(t)}</span>`).join('')}</span></div>${p.loc.includes('/') ? `<button class="linkbtn" type="button" data-dash="open:${esc(p.loc)}">Otevřít</button>` : ''}</li>`).join('')}</ol>` : '<p class="muted ds-empty">Zatím žádné problémové místo.</p>'}
-
-    <div class="sec-h"><h2>Kam až lidé v lekcích došli</h2><p>Kolik lidí otevřelo kterou lekci na cestě, v pořadí cesty. Velký propad ukazuje, kde lidé přestávají.</p></div>
-    ${(() => { const ids = ['l0', 'l1', 'pm', 'pd', 'se', 'gm', 'l3', 'l4']; const L = []; ids.forEach(id => { const w = W.find(x => x.id === id); if (w) w.days.forEach(d => { const k = id + '/' + d.d; if (A.reached[k] || id === 'l0' || id === 'l1') L.push([k, A.reached[k] || 0, w]); }); });
-      const mx = Math.max(1, ...L.map(x => x[1])); let prev = null;
-      return L.length && A.people ? dTable(['Lekce', 'Lidí', 'Propad'], L.map(([k, n, w]) => { const drop = prev !== null && prev > 0 && n < prev && w.role === undefined ? Math.round((prev - n) / prev * 100) : null; const r = [esc(w.title + ' › ' + flShort(k)), bar(n, mx), drop ? `<span class="fl-tag ${drop >= 40 ? 'bad' : 'warn'}">−${drop} %</span>` : '']; prev = n; return r; })) : '<p class="muted ds-empty">Zatím nikdo neotevřel žádnou lekci.</p>'; })()}
-
-    <div class="sec-h"><h2>Odkud kam lidé jdou</h2><p>Nejčastější přechody mezi stránkami a jaký podíl odchodů ze stránky tvoří.</p></div>
-    ${dTable(['Odkud', 'Kam', 'Kolikrát', 'Podíl'], trans.map(([k, n]) => { const [f, to] = k.split('→'); return [esc(flShort(f)), esc(flShort(to)), bar(n, tMax), Math.round(n / fromTot[f] * 100) + ' %']; }), 'Zatím žádné přechody.')}
-
-    <div class="ds-grid">
-      <div><h3>Kde lidé začínají</h3>${dTable(['Stránka', 'Sezení'], top(A.entry, 8).map(([l, n]) => [esc(flShort(l)), n]), 'Zatím nic.')}</div>
-      <div><h3>Kde lidé končí</h3>${dTable(['Stránka', 'Sezení', 'Podíl návštěv'], top(A.exit, 8).map(([l, n]) => [esc(flShort(l)), n, Math.round(n / (A.visits[l] || 1) * 100) + ' %']), 'Zatím nic.')}</div>
+    <div class="fl-two">
+      <section class="fl-card"><h3>Mapa pohybu</h3><p class="fl-how">Kruh = typ stránky, velikost = počet návštěv. Šipka = přechod, čím tlustší, tím častější.</p>${flMapSvg(A)}
+        <p class="fl-leg2">${FL_KINDS.map(([k, l], i) => Object.keys(A.visits).some(v => flKind(v) === k) ? `<span><i style="background:var(--fl-${i + 1})"></i>${l}</span>` : '').join('')}</p></section>
+      <section class="fl-card"><h3>Kam až lidé došli</h3><p class="fl-how">Kolik lidí otevřelo kterou lekci, v pořadí cesty. Červený propad = tady lidé přestávají.</p>${flBars(reach, {empty:'Zatím nikdo neotevřel lekci.'})}</section>
     </div>
 
-    <div class="ds-grid">
-      <div><h3>Opakující se vzorce pohybu</h3><p class="muted">Tři kroky po sobě podle typu stránky.</p>${dTable(['Vzorec', 'Kolikrát'], top(A.paths, 8).map(([k, n]) => [esc(k), n]), 'Zatím málo dat.')}</div>
-      <div><h3>Bloudění: tam a zpět</h3><p class="muted">Dvojice stránek, mezi kterými lidé během minuty přeskočí a vrátí se.</p>${dTable(['Mezi', 'Kolikrát'], top(A.ping, 8).map(([k, n]) => [esc(k.split('↔').map(flShort).join(' ↔ ')), n]), 'Nikdo nebloudí.')}</div>
+    <section class="fl-card"><h3>Problémová místa</h3><p class="fl-how">Délka pruhu = závažnost (důvody × počet lidí), barva = hlavní důvod. Klepněte na místo a níže uvidíte jen lidi, kteří tam byli.</p>
+      ${flBars(placeBars, {empty:'Zatím žádné problémové místo.'})}
+      ${place ? `<div class="fl-detail"><b>${esc(tLocLabel(place.loc))}</b> <span class="muted">${place.u} ${place.u === 1 ? 'člověk' : 'lidí'} · ${place.v} návštěv · medián ${dDur(Math.round(place.md))}${place.est ? ' (odhad ' + place.est + ' min)' : ''}</span><span class="fl-why">${place.why.map(([k, t]) => `<span class="fl-tag">${esc(t)}</span>`).join('')}</span>${place.loc.includes('/') ? `<button class="linkbtn" type="button" data-dash="open:${esc(place.loc)}">Otevřít to místo v tutoriálu</button>` : ''} <button class="btn sm" type="button" data-dash="fplace:">Zrušit výběr</button></div>` : ''}</section>
+
+    <div class="fl-two">
+      <section class="fl-card"><h3>Aktivita v čase</h3><p class="fl-how">Sezení po dnech za posledních ${FLF.days || 14} dní. Horní část sloupce = sezení s problémem.</p>${flDays(sess, FLF.days || 14)}</section>
+      <section class="fl-card"><h3>Jak dlouho lidé zůstávají</h3><p class="fl-how">Počet sezení podle délky. Hodně krátkých sezení = lidé rychle odcházejí.</p>${flBars(B.map(([l], i) => ({label:l, n:bc[i], val:bc[i] + ' sezení', color:'var(--fl-1)'})).filter(x => sess.length), {empty:'Zatím žádná sezení.'})}</section>
     </div>
 
-    <div class="sec-h"><h2>Cesta každého člověka</h2><p>Typ chování a celá cesta krok za krokem. Kliknutím na jméno ji otevřete.</p></div>
-    ${dTable(['Kdo', 'Sezení', 'Kroků', 'Typ chování', 'Nejdéle'], A.persons.slice().sort((a, b) => b.steps - a.steps).map(P => [
+    <section class="fl-card"><h3>Typy chování</h3><p class="fl-how">Kolik lidí se chová kterým způsobem. Jeden člověk může mít víc typů.</p>${flBars(Object.entries(tags).sort((a, b) => b[1] - a[1]).map(([t, n]) => ({label:t, n, val:n + (n === 1 ? ' člověk' : ' lidí'), color:'var(--fl-7)', tip:t + ': ' + (TAGD[t] || '')})), {empty:'Zatím nikdo bez nápadností.'})}
+      <p class="fl-how">${Object.keys(tags).map(t => `<b>${esc(t)}</b>: ${esc(TAGD[t] || '')}`).join(' · ')}</p></section>
+
+    <div class="sec-h"><h2>Cesta každého člověka</h2><p>${place ? `Jen lidé, kteří byli na místě <b>${esc(flShort(place.loc))}</b>. ` : ''}Klepněte na jméno a uvidíte celou cestu krok za krokem.</p></div>
+    ${dTable(['Kdo', 'Sezení', 'Kroků', 'Typ chování', 'Nejdéle'], persons.map(P => [
       `<button class="linkbtn" type="button" data-dash="flow:${esc(P.id)}">${dName(P.id)}${P.id === TRK.uid ? ' (vy)' : ''}</button>`, P.sessions, P.steps,
       P.tags.length ? P.tags.map(([t, d]) => `<span class="fl-tag" title="${esc(d)}">${esc(t)}</span>`).join(' ') : '<span class="muted">bez nápadností</span>',
-      P.stuck ? esc(flShort(P.stuck.loc)) + ' · ' + dDur(Math.round(P.stuck.dur / 1000)) : '—']), 'Zatím nikdo.')}
+      P.stuck ? esc(flShort(P.stuck.loc)) + ' · ' + dDur(Math.round(P.stuck.dur / 1000)) : '—']), 'Nikdo neodpovídá výběru.')}
     ${sel ? `<div class="ds-who fl-who"><h3>Cesta: ${dName(sel.id)} <button class="btn sm" type="button" data-dash="flow:">Zavřít</button></h3>
       ${sel.tags.length ? `<p>${sel.tags.map(([t, d]) => `<span class="fl-tag">${esc(t)}: ${esc(d)}</span>`).join(' ')}</p>` : ''}
       ${sel.J.slice().reverse().slice(0, 20).map(x => `<div class="fl-ses"><span class="fl-sh">${dDate(x.from)} · ${dTime(x.from)}–${dTime(x.last)} · ${x.steps.length} kroků</span><div class="fl-path">${x.steps.map(flChip).join('<span class="fl-ar" aria-hidden="true">→</span>')}<span class="fl-end">konec</span></div></div>`).join('') || '<p class="muted">Žádné kroky.</p>'}</div>` : ''}
-    <p class="muted fl-leg">Barvy kroků: <span class="fl-st k-úvod"><b>úvod</b></span> <span class="fl-st k-lekce"><b>lekce</b></span> <span class="fl-st k-kvíz"><b>kvíz</b></span> <span class="fl-st k-opora"><b>opora</b></span> <span class="fl-st k-profil"><b>profil</b></span> <span class="fl-st warn"><b>problém</b></span>. Doba kroku je čas do dalšího kroku, nejvýš 10 minut.</p>
+
+    <details class="fl-more"><summary>Podrobné tabulky: přechody, vstupy, odchody, vzorce a bloudění</summary>
+      <h3>Odkud kam lidé jdou</h3>
+      ${dTable(['Odkud', 'Kam', 'Kolikrát', 'Podíl odchodů ze stránky'], top(A.trans, 15).map(([k, n]) => { const [f, to] = k.split('→'); return [esc(flShort(f)), esc(flShort(to)), n, Math.round(n / fromTot[f] * 100) + ' %']; }), 'Zatím žádné přechody.')}
+      <div class="ds-grid">
+        <div><h3>Kde lidé začínají</h3>${dTable(['Stránka', 'Sezení'], top(A.entry, 8).map(([l, n]) => [esc(flShort(l)), n]), 'Zatím nic.')}</div>
+        <div><h3>Kde lidé končí</h3>${dTable(['Stránka', 'Sezení', 'Podíl návštěv'], top(A.exit, 8).map(([l, n]) => [esc(flShort(l)), n, Math.round(n / (A.visits[l] || 1) * 100) + ' %']), 'Zatím nic.')}</div>
+      </div>
+      <div class="ds-grid">
+        <div><h3>Opakující se vzorce pohybu</h3>${dTable(['Vzorec (3 kroky po sobě)', 'Kolikrát'], top(A.paths, 8).map(([k, n]) => [esc(k), n]), 'Zatím málo dat.')}</div>
+        <div><h3>Bloudění: tam a zpět</h3>${dTable(['Mezi', 'Kolikrát'], top(A.ping, 8).map(([k, n]) => [esc(k.split('↔').map(flShort).join(' ↔ ')), n]), 'Nikdo nebloudí.')}</div>
+      </div>
+    </details>
+    <p class="muted fl-leg">Barvy kroků v cestě: <span class="fl-st k-úvod"><b>úvod</b></span> <span class="fl-st k-lekce"><b>lekce</b></span> <span class="fl-st k-kvíz"><b>kvíz</b></span> <span class="fl-st k-opora"><b>opora</b></span> <span class="fl-st k-profil"><b>profil</b></span> <span class="fl-st warn"><b>problém</b></span>. Doba kroku je čas do dalšího kroku, nejvýš 10 minut.</p>
   </div>`);
 }
+/* tooltip pro grafy dashboardu: text z data-tip, vložený přes textContent */
+(function(){
+  let tip = null;
+  const show = (el, x, y) => { if (!tip) { tip = document.createElement('div'); tip.className = 'fl-tip'; tip.setAttribute('role', 'tooltip'); document.body.append(tip); }
+    tip.textContent = el.getAttribute('data-tip'); tip.hidden = false; const r = tip.getBoundingClientRect(); tip.style.left = Math.max(8, Math.min(innerWidth - r.width - 8, x + 12)) + 'px'; tip.style.top = Math.max(8, y - r.height - 10) + 'px'; };
+  const hide = () => { if (tip) tip.hidden = true; };
+  document.addEventListener('pointermove', e => { const el = e.target.closest && e.target.closest('#dash [data-tip]'); if (el) show(el, e.clientX, e.clientY); else hide(); });
+  document.addEventListener('focusin', e => { const el = e.target.closest && e.target.closest('#dash [data-tip]'); if (el) { const r = el.getBoundingClientRect(); show(el, r.left, r.top); } else hide(); });
+  addEventListener('scroll', hide, {passive:true});
+})();
+/* živá aktualizace: dokud je otevřený dashboard, data se každých 30 s načtou znovu (jen když je karta vidět) */
+setInterval(() => { if (view.name === 'dash' && DASH.live !== false && !document.hidden && !DASH.loading && DASH.rows) { const y = scrollY; dashLoad().then(() => { if (view.name === 'dash') scrollTo({top:y}); }); } }, 30000);
+/* klávesnice: prvky grafů, které jdou vybrat, reagují na Enter a mezerník */
+document.addEventListener('keydown', e => { const el = e.target.closest && e.target.closest('#dash [role=button][data-dash]'); if (el && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); el.click(); } });
