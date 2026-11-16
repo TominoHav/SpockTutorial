@@ -42,12 +42,12 @@
 
 /* ---------- Spock: animace ---------- */
 .spock .sp-shadow{fill:rgba(12,27,42,.18);transform-origin:60px 133px}
-.spock .sp-legs line,.spock .sp-arm line{stroke:#372B91;stroke-width:7;stroke-linecap:round}
-.spock .sp-arm circle{fill:#A54CB2}
-.spock .sp-ant{stroke:#A54CB2;stroke-width:3.5;stroke-linecap:round}
-.spock .sp-tip{fill:#F07196}
-.spock .sp-eyes ellipse{fill:#7FE3FF}
-.spock .sp-smile{fill:none;stroke:#7FE3FF;stroke-width:2.6;stroke-linecap:round}
+.spock .sp-legs line,.spock .sp-arm line{stroke:var(--limb,#372B91);stroke-width:7;stroke-linecap:round}
+.spock .sp-arm circle{fill:var(--hand,#A54CB2)}
+.spock .sp-ant{stroke:var(--ant,#A54CB2);stroke-width:3.5;stroke-linecap:round}
+.spock .sp-tip{fill:var(--tip,#F07196)}
+.spock .sp-eyes ellipse{fill:var(--eye,#7FE3FF)}
+.spock .sp-smile{fill:none;stroke:var(--eye,#7FE3FF);stroke-width:2.6;stroke-linecap:round}
 .spock .sp-body{transform-origin:60px 128px}
 .spock .sp-eyes{transform-origin:60px 61px;animation:spBlink 4.2s infinite}
 .spock .sp-arm-l{transform-origin:28px 70px}.spock .sp-arm-r{transform-origin:92px 70px}
