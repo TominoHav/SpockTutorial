@@ -526,10 +526,13 @@ function storyScenes(){
   const mods = pathIds().map(id => W.find(w => w.id === id)).filter(w => w && modPct(w) === 1);
   const first = Object.keys(S.days).filter(k => S.days[k] > 0).sort()[0], cz = k => k ? k.split('-').reverse().map(Number).join('. ') : '';
   const lessons = mods.reduce((n, w) => n + w.days.length, 0), tasks = mods.reduce((n, w) => n + w.days.reduce((m, d) => m + d.todo.length, 0), 0);
-  const sc = [{k:'start', h:'Start', t:`${first ? cz(first) + ': ' : ''}malá postavička nastupuje do lodi. Cíl: naučit se discovery se SPOCKem. Na palubě čeká průvodce Spock.`}];
+  const pl = (n, a, b, c) => n + ' ' + (n === 1 ? a : n > 1 && n < 5 ? b : c);
+  const nb = myBadges().filter(b => S.badges['got.' + b[0]]).length;
+  const sc = [{k:'start', h:'Start', t:`${first ? cz(first) + ': ' : ''}malá postavička nastupuje do lodi. Cíl: naučit se discovery se SPOCKem. Průvodce Spock jí radí na dálku a čeká na ni v cíli.`}];
   mods.forEach((w, i) => { const wd = worldOf(w); sc.push({k:'world', c:wd.c, n:i, h:wd.n, foe:wd.foe, t:`${esc(w.role ? w.title : w.lab + ' · ' + w.title)}. Překážka: ${wd.foe}. ${wd.win}`}); });
-  sc.push({k:'stats', h:'Co jste na cestě zvládli', t:`${mods.length} světů, ${lessons} lekcí a ${tasks} úkolů. ${S.xp} XP, hodnost ${rank().name}, ${myBadges().filter(b => S.badges['got.' + b[0]]).length} odznaků.`});
-  sc.push({k:'end', h:'Odlet', t:'Postavička se setkala se Spockem a společně odlétají k dalším iniciativám. Agenti připravují, vy rozhodujete.'});
+  sc.push({k:'meet', h:'Setkání se Spockem', t:'Postavička doletěla do cíle. Spock jí podává ruku a předává vlajku posádky: od teď vedete discovery sami. Agenti připravují, vy rozhodujete.'});
+  sc.push({k:'stats', h:'Co jste na cestě zvládli', t:`${pl(mods.length, 'svět', 'světy', 'světů')}, ${pl(lessons, 'lekce', 'lekce', 'lekcí')} a ${pl(tasks, 'úkol', 'úkoly', 'úkolů')}. ${S.xp} XP, hodnost ${rank().name}, ${pl(nb, 'odznak', 'odznaky', 'odznaků')}.`});
+  sc.push({k:'end', h:'Odlet', t:'Postavička a Spock nastupují do lodi a společně odlétají k dalším iniciativám.'});
   return sc;
 }
 /* zvuk: tichý podkres a tóny z Web Audio, komentář čte hlas prohlížeče (když má český). Jde vypnout. */
@@ -584,10 +587,13 @@ function playScenes(sc, label, what){
   const close = () => { clearTimeout(STORY.h); sndStop(); ov.remove(); STORY = null; document.body.classList.remove('noscroll'); render(); showCel(); };
   const show = () => {
     const s = sc[STORY.i], last = STORY.i === sc.length - 1;
-    const art = s.k === 'world' ? `<span class="st-planet" style="--pc:${s.c}"></span>${s.foe ? `<span class="st-foe">${s.foe}</span>` : ''}<span class="st-ship fly">${shipSVG()}</span><span class="st-guide">${spockSVG('fab')}</span>`
-      : s.k === 'start' ? `<span class="st-ship idle">${shipSVG()}</span><span class="st-av walk">${avatarSVG()}</span><span class="st-guide">${spockSVG('fab')}</span>`
-      : s.k === 'stats' ? `<span class="st-av center">${avatarSVG(null, 'big')}</span><span class="st-guide center">${spockSVG('big')}</span>`
-      : `<span class="st-ship away">${shipSVG()}</span><span class="st-wave">${spockSVG('fab')}</span>`;
+    const flag = '<svg class="st-flag" viewBox="0 0 40 60" aria-hidden="true"><line x1="5" y1="4" x2="5" y2="58" stroke="#C9D2E3" stroke-width="3" stroke-linecap="round"/><path d="M6 6 L36 12 L6 26 Z" fill="#E15079"/><circle cx="15" cy="15" r="3.4" fill="#fff"/></svg>';
+    const scene = s.k === 'world' ? `<span class="st-planet" style="--pc:${s.c}"></span>${s.foe ? `<span class="st-foe">${s.foe}</span>` : ''}<span class="st-ship fly">${shipSVG()}</span><span class="st-comm"><span class="st-comm-l">Spock radí</span>${spockSVG('fab')}</span>`
+      : s.k === 'start' ? `<span class="st-ship idle">${shipSVG()}</span><span class="st-av walk">${avatarSVG()}</span><span class="st-comm"><span class="st-comm-l">Spock na příjmu</span>${spockSVG('fab')}</span>`
+      : s.k === 'meet' ? `<span class="st-ground"></span><span class="st-ship landed">${shipSVG()}</span><span class="st-av meet">${avatarSVG(null, 'big')}</span><span class="st-guide meet">${spockSVG('big')}</span><span class="st-hand"></span><span class="st-flagbox">${flag}</span>`
+      : s.k === 'stats' ? `<span class="st-ground"></span><span class="st-av duo">${avatarSVG(null, 'big')}</span><span class="st-flagbox duo">${flag}</span><span class="st-guide duo">${spockSVG('big')}</span>`
+      : `<span class="st-crew away"><span class="st-crew-av">${avatarSVG()}</span><span class="st-crew-sp">${spockSVG('fab')}</span>${shipSVG()}</span>`;
+    const art = `<div class="st-scene">${scene}</div>`;
     ov.innerHTML = `<div class="st-stage k-${s.k}"><div class="sp-stars" aria-hidden="true"></div><div class="st-art" aria-hidden="true">${art}</div>
       <div class="st-cap"><span class="eyebrow">${label} · ${STORY.i + 1}/${sc.length}</span><h2>${s.h}</h2>${s.t ? `<p>${s.t}</p>` : ''}${s.list ? `<ul>${s.list.map(x => `<li>${x}</li>`).join('')}</ul>` : ''}</div>
       <div class="st-bar"><span class="bar"><i style="width:${Math.round((STORY.i + 1) / sc.length * 100)}%"></i></span>

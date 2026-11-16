@@ -183,8 +183,9 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  await p.locator('[data-av="acc:cape"]').click();await p.waitForTimeout(150);
  ok(T('cíl cesty: šatna oblékne postavičku'), (await st()).av.acc==='cape' && await p.locator('#wardrobe .avatar').count()===1);
  await p.locator('[data-fly]').click();await p.waitForTimeout(300);
- ok(T('odlet spustí příběh cesty se scénou pro každý svět'), (await p.locator('#story .st-cap .eyebrow').innerText()).includes('1/8'));
- for(let i=0;i<7;i++){await p.locator('#story [data-st=next]').click();await p.waitForTimeout(80);}
+ ok(T('odlet spustí příběh cesty se scénou pro každý svět a setkáním se Spockem'), (await p.locator('#story .st-cap .eyebrow').innerText()).includes('1/9'));
+ for(let i=0;i<8;i++){await p.locator('#story [data-st=next]').click();await p.waitForTimeout(80);if(i===5)ok(T('příběh má scénu setkání se Spockem s vlajkou'), (await p.locator('#story .st-cap h2').innerText())==='Setkání se Spockem' && await p.locator('#story .st-flag').count()===1);if(i===6)ok(T('souhrn příběhu skloňuje počty správně'), !/ 1 (odznaků|světů|lekcí|úkolů)/.test(await p.locator('#story .st-cap p').innerText()));}
+ ok(T('odlet: postavička i Spock jsou v lodi'), await p.locator('#story .st-crew .avatar').count()===1 && await p.locator('#story .st-crew .spock').count()===1);
  ok(T('příběh jde projít do konce a zavřít'), (await p.locator('#story .st-cap h2').innerText())==='Odlet');
  await p.locator('#story [data-st=next]').click();await p.waitForTimeout(200);
  ok(T('po příběhu se stránka vrátí a nepřetéká'), await p.locator('#story').count()===0 && (await ov())<=0);
