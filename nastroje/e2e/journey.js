@@ -302,6 +302,23 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  ok(T('doplňkové scénáře bez chyb v konzoli'), errs.length===0, errs.slice(0,2).join(' | '));
  await ctx.close();
 }
+// ---- pokrok pod účtem: návrat na jiném zařízení ----
+{
+ const ctx=await b.newContext({viewport:{width:390,height:844}});
+ const now=Date.now();
+ await ctx.addInitScript(n=>{const seed={v:1,at:n,state:{role:'gm',todo:{'l0.0.0':true},cards:{'l0.0.0':0},xp:123,got:{'welcome':true},badges:{},days:{},pos:{w:'l0',l:1},_at:n}};let db;Object.defineProperty(window,'__db',{configurable:true,get(){return db},set(v){v['data/users/u_ja/progress']=seed;db=v;}});},now);
+ const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));const T=s=>'pokrok v účtu: '+s;
+ await p.goto('file://'+path.join(DIST,'e2e.html'));await p.waitForTimeout(900);
+ const st=await p.evaluate(()=>JSON.parse(localStorage.getItem('spock-user-onboarding-v1')||'{}'));
+ ok(T('na novém zařízení se pokrok načte z účtu (role, úkoly, XP)'), st.role==='gm' && st.todo && st.todo['l0.0.0']===true && st.xp===123, JSON.stringify({role:st.role,xp:st.xp}));
+ ok(T('úvod nabídne pokračovat přesně tam, kde člověk skončil'), (await p.locator('.hx').first().innerText()).includes('kde jste skončil(a): lekce 0.2'));
+ await p.locator('[data-golesson]').first().click();await p.waitForTimeout(300);
+ await p.evaluate(()=>{const o=document.querySelector('.lpanel .lcard.cur .lc-opt');o&&o.click();});await p.waitForTimeout(2800);
+ const remote=await p.evaluate(()=>window.__db['data/users/u_ja/progress']);
+ ok(T('změna se do pár sekund uloží do účtu'), remote && remote.state && Object.keys(remote.state.cards||{}).length>=2 && remote.at>now, remote?Object.keys(remote.state.cards||{}).join(','):'nic');
+ ok(T('bez chyb v konzoli'), errs.length===0, errs.slice(0,2).join(' | '));
+ await ctx.close();
+}
 await b.close();
 const f=R.filter(r=>r[0]==='FAIL');
 fs.writeFileSync(path.join(DIST,'e2e-report.json'),JSON.stringify({src:SRC,at:Date.now(),total:R.length,pass:R.length-f.length,fail:f.length,failed:f.map(r=>r[1]+(r[2]?' ('+String(r[2]).slice(0,120)+')':'')),durMs:Date.now()-T0,lab:LAB,ctx:CTX}));R.forEach(r=>console.log(r[0],r[1],r[2]||''));console.log(`\nCELKEM ${R.length}, PASS ${R.length-f.length}, FAIL ${f.length}`);process.exit(f.length?1:0);})();

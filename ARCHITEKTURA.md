@@ -30,9 +30,9 @@ Plné šipky: kudy teče obsah. Čárkované: údržba a kontroly, které hlída
 | Automatické kontroly | GitHub Actions, `.github/workflows/kontroly.yml`: při každém pull requestu a po sloučení do `main` |
 | Sestavený web ke stažení | GitHub Actions → Kontroly → běh na `main` → Artifacts |
 | Měsíční kontrola aktuálnosti | naplánovaná úloha Clauda, 1. v měsíci v 8:56, navázaná na jedno sezení |
-| Měření průchodu a zpětná vazba | databáze stránky na claude.ai: `track/<člověk>` a `feedback/<člověk>`, vidí je jen vlastník a editoři; kód ve `web/track.js` |
+| Měření průchodu a zpětná vazba | databáze stránky na claude.ai: `track/<člověk>` (posledních 300 kroků) a `feedback/<člověk>`, vidí je jen vlastník a editoři; kód ve `web/track.js` |
 | Dashboard | na webu, tlačítko Dashboard v horní liště, jen pro vlastníka. Záložky: **Lidé a průchod** a **Verze a kvalita** (e2e testy, přístupnost, výkon, tokeny a historie verzí, `versions/<verze>` v databázi stránky) |
-| Pokrok a hra uživatele | jen v prohlížeči uživatele (`localStorage`): odškrtnuté úkoly, XP, hodnost, série, vzhled Spocka, postavička, zvuk |
+| Pokrok a hra uživatele | v prohlížeči (`localStorage`) a pod účtem uživatele v databázi stránky (`data/users/<člověk>/progress`, vidí ho jen on): odškrtnuté úkoly, XP, hodnost, série, vzhled Spocka, postavička, poslední lekce. Při otevření se obojí sloučí, změna se do 2 s uloží. Kód: `pLoad`, `pPush` ve `web/track.js` |
 | Úkoly, které musí udělat lidé | [revize/TODO-VLASTNIK.md](revize/TODO-VLASTNIK.md) |
 
 Web se po sloučení změny **sám nepublikuje**. Postup je ve [web/README.md](web/README.md). Verze je v patičce webu.
@@ -80,9 +80,10 @@ Každá změna jde na vlastní větev a do pull requestu. Do hlavní větve se s
 2. **Nový úkol na konec lekce, nová lekce na konec modulu.** Pořadí úkolů je klíč uloženého pokroku uživatelů.
 3. **Každé tvrzení o SPOCKu má oporu ve SPOCKu.** Odkazy kontroluje skript, odpovědi u ověření z VS Code jsou z kopie SPOCKu.
 4. **Nic se neslučuje ani nepublikuje bez schválení.** Větev, pull request, zelené kontroly, schválení, pak sloučení.
-5. **Web projde testy přístupnosti a výkonu.** Kontrast a dotykové plochy podle WCAG 2 AA ve světlém i tmavém režimu, rozpočty na velikost a rychlost. Nová barva nebo větší stránka se pozná hned v kontrolách.
-6. **Úroveň 4 je jen pro Guild Mastery.** Ostatní role ji nevidí a jejich cesta i „Hotovo %“ končí úrovní 3.
-7. **Web je soukromý.** Otevře ho jen ten, s kým ho vlastník sdílí z menu stránky. Pokrok se ukládá v prohlížeči uživatele, průchod se měří jmenovitě a vidí ho jen vlastník a editoři.
+5. **Pokrok se neztrácí.** Ukládá se pod účtem člověka; slučování v `pMerge` nikdy nemaže hotové úkoly, jen přidává.
+6. **Web projde testy přístupnosti a výkonu.** Kontrast a dotykové plochy podle WCAG 2 AA ve světlém i tmavém režimu, rozpočty na velikost a rychlost. Nová barva nebo větší stránka se pozná hned v kontrolách.
+7. **Úroveň 4 je jen pro Guild Mastery.** Ostatní role ji nevidí a jejich cesta i „Hotovo %“ končí úrovní 3.
+8. **Web je soukromý.** Otevře ho jen ten, s kým ho vlastník sdílí z menu stránky. Pokrok se ukládá v prohlížeči a pod účtem uživatele (vidí ho jen on), průchod se měří jmenovitě a vidí ho jen vlastník a editoři.
 
 ## Historie změn
 
@@ -91,6 +92,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
+| [#54](https://github.com/TominoHav/SpockTutorial/pull/54) | Aplikace | Pokrok pod účtem: ukládá se do soukromé části databáze, při otevření na jiném zařízení se sloučí, úvod nabídne pokračovat v poslední lekci; paměť kroků 300; TODO pro přesun na vlastní server | 17. 11. 2026 |
 | [#53](https://github.com/TominoHav/SpockTutorial/pull/53) | Aplikace | Dashboard pro 500 lidí: mezipaměť cest a analýzy, seznamy po 50, živá aktualizace stahuje jen změněné záznamy a překreslí jen při nových datech; výkonový test dashboardu s 500 lidmi | 17. 11. 2026 |
 | [#52](https://github.com/TominoHav/SpockTutorial/pull/52) | Aplikace | Pohyb a problémová místa: filtry (období, role, zařízení), přehledová čísla s vysvětlením, grafy (mapa pohybu, kam lidé došli, problémová místa, aktivita v čase, délka sezení, typy chování) s popisky, výběr místa zúží cesty lidí, živá aktualizace každých 30 s | 17. 11. 2026 |
 | [#51](https://github.com/TominoHav/SpockTutorial/pull/51) | Aplikace | Dashboard: nová záložka Pohyb a problémová místa (automatické závěry, problémová místa s důvody, kam až lidé došli, přechody, vstupy a odchody, vzorce, bloudění, cesta každého člověka krok za krokem) a bohatší sběr kroků | 17. 11. 2026 |

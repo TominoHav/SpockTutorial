@@ -22,7 +22,7 @@ function tLocLabel(k){
 }
 function trk(type, key){
   if (!TRK.doc) return;
-  tPush(TRK.doc.ev, [tNow(), type, String(key).slice(0, 80)], 600); TRK.dirty = true;
+  tPush(TRK.doc.ev, [tNow(), type, String(key).slice(0, 80)], 300); TRK.dirty = true;
 }
 function tSnapshot(){
   const T = TRK.doc; if (!T) return;
@@ -111,6 +111,7 @@ window.addEventListener('pagehide', () => { tFlush(); });
   let me = null; try { me = await user.me(); } catch (e) {}
   if (!me || !me.id) return;
   TRK.db = db; TRK.user = user; TRK.uid = me.id; TRK.owner = !!(me.isOwner || me.canEdit);
+  await pLoad(db, me.id);
   let doc = null;
   try { const s = await db.doc('track/' + me.id).get(); doc = s.exists ? JSON.parse(JSON.stringify(s.data())) : null; } catch (e) { return; }
   const T = Object.assign(tBlank(), doc || {});
@@ -801,3 +802,39 @@ function renderDashFlow(){
 setInterval(() => { if (view.name === 'dash' && DASH.live !== false && !document.hidden && !DASH.loading && DASH.rows) dashLive(); }, 30000);
 /* klávesnice: prvky grafů, které jdou vybrat, reagují na Enter a mezerník */
 document.addEventListener('keydown', e => { const el = e.target.closest && e.target.closest('#dash [role=button][data-dash]'); if (el && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); el.click(); } });
+
+/* ---------- pokrok pod účtem: soukromá část databáze data/users/<člověk>/progress ----------
+   Vidí ji jen ten člověk. Při otevření se sloučí s pokrokem v prohlížeči (nic se neztratí, ani při dvou
+   zařízeních), každá změna se do 2 s uloží. Bez přihlášení nebo bez připojení se pokračuje jen z prohlížeče.
+   Přechod na vlastní server: stačí nahradit pLoad a pPush. */
+const PROG = {ref:null, ready:false, h:null, busy:false};
+function pMerge(a, b){
+  const o = Object.assign({}, b, a), newer = (b._at || 0) > (a._at || 0) ? b : a;
+  ['role','goal','skin','av','sound','pos','survey','dq','seenVideo','flown'].forEach(k => { if (newer[k] !== undefined) o[k] = newer[k]; });
+  ['todo','cards','proof','got','badges','unlocked','qpass','ready','quiz','frozen'].forEach(k => { o[k] = Object.assign({}, b[k] || {}, a[k] || {}); });
+  o.days = Object.assign({}, b.days || {}); Object.entries(a.days || {}).forEach(([d, v]) => { o.days[d] = Math.max(v, o.days[d] || 0); });
+  ['ptries','tries'].forEach(k => { o[k] = Object.assign({}, b[k] || {}); Object.entries(a[k] || {}).forEach(([x, v]) => { o[k][x] = Math.max(v, o[k][x] || 0); }); });
+  ['xp','freeze','rankLvl'].forEach(k => { o[k] = Math.max(a[k] || 0, b[k] || 0); });
+  o._at = Math.max(a._at || 0, b._at || 0);
+  return o;
+}
+async function pLoad(db, uid){
+  try {
+    PROG.ref = db.doc('data/users/' + uid + '/progress');
+    const snap = await PROG.ref.get(), remote = snap.exists ? snap.data() : null;
+    PROG.ready = true;
+    if (remote && remote.state && typeof remote.state === 'object') {
+      const before = JSON.stringify(S), merged = pMerge(S, JSON.parse(JSON.stringify(remote.state)));
+      if (JSON.stringify(merged) !== before) { Object.keys(S).forEach(k => delete S[k]); Object.assign(S, merged); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} try { applySkin(); } catch (e) {} render(); }
+      if ((remote.at || 0) < (S._at || 0) || JSON.stringify(remote.state) !== JSON.stringify(S)) pPush();
+    } else if (Object.keys(S.todo || {}).length || S.role) pPush();
+  } catch (e) { PROG.ref = null; }
+}
+function pSync(){ if (!PROG.ready || !PROG.ref) return; clearTimeout(PROG.h); PROG.h = setTimeout(pPush, 2000); }
+async function pPush(){
+  if (!PROG.ref || PROG.busy) return; PROG.busy = true; clearTimeout(PROG.h);
+  try { await PROG.ref.set({v:1, at:Date.now(), state:JSON.parse(JSON.stringify(S))}); }
+  catch (e) { if (e && (e.code === 'revoked' || e.code === 'invalid_argument' || e.code === 'not_granted')) PROG.ref = null; else PROG.h = setTimeout(pPush, 15000); }
+  PROG.busy = false;
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden && PROG.h) pPush(); });
