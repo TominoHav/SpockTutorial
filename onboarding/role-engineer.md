@@ -43,7 +43,7 @@
 
 #### Ani SWE neupravuje workflow
 
-**Ani jako SWE neupravujte `.github/` ani `.vscode/`** (`SETUP.md` §9). Chybu ve workflow nahlaste (úroveň 4).
+**Ani jako SWE neupravujte `.github/` ani `.vscode/`** (`SETUP.md` §9). Chybu ve workflow nahlaste (lekce 3.6).
 
 **Otázka:** Najdete chybu ve skriptu kontroly. Co uděláte?
 - [ ] Opravím ho ve své kopii a pošlu kolegům

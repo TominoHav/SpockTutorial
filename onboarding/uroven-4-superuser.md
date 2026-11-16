@@ -1,10 +1,10 @@
-# Úroveň 4: Superuser (volitelně pro superusery a Guild Mastery, 4–5 h)
+# Úroveň 4: Superuser (jen Guild Master, 4–5 h)
 
 **Cíl:** SPOCK ovládáte bez nápovědy. Prověříte chování agentů, pošlete týmu CoE Product Management použitelný nález a provedete kolegu úrovněmi 0–1.
 
-**Pro koho:** Úroveň je volitelná. Je pro ty, kdo budou v týmu první pomocí se SPOCKem, a pro Guild Mastery. Na běžnou práci se SPOCKem stačí úrovně 0 až 3.
+**Pro koho:** Úroveň je jen pro Guild Mastery. Product Manager, Product Designer a Software Engineer končí úrovní 3, která na práci se SPOCKem stačí.
 
-**Proč:** Superuser je první, za kým tým přijde, když něco nefunguje. Musí poznat, jestli je chyba v materiálu, v nastavení, nebo ve workflow. A musí umět říct, kdy výstup vypadá dobře, ale nic nedokazuje: „A document that looks right proves nothing on its own“ (`TESTER-GUIDE.md` §1.3).
+**Proč:** Guild Master je jako superuser první, za kým tým přijde, když něco nefunguje. Musí poznat, jestli je chyba v materiálu, v nastavení, nebo ve workflow. A musí umět říct, kdy výstup vypadá dobře, ale nic nedokazuje: „A document that looks right proves nothing on its own“ (`TESTER-GUIDE.md` §1.3).
 
 ## 4.1 — Prověřte chování agentů
 
@@ -91,35 +91,11 @@
 
 ## 4.3 — Zpětná vazba týmu CoE Product Management
 
-### Karty (asi 5 min, jen na webu)
-
-#### Co poslat hned
-
-**Hned (ještě tu hodinu) pošlete:** relaci, kde poskytovatel nebyl GitHub Copilot, víc než šest agentů ve výběru (se jmény), jakékoli selhání DR-04 a případ, kdy agent doplnil informaci, kterou jste mu nedali.
-
-**Otázka:** Ve výběru vidíte sedm agentů SPOCKu. Kdy to nahlásíte?
-- [x] Hned, ještě tu hodinu, se jmény agentů
-- [ ] Na konci běhu
-
-**Proč:** Víc než šest agentů je nález, který se posílá okamžitě.
-
-#### Jak vypadá nález
-
-**Nález obsahuje:** verzi SPOCKu, fázi a agenta, co jste udělali a co jste čekali. Přiložte **celou složku běhu jako ZIP** a **chat každé fáze exportovaný zvlášť** (`Chat: Export Chat...`). Nikdy screenshot místo souboru.
-
-**Zprávu píšete sami**, ve vlastním dokumentu mimo složku SPOCKu, a posíláte ji jen týmu CoE Product Management. Agenta ji psát nenechávejte.
-
-**Otázka:** Co přiložíte k nálezu?
-- [ ] Screenshot chatu
-- [x] Celou složku běhu jako ZIP a chat každé fáze exportovaný zvlášť
-
-**Proč:** Screenshot nenahradí soubor. Zprávu píšete sami, ne agent.
-
 ### Úkoly
 
 - [ ] **Pošlete jeden nález** (30 min, ve VS Code)
   - *Proč:* Dobrý nález opraví workflow pro všechny. Nejasný nález se ztratí.
-  1. Vyberte jeden nález z deníku nebo ze sond v 4.1.
+  1. Vyberte jeden nález z deníku nebo ze sond v 4.1. Co nález obsahuje a co se posílá hned, znáte z lekce 3.6.
   2. Sepište ho podle `SETUP.md` §10, přiložte ZIP běhu a exportované chaty a pošlete týmu CoE Product Management.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)

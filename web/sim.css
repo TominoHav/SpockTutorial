@@ -292,6 +292,6 @@ body.msg-on .g-bubble{display:none}
 .ds-empty{border:1px dashed var(--line);border-radius:12px;padding:18px;text-align:center}
 .ds-rest{margin:4px 0 0;font-size:13px}
 @media (min-width:900px){.sim-body:has(.sim-hero){align-content:center;padding-bottom:12vh}.sim-foot{border:1px solid var(--line);border-bottom:0;border-radius:14px 14px 0 0}}
-@media (min-width:981px){.hp-path{grid-template-columns:repeat(4,minmax(0,1fr))}.hp-path::before{left:12.5%;right:12.5%}}
+@media (min-width:981px){.hp-path{grid-template-columns:repeat(4,minmax(0,1fr))}.hp-path::before{left:12.5%;right:12.5%}.hp-path.five{grid-template-columns:repeat(5,minmax(0,1fr))}.hp-path.five::before{left:10%;right:10%}}
 .tfold{min-width:0}.tfold>summary{width:auto}.tdet{grid-template-columns:minmax(0,1fr)}
 .codeblk pre{max-height:280px;overflow:auto}

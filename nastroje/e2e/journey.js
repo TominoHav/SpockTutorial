@@ -34,6 +34,7 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  ok(T('stopa tvrzení ukazuje 4 kroky'), await p.locator('.sim-trace li').count()===4);
  await p.locator('[data-sim=finish]').click();await p.waitForTimeout(200);await dismiss();
  ok(T('odznak Pilot nanečisto a 30 XP'), (await st()).badges['got.sim'] && (await st()).xp===30);
+ ok(T('bez role: cesta končí úrovní 3, odznak Superuser se nenabízí'), await p.evaluate(()=>!__kviz.path().includes('l4') && !__kviz.badges().includes('superuser') && __kviz.badges().includes('path')));
  // role
  await p.locator('.startb [data-role=gm]').click();await p.waitForTimeout(200);
  ok(T('hlášky se ukazují po jedné'), await p.locator('.notice').count()===1);
@@ -172,6 +173,7 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  if(!CTX)CTX=await p.evaluate(()=>__kviz.ctx());
  // trvalost
  await dismiss();const before=await st();await p.reload();await p.waitForTimeout(300);const after=await st();
+ ok(T('Guild Master: úroveň 4 je na cestě a odznak Superuser se nabízí'), await p.evaluate(()=>__kviz.path().join()==='l0,l1,gm,l3,l4' && __kviz.badges().includes('superuser')));
  ok(T('pokrok přežije obnovení stránky'), before.xp===after.xp && after.role==='gm', 'před '+before.xp+' po '+after.xp+' role '+after.role);
  ok(T('bez chyb v konzoli'), errs.length===0, errs.slice(0,2).join(' | '));
  // přístupnost: tlačítka bez názvu, obrázky bez alt

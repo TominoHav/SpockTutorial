@@ -73,7 +73,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
-| [#42](https://github.com/TominoHav/SpockTutorial/pull/42) | Obsah | Úroveň 4 Superuser je volitelná (pro superusery a GM) a nepočítá se do cesty ani do Hotovo %; lekce Co výstup dokazuje přesunuta do úrovně 3 jako 3.6 | 16. 11. 2026 |
+| [#42](https://github.com/TominoHav/SpockTutorial/pull/42) | Obsah | Úroveň 4 Superuser jen pro Guild Mastery; ostatním rolím cesta končí úrovní 3. Lekce 3.6: co výstup dokazuje a jak nahlásit nález. Hra: odznak Cesta hotová, nejvyšší hodnost Mistr na 1700 XP. Opora podle změn | 16. 11. 2026 |
 | [#41](https://github.com/TominoHav/SpockTutorial/pull/41) | Aplikace | Výkon: písmo neblokuje první vykreslení, data lekcí přes JSON.parse, styly bez komentářů a mezer, videa se nenačítají předem | 16. 11. 2026 |
 | [#40](https://github.com/TominoHav/SpockTutorial/pull/40) | Obsah | GM modul pro všech pět oblastí know-how (vlastní ČS, osoby zatím nejmenovány), lekce 1.5 rozdělena na 1.5 a 1.6, kratší karty v 2G.6 | 15. 11. 2026 |
 | [#39](https://github.com/TominoHav/SpockTutorial/pull/39) | Aplikace | Revize desktopu i mobilu: hlášky po jedné na jednom místě, sbalený postup úkolů, příkazy kopírovatelné kliknutím, průvodce modulem jen u první lekce, chat na místě Spocka, lehčí profil na úvodu | 15. 11. 2026 |

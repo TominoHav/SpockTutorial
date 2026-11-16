@@ -324,7 +324,7 @@ Kontrolní seznam všech karet (162), kvízových otázek (72) a úkolů tutori�
 ## Úroveň 3: Pokročilý
 
 **Kdo by měl kontrolovat:** superuser nebo SPOCK core tým  
-**Rozsah:** 16 karet, 8 kvízových otázek · asi 45 minut
+**Rozsah:** 18 karet, 8 kvízových otázek · asi 50 minut
 
 ### 3.1 Vrácení a změny
 
@@ -359,12 +359,14 @@ Kontrolní seznam všech karet (162), kvízových otázek (72) a úkolů tutori�
 - [ ] Karta „Začít znovu, nebo ukončit“ · otázka: Co se stane po `SPOCK: stop this run`? → správně: Ukončení je trvalé, dokumenty zůstanou čitelné
 - [ ] Úkoly lekce 3.5 (1): Aktualizujte kopii · kroky a čas sedí
 
-### 3.6 Co výstup SPOCKu dokazuje a co ne
+### 3.6 Co výstup dokazuje a jak nahlásit nález
 
 - [ ] Karta „Zelená brána nic nedokazuje sama“ · otázka: Všechny brány jsou zelené. Je discovery kvalitní? → správně: Nevíme, kvalitu discovery neposuzuje žádná kontrola
 - [ ] Karta „Compliance a co pilot nedělá“ · otázka: Kdo rozhoduje o compliance? → správně: Compliance tým banky
 - [ ] Karta „Otázka pro akceptační testování“ · otázka: Kde se ověří, jestli jsou to ty správné příležitosti? → správně: V uživatelském akceptačním testování
-- [ ] Úkoly lekce 3.6 (1): Připravte si „poctivé shrnutí“ pro kolegy · kroky a čas sedí
+- [ ] Karta „Co poslat hned“ · otázka: Ve výběru vidíte sedm agentů SPOCKu. Kdy to nahlásíte? → správně: Hned, ještě tu hodinu, se jmény agentů
+- [ ] Karta „Jak vypadá nález“ · otázka: Co přiložíte k nálezu? → správně: Celou složku běhu jako ZIP a chat každé fáze exportovaný zvlášť
+- [ ] Úkoly lekce 3.6 (2): Připravte si „poctivé shrnutí“ pro kolegy; Připravte si šablonu nálezu · kroky a čas sedí
 
 ### Kvíz modulu
 
@@ -380,7 +382,7 @@ Kontrolní seznam všech karet (162), kvízových otázek (72) a úkolů tutori�
 ## Úroveň 4: Superuser
 
 **Kdo by měl kontrolovat:** SPOCK core tým  
-**Rozsah:** 6 karet, 8 kvízových otázek · asi 30 minut
+**Rozsah:** 4 karet, 8 kvízových otázek · asi 25 minut
 
 ### 4.1 Prověřte chování agentů
 
@@ -396,8 +398,6 @@ Kontrolní seznam všech karet (162), kvízových otázek (72) a úkolů tutori�
 
 ### 4.3 Zpětná vazba týmu CoE Product Management
 
-- [ ] Karta „Co poslat hned“ · otázka: Ve výběru vidíte sedm agentů SPOCKu. Kdy to nahlásíte? → správně: Hned, ještě tu hodinu, se jmény agentů
-- [ ] Karta „Jak vypadá nález“ · otázka: Co přiložíte k nálezu? → správně: Celou složku běhu jako ZIP a chat každé fáze exportovaný zvlášť
 - [ ] Úkoly lekce 4.3 (1): Pošlete jeden nález · kroky a čas sedí
 
 ### 4.4 Mentor a generálka

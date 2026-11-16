@@ -13,7 +13,7 @@ MODS = [
  ('se','role-engineer.md','purple','se','Úroveň 2 · SWE','Software Engineer','Proveditelnost před G4, PRD jako vstup pro delivery, čtení kontrol.'),
  ('gm','role-guild-master.md','purple','gm','Úroveň 2 · GM','Guild Master','Správce know-how: revize běhů ve své oblasti, změny know-how, komunita.'),
  ('l3','uroven-3-pokrocily.md','indigo',None,'Úroveň 3','Pokročilý','Vrácení fáze, neprošlá brána, předání běhu, free-roam a aktualizace.'),
- ('l4','uroven-4-superuser.md','blue',None,'Úroveň 4','Superuser','Volitelně pro superusery a GM: sondy chování agentů, nálezy a mentoring.'),
+ ('l4','uroven-4-superuser.md','blue',None,'Úroveň 4','Superuser','Jen pro Guild Mastery: sondy chování agentů, měření, nálezy a mentoring.'),
 ]
 FILE2MOD = {m[1]:m[0] for m in MODS}
 NAMES = {m[1]:'modul '+m[5] for m in MODS}
@@ -184,6 +184,8 @@ for blk in re.split(r'^## ', rt, flags=re.M)[1:]:
         m = re.match(r'^- \[ \] (.+)$', ln)
         if m: cur['i'].append(inline(m.group(1)))
 READY=[g for g in READY if g['i']]
+for g in READY:
+    if g['g'].startswith('Úroveň 4'): g['role']='gm'   # úroveň 4 je jen pro Guild Mastery
 json.dump({'W':mods,'GLOSS':GLOSS,'CHEAT':CHEAT,'CHEAT_INTRO':CHEAT_INTRO,'DIAG':DIAG,'DIAG_INTRO':DIAG_INTRO,'PRINCIPLES':PRINCIPLES,'MISTAKES':MISTAKES,'READY':READY}, open(OUT,'w',encoding='utf-8'), ensure_ascii=False, indent=0)
 for m in mods: print(m['id'], m['time'], len(m['days']), [len(d['todo']) for d in m['days']], len(m['quiz']), [q['a'] for q in m['quiz']])
 print('gloss',len(GLOSS),'cheat',[ (c['g'],len(c['t']['rows'])) for c in CHEAT],'diag',[len(d['t']['rows']) for d in DIAG],'pr',len(PRINCIPLES),'mist',len(MISTAKES),'ready',[(g['g'][:30],len(g['i'])) for g in READY])

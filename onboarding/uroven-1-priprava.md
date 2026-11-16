@@ -339,7 +339,7 @@ Spocka, průvodce z tohoto webu, máte i jako agenta **Spock průvodce** v GitHu
     - [ ] Žádné
   - *Nápověda:* V `specifications/onboarding/TASKS.md` najděte nadpis tasku a řádek „Opens … boxes“.
 - [ ] **Založte si deník** (5 min, mimo VS Code)
-  - *Proč:* Do deníku si zapisujete, co agent udělal jinak, než jste čekali. Z těchhle zápisků vzniká zpětná vazba pro tým CoE Product Management (úroveň 4).
+  - *Proč:* Do deníku si zapisujete, co agent udělal jinak, než jste čekali. Z těchhle zápisků vzniká zpětná vazba pro tým CoE Product Management (lekce 3.6).
   1. Vytvořte si soubor `denik.md` **mimo** složku SPOCKu.
   2. První zápis: datum, verze SPOCKu (nahoře v `SETUP.md`, např. 1.16.1), model, který jste zvolili, a výsledek `check my setup`.
 - [ ] **Najděte v běhu podpisy** (10 min, ve VS Code)

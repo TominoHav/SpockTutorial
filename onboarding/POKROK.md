@@ -257,9 +257,10 @@ Zaškrtávejte `[x]`. Průvodce (`/spock-onboarding`) tento soubor čte a po va�
 
 - [ ] 3.5 Aktualizujte kopii
 
-**3.6 — Co výstup SPOCKu dokazuje a co ne**
+**3.6 — Co výstup dokazuje a jak nahlásit nález**
 
 - [ ] 3.6 Připravte si „poctivé shrnutí“ pro kolegy
+- [ ] 3.6 Připravte si šablonu nálezu
 
 - [ ] Kvíz: Úroveň 3: Pokročilý
 

@@ -1,4 +1,4 @@
-# Příručka: Fáze do hloubky (volitelná, hlavně pro GM a superusery, 8–10 h)
+# Příručka: Fáze do hloubky (volitelná, hlavně pro Guild Mastery, 8–10 h)
 
 **Cíl:** Rozumíte každé ze sedmi fází tak, jak je popisuje její specifikace: co fáze čte, jaké kroky dělá, co přesně vyrobí, co hlídá brána, o čem rozhodujete vy, co fáze záměrně nedělá a co se stane, když se vracíte. Poznáte správné chování agenta podle pravidel, ne podle pocitu.
 

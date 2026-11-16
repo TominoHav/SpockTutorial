@@ -270,7 +270,7 @@ function renderDash(){
     ['Dokončili Přípravu', rows.filter(r => mod(r, 'l1')[0] === mod(r, 'l1')[1]).length],
     ['Dokončili modul své role', rows.filter(r => { const w = roleMod(r); return w && mod(r, w.id)[0] === mod(r, w.id)[1]; }).length],
     ['Dokončili Pokročilý', rows.filter(r => mod(r, 'l3')[0] === mod(r, 'l3')[1]).length],
-    ['Dokončili Superuser', rows.filter(r => mod(r, 'l4')[0] === mod(r, 'l4')[1]).length]];
+    ['Dokončili Superuser (jen GM)', rows.filter(r => mod(r, 'l4')[0] === mod(r, 'l4')[1]).length]];
   const funnel = steps.map((s, i) => [s[0], s[1], i && steps[i - 1][1] ? Math.round(100 * s[1] / steps[i - 1][1]) + ' % z předchozího' : '']);
   // kde se ztrácejí
   const stuck = rows.filter(r => now - r.last > 3 * 864e5 && (r.prog || {}).pct < 100);

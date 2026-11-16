@@ -44,7 +44,7 @@ Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až mát
 
 **Guild Master**
 - [ ] Vím, které know-how mé oblasti existuje, v jaké je verzi a stavu a že osobu, která oblast udržuje, ČS teprve jmenuje.
-- [ ] Udělám metodickou revizi běhu a odliším slabý materiál od mezery v metodice.
+- [ ] Udělám revizi běhu ve své oblasti a odliším slabý materiál od mezery v know-how.
 - [ ] Navrhnu a se SWE provedu změnu know-how podle `KNOW-HOW-OWNERS.md` §4.
 - [ ] U každé vrstvy SPOCKu řeknu, co dělá, a u změny know-how určím, které skilly a fáze zasáhne.
 
@@ -55,10 +55,11 @@ Zaškrtněte, co umíte bez nápovědy. Na další úroveň přejděte, až mát
 - [ ] Předám běh kolegovi a převezmu cizí běh.
 - [ ] Vím, kdy a jak použít free-roam a co ztrácím.
 - [ ] Aktualizuji kopii SPOCKu.
-
-## Úroveň 4: Superuser
-
 - [ ] Poctivě vysvětlím, co zelené brány dokazují a co ne.
+- [ ] Vím, co obsahuje nález, co se k němu přikládá a komu se posílá.
+
+## Úroveň 4: Superuser (jen Guild Master)
+
 - [ ] Vyvolám a poznám typické odchylky agenta (sondy v 4.1).
 - [ ] Poslal(a) jsem týmu CoE Product Management aspoň jeden úplný nález.
 - [ ] Prošel/prošla jsem generálku bez nápovědy.

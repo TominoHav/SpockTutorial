@@ -1,6 +1,6 @@
 # Úroveň 3: Pokročilý (všichni, 3–4 h)
 
-**Cíl:** Zvládnete situace mimo šťastnou cestu: vrátit fázi, vyřešit neprošlou bránu, opravit záznam, předat běh kolegovi, pracovat mimo workflow a aktualizovat svou kopii SPOCKu. A umíte poctivě říct, co výstup SPOCKu dokazuje a co ne.
+**Cíl:** Zvládnete situace mimo šťastnou cestu: vrátit fázi, vyřešit neprošlou bránu, opravit záznam, předat běh kolegovi, pracovat mimo workflow a aktualizovat svou kopii SPOCKu. Umíte poctivě říct, co výstup SPOCKu dokazuje a co ne, a víte, jak poslat nález.
 
 **Proč:** Skutečné běhy se šťastnou cestou nedrží. Přijde nový materiál, kolega odjede na dovolenou, kontrolu nejde splnit. SPOCK má na každou z těchto situací task, a ten zanechá záznam. Bez něj by se běh, který změnil názor, nedal obhájit.
 
@@ -236,9 +236,9 @@ Nový vlastník otevře nový chat s agentem dané fáze, spustí `SPOCK: record
 
 - 📄 **`SETUP.md`** §7 („Starting again“) a §8 („When a new version arrives“)
 
-## 3.6 — Co výstup SPOCKu dokazuje a co ne
+## 3.6 — Co výstup dokazuje a jak nahlásit nález
 
-### Karty (asi 6 min, jen na webu)
+### Karty (asi 11 min, jen na webu)
 
 #### Zelená brána nic nedokazuje sama
 
@@ -272,12 +272,40 @@ Nový vlastník otevře nový chat s agentem dané fáze, spustí `SPOCK: record
 
 **Proč:** Žádná kontrola kvalitu discovery neposuzuje.
 
+#### Co poslat hned
+
+**Hned (ještě tu hodinu) pošlete:** relaci, kde poskytovatel nebyl GitHub Copilot, víc než šest agentů ve výběru (se jmény), jakékoli selhání DR-04 a případ, kdy agent doplnil informaci, kterou jste mu nedali.
+
+**Otázka:** Ve výběru vidíte sedm agentů SPOCKu. Kdy to nahlásíte?
+- [x] Hned, ještě tu hodinu, se jmény agentů
+- [ ] Na konci běhu
+
+**Proč:** Víc než šest agentů je nález, který se posílá okamžitě.
+
+#### Jak vypadá nález
+
+**Nález obsahuje:** verzi SPOCKu, fázi a agenta, co jste udělali a co jste čekali. Přiložte **celou složku běhu jako ZIP** a **chat každé fáze exportovaný zvlášť** (`Chat: Export Chat...`). Nikdy screenshot místo souboru.
+
+**Zprávu píšete sami**, ve vlastním dokumentu mimo složku SPOCKu, a posíláte ji jen týmu CoE Product Management. Agenta ji psát nenechávejte.
+
+**Otázka:** Co přiložíte k nálezu?
+- [ ] Screenshot chatu
+- [x] Celou složku běhu jako ZIP a chat každé fáze exportovaný zvlášť
+
+**Proč:** Screenshot nenahradí soubor. Zprávu píšete sami, ne agent.
+
 ### Úkoly
 
 - [ ] **Připravte si „poctivé shrnutí“ pro kolegy** (30 min, ve VS Code)
   - *Proč:* Sobě i kolegům musíte umět v pěti větách říct, čemu ve výstupu věřit a co si ověřit.
   1. Do deníku napište pět vět: co SPOCK zaručuje, co ne a co si má tým u každé iniciativy ověřit sám.
   2. Porovnejte je s odpovědí agenta **Methodology Coach** na otázku „Co tento pilot z metody vynechává?“
+
+- [ ] **Připravte si šablonu nálezu** (10 min, mimo VS Code)
+  - *Proč:* Až agent udělá něco, co nemá, nebudete hledat, co poslat. Dobrý nález opraví workflow pro všechny.
+  1. Do deníku si připravte osnovu: verze SPOCKu, fáze a agent, co jste udělali, co jste čekali, co se stalo.
+  2. Připište, co se přikládá: celá složka běhu jako ZIP a chat každé fáze exportovaný zvlášť (`Chat: Export Chat...`).
+  3. Nález posíláte týmu CoE Product Management podle `SETUP.md` §10.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
