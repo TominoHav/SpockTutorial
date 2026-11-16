@@ -42,6 +42,7 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  await p.locator('.notice',{hasText:'Na palubě'}).waitFor({timeout:15000}).catch(()=>{});
  ok(T('výběr role → upozornění na odznak Na palubě, bez překrytí obrazovky'), (await p.locator('.notice').allInnerTexts()).some(t=>t.includes('Na palubě')) && !(await p.locator('.cel').count()));await dismiss();
  ok(T('po výběru role „Vítejte zpět“'), (await p.locator('.hx .eyebrow').first().innerText()).toLowerCase().includes('zpět'));
+ ok(T('po výběru role jsou na úvodu tři denní výzvy'), await p.locator('.quests li').count()===3);
  // lekce 0.1 – karty a úkoly
  const answerCards=async()=>{let g=0;while(g++<40){await dismiss();const n=await p.evaluate(()=>{const e=document.querySelector('.lpanel .lcard.cur .lc-opt:not([disabled])');if(!e)return 0;e.scrollIntoView({block:'center'});e.click();return 1;});if(!n)break;await p.waitForTimeout(90);}await dismiss();};
  const lessonHead=()=>p.evaluate(()=>(document.querySelector('.lp-head')||{}).innerText||'');
@@ -174,6 +175,11 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  if(!CTX)CTX=await p.evaluate(()=>__kviz.ctx());
  // trvalost
  await dismiss();const before=await st();await p.reload();await p.waitForTimeout(300);const after=await st();
+ await p.evaluate(()=>document.querySelector('[data-go=badges]').click());await p.waitForTimeout(200);
+ ok(T('profil: postup v hodnostech a odemčené vzhledy Spocka'), await p.locator('.ladder li').count()===7 && await p.locator('.skin[data-setskin]').count()>=2 && await p.locator('.ladder li.cur').count()===1);
+ await p.locator('.skin[data-setskin]').nth(1).click();await p.waitForTimeout(150);
+ ok(T('vzhled Spocka jde přepnout'), await p.evaluate(()=>document.body.dataset.skin==='ocean'));
+ await p.locator('#home-btn').click();await p.waitForTimeout(200);
  ok(T('Guild Master: úroveň 4 je na cestě a odznak Superuser se nabízí'), await p.evaluate(()=>__kviz.path().join()==='l0,l1,gm,l3,l4' && __kviz.badges().includes('superuser')));
  ok(T('pokrok přežije obnovení stránky'), before.xp===after.xp && after.role==='gm', 'před '+before.xp+' po '+after.xp+' role '+after.role);
  ok(T('bez chyb v konzoli'), errs.length===0, errs.slice(0,2).join(' | '));
