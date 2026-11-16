@@ -35,6 +35,10 @@ npm install --no-save axe-core@4.10.2
 ```
 
 ```bash
+node nastroje/e2e/scenare.js
+```
+
+```bash
 node nastroje/e2e/pristupnost.js
 ```
 
@@ -44,11 +48,13 @@ node nastroje/e2e/vykon.js
 
 End-to-end test projde cestu uživatele na počítači i na mobilu: simulaci, výběr role, karty, kvíz, zámky a skokový test, všech 9 modulů, oporu, dotazník, chat se Spockem, obnovení stránky a přístupnost. Potřebuje Node.js a Playwright s Chromiem.
 
+Neprošlý test uloží snímek obrazovky do `web/dist/e2e-chyby/`. Test v Safari: `E2E_BROWSER=webkit E2E_ONLY=počítač node nastroje/e2e/journey.js` (potřebuje `npx playwright install webkit`).
+
 ## Publikace
 
 Web je stránka na claude.ai (artifact). Po sloučení změny do `main` se **sám neaktualizuje**.
 
-**Pořadí při publikaci:** sestavit (`parse.py`, `build.py`), pustit `node nastroje/e2e/journey.js`, `node nastroje/e2e/pristupnost.js` a `node nastroje/e2e/vykon.js`, a **znovu** `build.py`. Test zapíše zprávu `web/dist/e2e-report.json` (výsledky, rychlost v testu, velikost kontextu Spocka) a druhé sestavení ji vloží do stránky. Dashboard ji ukáže v záložce **Verze a kvalita** a zapíše verzi do historie, když ji vlastník poprvé otevře. Když se zdroje po testu změní, zpráva se nevloží a záložka hlásí, že testy pro tuto verzi neběžely.
+**Pořadí při publikaci:** sestavit (`parse.py`, `build.py`), pustit `node nastroje/e2e/journey.js`, `node nastroje/e2e/scenare.js`, `node nastroje/e2e/pristupnost.js` a `node nastroje/e2e/vykon.js`, a **znovu** `build.py`. Test zapíše zprávu `web/dist/e2e-report.json` (výsledky, rychlost v testu, velikost kontextu Spocka) a druhé sestavení ji vloží do stránky. Dashboard ji ukáže v záložce **Verze a kvalita** a zapíše verzi do historie, když ji vlastník poprvé otevře. Když se zdroje po testu změní, zpráva se nevloží a záložka hlásí, že testy pro tuto verzi neběžely.
 
 **S Claudem (běžná cesta):** v Claude Code napište „Sestav web z main a publikuj ho na stejnou adresu“. Claude web sestaví, pustí testy a zeptá se na souhlas. Adresa webu a stránky s architekturou je v [ARCHITEKTURA.md](../ARCHITEKTURA.md).
 

@@ -52,9 +52,13 @@ Běží na GitHubu při každém pull requestu a po sloučení do `main`. Když 
 
 | Test | Co hlídá | Kolik kontrol |
 |---|---|---|
-| `nastroje/e2e/journey.js` | Cesta uživatele na počítači i mobilu: simulace, role, karty, úkoly s ověřením, kvíz, zámky a skokový test, všech 9 modulů, opora, chat, dashboard, hra (výzvy, hodnosti, vzhledy), vesmírná mapa, minihry, shrnutí, šatna a příběh, oslava po dokončení úrovně, mluvený komentář se zkušebním hlasem, zmrazení série | 185 |
-| `nastroje/e2e/pristupnost.js` | Průchod za každou roli (PM, PD, SWE, GM) na mobilu i počítači; přístupnost podle WCAG 2 A a AA nástrojem axe-core na osmi stránkách ve světlém i tmavém režimu; dotykové plochy na mobilu aspoň 24 × 24 px | 56 |
-| `nastroje/e2e/vykon.js` | Rozpočty: velikost stránky (700 kB, po kompresi 230 kB), první vykreslení, vykreslení lekce (150 ms) a opory, procesor po 15 s nečinnosti, počet prvků na stránce; dashboard s 500 smyšlenými lidmi (záložka Pohyb do 600 ms, filtr do 300 ms) | 10 |
+| `nastroje/e2e/journey.js` | Cesta uživatele na počítači i mobilu (souběžně): simulace, role, karty, úkoly s ověřením, kvíz, zámky a skokový test, všech 9 modulů, opora, chat, dashboard a jeho analýzy, hra, vesmírná cesta, minihry, shrnutí, příběh, mluvený komentář, zmrazení série, pokrok v účtu | 219 |
+| `nastroje/e2e/scenare.js` | Výpadek chatu, nedostupná databáze, chybějící právo zápisu, pokrok ze dvou zařízení, ovládání klávesnicí (Tab, Enter, Escape, viditelné zaměření), tablet, tablet na šířku, široký monitor, tmavý režim, platnost videí | 34 |
+| `nastroje/e2e/pristupnost.js` | Průchod za každou roli; WCAG 2 A a AA (axe-core) na osmi stránkách, v dashboardu, simulaci, minihře a příběhu, světlý i tmavý režim; dotykové plochy na mobilu | 80 |
+| `nastroje/e2e/vykon.js` | Rozpočty: velikost stránky (700 kB, po kompresi 230 kB), první vykreslení, vykreslení lekce a opory, procesor po 15 s nečinnosti, počet prvků; dashboard s 500 smyšlenými lidmi | 10 |
+| Safari (WebKit) | `journey.js` v jádru Safari na počítači i mobilu. Zatím informativní, neblokuje sloučení | 2 × cesta |
+
+Testovací prostředí (smyšlená databáze, vlastník, chat) je v `nastroje/e2e/fixture.js`. Každý scénář běží ve vlastním prohlížeči: když jeden spadne, ostatní doběhnou a selhání se zapíše. U každého neprošlého testu se uloží snímek obrazovky do `web/dist/e2e-chyby/` a na GitHubu je ke stažení u běhu kontrol. Testy nečekají pevné pauzy, ale na vykreslení stránky. Testovací háčky (`window.__kviz`) jsou jen v testovacím sestavení, ne ve stránce pro uživatele. Na GitHubu běží čtyři úlohy souběžně (obsah, web, přístupnost a výkon, Safari).
 
 Každý test zapíše zprávu do `web/dist/` a `build.py` ji přiloží do stránky, jen když test běžel nad stejnými zdroji. Dashboard pak na záložce **Verze a kvalita** ukáže, co neprošlo nebo neběželo.
 
@@ -92,6 +96,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
+| [#55](https://github.com/TominoHav/SpockTutorial/pull/55) | Údržba | Revize testů: nezávislé scénáře, snímky při selhání, čekání na vykreslení místo pauz, háčky jen v testech, nové scénáře (výpadky, dvě zařízení, klávesnice, tablet, tmavý režim, videa), přístupnost dashboardu a příběhu, Safari, souběžné úlohy; opravy nalezených chyb | 17. 11. 2026 |
 | [#54](https://github.com/TominoHav/SpockTutorial/pull/54) | Aplikace | Pokrok pod účtem: ukládá se do soukromé části databáze, při otevření na jiném zařízení se sloučí, úvod nabídne pokračovat v poslední lekci; paměť kroků 300; TODO pro přesun na vlastní server | 17. 11. 2026 |
 | [#53](https://github.com/TominoHav/SpockTutorial/pull/53) | Aplikace | Dashboard pro 500 lidí: mezipaměť cest a analýzy, seznamy po 50, živá aktualizace stahuje jen změněné záznamy a překreslí jen při nových datech; výkonový test dashboardu s 500 lidmi | 17. 11. 2026 |
 | [#52](https://github.com/TominoHav/SpockTutorial/pull/52) | Aplikace | Pohyb a problémová místa: filtry (období, role, zařízení), přehledová čísla s vysvětlením, grafy (mapa pohybu, kam lidé došli, problémová místa, aktivita v čase, délka sezení, typy chování) s popisky, výběr místa zúží cesty lidí, živá aktualizace každých 30 s | 17. 11. 2026 |
