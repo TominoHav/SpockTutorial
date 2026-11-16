@@ -217,6 +217,54 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  const a11y=await p.evaluate(()=>[...document.querySelectorAll('button,a,input,textarea')].filter(e=>e.offsetParent!==null && !(e.closest('details:not([open])') && !e.closest('summary'))).filter(e=>!(e.innerText||'').trim()&&!e.getAttribute('aria-label')&&!e.getAttribute('title')&&!(e.labels&&e.labels.length)&&!e.querySelector('img[alt],svg title')).map(e=>e.outerHTML.slice(0,80)));
  ok(T('ovládací prvky mají název'), a11y.length===0, a11y.slice(0,3).join(' | '));
  await ctx.close();}
+// ---- doplňkové scénáře: oslava po dokončení úrovně, mluvený komentář, zmrazení série ----
+{
+ const ctx=await b.newContext({viewport:{width:1280,height:900}});
+ // Zkušební český hlas: testovací prohlížeč žádný nemá. Zapisuje, co se má přečíst, a hned ohlásí konec čtení.
+ await ctx.addInitScript(()=>{window.__spoken=[];const fake={getVoices:()=>[{lang:'cs-CZ',name:'Zkušební hlas',default:true}],speak:u=>{window.__spoken.push({text:u.text,lang:u.lang});setTimeout(()=>u.onend&&u.onend(),30)},cancel:()=>{},onvoiceschanged:null};Object.defineProperty(window,'speechSynthesis',{value:fake,configurable:true});window.SpeechSynthesisUtterance=function(t){this.text=t;};});
+ const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
+ const st=()=>p.evaluate(()=>JSON.parse(localStorage.getItem('spock-user-onboarding-v1')||'{}'));
+ const T=s=>'doplňky: '+s;
+ await p.goto('file://'+path.join(DIST,'e2e.html'));await p.waitForTimeout(400);
+ await p.locator('.startb [data-role=pm]').click();await p.waitForTimeout(300);
+ // dokončení úrovně opravdovým kliknutím na poslední úkol → oslava s nabídkou
+ const finishBy=async wid=>{const left=await p.evaluate(w=>__kviz.almost(w),wid);await p.evaluate(w=>document.querySelector('[data-week='+w+']').click(),wid);await p.waitForTimeout(200);
+  await p.evaluate(di=>{const e=document.querySelector('[data-lesson="'+di+'"]');if(e)e.click()},left[0]);await p.waitForTimeout(200);
+  await p.evaluate(()=>{const e=document.querySelector('.lpanel input[data-todo]:not(:checked)');e.scrollIntoView({block:'center'});e.click();});await p.waitForTimeout(300);
+  for(let i=0;i<10 && !(await p.locator('.cel .cel-recap').count());i++){const c=p.locator('.cel .cel-go');if(!(await c.count()))break;await c.first().click();await p.waitForTimeout(120);}};
+ await finishBy('l0');
+ ok(T('dokončená úroveň: oslava překonané překážky nabízí shrnutí, minihru i přeskočení'), await p.locator('.cel .cel-recap').count()===1 && await p.locator('.cel .cel-game').count()===1 && await p.locator('.cel .cel-go').count()===1 && (await p.locator('.cel h2').innerText()).includes('Mlhovina nejasností'));
+ await p.locator('.cel .cel-recap').click();await p.waitForTimeout(300);
+ ok(T('„Přehrát shrnutí úrovně“ v oslavě spustí shrnutí'), (await p.locator('#story .st-cap .eyebrow').innerText()).toLowerCase().includes('shrnutí úrovně') && await p.locator('.cel').count()===0);
+ const sp=await p.evaluate(()=>window.__spoken);
+ ok(T('komentář se čte českým hlasem a obsahuje text scény'), sp.length>=1 && sp[0].lang==='cs-CZ' && sp[0].text.includes('Shrnutí'), sp.length+' promluv');
+ await p.waitForTimeout(1300);
+ ok(T('po dočtení komentáře se scéna sama přepne'), !(await p.locator('#story .st-cap .eyebrow').innerText()).includes('1/'));
+ await p.locator('#story [data-st=snd]').click();await p.waitForTimeout(100);const n0=(await p.evaluate(()=>window.__spoken)).length;
+ await p.locator('#story [data-st=next]').click();await p.waitForTimeout(200);
+ ok(T('s vypnutým zvukem se komentář nečte'), (await p.evaluate(()=>window.__spoken)).length===n0);
+ await p.locator('#story [data-st=snd]').click();await p.locator('#story [data-st=close]').click();await p.waitForTimeout(200);
+ for(let i=0;i<8;i++){const c=p.locator('.cel .cel-go');if(await c.count()){await c.first().click();await p.waitForTimeout(100);}else break;}
+ await finishBy('l1');
+ await p.locator('.cel .cel-game').click();await p.waitForTimeout(300);
+ ok(T('„Zahrát minihru“ v oslavě spustí minihru dané úrovně'), await p.locator('#mg .mg-opt').count()>1 && (await p.locator('#mg h2').innerText()).includes('Asteroidové pole') && await p.locator('.cel').count()===0);
+ await p.locator('#mg [data-mg=close]').click();await p.waitForTimeout(200);
+ for(let i=0;i<8;i++){const c=p.locator('.cel .cel-go');if(await c.count()){await c.first().click();await p.waitForTimeout(100);}else break;}
+ // zmrazení série: včera nic, předtím dva dny s XP, jedno zmrazení v zásobě
+ const day=o=>{const d=new Date();d.setDate(d.getDate()-o);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+ await p.evaluate(([d2,d3])=>__kviz.state(S=>{S.days={};S.days[d2]=30;S.days[d3]=30;S.frozen={};S.freeze=1;}),[day(2),day(3)]);
+ await p.waitForTimeout(100);await p.reload();await p.waitForTimeout(500);
+ const s1=await st();
+ ok(T('zmrazení zakryje jeden vynechaný den a série pokračuje'), s1.frozen[day(1)]===1 && s1.freeze===0 && await p.evaluate(()=>__kviz.streak())===3, 'série '+await p.evaluate(()=>__kviz.streak())+', zmrazení '+s1.freeze);
+ ok(T('o zachráněné sérii se člověk dozví'), (await p.locator('.notice').allInnerTexts()).some(t=>t.includes('Zmrazení zachránilo')));
+ // dva vynechané dny a jen jedno zmrazení: série propadne a zmrazení zůstane
+ await p.evaluate(([d3,d4])=>__kviz.state(S=>{S.days={};S.days[d3]=30;S.days[d4]=30;S.frozen={};S.freeze=1;}),[day(3),day(4)]);
+ await p.waitForTimeout(100);await p.reload();await p.waitForTimeout(500);
+ const s2=await st();
+ ok(T('na dva vynechané dny jedno zmrazení nestačí: série propadne, zmrazení zůstane'), s2.freeze===1 && !Object.keys(s2.frozen||{}).length && await p.evaluate(()=>__kviz.streak())===0);
+ ok(T('doplňkové scénáře bez chyb v konzoli'), errs.length===0, errs.slice(0,2).join(' | '));
+ await ctx.close();
+}
 await b.close();
 const f=R.filter(r=>r[0]==='FAIL');
 fs.writeFileSync(path.join(DIST,'e2e-report.json'),JSON.stringify({src:SRC,at:Date.now(),total:R.length,pass:R.length-f.length,fail:f.length,failed:f.map(r=>r[1]+(r[2]?' ('+String(r[2]).slice(0,120)+')':'')),durMs:Date.now()-T0,lab:LAB,ctx:CTX}));R.forEach(r=>console.log(r[0],r[1],r[2]||''));console.log(`\nCELKEM ${R.length}, PASS ${R.length-f.length}, FAIL ${f.length}`);process.exit(f.length?1:0);})();
