@@ -149,10 +149,12 @@ const TERMS = [
 function glossify(root){
   if (!root) return;
   const used = new Set(), tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {acceptNode: n => n.parentElement.closest('code,a,button,h1,h2,h3,summary,label,table,svg,.gl,.eyebrow,.ld,.ses,script,style') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT});
+  /* výkon: pojmy, které v lekci vůbec nejsou, se nehledají v každém textovém uzlu zvlášť */
+  const all = root.textContent, live = TERMS.map((t, ti) => [t[0], t[1], ti]).filter(t => t[0].test(all)); if (!live.length) return;
   const nodes = []; while (tw.nextNode()) nodes.push(tw.currentNode);
   nodes.forEach(n => {
     let node = n;
-    TERMS.forEach(([re, d], ti) => {
+    live.forEach(([re, d, ti]) => {
       if (used.has(ti) || !node) return;
       const m = node.nodeValue.match(re); if (!m) return;
       const def = typeof d === 'function' ? d() : d; if (!def) return;

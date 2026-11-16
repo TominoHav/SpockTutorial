@@ -263,6 +263,12 @@ for (const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
  await p.waitForTimeout(100);await p.reload();await p.waitForTimeout(500);
  const s2=await st();
  ok(T('na dva vynechané dny jedno zmrazení nestačí: série propadne, zmrazení zůstane'), s2.freeze===1 && !Object.keys(s2.frozen||{}).length && await p.evaluate(()=>__kviz.streak())===0);
+ ok(T('stránka má jazyk čeština pro čtečky obrazovky'), await p.evaluate(()=>document.documentElement.lang==='cs'));
+ await p.setViewportSize({width:390,height:844});await p.evaluate(()=>document.querySelector('#home-btn').click());await p.waitForTimeout(300);
+ const small=await p.evaluate(()=>[...document.querySelectorAll('button,a,summary,input')].filter(e=>e.offsetParent&&!e.closest('label')).map(e=>{const r=e.getBoundingClientRect();return [Math.round(r.width),Math.round(r.height),(e.innerText||e.getAttribute('aria-label')||'').trim().slice(0,24)]}).filter(([w,h])=>w<24||h<24));
+ ok(T('mobil: dotykové plochy aspoň 24 × 24 px (WCAG 2.2)'), small.length===0, JSON.stringify(small.slice(0,3)));
+ const t0=await p.evaluate(()=>{const t=performance.now();document.querySelector('[data-week=l0]').click();return performance.now()-t;});
+ ok(T('výkon: lekce se vykreslí do 150 ms'), t0<150, Math.round(t0)+' ms');
  ok(T('doplňkové scénáře bez chyb v konzoli'), errs.length===0, errs.slice(0,2).join(' | '));
  await ctx.close();
 }

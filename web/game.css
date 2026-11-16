@@ -384,3 +384,7 @@
 @keyframes trail{30%{opacity:1}100%{opacity:0;width:120%}}
 .k-meet .st-av.meet,.k-meet .st-guide.meet{z-index:1}
 @media (prefers-reduced-motion:reduce){.st-rays,.st-crowd .cw,.st-banner span,.st-medal,.st-trail{animation:none}.st-banner span{color:#FFE99A}}
+
+/* výkon: pozastavené dekorativní animace (nečinnost nebo mimo obrazovku) */
+body.calm .spock *,body.calm .sp-stars,body.calm .sw-me,body.calm .hx-chip,body.calm .hx-hi,.offscreen .spock *,.offscreen .sp-stars,.offscreen .sw-me,.offscreen .hx-chip{animation-play-state:paused!important}
+.sp-stars{will-change:opacity}
