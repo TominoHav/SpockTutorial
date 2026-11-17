@@ -480,3 +480,5 @@ button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var
 .tm-foot{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.tm-priv{font-size:13px;margin-top:8px}
 .tm-err{background:var(--surface-2);border-left:4px solid var(--pink);border-radius:10px;padding:10px 12px}.tm-note{color:var(--ink-2)}
 @media (max-width:700px){.tm-two{grid-template-columns:1fr}.tm-kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Safari: mřížka nadpisu stránky se nesmí roztáhnout podle nejširšího prvku (záložky dashboardu na mobilu) */
+.mh{grid-template-columns:minmax(0,1fr)}
