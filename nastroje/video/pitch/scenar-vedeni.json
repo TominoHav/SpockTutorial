@@ -62,15 +62,32 @@
   ]
  },
  {
-  "id": "hra",
-  "img": "hra.jpg",
-  "h": "Lidé to dokončí",
-  "s": "Hodnosti, série, výzvy a vesmírná mapa",
+  "id": "odmeny",
+  "img": "",
+  "ranks": [
+   "Nováček",
+   "Učeň",
+   "Praktik",
+   "Znalec",
+   "Expert",
+   "Mistr"
+  ],
+  "chips": [
+   "16 odznaků",
+   "Denní výzvy a truhla",
+   "Série dní",
+   "Medaile absolventa",
+   "Pokrok vidíte v dashboardu"
+  ],
+  "h": "Hra, která drží lidi u toho",
+  "s": "Hodnosti, odznaky, výzvy a finále se Spockem",
   "en": [
-   "Ranks, streaks, daily challenges and a space journey keep people coming back until they finish."
+   "People finish because it feels like a game. Six ranks from Rookie to Master, each one with a new look for Spock, sixteen badges and daily challenges.",
+   "The journey ends with a graduate medal and a celebration. And you can see everyone's progress in the dashboard."
   ],
   "cs": [
-   "Hodnosti, série, denní výzvy a vesmírná cesta drží lidi u toho, dokud cestu nedokončí."
+   "Lidé cestu dokončí, protože je to hra. Šest hodností od Nováčka po Mistra, s každou nový vzhled Spocka, šestnáct odznaků a denní výzvy.",
+   "Cesta končí medailí absolventa a oslavou. A pokrok všech vidíte v dashboardu."
   ]
  },
  {

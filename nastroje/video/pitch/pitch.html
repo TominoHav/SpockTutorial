@@ -40,6 +40,21 @@
 .fin-h{position:absolute;left:0;right:0;top:450px;text-align:center;font-size:58px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(90deg,#fff 0%,#fff 40%,#F29AC0 50%,#fff 60%,#fff 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
 .fin-s{position:absolute;left:0;right:0;top:524px;text-align:center;font-size:30px;font-weight:600;color:#E6DBFF}
 .fin-flash{position:absolute;inset:0;background:#fff;opacity:0}
+.rk-l{position:absolute;left:80px;top:40px;width:470px;display:grid;gap:10px}
+.rk-l .k{margin-bottom:2px}.rk-l .h{font-size:48px}.rk-l .s{font-size:21px;margin-bottom:10px}
+.rk{display:flex;align-items:center;gap:14px;padding:9px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);font-size:21px;font-weight:700;color:rgba(255,255,255,.45)}
+.rk b{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:14px;border:2px solid rgba(255,255,255,.3)}
+.rk.on{color:#fff;background:linear-gradient(90deg,rgba(242,154,192,.22),rgba(185,166,255,.12));border-color:rgba(242,154,192,.6)}.rk.on b{background:linear-gradient(135deg,#F29AC0,#B9A6FF);border-color:#fff;color:#0A0E22}
+.rk.cur{box-shadow:0 0 26px rgba(242,154,192,.45)}
+.rk-r{position:absolute;left:620px;top:10px;width:600px;height:460px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.rk-r .spock{width:270px;height:315px}
+.rk-glow{position:absolute;left:50%;top:46%;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;background:radial-gradient(circle,rgba(185,166,255,.45),transparent 62%)}
+.rk-name{font-size:30px;font-weight:800;margin-top:6px}.rk-sub{font-size:19px;color:#C9D2F0}
+.chips{position:absolute;left:600px;right:40px;top:480px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.chips span{padding:8px 16px;border-radius:99px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);font-size:18px;font-weight:600}
+.spock .sp-legs line,.spock .sp-arm line{stroke:var(--limb,#372B91);stroke-width:6;stroke-linecap:round}.spock .sp-arm circle{fill:var(--hand,#A54CB2)}
+.spock .sp-ant{stroke:var(--ant,#A54CB2);stroke-width:5;stroke-linecap:round}.spock .sp-tip{fill:var(--tip,#E15079)}.spock .sp-eyes ellipse{fill:var(--eye,#7DE3FF)}
+.spock .sp-smile{stroke:var(--eye,#7DE3FF);stroke-width:3;fill:none;stroke-linecap:round}.spock .sp-shadow{fill:rgba(0,0,0,.35)}
 </style></head><body>
 <div id="bg"><div class="stars" id="stars"></div></div><div id="sc"></div><div class="cap" id="cap"></div><div class="prog" id="prog"></div>
 <script>
@@ -48,11 +63,15 @@ const mascot = `<svg class="mascot" viewBox="0 0 120 140"><defs><linearGradient 
 let st = ''; for (let i = 0; i < 70; i++) { const x = (i * 97) % 1280, y = (i * 53 + i * i * 7) % 720, o = .15 + (i % 7) / 12; st += `<i style="left:${x}px;top:${y}px;opacity:${o};transform:scale(${.5 + (i % 3) * .4})"></i>`; } document.getElementById('stars').innerHTML = st;
 const root = document.getElementById('sc');
 if (window.__PDE) { eval('window.__PDE_N = 0;' + window.__PDE.replace('function pdeLogo', 'window.pdeLogo = function').replace(/PDE_N/g, 'window.__PDE_N')); }
+if (window.__SPK) { eval('window.__SP_N = 0;' + window.__SPK.replace('const SKINS', 'window.SKINS').replace('function spockSVG', 'window.spockSVG = function').replace(/\+\+SP_N/g, '++window.__SP_N').replace(/curSkin\(\)/g, 'null')); }
+const ranksScene = (s, i) => `<div class="sc rks" data-i="${i}"><div class="rk-l"><span class="k">SPOCK Onboarding · hra</span><div class="h">${s.h}</div><div class="s">${s.s}</div>${s.ranks.map((r, k) => `<div class="rk"><b>${k + 1}</b>${r}</div>`).join('')}</div>
+  <div class="rk-r"><div class="rk-glow"></div>${s.ranks.map((r, k) => `<div class="rk-sp" data-k="${k}" style="position:absolute;opacity:0;display:flex;flex-direction:column;align-items:center">${window.spockSVG ? window.spockSVG('', window.SKINS[k]) : mascot}<div class="rk-name">${r}</div><div class="rk-sub">${window.SKINS ? window.SKINS[k].n + ' · ' + window.SKINS[k].d : ''}</div></div>`).join('')}</div>
+  <div class="chips">${s.chips.map(c => `<span>${c}</span>`).join('')}</div></div>`;
 const montage = (s, i) => `<div class="sc" data-i="${i}"><div class="mtg"><div class="mtg-in">${s.msrc.concat(s.msrc).map(u => `<img src="${u}">`).join('')}</div></div><div class="mtg-veil"></div><div class="mtg-t"><div class="h">${s.h}</div><div class="s">${s.s}</div></div></div>`;
 const finale = (s, i) => `<div class="sc fin" data-i="${i}"><div class="fin-rays"></div><div class="fin-glow"></div><canvas width="1280" height="720"></canvas>
   <div class="fin-line"></div><div class="fin-arc">${s.stages.map((n, k) => `<div class="st" style="left:${190 + k * 150}px"><i>${k + 1}</i><span>${n}</span></div>`).join('')}</div>
   <div class="fin-mid">${window.pdeLogo ? window.pdeLogo('') : ''}${mascot}</div><div class="fin-h">${s.h}</div><div class="fin-s">${s.s}</div><div class="fin-flash"></div></div>`;
-root.innerHTML = SC.map((s, i) => s.montage ? montage(s, i) : s.finale ? finale(s, i) : s.img ? `<div class="sc" data-i="${i}"><div class="txt"><span class="k">${String(i).padStart(2, '0')} · SPOCK Onboarding</span><div class="h">${s.h}</div><div class="s">${s.s}</div></div>${s.mobile ? `<div class="phone"><div class="vp"><img src="${s.src}"></div></div>` : `<div class="win"><div class="bar"><i></i><i></i><i></i></div><div class="vp"><img src="${s.src}"></div></div>`}</div>`
+root.innerHTML = SC.map((s, i) => s.ranks ? ranksScene(s, i) : s.montage ? montage(s, i) : s.finale ? finale(s, i) : s.img ? `<div class="sc" data-i="${i}"><div class="txt"><span class="k">${String(i).padStart(2, '0')} · SPOCK Onboarding</span><div class="h">${s.h}</div><div class="s">${s.s}</div></div>${s.mobile ? `<div class="phone"><div class="vp"><img src="${s.src}"></div></div>` : `<div class="win"><div class="bar"><i></i><i></i><i></i></div><div class="vp"><img src="${s.src}"></div></div>`}</div>`
   : s.facts ? `<div class="sc" data-i="${i}"><div class="center fx"><div class="h">${s.h}</div><div class="s">${s.s}</div><div class="facts">${s.facts.map(f => `<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join('')}</div></div></div>`
   : `<div class="sc" data-i="${i}"><div class="center">${mascot}<div class="h">${s.h}</div><div class="s">${s.s}</div></div></div>`).join('');
 const ease = x => x < 0 ? 0 : x > 1 ? 1 : 1 - Math.pow(1 - x, 3);
@@ -69,6 +88,14 @@ window.__seek = t => {
   el.querySelectorAll('.facts div').forEach((f, k) => { const a = ease((lt - .4 - k * .25) / .5); f.style.opacity = a; f.style.transform = `translateY(${(1 - a) * 16}px)`; });
   const mt = el.querySelector('.mtg-in'); if (mt) { const k = lt / d; mt.style.transform = `translate(-50%,-50%) rotateX(${22 - k * 8}deg) rotateZ(${-10 + k * 4}deg) scale(${1.25 - k * .3}) translateY(${-k * 120}px)`; const tt = el.querySelector('.mtg-t'); tt.style.opacity = ease((lt - .3) / .6); tt.style.transform = `scale(${.94 + .06 * ease((lt - .3) / .8)})`; }
   if (el.classList.contains('fin')) { finaleSeek(el, lt, d); }
+  if (el.classList.contains('rks')) {
+    const per = Math.max(1.1, (d - 3.2) / 6), cur = Math.min(5, Math.floor(Math.max(0, lt - .8) / per));
+    el.querySelectorAll('.rk').forEach((r, k) => { r.classList.toggle('on', k <= cur && lt > .8); r.classList.toggle('cur', k === cur && lt > .8); });
+    el.querySelectorAll('.rk-sp').forEach((sp, k) => { const a = lt - .8 - k * per, vis = k === cur && lt > .8; const pop = vis ? Math.min(1, a / .35) : 0;
+      sp.style.opacity = vis ? pop : 0; sp.style.transform = `scale(${vis ? .7 + .3 * pop + (pop < 1 ? 0 : Math.sin(Math.min(1, (a - .35) / .4) * Math.PI) * .05) : .7}) translateY(${Math.sin(lt * 2.2) * 6}px)`; });
+    el.querySelector('.rk-glow').style.transform = `scale(${1 + Math.sin(lt * 2) * .05})`;
+    el.querySelectorAll('.chips span').forEach((c, k) => { const a = ease((lt - (d * .45) - k * .3) / .5); c.style.opacity = a; c.style.transform = `translateY(${(1 - a) * 14}px)`; });
+  }
   const m = el.querySelector('.fin-mid .mascot') ? null : el.querySelector('.mascot'); if (m) m.style.transform = `translateY(${Math.sin(t * 2.2) * 8}px) rotate(${Math.sin(t * 1.3) * 3}deg)`;
   const c = (T.scenes[i].caps || []).find(c => lt >= c[0] && lt < c[1] + .25); document.getElementById('cap').textContent = c ? c[2] : '';
   document.getElementById('prog').style.width = (t / acc * 100) + '%';

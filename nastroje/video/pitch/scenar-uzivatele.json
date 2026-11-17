@@ -98,6 +98,37 @@
   ]
  },
  {
+  "id": "odmeny",
+  "img": "",
+  "ranks": [
+   "Nováček",
+   "Učeň",
+   "Praktik",
+   "Znalec",
+   "Expert",
+   "Mistr"
+  ],
+  "chips": [
+   "16 odznaků",
+   "Denní výzvy a truhla",
+   "Série dní",
+   "Minihry u překážek",
+   "Medaile absolventa"
+  ],
+  "h": "Co získáte",
+  "s": "Šest hodností a Spock v novém vzhledu za každou",
+  "en": [
+   "And you earn as you go. Six ranks, from Rookie to Master, and Spock gets a new look at every one.",
+   "Sixteen badges, daily challenges with a treasure chest, and at the end, a graduate medal and a meeting with Spock himself.",
+   "So, who will be the first Master on your team?"
+  ],
+  "cs": [
+   "A po cestě získáváte. Šest hodností od Nováčka po Mistra a Spock dostane s každou nový vzhled.",
+   "Šestnáct odznaků, denní výzvy s truhlou a na konci medaile absolventa a setkání se samotným Spockem.",
+   "Tak kdo bude ve vašem týmu první Mistr?"
+  ]
+ },
+ {
   "id": "mobil",
   "img": "mobil.jpg",
   "h": "Kdekoli",
