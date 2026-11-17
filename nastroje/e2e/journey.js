@@ -211,7 +211,7 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  const vtx=await p.locator('#dash').innerText().catch(()=>'');
  ok(T('záložka Verze a kvalita ukáže testy, výkon a tokeny verze'), vtx.includes('End-to-end testy') && vtx.includes('Náročnost na tokeny') && vtx.includes('Historie verzí'));
  ok(T('verze se zapíše do historie'), Object.keys(await p.evaluate(()=>window.__db)).some(k=>k.startsWith('versions/')));
- ok(T('záložka Verze bez přetékání'), (await ov())<=0);
+ ok(T('záložka Verze bez přetékání'), (await ov())<=0, await p.evaluate(()=>{/* při chybě: které prvky přesahují (mimo posuvné tabulky) */const W=innerWidth;return [...document.querySelectorAll('#dash *')].filter(e=>{const r=e.getBoundingClientRect();return r.right>W+1&&!e.closest('.tw,.ds-scroll')}).slice(0,4).map(e=>e.tagName.toLowerCase()+'.'+[...e.classList].join('.')+' '+Math.round(e.getBoundingClientRect().right)+'px '+(e.textContent||'').trim().slice(0,40)).join(' | ')}));
  {const r=((await p.evaluate(()=>window.__db['track/u_ja']))||{perf:{render:[]}}).perf.render.slice().sort((a,b)=>a-b);LAB[tag].render=r.length?r[Math.floor(r.length/2)]:null;LAB[tag].renderP90=r.length?r[Math.min(r.length-1,Math.floor(r.length*.9))]:null;}
  if(!CTX)CTX=await p.evaluate(()=>__kviz.ctx());
  // trvalost
