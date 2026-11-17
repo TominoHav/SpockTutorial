@@ -96,6 +96,7 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  // praktická lekce: nejdřív práce ve VS Code, úkol se odškrtne až ověřením
  await p.evaluate(()=>{const e=document.querySelector('.pd-in-card [data-lesson="1"], .pd-mob-card [data-lesson="1"]');e&&e.click()});await settle(p);
  ok(T('praktická lekce začíná prací ve VS Code, karty jsou až potom'), await p.evaluate(()=>{const h=[...document.querySelectorAll('.lpanel .blk h4')].map(x=>x.innerText);return h.length>=2 && /Vyzkoušejte ve SPOCKu/i.test(h[0]) && /Proč to tak je/i.test(h[1])}));
+ ok(T('lekce končí blokem Co si odnést do práce'), await p.evaluate(()=>{const h=[...document.querySelectorAll('.lpanel .blk h4')].map(x=>x.innerText);return /Co si odnést do práce/i.test(h[h.length-1]);}));
  const pk=await p.evaluate(()=>{const b=document.querySelector('.lpanel .tchk.proof [data-proof]');return b?b.dataset.proof.split(':')[0]:''});
  ok(T('úkol s ověřením nejde odškrtnout bez odpovědi'), !!pk && await p.evaluate(k=>document.getElementById('t-'+k.replace(/\./g,'-')).disabled,pk));
  const pa=await p.evaluate(k=>{const [w,d,t]=k.split('.');return __kviz.check(w,+d,+t)},pk);
