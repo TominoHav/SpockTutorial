@@ -297,7 +297,7 @@ function msgNext(){
 }
 function showCel(){
   /* během kvízu a skokového testu oslavy počkají na jeho konec; naráz je vidět jen jedna */
-  const c = CEL[0]; if (!c || SES || STORY || MG || document.querySelector('.cel')) return;
+  const c = CEL[0]; if (!c || SES || STORY || document.querySelector('.cel')) return;
   const ov = document.createElement('div'); ov.className = 'cel'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label', c.title);
   const big = c.kind === 'module' || c.kind === 'badge' || c.kind === 'unlock' || c.kind === 'rank' || c.kind === 'streak';
   ov.innerHTML = `<canvas class="confetti" aria-hidden="true"></canvas><div class="cel-card ${c.kind}">${spockSVG('big')}
@@ -305,16 +305,14 @@ function showCel(){
     <h2>${esc(c.title)}</h2><p>${esc(c.text || '')}</p>
     ${c.sum ? `<div class="cel-sum">${c.sum.map(x => `<div><b class="num">${x[0]}</b><span>${x[1]}</span></div>`).join('')}</div>` : ''}
     <div class="cel-stats"><span>${FLAME}<b>${streak()}</b> série</span><span><b>${S.xp}</b> XP celkem</span><span><b>${rank().name}</b> hodnost</span></div>
-    <div class="cel-acts">${c.mod ? `<button class="btn primary cel-recap" type="button">Přehrát shrnutí úrovně</button><button class="btn cel-game" type="button">Zahrát minihru</button>${c.fin ? '<button class="btn cel-fin" type="button">Obléknout postavičku a odletět</button>' : ''}<button class="btn cel-go" type="button">Přeskočit</button>` : c.quiz ? '<button class="btn primary cel-quiz" type="button">Spustit kvíz</button><button class="btn cel-go" type="button">Později</button>' : '<button class="btn primary cel-go" type="button">Pokračovat</button>'}</div></div>`;
+    <div class="cel-acts">${c.mod ? `${c.fin ? '<button class="btn primary cel-fin" type="button">Obléknout postavičku a odletět</button>' : ''}<button class="btn ${c.fin ? '' : 'primary'} cel-go" type="button">Pokračovat</button>` : c.quiz ? '<button class="btn primary cel-quiz" type="button">Spustit kvíz</button><button class="btn cel-go" type="button">Později</button>' : '<button class="btn primary cel-go" type="button">Pokračovat</button>'}</div></div>`;
   document.body.append(ov);
   const done = () => { ov.remove(); CEL.shift(); showCel(); };
   ov.querySelector('.cel-go').onclick = done;
-  const cr = ov.querySelector('.cel-recap'); if (cr) cr.onclick = () => { done(); playRecap(c.mod); };
-  const cg = ov.querySelector('.cel-game'); if (cg) cg.onclick = () => { done(); playGame(c.mod); };
   const cf = ov.querySelector('.cel-fin'); if (cf) cf.onclick = () => { CEL.length = 1; done(); openWardrobe(); };
   const cq = ov.querySelector('.cel-quiz'); if (cq) cq.onclick = () => { CEL.length = 1; done(); startSession(c.quiz, 'quiz'); };
   ov.addEventListener('keydown', e => { if (e.key === 'Escape') done(); });
-  (ov.querySelector('.cel-recap') || ov.querySelector('.cel-quiz') || ov.querySelector('.cel-go')).focus();
+  (ov.querySelector('.cel-fin') || ov.querySelector('.cel-quiz') || ov.querySelector('.cel-go')).focus();
   confetti(ov.querySelector('.confetti'), big ? 160 : 90);
 }
 function confetti(cv, n){
@@ -440,13 +438,16 @@ if (window.__E2E) window.__kviz = {cardA: k => { const c = revCardOf(k); return 
     for (let di = w.days.length - 1; di >= 0 && !left; di--) for (let ti = w.days[di].todo.length - 1; ti >= 0; ti--) if (!w.days[di].todo[ti].check) { left = [di, ti]; break; }
     w.days.forEach((d, di) => { d.todo.forEach((_, ti) => { if (!(left && left[0] === di && left[1] === ti)) S.todo[wid+'.'+di+'.'+ti] = true; }); (d.cards || []).forEach((c, ci) => { S.cards[wid+'.'+di+'.'+ci] = c.a; }); });
     S.qpass[wid] = {at:Date.now(), right:5, total:5}; save(); render(); return left; },
+  scenes: () => playScenes(storyScenes(), 'Příběh vaší cesty', 'příběh'),
+  open: id => go('week', {week:id, peek:id}),
   skins: () => SKINS.map(k => [k.n, k.d, spockSVG('fab', k)]), finish: () => { S.qpass = S.qpass || {}; pathMods().forEach(w => { w.days.forEach((d, di) => { d.todo.forEach((_, ti) => { S.todo[w.id+'.'+di+'.'+ti] = true; }); (d.cards || []).forEach((c, ci) => { S.cards[w.id+'.'+di+'.'+ci] = c.a; }); }); S.qpass[w.id] = S.qpass[w.id] || {at:Date.now(), right:5, total:5}; }); save(); render(); return pathDone(); }, path: () => pathIds(), badges: () => myBadges().map(b => b[0]), idle: mins => { const now = Date.now(); tTick(); const b = Object.values(TRK.doc.secs).reduce((n, x) => n + x, 0); TRK.act = now - (mins + 2) * 60000; TRK.curAt = now - mins * 60000; tTick(); return Object.values(TRK.doc.secs).reduce((n, x) => n + x, 0) - b; }, check: (w, d, t) => { const m = W.find(x => x.id === w); return m.days[d].todo[t].check.a; }, build: () => BUILD, ctx: () => { const v = view, out = {}; W.forEach(w => { view = Object.assign({}, v, {name:'week', week:w.id}); out[w.id] = rules().length; }); view = v; return out; }, mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
 function sesQ(){ const w = W.find(x => x.id === SES.wid) || {id:SES.wid, title:'Opakování chyb', c:'indigo'}, qi = SES.qs[SES.i]; return {w, qi, q:SES.items[qi]}; }
 function renderSession(){
   let ov = document.getElementById('ses');
   if (!ov) { ov = document.createElement('div'); ov.id = 'ses'; ov.className = 'ses'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); document.body.append(ov); }
   const {w, q} = sesQ();
-  ov.className = 'ses c-' + w.c;
+  const game = SES.mode === 'quiz', wd = game ? (worldOf(w) || {n:w.title, foe:'Překážka', c:'#A54CB2'}) : null;
+  ov.className = 'ses c-' + w.c + (game ? ' ses-game' : '');
   const pct = Math.round(SES.i / SES.qs.length * 100);
   const hearts = (SES.mode === 'jump' || SES.mode === 'place') ? `<span class="ses-hearts" aria-label="Zbývá ${SES.hearts} ${SES.hearts === 1 ? 'srdíčko' : 'srdíčka'}">${Array.from({length:SES.heartsMax || SES.hearts}, (_, i) => `<span class="${i < SES.hearts ? '' : 'lost'}">${HEART}</span>`).join('')}</span>` : `<span class="ses-n num">${Math.min(SES.i + 1, SES.qs.length)} / ${SES.qs.length}</span>`;
   const body = `<div class="ses-opts">${q.o.map((o,oi) => {
@@ -456,11 +457,11 @@ function renderSession(){
   if (!SES.checked) foot = `<div class="ses-foot">${SES.mode === 'quiz' ? '<button class="btn" type="button" data-sskip>Přeskočit</button>' : '<span></span>'}<button class="btn primary" type="button" data-scheck ${SES.pick === null ? 'disabled' : ''}>Zkontrolovat</button></div>`;
   else {
     const ok = SES.pick === q.a;
-    foot = `<div class="ses-foot fb-${ok ? 'ok' : 'bad'}"><div class="ses-fb"><b>${ok ? 'Výborně!' : 'Správná odpověď: ' + fmt(q.o[q.a])}</b><p>${fmt(q.e || '')}</p></div><button class="btn primary" type="button" data-snext>Pokračovat</button></div>`;
+    foot = `<div class="ses-foot fb-${ok ? 'ok' : 'bad'}"><div class="ses-fb"><b>${ok ? 'Výborně!' : 'Správná odpověď: ' + fmt(q.o[q.a])}</b><p>${!ok && SES.mode === 'quiz' ? '<b>Spock radí:</b> ' : ''}${fmt(q.e || '')}${!ok && SES.mode === 'quiz' ? ' Otázka se vrátí na konci.' : ''}</p></div><button class="btn primary" type="button" data-snext>Pokračovat</button></div>`;
   }
-  ov.innerHTML = `<div class="ses-in">
-    <div class="ses-top"><button class="g-x" type="button" data-sclose aria-label="Ukončit kvíz">×</button><span class="ses-bar"><i style="width:${pct}%"></i></span>${hearts}</div>
-    <div class="ses-body"><span class="eyebrow">${SES.mode === 'jump' ? 'Skokový test · ' : SES.mode === 'place' ? 'Vstupní test · ' : SES.mode === 'rev' ? '' : 'Ověř se · '}${esc(SES.mode === 'place' ? 'Poznejte SPOCK' : w.title)}</span><h2 class="ses-q">${fmt(q.q)}</h2>${body}</div>
+  ov.innerHTML = `${game ? '<div class="sp-stars" aria-hidden="true"></div>' : ''}<div class="ses-in">
+    <div class="ses-top"><button class="g-x" type="button" data-sclose aria-label="Ukončit kvíz">×</button>${game ? `<div class="mg-track" role="img" aria-label="Postup ${SES.i} z ${SES.qs.length}"><span class="mg-ship" style="left:${pct}%">${shipSVG()}</span>${SES.qs.map((_, k) => `<i class="${k < SES.i ? 'on' : ''}"></i>`).join('')}<span class="mg-goal" style="--pc:${wd.c}"></span></div>` : `<span class="ses-bar"><i style="width:${pct}%"></i></span>`}${hearts}</div>
+    <div class="ses-body"><span class="eyebrow">${game ? `Překážka · ${wd.foe}` : (SES.mode === 'jump' ? 'Skokový test · ' : SES.mode === 'place' ? 'Vstupní test · ' : SES.mode === 'rev' ? '' : 'Ověř se · ') + esc(SES.mode === 'place' ? 'Poznejte SPOCK' : w.title)}</span><h2 class="ses-q">${fmt(q.q)}</h2>${body}</div>
     ${foot}</div>`;
   const f = ov.querySelector('[data-snext],[data-scheck]:not([disabled]),.ses-opt'); if (f) f.focus();
 }
@@ -578,7 +579,7 @@ function spaceMap(){
       <h3>${wd.n}</h3><p class="sw-m">${esc(w.role ? w.title : w.lab + ' · ' + w.title)}</p>
       <p class="sw-foe ${done ? 'won' : ''}">${done ? 'Překonáno: ' : 'Překážka: '}${wd.foe}</p>
       <span class="sw-prog" aria-label="Hotovo ${Math.round(pct*100)} %"><span class="sw-bar"><i style="width:${Math.round(pct*100)}%"></i></span><b class="num">${Math.round(pct*100)} %</b></span>
-      <button class="linkbtn" type="button" data-week="${w.id}">${lbl}</button>${done ? `<span class="sw-x"><button class="linkbtn" type="button" data-recap="${w.id}">Shrnutí</button><button class="linkbtn" type="button" data-mgame="${w.id}">Minihra</button></span>` : ''}</li>`;
+      <button class="linkbtn" type="button" data-week="${w.id}">${lbl}</button>${done || (quizReady(w) && !locked) ? `<span class="sw-x"><button class="linkbtn" type="button" data-quiz="${w.id}">${quizPassed(w) ? 'Zopakovat kvíz' : 'Kvíz u překážky'}</button></span>` : ''}</li>`;
   }).join('');
   return `<div class="spmap"><div class="sp-stars" aria-hidden="true"></div>
     <ol class="sp-route ${S.role === 'gm' ? 'five' : ''}">${items}
@@ -761,53 +762,6 @@ function playStory(){
   playScenes(storyScenes(), 'Příběh vaší cesty', 'příběh');
 }
 /* shrnutí úrovně: co se člověk v každé lekci naučil (názvy karet, u lekcí bez karet úkoly) */
-function recapScenes(w){
-  const wd = worldOf(w) || {n:w.title, c:'#A54CB2', foe:''}, nm = esc(w.role ? w.title : w.lab + ' · ' + w.title);
-  const sc = [{k:'start', h:'Shrnutí: ' + nm, t:`${wd.n}. Připomeňte si za minutu, co jste se tu naučili. Shrnutí můžete kdykoli přeskočit.`}];
-  w.days.forEach(d => { const pts = (d.cards && d.cards.length ? d.cards.map(c => plain(c.t)) : d.todo.map(t => 'Vyzkoušeli jste: ' + plain(t.t))).slice(0, 5); sc.push({k:'world', c:wd.c, h:'Lekce ' + esc(d.d) + ': ' + plain(d.t), list:pts.map(esc)}); });
-  sc.push({k:'stats', h:'To je celá úroveň', t:`${w.days.length} lekcí za vámi. ${wd.win || ''}`});
-  return sc;
-}
-function playRecap(wid){ const w = W.find(x => x.id === wid); if (w) playScenes(recapScenes(w), 'Shrnutí úrovně', 'shrnutí ' + wid); }
-/* minihra u překážky: pět rychlých rozhodnutí z látky úrovně; špatná volba nevadí, Spock napoví. Jde přeskočit. */
-let MG = null;
-function playGame(wid){
-  const w = W.find(x => x.id === wid); if (!w) return;
-  const pool = []; w.days.forEach(d => (d.cards || []).forEach(c => { if (c.q && c.o && c.o.length > 1) pool.push(c); }));
-  if (!pool.length) { toast('Tahle úroveň minihru nemá.'); return; }
-  for (let i = pool.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [pool[i], pool[j]] = [pool[j], pool[i]]; }
-  MG = {w, wd: worldOf(w) || {n:w.title, foe:'Překážka', c:'#A54CB2'}, qs: pool.slice(0, 5), i:0, miss:0, hint:''};
-  try { trk('minihra', wid + ' spuštěna'); } catch (e) {}
-  document.body.classList.add('noscroll'); mgRender();
-}
-function mgClose(){ const ov = document.getElementById('mg'); if (ov) ov.remove(); MG = null; document.body.classList.remove('noscroll'); render(); showCel(); }
-function mgRender(){
-  let ov = document.getElementById('mg');
-  if (!ov) { ov = document.createElement('div'); ov.id = 'mg'; ov.className = 'story mg'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','Minihra: ' + MG.wd.foe); document.body.append(ov); }
-  const g = MG, n = g.qs.length, end = g.i >= n;
-  const track = `<div class="mg-track" role="img" aria-label="Postup ${Math.min(g.i, n)} z ${n}"><span class="mg-ship" style="left:${Math.min(g.i, n) / n * 100}%">${shipSVG()}</span>${g.qs.map((_, k) => `<i class="${k < g.i ? 'on' : ''}"></i>`).join('')}<span class="mg-goal" style="--pc:${g.wd.c}"></span></div>`;
-  if (end) {
-    ov.innerHTML = `<div class="st-stage mg-stage"><div class="sp-stars" aria-hidden="true"></div><div class="mg-top"><span class="eyebrow">Minihra · ${g.wd.n}</span><h2>Proletěli jste: ${g.wd.foe}</h2></div>${track}
-      <div class="mg-end">${spockSVG('big')}<p>${g.miss ? `Spock vám napověděl ${g.miss}×. Kurz jste udrželi.` : 'Bez jediné nápovědy. Čistý průlet!'}</p><button class="btn primary" type="button" data-mg="close">Pokračovat</button></div></div>`;
-    ov.querySelector('[data-mg=close]').focus(); return;
-  }
-  const c = g.qs[g.i], order = g.order || (g.order = c.o.map((_, k) => k).sort(() => Math.random() - .5));
-  ov.innerHTML = `<div class="st-stage mg-stage"><div class="sp-stars" aria-hidden="true"></div>
-    <div class="mg-top"><span class="eyebrow">Minihra · ${g.wd.n} · ${g.i + 1}/${n}</span><h2>Překážka: ${g.wd.foe}</h2><button class="btn sm" type="button" data-mg="close">Přeskočit minihru</button></div>${track}
-    <div class="mg-q"><p class="mg-ask">${fmt(c.q)}</p><div class="mg-opts">${order.map((oi, k) => `<button type="button" class="mg-opt" style="--d:${k * .6}s" data-mg="a:${oi}">${fmt(c.o[oi])}</button>`).join('')}</div>
-      ${g.hint ? `<p class="mg-hint" role="status"><b>Spock radí:</b> ${fmt(g.hint)}</p>` : '<p class="mg-hint muted">Vyberte správný kurz. Špatná volba nevadí, Spock napoví.</p>'}</div></div>`;
-}
-document.addEventListener('click', e => {
-  const t = e.target.closest('[data-mg],[data-mgame],[data-recap]'); if (!t) return;
-  if (t.dataset.mgame) return playGame(t.dataset.mgame);
-  if (t.dataset.recap) return playRecap(t.dataset.recap);
-  if (!MG) return;
-  if (t.dataset.mg === 'close') { const fin = MG.i >= MG.qs.length, wid = MG.w.id; if (fin) award('mg.' + wid, 15, 'minihra'); try { trk('minihra', wid + (fin ? ' dohrána' : ' přeskočena')); } catch (err) {} return mgClose(); }
-  const oi = +t.dataset.mg.split(':')[1], c = MG.qs[MG.i];
-  if (oi === c.a) { blip('ok'); MG.i++; MG.hint = ''; MG.order = null; } else { blip('bad'); MG.miss++; MG.hint = c.why || 'Zkuste jiný kurz.'; }
-  mgRender();
-});
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && MG) mgClose(); });
 
 /* ---------- profil a odznaky ---------- */
 function renderBadges(){
@@ -1239,7 +1193,7 @@ function lessonPanel(w, di){
   const learn = d.learn.length ? `<div class="blk"><h4><i>\u0001</i>Nauč se${d.learn.some(r => /`/.test(r.l)) ? ' · v kopii SPOCKu' : ''}</h4><div class="res">${d.learn.map(r => `<div class="ritem"><span class="ty text">text</span><span>${fmt(r.l)}<small>${fmt(r.n||'')}</small></span></div>`).join('')}</div></div>` : '';
   const cards = d.cards && d.cards.length ? (() => {
     const nAns = cardsDone(w, di), shown = d.cards.slice(0, Math.min(d.cards.length, nAns + 1));
-    return `<div class="blk"><h4><i>\u0001</i>${prakt ? 'Proč to tak je' : 'Nauč se'} · ${d.cards.length} karet <span class="where web">jen na webu</span></h4><div class="cards">${shown.map((c, ci) => {
+    return `<div class="blk"><h4><i>\u0001</i>${prakt ? 'Proč to tak je' : 'Nauč se'} · ${d.cards.length} ${d.cards.length === 1 ? "karta" : d.cards.length < 5 ? "karty" : "karet"} <span class="where web">jen na webu</span></h4><div class="cards">${shown.map((c, ci) => {
       const k = w.id + '.' + di + '.' + ci, a = cardAns(k), answered = a !== undefined;
       return `<article class="lcard ${answered ? 'done' : 'cur'}" id="card-${k.replace(/\./g,'-')}"><span class="lc-n num">Karta ${ci + 1} z ${d.cards.length}</span><h3>${fmt(c.t)}</h3>${(c.blocks || c.text.map(p => ({p}))).map(b => b.p !== undefined ? `<p>${fmt(b.p)}</p>` : b.list ? `<ul class="keys">${b.list.map(x => `<li><span>${fmt(x)}</span></li>`).join('')}</ul>` : b.table ? tbl(b.table) : b.svg === 'arch' ? archSvg() : b.olist ? `<ol class="lc-ol">${b.olist.map(x => `<li>${fmt(x)}</li>`).join('')}</ol>` : b.code !== undefined ? `<div class="codeblk"><button type="button" class="btn sm codecopy" data-copy>Zkopírovat</button><pre><code>${esc(b.code)}</code></pre></div>` : '').join('')}${c.more || c.moreList ? `<details class="lc-more"><summary>Víc do hloubky</summary>${c.more ? `<p>${fmt(c.more)}</p>` : ''}${c.moreList ? `<ul class="keys">${c.moreList.map(x => `<li><span>${fmt(x)}</span></li>`).join('')}</ul>` : ''}</details>` : ''}${c.q ? `<div class="lc-q"><b>${fmt(c.q)}</b><div class="lc-opts">${c.o.map((o, oi) => `<button type="button" class="lc-opt ${answered ? (oi === c.a ? 'right' : oi === a ? 'wrong' : '') : ''}" data-card="${k}:${oi}" ${answered ? 'disabled' : ''}>${fmt(o)}</button>`).join('')}</div>${answered ? `<p class="lc-why ${a === c.a ? 'ok' : 'bad'}"><b>${a === c.a ? 'Správně.' : 'Ne tak docela.'}</b> ${fmt(c.why)}</p>` : ''}</div>` : ''}</article>`;
     }).join('')}${nAns < d.cards.length ? `<p class="lc-left muted">Odpovězte a otevře se další karta. Zbývá ${d.cards.length - nAns} z ${d.cards.length}.</p>` : ''}</div></div>`;
@@ -1253,7 +1207,7 @@ function lessonPanel(w, di){
   const xpLeft = d.todo.filter((_,ti) => !S.got['task.'+w.id+'.'+di+'.'+ti]).length * XP.task + (S.got['lesson.'+w.id+'.'+di] ? 0 : XP.lesson);
   const next = di + 1 < w.days.length
     ? `<button class="btn ${done ? 'primary' : ''}" type="button" data-lesson="${di+1}">Další lekce: ${esc(w.days[di+1].d)} →</button>`
-    : quizReady(w) ? `<button class="btn ${done ? 'primary' : ''}" type="button" data-quiz="${w.id}">${quizPassed(w) ? 'Zopakovat kvíz modulu' : 'Spustit kvíz modulu'} →</button>` : `<button class="btn" type="button" disabled>${LOCK} Kvíz po kartách modulu</button>`;
+    : ''; /* poslední lekce: další krok je kvíz u překážky hned pod lekcí */
   return `<section class="lpanel c-${w.c}" id="lpanel" aria-label="Lekce ${esc(d.d)}">
     <div class="lp-head">
       <span class="lp-badge">${done ? '✓' : esc(d.d)}</span>
@@ -1291,10 +1245,10 @@ function renderWeek(id){
     ${other ? `<p class="goal" style="background:var(--warn-bg)"><b>Tohle je lekce pro roli ${ROLES[w.role || 'gm']}.</b> Čtěte ji pro kontext tria, do vašeho pokroku se nepočítá.</p>` : ''}
     ${sel === 0 ? `<details class="unit-guide"><summary>Průvodce modulem: proč a co mít připravené</summary><div class="mh c-${w.c}"><p class="why"><b>Proč:</b> ${fmt(w.why)}</p>${w.before ? `<p class="why"><b>Než začnete:</b> ${fmt(w.before)}</p>` : ''}</div></details>` : ''}
     ${lessonPanel(w, sel)}
-    <div class="sec-h" style="margin-top:28px"><h2>Ověř se</h2><p>${qp ? 'Kvíz máte splněný. Můžete si ho zopakovat s jinými otázkami.' : qr ? 'Karty máte hotové, kvíz je odemčený.' : 'Kvíz se odemkne, až zodpovíte všechny karty modulu.'}</p></div>
-    <div class="qlaunch c-${w.c} ${qr ? '' : 'qlock'}">${spockSVG('fab')}<div><b>Kvíz modulu · ${Math.min(QN, w.quiz.length)} otázek ze ${w.quiz.length}</b><span>${qp ? `Splněno: ${S.qpass[w.id].right} z ${S.qpass[w.id].total} napoprvé.` : qr ? `Otázky se losují a míchají. Na splnění potřebujete ${Math.ceil(Math.min(QN, w.quiz.length) * QPASS)} z ${Math.min(QN, w.quiz.length)} napoprvé.` : `Karty: ${ca} z ${ct}.`}</span></div><button class="btn ${qr && !qp ? 'primary' : ''}" type="button" data-quiz="${w.id}" ${qr ? '' : 'disabled'}>${qp ? 'Zopakovat kvíz' : qr ? 'Spustit kvíz' : LOCK + ' Po kartách'}</button></div>
-    ${qp ? `<details class="qreview"><summary>Všechny otázky kvízu s vysvětlením</summary><div class="quiz c-${w.c}">${quiz}</div></details>` : ''}
-    <div class="navrow">${prev?`<button class="btn" type="button" data-week="${prev.id}">← ${esc(prev.title)}</button>`:'<span></span>'}${next?`<button class="btn ${qp ? 'primary' : ''}" type="button" data-week="${next.id}">${esc(next.title)} →</button>`:`<button class="btn primary" type="button" data-go="ready">Připravenost →</button>`}</div>`);
+    ${sel === w.days.length - 1 ? `<div class="sec-h" style="margin-top:28px"><h2>Kvíz u překážky</h2><p>${qp ? 'Překážku máte za sebou.' : qr ? 'Karty máte hotové. Proleťte překážkou: otázky ze situací z praxe.' : 'Odemkne se, až zodpovíte všechny karty modulu.'}</p></div>
+    <div class="qlaunch c-${w.c} ${qr ? '' : 'qlock'}">${spockSVG('fab')}<div><b>${esc((worldOf(w) || {foe:'Kvíz modulu'}).foe)} · ${Math.min(QN, w.quiz.length)} otázek</b><span>${qp ? `Splněno: ${S.qpass[w.id].right} z ${S.qpass[w.id].total} napoprvé.` : qr ? `Otázky se losují a míchají. Na splnění potřebujete ${Math.ceil(Math.min(QN, w.quiz.length) * QPASS)} z ${Math.min(QN, w.quiz.length)} napoprvé.` : `Karty: ${ca} z ${ct}.`}</span></div><button class="btn ${qr && !qp ? 'primary' : ''}" type="button" data-quiz="${w.id}" ${qr ? '' : 'disabled'}>${qp ? 'Zopakovat kvíz' : qr ? 'Spustit kvíz' : LOCK + ' Po kartách'}</button></div>
+    ${qp ? `<details class="qreview"><summary>Všechny otázky kvízu s vysvětlením</summary><div class="quiz c-${w.c}">${quiz}</div></details>` : ''} ` : ''}
+    ${qp && sel === w.days.length - 1 ? `<div class="navrow"><span></span>${next ? `<button class="btn primary" type="button" data-week="${next.id}">Pokračovat: ${esc(next.title)} →</button>` : `<button class="btn primary" type="button" data-go="home">Na úvod →</button>`}</div>` : ''}`);
   /* vysvětlivky až po vykreslení lekce, aby se lekce ukázala hned */
   { const gr = document.querySelector('.lpanel') || document.querySelector('.main'), go = () => { if (gr.isConnected) glossify(gr); }; (window.requestIdleCallback || setTimeout)(go, {timeout:300}); }
   const um = document.querySelector('.unit-more');

@@ -52,9 +52,9 @@ Běží na GitHubu při každém pull requestu a po sloučení do `main`. Když 
 
 | Test | Co hlídá | Kolik kontrol |
 |---|---|---|
-| `nastroje/e2e/journey.js` | Cesta uživatele na počítači i mobilu (souběžně): simulace, role, karty, úkoly s ověřením, kvíz, zámky a skokový test, všech 9 modulů, opora, chat, dashboard a jeho analýzy, hra, vesmírná cesta, minihry, shrnutí, příběh, mluvený komentář, zmrazení série, pokrok v účtu | 217 |
+| `nastroje/e2e/journey.js` | Cesta uživatele na počítači i mobilu (souběžně): simulace, role, karty, úkoly s ověřením, kvíz, zámky a skokový test, všech 9 modulů, opora, chat, dashboard a jeho analýzy, hra, vesmírná cesta, minihry, shrnutí, příběh, mluvený komentář, zmrazení série, pokrok v účtu | 209 |
 | `nastroje/e2e/scenare.js` | Offline režim (výpadek za běhu i start bez sítě), výpadek chatu, nedostupná databáze, chybějící právo zápisu, pokrok ze dvou zařízení, ovládání klávesnicí (Tab, Enter, Escape, viditelné zaměření), tablet, tablet na šířku, široký monitor, tmavý režim, platnost videí | 119 |
-| `nastroje/e2e/pristupnost.js` | Průchod za každou roli; WCAG 2 A a AA (axe-core) na sedmi stránkách a na úvodu se zapnutou expresní cestou, v dashboardu, simulaci, minihře a příběhu, světlý i tmavý režim; dotykové plochy na mobilu | 84 |
+| `nastroje/e2e/pristupnost.js` | Průchod za každou roli; WCAG 2 A a AA (axe-core) na sedmi stránkách a na úvodu se zapnutou expresní cestou, v dashboardu, simulaci, minihře a příběhu, světlý i tmavý režim; dotykové plochy na mobilu | 88 |
 | `nastroje/e2e/vykon.js` | Rozpočty: velikost stránky (700 kB, po kompresi 230 kB), první vykreslení, vykreslení lekce a opory, procesor po 15 s nečinnosti, počet prvků; dashboard s 500 smyšlenými lidmi | 10 |
 | Safari (WebKit) | `journey.js` v jádru Safari na počítači i mobilu (iPhone, iPad, Mac). Chrome a Edge pokrývá Chromium | 2 × 101 |
 
@@ -96,6 +96,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
+| [#72](https://github.com/TominoHav/SpockTutorial/pull/72) | Aplikace | Kvíz u překážky: kvíz modulu v podobě minihry (vesmír, loď letí k planetě úrovně, Spock radí), otázky z kvízu; smazáno shrnutí úrovně a samostatná minihra; kvíz jen pod poslední lekcí modulu, po splnění jedno tlačítko Pokračovat; oprava odkazu na smazanou Připravenost a kontrastu chybové odpovědi | 17. 11. 2026 |
 | [#71](https://github.com/TominoHav/SpockTutorial/pull/71) | Aplikace, Obsah | Konec lekce prakticky: lekce končí úkolem „Teď to zkuste (ve SPOCKu)“ a blokem „Co si odnést do práce“ (pravidla z vysvětlení karet lekce, ukážou se až po kartách); praktické lekce dál začínají prací ve VS Code | 17. 11. 2026 |
 | [#70](https://github.com/TominoHav/SpockTutorial/pull/70) | Aplikace | Méně času a opory: pryč „30 minut denně“, časy v menu, v průvodci modulem a u bloků lekcí a denní cíl XP (čas zůstává na rozcestí, u lekce a u expresu); Opora jen Tahák, Když něco nejde a Slovníček, pod Další Odznaky a profil, Tým a Příručka; smazány SPOCK v kostce, Připravenost (dotazník je na stránce Odznaky a profil), nanečisto a jiné role v menu | 17. 11. 2026 |
 | [#69](https://github.com/TominoHav/SpockTutorial/pull/69) | Aplikace, Údržba | První použití zase podle původní verze: bez uvítacího okna, role se vybírá na stránce a pod ní je rozbalené Co je SPOCK; po výběru role rozcestí se dvěma rovnocennými kartami jako ve videu a Co je SPOCK hned pod bannerem; JavaScript se při sestavení zmenšuje nástrojem esbuild (stránka 699 → 640 kB) | 17. 11. 2026 |
