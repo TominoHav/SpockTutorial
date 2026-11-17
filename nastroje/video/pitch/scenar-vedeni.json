@@ -1,0 +1,150 @@
+[
+ {
+  "id": "hook",
+  "img": "",
+  "h": "1 500 lidí, jeden nový nástroj",
+  "s": "Jak je naučit SPOCK dobře a rychle?",
+  "en": [
+   "Fifteen hundred people are about to start using SPOCK. Each of them has to learn seven stages, six agents, quality gates and rules that must not be broken.",
+   "Learning that from documents takes weeks, and every team ends up using SPOCK a little differently."
+  ],
+  "cs": [
+   "Používat SPOCK začne patnáct set lidí. Každý se musí naučit sedm fází, šest agentů, brány kvality a pravidla, která se neporušují.",
+   "Z dokumentace to trvá týdny a každý tým pak SPOCK používá trochu jinak."
+  ]
+ },
+ {
+  "id": "uvod",
+  "img": "uvod.jpg",
+  "h": "Onboarding do SPOCKu",
+  "s": "Jedno místo pro všechny role",
+  "en": [
+   "The SPOCK Onboarding Tutorial teaches it in one place, the same way for everyone. Product Managers, Designers, Engineers and Guild Masters."
+  ],
+  "cs": [
+   "Onboarding do SPOCKu ho učí na jednom místě a pro všechny stejně. Product Manageři, Designeři, Engineeři i Guild Masteři."
+  ]
+ },
+ {
+  "id": "rozcesti",
+  "img": "rozcesti.jpg",
+  "h": "Cesta podle role",
+  "s": "Nebo expresní start za 1 h 40 min",
+  "en": [
+   "Every role gets its own path. People short on time take the express start, and order their access on day one."
+  ],
+  "cs": [
+   "Každá role má vlastní cestu. Kdo nemá čas, začne expresním startem a hned první den si objedná přístupy."
+  ]
+ },
+ {
+  "id": "lekce",
+  "img": "lekce.jpg",
+  "h": "Učení praxí, ne čtením",
+  "s": "Karty, kvízy a úkoly ve VS Code",
+  "en": [
+   "Learning by doing. Short cards, quizzes, and real tasks in VS Code, verified with answers people can only get by doing the task."
+  ],
+  "cs": [
+   "Učení praxí. Krátké karty, kvízy a skutečné úkoly ve VS Code, ověřené odpovědí, kterou člověk zjistí jen tak, že úkol opravdu udělá."
+  ]
+ },
+ {
+  "id": "spock",
+  "img": "spock.jpg",
+  "h": "Podpora bez čekání",
+  "s": "Spock odpoví na otázky k lekcím",
+  "en": [
+   "Questions get answered on the spot by Spock, a guide that knows every lesson. Fewer tickets for the core team."
+  ],
+  "cs": [
+   "Na otázky hned odpoví Spock, průvodce, který zná každou lekci. Méně dotazů na core tým."
+  ]
+ },
+ {
+  "id": "hra",
+  "img": "hra.jpg",
+  "h": "Lidé to dokončí",
+  "s": "Hodnosti, série, výzvy a vesmírná mapa",
+  "en": [
+   "Ranks, streaks, daily challenges and a space journey keep people coming back until they finish."
+  ],
+  "cs": [
+   "Hodnosti, série, denní výzvy a vesmírná cesta drží lidi u toho, dokud cestu nedokončí."
+  ]
+ },
+ {
+  "id": "dashboard",
+  "img": "dashboard.jpg",
+  "h": "Vidíte, co funguje",
+  "s": "Průchod, problémová místa a zpětná vazba",
+  "en": [
+   "You see the whole rollout. Who is progressing, where people get stuck, and what is unclear. Feedback from every lesson arrives as a task."
+  ],
+  "cs": [
+   "Vidíte celé zavádění. Kdo postupuje, kde se lidé zasekávají a čemu nerozumí. Zpětná vazba z každé lekce přijde jako úkol."
+  ]
+ },
+ {
+  "id": "fakta",
+  "img": "",
+  "facts": [
+   [
+    "9",
+    "modulů"
+   ],
+   [
+    "51",
+    "lekcí"
+   ],
+   [
+    "93",
+    "úkolů ve VS Code"
+   ],
+   [
+    "382",
+    "automatických kontrol"
+   ],
+   [
+    "3",
+    "prohlížeče: Chrome, Edge, Safari"
+   ],
+   [
+    "WCAG AA",
+    "přístupnost"
+   ]
+  ],
+  "h": "Připraveno k pilotu",
+  "s": "Počítač, mobil, offline",
+  "en": [
+   "It is ready for a pilot. Nine modules, fifty one lessons, ninety three hands-on tasks. Tested automatically on Chrome, Edge and Safari, on desktop and phone, accessible, and it works offline."
+  ],
+  "cs": [
+   "Je připravený k pilotu. Devět modulů, padesát jedna lekcí, devadesát tři praktické úkoly. Automaticky testovaný v Chrome, Edge i Safari, na počítači i telefonu, přístupný a funguje i offline."
+  ]
+ },
+ {
+  "id": "krok",
+  "img": "",
+  "h": "Další krok: pilot",
+  "s": "Pět nováčků · pak 1 500 lidí",
+  "en": [
+   "The next step is a pilot with five newcomers. We measure, we fix, and then we roll it out to all fifteen hundred people."
+  ],
+  "cs": [
+   "Dalším krokem je pilot s pěti nováčky. Změříme, opravíme a pak ho nasadíme všem patnácti stům lidí."
+  ]
+ },
+ {
+  "id": "zaver",
+  "img": "",
+  "h": "Od první instalace k vlastnímu běhu",
+  "s": "SPOCK Onboarding · PM · PD · SWE · GM",
+  "en": [
+   "SPOCK Onboarding. From the first install to your own run. Agents prepare, people decide."
+  ],
+  "cs": [
+   "Onboarding do SPOCKu. Od první instalace k vlastnímu běhu. Agenti připravují, lidé rozhodují."
+  ]
+ }
+]
