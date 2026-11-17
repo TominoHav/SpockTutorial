@@ -947,7 +947,7 @@ function pdeLogo(cls){
 }
 function heroFirst(){
   return `<section class="hx hx-first"><div class="hx-txt">
-    <div class="hx-brand">${pdeLogo()}<span class="eyebrow">Nový nástroj pro discovery v ČS · PDE</span></div>
+    <div class="hx-brand">${pdeLogo()}<span class="eyebrow">Onboarding do SPOCKu · nový nástroj pro discovery v ČS</span></div>
     <h1>Seznamte se <em>se SPOCKem</em></h1>
     <p class="hx-lead">AI asistent ve VS Code, který produktovým týmům připraví discovery od nápadu po iniciativu. <b>Agenti připravují, vy rozhodujete.</b></p>
     <div class="hx-cta"><button class="btn primary" type="button" data-simstart>Vyzkoušet nanečisto · 5 min</button><button class="btn" type="button" data-playvideo="">▶ Pustit video · 2 min</button></div>
@@ -1045,7 +1045,7 @@ function heroStable(){
         ${exLink}${roleLine}
       </div>${miniStats()}`;
   return `<section class="hx"><div class="hx-txt">
-    <div class="hx-brand">${pdeLogo()}<span class="eyebrow">${first ? 'Vítejte v onboardingu SPOCKu' : 'Vítejte zpět'} · PDE</span></div>
+    <div class="hx-brand">${pdeLogo()}<span class="eyebrow">${first ? 'Vítejte v onboardingu SPOCKu' : 'Vítejte zpět · Onboarding do SPOCKu'}</span></div>
     <h1>Od první instalace <em>k vlastnímu běhu</em></h1>
     ${first ? '<p class="hx-lead">Pro Product Managera, Product Designera, Software Engineera a Guild Mastera. Naučí vás, jak SPOCK funguje uvnitř každé fáze, provede vás vlastním během a ukáže, čemu výstupu věřit a čemu ne.</p>' : ''}
     ${action}
