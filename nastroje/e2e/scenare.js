@@ -105,7 +105,7 @@ for(const [name,w,h,scheme] of [['tablet',768,1024,'light'],['tablet na šířku
   await ctx.close();
  }));
 }
-// 11) uvítání při prvním otevření: video Onboarding do SPOCKu za minutu a půl
+// 11) uvítání při prvním otevření: video Onboarding do SPOCKu za necelé dvě minuty
 runs.push(scenario('uvítání',async()=>{
  for(const [W,H,dev] of [[1280,900,'počítač'],[390,844,'mobil']]){
   const ctx=await b.newContext({viewport:{width:W,height:H}});await ctx.addInitScript(()=>{window.__E2E_WELCOME=true;});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));

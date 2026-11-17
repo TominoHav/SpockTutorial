@@ -55,6 +55,8 @@
 .spock .sp-legs line,.spock .sp-arm line{stroke:var(--limb,#372B91);stroke-width:6;stroke-linecap:round}.spock .sp-arm circle{fill:var(--hand,#A54CB2)}
 .spock .sp-ant{stroke:var(--ant,#A54CB2);stroke-width:5;stroke-linecap:round}.spock .sp-tip{fill:var(--tip,#E15079)}.spock .sp-eyes ellipse{fill:var(--eye,#7DE3FF)}
 .spock .sp-smile{stroke:var(--eye,#7DE3FF);stroke-width:3;fill:none;stroke-linecap:round}.spock .sp-shadow{fill:rgba(0,0,0,.35)}
+.tz-box{position:absolute;left:240px;top:34px;width:800px;height:294px;border-radius:16px;background:#120F2E;box-shadow:0 0 0 2px rgba(255,255,255,.18),0 0 60px rgba(242,154,192,.35),0 30px 80px rgba(0,0,0,.5)}
+.tz-t{position:absolute;left:0;right:0;top:360px;text-align:center;display:grid;gap:8px}.tz-t .h{font-size:50px}.tz-t .s{font-size:28px;color:#F29AC0;font-weight:700}
 </style></head><body>
 <div id="bg"><div class="stars" id="stars"></div></div><div id="sc"></div><div class="cap" id="cap"></div><div class="prog" id="prog"></div>
 <script>
@@ -71,7 +73,7 @@ const montage = (s, i) => `<div class="sc" data-i="${i}"><div class="mtg"><div c
 const finale = (s, i) => `<div class="sc fin" data-i="${i}"><div class="fin-rays"></div><div class="fin-glow"></div><canvas width="1280" height="720"></canvas>
   <div class="fin-line"></div><div class="fin-arc">${s.stages.map((n, k) => `<div class="st" style="left:${190 + k * 150}px"><i>${k + 1}</i><span>${n}</span></div>`).join('')}</div>
   <div class="fin-mid">${window.pdeLogo ? window.pdeLogo('') : ''}${mascot}</div><div class="fin-h">${s.h}</div><div class="fin-s">${s.s}</div><div class="fin-flash"></div></div>`;
-root.innerHTML = SC.map((s, i) => s.ranks ? ranksScene(s, i) : s.montage ? montage(s, i) : s.finale ? finale(s, i) : s.img ? `<div class="sc" data-i="${i}"><div class="txt"><span class="k">${String(i).padStart(2, '0')} · SPOCK Onboarding</span><div class="h">${s.h}</div><div class="s">${s.s}</div></div>${s.mobile ? `<div class="phone"><div class="vp"><img src="${s.src}"></div></div>` : `<div class="win"><div class="bar"><i></i><i></i><i></i></div><div class="vp"><img src="${s.src}"></div></div>`}</div>`
+root.innerHTML = SC.map((s, i) => s.teaser ? `<div class="sc tz" data-i="${i}"><div class="tz-box"></div><div class="tz-t"><div class="h">${s.h}</div><div class="s">${s.s}</div></div></div>` : s.ranks ? ranksScene(s, i) : s.montage ? montage(s, i) : s.finale ? finale(s, i) : s.img ? `<div class="sc" data-i="${i}"><div class="txt"><span class="k">${String(i).padStart(2, '0')} · SPOCK Onboarding</span><div class="h">${s.h}</div><div class="s">${s.s}</div></div>${s.mobile ? `<div class="phone"><div class="vp"><img src="${s.src}"></div></div>` : `<div class="win"><div class="bar"><i></i><i></i><i></i></div><div class="vp"><img src="${s.src}"></div></div>`}</div>`
   : s.facts ? `<div class="sc" data-i="${i}"><div class="center fx"><div class="h">${s.h}</div><div class="s">${s.s}</div><div class="facts">${s.facts.map(f => `<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join('')}</div></div></div>`
   : `<div class="sc" data-i="${i}"><div class="center">${mascot}<div class="h">${s.h}</div><div class="s">${s.s}</div></div></div>`).join('');
 const ease = x => x < 0 ? 0 : x > 1 ? 1 : 1 - Math.pow(1 - x, 3);
@@ -88,6 +90,7 @@ window.__seek = t => {
   el.querySelectorAll('.facts div').forEach((f, k) => { const a = ease((lt - .4 - k * .25) / .5); f.style.opacity = a; f.style.transform = `translateY(${(1 - a) * 16}px)`; });
   const mt = el.querySelector('.mtg-in'); if (mt) { const k = lt / d; mt.style.transform = `translate(-50%,-50%) rotateX(${22 - k * 8}deg) rotateZ(${-10 + k * 4}deg) scale(${1.25 - k * .3}) translateY(${-k * 120}px)`; const tt = el.querySelector('.mtg-t'); tt.style.opacity = ease((lt - .3) / .6); tt.style.transform = `scale(${.94 + .06 * ease((lt - .3) / .8)})`; }
   if (el.classList.contains('fin')) { finaleSeek(el, lt, d); }
+  if (el.classList.contains('tz')) { const t1 = el.querySelector('.tz-t'); t1.style.opacity = ease((lt - .5) / .6); el.querySelector('.tz-t .s').style.opacity = ease((lt - (d - 2.4)) / .5); }
   if (el.classList.contains('rks')) {
     const per = Math.max(1.1, (d - 3.2) / 6), cur = Math.min(5, Math.floor(Math.max(0, lt - .8) / per));
     el.querySelectorAll('.rk').forEach((r, k) => { r.classList.toggle('on', k <= cur && lt > .8); r.classList.toggle('cur', k === cur && lt > .8); });

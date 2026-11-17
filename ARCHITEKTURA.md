@@ -96,7 +96,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
-| [#64](https://github.com/TominoHav/SpockTutorial/pull/64) | Aplikace, Údržba | Pitch video „Onboarding do SPOCKu za minutu a půl“ (s odměnami ve hře): uvítání při prvním otevření (jednou, nepouští se samo, Přeskočit) a tlačítka „Co vás čeká“ a „Co je SPOCK“ na úvodní stránce; výroba videa ve dvou verzích (vedení, uživatelé) v `nastroje/video/pitch/` | 17. 11. 2026 |
+| [#64](https://github.com/TominoHav/SpockTutorial/pull/64) | Aplikace, Údržba | Pitch video „Onboarding do SPOCKu za necelé dvě minuty“ (s odměnami ve hře a náznakem finále): uvítání při prvním otevření (jednou, nepouští se samo, Přeskočit) a tlačítka „Co vás čeká“ a „Co je SPOCK“ na úvodní stránce; výroba videa ve dvou verzích (vedení, uživatelé) v `nastroje/video/pitch/` | 17. 11. 2026 |
 | [#63](https://github.com/TominoHav/SpockTutorial/pull/63) | Aplikace | Nadtitulek banneru: místo „PDE“ srozumitelné „Onboarding do SPOCKu“ (logo PDE zůstává) | 17. 11. 2026 |
 | [#62](https://github.com/TominoHav/SpockTutorial/pull/62) | Aplikace | Logo PDE Journey v banneru úvodní stránky vedle nadtitulku (nováček i vracející se), překreslené do SVG | 17. 11. 2026 |
 | [#61](https://github.com/TominoHav/SpockTutorial/pull/61) | Aplikace | Ikona aplikace pro plochu telefonu a záložku prohlížeče (hlava Spocka na hvězdném nebi): vložená ve stránce, soubory a manifest pro vlastní server ve `web/ikona/` | 17. 11. 2026 |

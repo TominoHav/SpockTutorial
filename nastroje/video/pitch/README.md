@@ -3,11 +3,12 @@
 Asi 80 s: anglický komentář hlasem Piper `en-us-ryan`, české titulky v obraze, snímky skutečné aplikace.
 Dvě verze se stejnými snímky:
 - `scenar-vedeni.json`: pro Head of Product a Head of Design (proč to zavést, co je hotové, další krok: pilot, finále s montáží, sedmi fázemi a ohňostrojem), asi 110 s, s žebříčkem hodností a vzhledy Spocka.
-- `scenar-uzivatele.json`: pro lidi, kteří budou SPOCK používat (co je čeká, co ve hře získají a proč začít), asi 93 s.
+- `scenar-uzivatele.json`: pro lidi, kteří budou SPOCK používat (co je čeká, co ve hře získají a proč začít), s náznakem skutečného finále, asi 98 s.
 
 ```bash
 python3 web/build.py
 node nastroje/video/pitch/snimky.js
+node nastroje/video/pitch/finale-klip.js   # klip skutečného finále pro náznak v uživatelské verzi
 python3 nastroje/video/pitch/render.py <cesta k en-us-ryan-high.onnx> vedeni
 python3 nastroje/video/pitch/render.py <cesta k en-us-ryan-high.onnx> uzivatele
 ```

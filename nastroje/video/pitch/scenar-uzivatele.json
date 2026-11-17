@@ -129,6 +129,20 @@
   ]
  },
  {
+  "id": "tajemstvi",
+  "img": "",
+  "teaser": "finale.mp4",
+  "h": "Co čeká úplně na konci?",
+  "s": "To už zjistíte sami.",
+  "tail": 1.0,
+  "en": [
+   "And what waits at the very end? You will have to find out yourself."
+  ],
+  "cs": [
+   "A co čeká úplně na konci? To už zjistíte sami."
+  ]
+ },
+ {
   "id": "mobil",
   "img": "mobil.jpg",
   "h": "Kdekoli",
