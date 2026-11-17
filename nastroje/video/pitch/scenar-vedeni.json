@@ -136,15 +136,54 @@
   ]
  },
  {
-  "id": "zaver",
+  "id": "montaz",
   "img": "",
-  "h": "Od první instalace k vlastnímu běhu",
-  "s": "SPOCK Onboarding · PM · PD · SWE · GM",
+  "montage": [
+   "uvod.jpg",
+   "simulace.jpg",
+   "rozcesti.jpg",
+   "lekce.jpg",
+   "spock.jpg",
+   "hra.jpg",
+   "dashboard.jpg",
+   "role.jpg"
+  ],
+  "h": "Sedm fází. Šest agentů.",
+  "s": "Jeden způsob, jak se je naučit.",
+  "music": true,
   "en": [
-   "SPOCK Onboarding. From the first install to your own run. Agents prepare, people decide."
+   "Seven stages. Six agents. One way to learn them."
   ],
   "cs": [
-   "Onboarding do SPOCKu. Od první instalace k vlastnímu běhu. Agenti připravují, lidé rozhodují."
+   "Sedm fází. Šest agentů. Jeden způsob, jak se je naučit."
+  ]
+ },
+ {
+  "id": "finale",
+  "img": "",
+  "finale": true,
+  "stages": [
+   "Brief",
+   "Problémy",
+   "Trh",
+   "Řešení",
+   "MVP",
+   "PRD",
+   "Iniciativa"
+  ],
+  "h": "Od první instalace k vlastnímu běhu",
+  "s": "Agenti připravují. Lidé rozhodují.",
+  "music": true,
+  "tail": 3.5,
+  "en": [
+   "SPOCK Onboarding.",
+   "From the first install, to your own run.",
+   "Agents prepare. People decide."
+  ],
+  "cs": [
+   "Onboarding do SPOCKu.",
+   "Od první instalace k vlastnímu běhu.",
+   "Agenti připravují. Lidé rozhodují."
   ]
  }
 ]
