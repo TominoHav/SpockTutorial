@@ -99,6 +99,7 @@ function updatePills(){
   const ps = $('#pill-streak'); if (ps) { ps.hidden = !S.xp; ps.innerHTML = FLAME + '<b>' + st + '</b>'; ps.classList.toggle('lit', lit); ps.title = 'Série: ' + st + ' dní' + (lit ? '' : ' · dnes ještě nic'); }
   const px = $('#pill-xp'); if (px) { px.hidden = !S.xp; px.innerHTML = `<span class="ring sm" style="--p:${Math.min(100, todayXP()/S.goal*100)}"></span><b>${S.xp}</b> XP`; px.title = 'Dnes ' + todayXP() + ' z ' + S.goal + ' XP · ' + rank().name; }
   $('#pill-prog').innerHTML = '<span class="pp-l">Hotovo </span>' + overall() + ' %'; $('#pill-prog').title = 'Hotovo z vaší cesty';
+  try { ntfUpdate(); } catch (e) {}
 }
 function toast(msg){ notice({kind:'info', title:msg}); }
 
@@ -360,10 +361,6 @@ function startReview(){
   try { trk('opakování', items.length + ' karet'); } catch (e) {}
   renderSession();
 }
-function revCard(){
-  if (!S.role) return ''; const n = revDue().length; if (!n) return '';
-  return `<section class="revc"><div><span class="eyebrow">Opakování chyb</span><h3>${n} ${n === 1 ? 'karta' : n < 5 ? 'karty' : 'karet'} k zopakování</h3><p class="muted">Co jste netrefili, se vrací s odstupem, dokud to neumíte. Asi ${Math.max(1, Math.round(Math.min(n, QN) * .5))} min, +5 XP za každou.</p></div><button class="btn primary" type="button" data-review>Opakovat →</button></section>`;
-}
 document.addEventListener('click', e => { if (e.target.closest('[data-review]')) startReview(); if (e.target.closest('[data-place]')) startSession('l0', 'place'); });
 /* vstupní test: splní karty a kvíz úrovně 0 a odemkne Přípravu; praktické úkoly zůstávají */
 function placeCredit(){
@@ -378,13 +375,43 @@ function placeCredit(){
    Nováček kartu nevidí, učí se rovnou novou verzi. */
 const NOVINKY = {};
 if (window.__E2E && window.__E2E_NOVINKY) Object.assign(NOVINKY, window.__E2E_NOVINKY);
-function newsCard(){
-  if (!S.role) return '';
-  if (!S.spockSeen) { S.spockSeen = BUILD.spock; save(); return ''; }
-  const items = S.spockSeen !== BUILD.spock && NOVINKY[BUILD.spock]; if (!items) return '';
-  return `<section class="newsc"><div><span class="eyebrow">Co je nového ve SPOCKu ${esc(BUILD.spock)}</span><ul>${items.map(x => `<li>${fmt(x)}</li>`).join('')}</ul></div><button class="btn" type="button" data-newsok>Rozumím</button></section>`;
+/* ---------- upozornění v horní liště: opakování chyb a novinky ve SPOCKu ----------
+   Zvonek vedle série, XP a procent ukazuje počet; po kliknutí se otevře panel. Když přibude něco nového,
+   jednou vyskočí hláška (opakování nejvýš jednou denně, novinky jednou). Úvodní stránka zůstává jen pro cestu. */
+const newsItems = () => S.role && S.spockSeen && S.spockSeen !== BUILD.spock ? NOVINKY[BUILD.spock] || null : null;
+function ntfCount(){ return (S.role && revDue().length ? 1 : 0) + (newsItems() ? 1 : 0); }
+function ntfPanel(){
+  const n = S.role ? revDue().length : 0, news = newsItems(), parts = [];
+  if (n) parts.push(`<div class="ntf-i"><b>Opakování chyb</b><p>${n} ${n === 1 ? 'karta' : n < 5 ? 'karty' : 'karet'} k zopakování. Co jste netrefili, se vrací s odstupem, dokud to neumíte. +5 XP za každou.</p><button class="btn primary sm" type="button" data-review>Opakovat →</button></div>`);
+  if (news) parts.push(`<div class="ntf-i"><b>Co je nového ve SPOCKu ${esc(BUILD.spock)}</b><ul>${news.map(x => `<li>${fmt(x)}</li>`).join('')}</ul><button class="btn sm" type="button" data-newsok>Rozumím</button></div>`);
+  return parts.length ? parts.join('') : '<p class="ntf-empty">Nic nového. Až budete mít co opakovat nebo SPOCK přinese novinky, objeví se tady.</p>';
 }
-document.addEventListener('click', e => { if (e.target.closest('[data-newsok]')) { S.spockSeen = BUILD.spock; save(); render(); } });
+function ntfUpdate(){
+  if (S.role && !S.spockSeen) { S.spockSeen = BUILD.spock; save(); }
+  const b = document.getElementById('pill-ntf'); if (!b) return;
+  const c = ntfCount(); b.hidden = !S.role; b.classList.toggle('has', !!c);
+  b.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>${c ? `<b class="ntf-n">${c}</b>` : ''}`;
+  b.setAttribute('aria-label', c ? 'Upozornění: ' + c : 'Upozornění: nic nového'); b.title = b.getAttribute('aria-label');
+  const pop = document.getElementById('ntf-pop'); if (pop && !pop.hidden) pop.innerHTML = ntfPanel();
+  /* vyskočí jednou: novinky po nové verzi, opakování jednou denně */
+  if (S.role && newsItems() && S.newsNotified !== BUILD.spock) { S.newsNotified = BUILD.spock; save(); notice({kind:'badge', title:'Co je nového ve SPOCKu ' + BUILD.spock, text:'Podívejte se na zvonek nahoře.'}); }
+  const n = S.role ? revDue().length : 0;
+  if (n && S.revNotified !== dKey(0)) { S.revNotified = dKey(0); save(); notice({kind:'badge', title:n + ' ' + (n === 1 ? 'karta' : n < 5 ? 'karty' : 'karet') + ' k zopakování', text:'Najdete je u zvonku nahoře.'}); }
+}
+function ntfToggle(open){
+  const b = document.getElementById('pill-ntf'); let pop = document.getElementById('ntf-pop'); if (!b) return;
+  if (!pop) { pop = document.createElement('div'); pop.id = 'ntf-pop'; pop.className = 'ntf-pop'; pop.setAttribute('role', 'region'); pop.setAttribute('aria-label', 'Upozornění'); pop.hidden = true; document.body.append(pop); }
+  const show = open === undefined ? pop.hidden : open;
+  pop.hidden = !show; b.setAttribute('aria-expanded', String(show));
+  if (show) { pop.innerHTML = ntfPanel(); const f = pop.querySelector('button'); if (f) f.focus(); try { trk('upozornění', 'otevřeno'); } catch (e) {} }
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('#pill-ntf')) { ntfToggle(); return; }
+  if (e.target.closest('[data-review],[data-newsok]')) ntfToggle(false);
+  else if (!e.target.closest('#ntf-pop')) { const p = document.getElementById('ntf-pop'); if (p && !p.hidden) ntfToggle(false); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { const p = document.getElementById('ntf-pop'); if (p && !p.hidden) { ntfToggle(false); document.getElementById('pill-ntf').focus(); } } });
+document.addEventListener('click', e => { if (e.target.closest('[data-newsok]')) { S.spockSeen = BUILD.spock; save(); ntfUpdate(); render(); } });
 let SES = null;
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const cardsTotal = w => w.days.reduce((n, d) => n + (d.cards || []).length, 0);
@@ -976,11 +1003,11 @@ function pathBlock(title){
 function roleCards(){
   return `<div class="rcards">${W.filter(w => w.role).map(w => `<button type="button" class="rcard c-${w.c} ${S.role === w.role ? 'on' : ''}" data-role="${w.role}" aria-pressed="${S.role === w.role}"><span class="rc-dia"><span>${S.role === w.role ? '✓' : ROLE_SHORT[w.role]}</span></span><b>${esc(ROLES[w.role])}</b><span>${esc(ROLE_WHO[w.role])}</span></button>`).join('')}</div>`;
 }
-function toolsBlock(title, noSim){
-  return `<div class="sec-h"><h2>${title || 'Opora'}</h2></div><div class="journey ${noSim ? 'three' : 'four'}">
-    ${noSim ? '' : `<button class="jstep c-pink" type="button" data-simstart><span class="n">5 minut · interaktivně</span><h3>SPOCK nanečisto</h3><p>Zkrácený běh od nápadu po iniciativu. Vy rozhodujete na každé bráně.</p></button>`}
-    <button class="jstep c-blue" type="button" data-go="map"><span class="n">Interaktivní mapa</span><h3>SPOCK v kostce</h3><p>7 fází a 6 agentů. Kdo v které fázi rozhoduje a na co si dát pozor.</p></button>
+function toolsBlock(title){
+  /* jen to, bez čeho se člověk neobejde; mapa, příručka a sebehodnocení jsou v menu pod Další */
+  return `<div class="sec-h"><h2>${title || 'Opora'}</h2></div><div class="journey three">
     <button class="jstep c-purple" type="button" data-go="diag"><span class="n">Když něco nejde</span><h3>Diagnostika</h3><p>Co vidím → co udělám a nejčastější chyby uživatelů.</p></button>
+    <button class="jstep c-blue" type="button" data-go="gloss"><span class="n">Neznámý pojem</span><h3>Slovníček</h3><p>Pojmy SPOCKu jednou větou: brána, agent, task, iniciativa.</p></button>
     <button class="jstep c-indigo" type="button" data-go="cheat"><span class="n">Opora</span><h3>Tahák tasků</h3><p>Všechny tasky SPOCKu, kdy je spustit a která políčka otevřou.</p></button></div>${contacts()}`;
 }
 function contacts(){
@@ -988,7 +1015,6 @@ function contacts(){
     <li><b>SPOCK core tým</b><span>Přístup k pilotu, materiály a data, obecné otázky: Veronika Bedáňová (vbedanova@csas.cz) a Ines Bamburać-Alibašić (ibamburac-alibasic@csas.cz).</span></li>
     <li><b>Repozitář a prostředí</b><span>Ilya Shramov. Instalace a běžné potíže: nejdřív support engineer ve vašem týmu, pak IT podpora ČS.</span></li>
     <li><b>SPOCK</b><span>CoE Product Management a CoE Product Design. Na otázky k lekcím onboardingu odpoví průvodce Spock v rohu stránky.</span><button class="linkbtn" type="button" data-open-spock>Zeptat se</button></li>
-    <li><b>Know-how SPOCKu</b><span>Pět oblastí (Compliance, Market, Method, Product, Writing) vlastní Česká spořitelna. Osobu pro každou oblast ČS teprve jmenuje.</span></li>
     <li><b>Onboarding Tutorial</b><span>Tomáš Havlíček, Guild Master Product Management.</span></li>
   </ul></section>`;
 }
@@ -1114,9 +1140,9 @@ function heroStable(){
 }
 function homeV4(){
   /* nováček: jedna hlavní akce (nanečisto) v úvodu, pak výběr role a cesta; vysvětlení a opora sbalené níž */
-  if (isFirst()) return heroFirst() + startBlock() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora', true);
+  if (isFirst()) return heroFirst() + startBlock() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora');
   const l1 = W.find(w => w.id === 'l1'), showSvy = l1 && modPct(l1) === 1 && !(S.survey && S.survey.at);
-  return heroStable() + newsCard() + revCard() + questCard() + teamCard() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
+  return heroStable() + questCard() + teamCard() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
 }
 function renderHome(){ app.innerHTML = homeV4(); }
 document.addEventListener('click', e => {
@@ -1416,10 +1442,13 @@ function shell(active, body){
   }).join('');
   const gw = W.find(w => w.id === 'l1b');
   const guide = gw ? `<button type="button" class="${active===gw.id?'on':''} c-${gw.c}" data-week="${gw.id}"><span class="dm"></span>Příručka: ${esc(gw.title)}</button>` + sideLessons(gw, active) : '';
-  const ex = [['tym','Tým','indigo'],['badges','Odznaky a profil','indigo'],['map','SPOCK v kostce','blue'],['diag','Diagnostika','purple'],['gloss','Slovníček','blue'],['cheat','Tahák tasků','blue'],['ready','Připravenost','indigo']]
-    .concat(TRK.owner ? [['dash','Dashboard (jen vy)','indigo']] : [])
-    .map(x => `<button type="button" class="${active===x[0]?'on':''} c-${x[2]}" data-go="${x[0]}"><span class="dm"></span>${x[1]}</button>`).join('');
-  return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more">${otherRoles(active)}<span class="grp">Opora</span>${guide}${ex}</div>`}</nav><section class="main">${body}</section></div>`;
+  /* Opora: nahoře jen to, bez čeho se člověk neobejde; zbytek sbalený v Další; dashboard jen pro vlastníka */
+  const it = x => `<button type="button" class="${active===x[0]?'on':''} c-${x[2]}" data-go="${x[0]}"><span class="dm"></span>${x[1]}</button>`;
+  const core = [['cheat','Tahák tasků','blue'],['diag','Když něco nejde','purple'],['gloss','Slovníček','blue'],['tym','Tým','indigo']].map(it).join('');
+  const extra = [['map','SPOCK v kostce','blue'],['badges','Odznaky a profil','indigo'],['ready','Připravenost','indigo']], exOpen = extra.some(x => x[0] === active) || (gw && active === gw.id) || W.some(w => w.role && w.role !== S.role && w.id === active);
+  const more = `<details class="rail-x" ${exOpen ? 'open' : ''}><summary>Další</summary><button type="button" class="c-pink" data-simstart><span class="dm"></span>SPOCK nanečisto</button>${extra.map(it).join('')}${guide}${otherRoles(active)}</details>`;
+  const own = TRK.owner ? `<span class="grp">Jen pro vás</span>${it(['dash','Dashboard','indigo'])}` : '';
+  return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more"><span class="grp">Opora</span>${core}${more}${own}</div>`}</nav><section class="main">${body}</section></div>`;
 }
 
 function nextWeek(){

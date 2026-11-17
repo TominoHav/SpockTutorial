@@ -105,10 +105,25 @@ for(const [name,w,h,scheme] of [['tablet',768,1024,'light'],['tablet na šířku
   await ctx.close();
  }));
 }
+// 14) opora: v menu jen to nezbytné, zbytek pod Další, dashboard jen pro vlastníka
+runs.push(scenario('opora',async()=>{
+ const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;
+ await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=pm]').click();await settle(p,200);
+ await p.evaluate(()=>document.querySelector('[data-go=cheat]').click());await settle(p,100);
+ const vis=await p.evaluate(()=>[...document.querySelectorAll('.rail-more > button')].map(b=>b.dataset.go));
+ ok('opora: v menu jsou nahoře jen tahák, když něco nejde, slovníček a tým', JSON.stringify(vis)==='["cheat","diag","gloss","tym","dash"]', JSON.stringify(vis));
+ ok('opora: nanečisto, mapa, příručka, odznaky, připravenost a jiné role jsou sbalené pod Další', await p.evaluate(()=>{const d=document.querySelector('.rail-x');return d&&!d.open&&!!d.querySelector('[data-simstart]')&&['map','badges','ready'].every(x=>d.querySelector('[data-go='+x+']'))&&!!d.querySelector('[data-week=l1b]')&&!!d.querySelector('[data-week=pd]');}));
+ await p.evaluate(()=>document.querySelector('.rail-x [data-go=map]').click());await settle(p,100);
+ ok('opora: na stránce z Další zůstane Další rozbalené', await p.evaluate(()=>document.querySelector('.rail-x').open));
+ ok('opora: dashboard je pod Jen pro vás', /jen pro vás/i.test(await p.locator('.rail-more').innerText()));
+ await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,100);
+ ok('opora: úvodní stránka nabízí jen tři nejdůležitější opory', await p.evaluate(()=>{const j=[...document.querySelectorAll('.journey .jstep')].map(b=>b.dataset.go);return JSON.stringify(j)==='["diag","gloss","cheat"]';}));
+ await ctx.close();
+}));
 // 13) přizpůsobení: opakování chyb s odstupem, vstupní test, co je nového ve SPOCKu
 runs.push(scenario('přizpůsobení',async()=>{
  const ctx=await b.newContext({viewport:{width:1280,height:900}});await ctx.addInitScript(()=>{window.__E2E_NOVINKY={'1.16.1':['Nový task **SPOCK: Kontrola**.']};});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
- const clean=()=>p.evaluate(()=>{for(const e of document.querySelectorAll('.cel,.notices'))e.remove();});
+ const clean=()=>p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});
  const answer=async right=>{for(let g=0;g<20&&await p.locator('#ses').count();g++){const pick=await p.evaluate(r=>{const it=(S=>S.items[S.qs[S.i]])(__kviz.ses());return r?it.a:(it.a+1)%it.o.length},right);await p.locator('.ses-opt').nth(pick).click();await p.locator('[data-scheck]').click();await p.locator('[data-snext]').click();await settle(p);}};
  await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=pm]').click();await settle(p,300);
  ok('přizpůsobení: rozcestí nabízí vstupní test', await p.locator('.exfork [data-place]').count()===1);
@@ -132,18 +147,25 @@ runs.push(scenario('přizpůsobení',async()=>{
  ok('přizpůsobení: netrefená karta se zařadí k opakování za den', !!wrong&&s2.rev&&s2.rev[wrong]&&s2.rev[wrong].due>Date.now()+20*36e5, wrong);
  await p.evaluate(k=>__kviz.state(S=>{S.rev[k].due=Date.now()-1;}),wrong);
  await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,200);
- ok('přizpůsobení: úvod nabídne opakování s počtem karet', await p.locator('.revc [data-review]').count()===1&&/1 karta/.test(await p.locator('.revc').innerText()));
+ ok('přizpůsobení: opakování je v horní liště u zvonku, ne na úvodní stránce', await p.locator('#pill-ntf .ntf-n').innerText().then(t=>t==='1')&&await p.locator('.revc,.newsc').count()===0);
+ await p.waitForFunction(()=>[...document.querySelectorAll('.notice')].some(n=>/k zopakování/.test(n.textContent)),null,{timeout:12000}).then(()=>true,()=>false).then(v=>ok('přizpůsobení: vyskočí upozornění na karty k zopakování',v));
+ await clean();await p.locator('#pill-ntf').click();await settle(p,80);
+ ok('přizpůsobení: zvonek otevře panel s opakováním a počtem karet', await p.locator('#ntf-pop [data-review]').isVisible()&&/1 karta/.test(await p.locator('#ntf-pop').innerText())&&(await p.locator('#pill-ntf').getAttribute('aria-expanded'))==='true');
  const x0=(await loadState(p)).xp;
- await p.locator('[data-review]').click();await p.waitForSelector('#ses');await answer(true);await clean();
+ await p.locator('#ntf-pop [data-review]').click();await p.waitForSelector('#ses');await answer(true);await clean();
  const s3=await loadState(p);
  ok('přizpůsobení: trefa při opakování posune kartu na 3 dny a přidá XP', s3.rev[wrong]&&s3.rev[wrong].step===1&&s3.rev[wrong].due>Date.now()+2.5*864e5&&s3.xp>x0, JSON.stringify(s3.rev[wrong]));
  await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,200);
- ok('přizpůsobení: po opakování karta z úvodu zmizí', await p.locator('.revc').count()===0);
+ ok('přizpůsobení: po opakování zvonek nic neukazuje', await p.locator('#pill-ntf .ntf-n').count()===0);
  // co je nového: kdo onboarding používal před novou verzí SPOCKu, uvidí novinky
  await p.evaluate(()=>__kviz.state(S=>{S.spockSeen='1.15.0';}));await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,200);
- ok('přizpůsobení: po nové verzi SPOCKu ukáže úvod, co je nového', await p.locator('.newsc').count()===1&&(await p.locator('.newsc').innerText()).includes('Kontrola'));
- await p.locator('[data-newsok]').click();await settle(p,100);
- ok('přizpůsobení: Rozumím novinky skryje', await p.locator('.newsc').count()===0&&(await loadState(p)).spockSeen==='1.16.1');
+ await p.waitForFunction(()=>[...document.querySelectorAll('.notice')].some(n=>/Co je nového/.test(n.textContent)),null,{timeout:12000}).then(()=>true,()=>false).then(v=>ok('přizpůsobení: po nové verzi SPOCKu vyskočí upozornění na novinky',v));
+ await clean();await p.locator('#pill-ntf').click();await settle(p,80);
+ ok('přizpůsobení: novinky jsou v panelu u zvonku', (await p.locator('#ntf-pop').innerText()).includes('Kontrola'));
+ await p.locator('#ntf-pop [data-newsok]').click();await settle(p,100);
+ ok('přizpůsobení: Rozumím novinky skryje a panel zavře', await p.locator('#ntf-pop').isHidden()&&await p.locator('#pill-ntf .ntf-n').count()===0&&(await loadState(p)).spockSeen==='1.16.1');
+ await p.locator('#pill-ntf').click();await settle(p,50);await p.keyboard.press('Escape');await settle(p,50);
+ ok('přizpůsobení: prázdný panel zavře Escape a zaměření se vrátí na zvonek', await p.locator('#ntf-pop').isHidden()&&await p.evaluate(()=>document.activeElement.id==='pill-ntf'));
  ok('přizpůsobení: bez chyb v konzoli', errs.length===0, errs.slice(0,2).join(' | '));
  await ctx.close();
 }));

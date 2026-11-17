@@ -487,3 +487,11 @@ button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var
 .exf-place{margin:0;font-size:14px;color:var(--ink-2)}
 /* nadpis stránky: mřížka se nesmí roztáhnout podle obsahu a dlouhá slova (hash verze, URL) se zalomí; v Safari na mobilu jinak přetékalo */
 .mh{grid-template-columns:minmax(0,1fr)}.mh h1,.mh p{overflow-wrap:anywhere}
+/* upozornění v horní liště */
+.ntf-pill{position:relative;display:inline-flex;align-items:center;gap:4px;cursor:pointer;font:inherit}.ntf-pill[hidden]{display:none}
+.ntf-pill.has{color:var(--ink)}.ntf-n{min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:var(--pink);color:#fff;font-size:11.5px;display:grid;place-items:center}
+.ntf-pop{position:fixed;top:calc(env(safe-area-inset-top,0px) + 64px);right:max(12px,env(safe-area-inset-right,0px));z-index:80;width:min(380px,calc(100vw - 24px));max-height:70vh;overflow:auto;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 40px rgba(12,27,42,.22);padding:12px;display:grid;gap:10px}
+.ntf-pop[hidden]{display:none}
+.ntf-i{display:grid;gap:6px;justify-items:start;padding:10px 12px;border-radius:10px;background:var(--surface-2)}.ntf-i p{margin:0;font-size:14px;color:var(--ink-2)}.ntf-i ul{margin:0;padding-left:18px;font-size:14px;display:grid;gap:3px}
+.ntf-empty{margin:0;font-size:14px;color:var(--ink-2)}
+.rail-x>summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--ink-3);padding:6px 10px;list-style-position:inside}
