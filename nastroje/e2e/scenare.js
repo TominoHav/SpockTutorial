@@ -173,7 +173,8 @@ runs.push(scenario('přizpůsobení',async()=>{
 runs.push(scenario('tým',async()=>{
  const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));p.on('dialog',d=>d.accept());
  await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=pm]').click();await settle(p,300);
- ok('tým: na úvodu je karta Učte se s týmem', await p.locator('.tmc [data-go=tym]').count()===1);
+ await p.evaluate(()=>document.querySelector('[data-go=cheat]').click());await settle(p,100);
+ ok('tým: stránka Tým je v menu', await p.locator('.rail-more [data-go=tym]').count()===1);
  await p.evaluate(()=>document.querySelector('[data-go=tym]').click());await settle(p,100);
  ok('tým: bez týmu jde tým založit nebo se připojit kódem', await p.locator('[data-tmform=create]').count()===1&&await p.locator('[data-tmform=join]').count()===1);
  await p.locator('[data-tmform=create] button').click();await settle(p,200);
@@ -206,6 +207,7 @@ runs.push(scenario('tým',async()=>{
  const m=await b.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});const q=await m.newPage();
  await q.goto(F);await q.waitForSelector('.startb [data-role]');await q.locator('.startb [data-role=pm]').click();await settle(q,300);
  await q.evaluate(()=>{window.__db['tymy/u_ja']={name:'Tribe Platby s dlouhým názvem týmu',code:'ABC234',removed:[]};window.__db['clenove/u_ja']={team:'u_ja',pct:0};window.__db['clenove/u_kolega']={team:'u_ja',role:'pd',xp:320,rank:'Praktik',pct:41,mod:'pd',streak:4,last:Date.now()};});
+ await q.evaluate(()=>document.querySelector('[data-go=cheat]').click());await settle(q,100);
  await q.evaluate(()=>document.querySelector('[data-go=tym]').click());await q.waitForSelector('.tm-t tbody tr',{timeout:5000}).catch(()=>{});await settle(q,200);
  ok('tým, mobil: stránka nepřetéká do strany a tabulka se dá posouvat', await q.evaluate(()=>document.documentElement.scrollWidth-innerWidth)<=0&&await q.locator('.tm-t tbody tr').count()===2);
  await m.close();

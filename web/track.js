@@ -967,12 +967,6 @@ async function tmAct(a, arg){
   const err = TEAM.err; await tmLoad(); if (err) { TEAM.err = err; if (view.name === 'tym') renderTeam(); }
 }
 const tmAgo = t => { if (!t) return '—'; const d = Math.floor((Date.now() - t) / 864e5); return d <= 0 ? 'dnes' : d === 1 ? 'včera' : 'před ' + d + ' dny'; };
-function teamCard(){
-  if (!S.role || !TRK.ok) return '';
-  if (TEAM.team) { const m = TEAM.members, avg = m.length ? Math.round(m.reduce((n, x) => n + (x.pct || 0), 0) / m.length) : 0;
-    return `<section class="tmc"><div><span class="eyebrow">Váš tým</span><h3>${esc(TEAM.team.name)}</h3><p class="muted">${m.length} ${m.length === 1 ? 'člověk' : m.length < 5 ? 'lidé' : 'lidí'} · průměrně ${avg} % cesty</p></div><button class="btn" type="button" data-go="tym">Otevřít tým →</button></section>`; }
-  return `<section class="tmc"><div><span class="eyebrow">Učte se s týmem</span><h3>Vidíte, kde jsou kolegové</h3><p class="muted">Založte tým nebo se připojte kódem od kolegy.</p></div><button class="btn" type="button" data-go="tym">Tým →</button></section>`;
-}
 function renderTeam(){
   const lead = TEAM.team && TEAM.team.id === TRK.uid, W2 = id => { const w = W.find(x => x.id === id); return w ? (w.role ? w.title : w.lab + ' · ' + w.title) : 'Hotovo'; };
   let body;

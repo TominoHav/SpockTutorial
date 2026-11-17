@@ -53,7 +53,7 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  await p.locator('.notice',{hasText:'Na palubě'}).waitFor({timeout:15000}).catch(()=>{});
  ok(T('výběr role → upozornění na odznak Na palubě, bez překrytí obrazovky'), (await p.locator('.notice').allInnerTexts()).some(t=>t.includes('Na palubě')) && !(await p.locator('.cel').count()));await dismiss();
  ok(T('po výběru role „Vítejte zpět“'), (await p.locator('.hx .eyebrow').first().innerText()).toLowerCase().includes('zpět'));
- ok(T('po výběru role jsou na úvodu tři denní výzvy'), await p.locator('.quests li').count()===3);
+ ok(T('úvod drží jen cestu: denní výzvy a tým na něm nejsou'), await p.locator('.main .quests, #app > .quests, .tmc').count()===0 && await p.locator('.quests').count()===0);
  // lekce 0.1 – karty a úkoly
  const answerCards=async()=>{let g=0;while(g++<40){await dismiss();const n=await p.evaluate(()=>{const e=document.querySelector('.lpanel .lcard.cur .lc-opt:not([disabled])');if(!e)return 0;e.scrollIntoView({block:'center'});e.click();return 1;});if(!n)break;await settle(p);}await dismiss();};
  const lessonHead=()=>p.evaluate(()=>(document.querySelector('.lp-head')||{}).innerText||'');
