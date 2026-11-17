@@ -83,7 +83,11 @@ BUILD = {'a11y': _report('pristupnost-report.json'), 'perf': _report('vykon-repo
          'counts': {'moduly': len(_data['W']), 'lekce': sum(len(w['days']) for w in _data['W']), 'karty': sum(len(d.get('cards', [])) for w in _data['W'] for d in w['days']),
                     'ukoly': sum(len(d['todo']) for w in _data['W'] for d in w['days']), 'kviz': sum(len(w['quiz']) for w in _data['W'])},
          'edit': _edit, 'e2e': _rep}
-app = (open('app.js',encoding='utf-8').read() + '\n' + open('sim.js',encoding='utf-8').read() + '\n' + open('track.js',encoding='utf-8').read()).replace('__DATA__', "JSON.parse('" + json.dumps(json.load(open(os.path.join('dist','data.json'),encoding='utf-8')), ensure_ascii=False, separators=(',',':')).replace('\\', '\\\\').replace("'", "\\'").replace('</', '<\\/') + "')")
+def _minjs(js):
+    # výkon: z JavaScriptu se vypustí řádky, které jsou celé komentář (// … a /* … */ na vlastních řádcích). Kód se nemění.
+    js = _re.sub(r'^[ \t]*/\*(?:(?!\*/).)*\*/[ \t]*\n', '', js, flags=_re.S | _re.M)
+    return _re.sub(r'^[ \t]*//[^\n]*\n', '', js, flags=_re.M)
+app = _minjs(open('app.js',encoding='utf-8').read() + '\n' + open('sim.js',encoding='utf-8').read() + '\n' + open('track.js',encoding='utf-8').read()).replace('__DATA__', "JSON.parse('" + json.dumps(json.load(open(os.path.join('dist','data.json'),encoding='utf-8')), ensure_ascii=False, separators=(',',':')).replace('\\', '\\\\').replace("'", "\\'").replace('</', '<\\/') + "')")
 # verze v patičce: commit tutoriálu a vydání SPOCKu, podle kterého je napsaný
 import subprocess
 def _git(*a):

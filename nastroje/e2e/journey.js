@@ -11,6 +11,15 @@ const T0=Date.now();const LAB={};let CTX=null,SRC='';const R=[];let CUR=null;con
 /* scénář: když spadne výjimkou, zapíše se jako selhání se snímkem a běh pokračuje dalším scénářem */
 const scenario=async(name,fn)=>{try{await fn();}catch(e){R.push(['FAIL',name+': scénář spadl',String(e&&e.message||e).split('\n')[0].slice(0,200)]);SHOTS.push(failShot(DIST,CUR,name+'-spadl'));}};
 (async()=>{const b=await browserType().launch();
+/* Rychlost načtení: medián ze 7 studených načtení, měřeno o samotě, než se rozběhnou souběžné scénáře.
+   Jedno měření při souběžném běhu kolísalo o desítky procent a hlásilo zhoršení, které nebylo. */
+const LOADS={};
+for(const [W,H,tag] of [[1280,900,'počítač'],[390,844,'mobil']]){
+ const a=[];for(let i=0;i<7;i++){const c=await b.newContext({viewport:{width:W,height:H},isMobile:tag==='mobil'&&(process.env.E2E_BROWSER||'chromium')==='chromium',hasTouch:tag==='mobil'});const q=await c.newPage();
+  await q.goto('file://'+path.join(DIST,'e2e.html'));await settle(q,150);
+  const v=await q.evaluate(()=>{const n=performance.getEntriesByType('navigation')[0];return n?n.domContentLoadedEventEnd:null});if(v!==null)a.push(v);await c.close();}
+ a.sort((x,y)=>x-y);LOADS[tag]=a.length?Math.round(a[Math.floor(a.length/2)]):null;
+}
 /* cesta na počítači a na mobilu běží souběžně, každá ve vlastním kontextu prohlížeče */
 const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag])=>!process.env.E2E_ONLY||process.env.E2E_ONLY===tag).map(async([W,H,tag])=>{
  await scenario('cesta uživatele, '+tag,async()=>{
@@ -25,7 +34,7 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  const ov=async()=>p.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
  await p.goto('file://'+path.join(DIST,'e2e.html'));await p.waitForTimeout(400);
  const T=s=>tag+': '+s;
- LAB[tag]={load:await p.evaluate(()=>{const n=performance.getEntriesByType('navigation')[0];return n?Math.round(n.domContentLoadedEventEnd):null})};
+ LAB[tag]={load:LOADS[tag],m:'median7'};
  SRC=await p.evaluate(()=>__kviz.build().src);
  ok(T('nováček vidí úvod „Seznamte se se SPOCKem“'), await p.locator('.hx-first h1').innerText().then(t=>t.includes('Seznamte')));
  ok(T('úvod: na mobilu jeden sloupec, na počítači dva'), (await p.evaluate(()=>getComputedStyle(document.querySelector('.hx-first')).gridTemplateColumns.split(' ').length))===(W>980?2:1));
