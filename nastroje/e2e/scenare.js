@@ -303,32 +303,32 @@ runs.push(scenario('expresní cesta',async()=>{
  ok('expresní cesta: po výběru role banner nabídne dvě rovnocenné karty jako ve videu, celou cestu a expres do 2 hodin', await p.locator('.hx .exfork .exf-opts .exf').count()===2 && /1 h \d+ min/.test(await p.locator('.exfork .exf.fast').innerText()) && await p.locator('.exf.fast[data-express=on]').count()===1);
  ok('expresní cesta: v rozcestí je zaměřená první volba (klávesnice)', await p.evaluate(()=>document.activeElement&&document.activeElement.matches('.exfork .exf')));
  await p.locator('.exfork [data-express=on]').click();await settle(p,50);
- ok('expresní cesta: banner ukazuje další krok a v úvodu je jen jedno hlavní tlačítko', (await p.locator('.hx-next.ex .hx-nt').innerText()).includes('nanečisto') && await p.locator('.hx .btn.primary').count()===1 && await p.locator('.exfork').count()===0);
+ ok('expresní cesta: banner ukazuje další krok a v úvodu je jen jedno hlavní tlačítko', (await p.locator('.hx-next.ex .hx-nt').innerText()).includes('přístupy') && await p.locator('.hx .btn.primary').count()===1 && await p.locator('.exfork').count()===0);
  ok('expresní cesta: má 7 kroků v rozbalovacím seznamu a 7 dílků postupu', await p.locator('.exall .exlist li').count()===7 && await p.locator('.hx-next.ex .exseg i').count()===7);
  await p.locator('.exsw-l [data-express=off]').click();await settle(p,50);
  ok('expresní cesta: jde přepnout na celou cestu a zpět odkazem v banneru', await p.locator('.hx-next.ex').count()===0 && await p.locator('.hx .exsw-l [data-express=on]').count()===1);
  await p.locator('.hx .exsw-l [data-express=on]').click();await settle(p,50);
  const home=async()=>{await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel,.notice'))e.remove();document.querySelector('#home-btn').click();});await settle(p,50);};
  const next=()=>p.evaluate(()=>{const b=document.querySelector('.hx-next.ex .hx-cta .btn.primary');const v=b&&b.dataset.express;b&&b.click();return v||'';});
- // 1) simulace
- ok('expresní cesta: první krok spustí simulaci', (await next())==='step:sim' && await p.locator('#sim').count()===1);
+ // 1) lekce 1.1 jako první krok: schválení přístupů trvá dny (Příprava je jinak zamčená, expresní cesta ji otevře k nahlédnutí)
+ ok('expresní cesta: první krok je objednání přístupů, lekce 1.1 se otevře, i když Příprava ještě není odemčená', (await next())==='step:l1' && (await p.locator('.lpanel .lp-head').innerText()).includes('1.1'));
+ for(let i=0;i<8;i++){const n=await p.evaluate(()=>{const o=document.querySelector('.lpanel .lcard.cur .lc-opt:not([disabled])');if(o){o.click();return 1}const t=document.querySelector('.lpanel input[data-todo]:not(:checked):not([disabled])');if(t){t.click();return 1}return 0});await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});if(!n)break;await settle(p);}
+ await p.evaluate(()=>__kviz.state(S=>{const w=0;for(let t=0;t<6;t++)S.todo['l1.0.'+t]=true;}));
+ await home();
+ // 2) simulace
+ ok('expresní cesta: druhý krok spustí simulaci', (await next())==='step:sim' && await p.locator('#sim').count()===1);
  for(const st of ['next','o-sol','o-ok','sign','load','sign','next','sol-1','why-2','sign','mvp-0','sign','sign','sign','trace','finish']){await p.locator(`[data-sim="${st}"]`).first().click();await settle(p);}
  await home();
- // 2–4) karty lekcí 0.1–0.3
+ // 3–5) karty lekcí 0.1–0.3
  for(const step of ['step:l0c0','step:l0c1','step:l0c2']){
   const v=await next();await p.waitForSelector('.lpanel');
   for(let i=0;i<12;i++){const n=await p.evaluate(()=>{const o=document.querySelector('.lpanel .lcard.cur .lc-opt:not([disabled])');if(o){o.click();return 1}return 0});await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});if(!n)break;await settle(p);}
   ok(`expresní cesta: krok ${step} otevře správnou lekci a karty jdou projít`, v===step);
   await home();
  }
- // 5) video
+ // 6) video
  ok('expresní cesta: krok s videem pustí video krok za krokem', (await next())==='step:vid' && await p.locator('.vidov video').count()===1);
  await p.keyboard.press('Escape');await home();
- // 6) lekce 1.1 (Příprava je jinak zamčená, expresní cesta ji otevře k nahlédnutí)
- ok('expresní cesta: lekce 1.1 se otevře, i když Příprava ještě není odemčená', (await next())==='step:l1' && (await p.locator('.lpanel .lp-head').innerText()).includes('1.1'));
- for(let i=0;i<8;i++){const n=await p.evaluate(()=>{const o=document.querySelector('.lpanel .lcard.cur .lc-opt:not([disabled])');if(o){o.click();return 1}const t=document.querySelector('.lpanel input[data-todo]:not(:checked):not([disabled])');if(t){t.click();return 1}return 0});await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});if(!n)break;await settle(p);}
- await p.evaluate(()=>__kviz.state(S=>{const w=0;for(let t=0;t<6;t++)S.todo['l1.0.'+t]=true;}));
- await home();
  // 7) tahák
  ok('expresní cesta: poslední krok otevře tahák tasků', (await next())==='step:cheat' && await p.locator('.main h1').innerText().then(t=>/tah/i.test(t)));
  await settle(p,100);
@@ -337,6 +337,34 @@ runs.push(scenario('expresní cesta',async()=>{
  await home();
  ok('expresní cesta: úvod nabídne pokračovat Přípravou', (await p.locator('.hx-next.ex').innerText()).includes('Pokračovat Přípravou'));
  ok('expresní cesta: bez chyb v konzoli', errs.length===0, errs.slice(0,2).join(' | '));
+ await ctx.close();
+}));
+// 10) důkaz z běhu: první hodnota (G1 ve vlastním běhu) se ověří z RUN-STATE.md v prohlížeči
+runs.push(scenario('důkaz z běhu',async()=>{
+ const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
+ await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=pm]').click();await settle(p,50);
+ await p.evaluate(()=>__kviz.state(S=>{S.unlocked.pm=true;S.express=false;}));
+ const go=async()=>{await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel,.notice'))e.remove();const x=document.createElement('button');x.dataset.golesson='pm:0';document.body.appendChild(x);x.click();x.remove();});await p.waitForSelector('.lpanel');await p.evaluate(()=>{for(const d of document.querySelectorAll('.lpanel details.tfold'))d.open=true;});};
+ await go();
+ const K='pm.0.3',TA='#re-pm-0-3',BOX='#t-pm-0-3';
+ ok('důkaz z běhu: úkol Schvalte brief (G1) má pole pro RUN-STATE.md a bez důkazu nejde odškrtnout', await p.locator(TA).count()===1 && await p.locator(BOX).isDisabled());
+ const sample=['---','run_id: 2026-09-spending-insights','record: run-state','stages:','  - id: 1','    name: Brief','    status: accepted','    decision_gates:','      - id: G1','        decided_by: Jana Novakova','        decided_at: 2026-09-08','        by_agent: false','  - id: 2','    name: Problems','    status: pending'].join('\n');
+ const check=async txt=>{await p.locator(TA).fill(txt);await p.locator(`[data-runev="${K}"]`).click();await settle(p,50);await p.evaluate(()=>{for(const d of document.querySelectorAll('.lpanel details.tfold'))d.open=true;});};
+ await check(sample);
+ ok('důkaz z běhu: ukázkový běh ze SPOCKu se nepřijme a řekne proč', /ukázkový běh/.test(await p.locator('.tchk.run .lc-why.bad').innerText().catch(()=>'')) && !(await loadState(p)).runev);
+ await check(sample.replace('2026-09-spending-insights','2026-11-moje-iniciativa').replace('      - id: G1','      - id: G9'));
+ ok('důkaz z běhu: chybějící podpis G1 se nepřijme a odkáže na task approve', /approve what is in front of me/.test(await p.locator('.tchk.run .lc-why.bad').innerText().catch(()=>'')));
+ await check(sample.replace('2026-09-spending-insights','2026-11-moje-iniciativa'));
+ const st=await loadState(p);
+ ok('důkaz z běhu: vlastní běh se schváleným G1 úkol odškrtne a zapíše první hodnotu ověřenou z běhu', st.todo&&st.todo[K]===true && st.runev&&st.runev[K]&&st.runev[K].signed==='2026-09-08' && st.fv&&st.fv.lvl==='run'&&st.fv.gate==='G1', JSON.stringify({fv:st.fv,ev:st.runev}));
+ ok('důkaz z běhu: obsah RUN-STATE.md ani jméno se neukládají', !JSON.stringify(st).includes('Jana') && !JSON.stringify(st).includes('moje-iniciativa'));
+ ok('důkaz z běhu: po ověření úkol ukáže potvrzení místo pole', await p.locator('.tchk.run .lc-why.ok').count()===1 && await p.locator(TA).count()===0);
+ // náhradní cesta: bez důkazu jde úkol odškrtnout, ale zapíše se jako bez důkazu
+ await p.evaluate(()=>__kviz.state(S=>{delete S.runev;delete S.fv;S.todo['pm.0.3']=false;}));await go();
+ await p.locator(`[data-runself="${K}"]`).click();await settle(p,50);
+ const s2=await loadState(p);
+ ok('důkaz z běhu: „Nejde to?“ úkol odškrtne a první hodnotu zapíše jako bez důkazu', s2.todo[K]===true && s2.selfok&&s2.selfok[K] && s2.fv&&s2.fv.lvl==='self');
+ ok('důkaz z běhu: bez chyb v konzoli', errs.length===0, errs.slice(0,2).join(' | '));
  await ctx.close();
 }));
 // 6) videa: soubory existují, jsou to MP4, mají náhled a okno je pustí

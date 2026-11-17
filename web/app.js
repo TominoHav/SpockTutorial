@@ -1,7 +1,7 @@
 const KEY = 'spock-user-onboarding-v1';
 const DATA = __DATA__;
 const BUILD = __BUILD__;
-let {W, GLOSS, CHEAT, CHEAT_INTRO, DIAG, DIAG_INTRO, PRINCIPLES, MISTAKES, READY} = DATA;
+let {SAMPLES = [], W, GLOSS, CHEAT, CHEAT_INTRO, DIAG, DIAG_INTRO, PRINCIPLES, MISTAKES, READY} = DATA;
 const ROLES = {pm:'Product Manager', pd:'Product Designer', se:'Software Engineer', gm:'Guild Master'};
 const ROLE_WHO = {pm:'Vedete produkt nebo iniciativu a rozhodujete, co se bude stavět.', pd:'Děláte výzkum s klienty a navrhujete, jak bude produkt fungovat a vypadat.', se:'Posuzujete, co jde technicky postavit, a pak to stavíte.', gm:'Držíte některou oblast know-how SPOCKu (metoda, produkt, trh, compliance, styl) a pomáháte lidem, kteří s ním pracují.'};
 const ROLE_SHORT = {pm:'PM', pd:'PD', se:'SWE', gm:'GM'};
@@ -977,14 +977,15 @@ function heroFirst(){
   </div>${heroArt('Ahoj, jsem Spock')}</section>`;
 }
 /* ---------- expresní cesta: to nejnutnější pro start se SPOCKem za zhruba 1 h 40 min ----------
-   Kroky z existujících lekcí: v úrovni 0 jen karty (bez úkolů), v Přípravě objednání rolí. Zbytek cesty zůstává na později. */
+   Kroky z existujících lekcí: nejdřív objednání rolí v Přípravě, pak v úrovni 0 jen karty (bez úkolů). Zbytek cesty zůstává na později. */
 const EXPRESS = [
+  /* přístupy první: schválení v REDIMu trvá dny a běží, zatímco se člověk učí; kdo je objedná až na konci, čeká o to déle na první běh */
+  {id:'l1', t:'Objednejte si přístupy', d:'Lekce 1.1: role v REDIMu. Schválení trvá pár dní a běží, zatímco pokračujete.', min:45, w:'l1', l:0},
   {id:'sim', t:'Vyzkoušejte SPOCK nanečisto', d:'Celý běh od nápadu po iniciativu ve zkratce.', min:5, done:() => !!(S.badges && S.badges.sim), go:'sim'},
   {id:'l0c0', t:'Co SPOCK dělá a proč', d:'Lekce 0.1, jen karty.', min:15, w:'l0', l:0, cards:true},
   {id:'l0c1', t:'Agenti, tasky a brány', d:'Lekce 0.2, jen karty.', min:15, w:'l0', l:1, cards:true},
   {id:'l0c2', t:'Pět pravidel, která se neporušují', d:'Lekce 0.3.', min:10, w:'l0', l:2, cards:true},
   {id:'vid', t:'Video: SPOCK krok za krokem', d:'Hotový běh všemi sedmi fázemi za 4 minuty.', min:5, done:() => !!(S.vids && S.vids['krok-za-krokem']), video:'krok-za-krokem'},
-  {id:'l1', t:'Objednejte si přístupy', d:'Lekce 1.1: role v REDIMu. Schválení trvá pár dní, proto hned.', min:45, w:'l1', l:0},
   {id:'cheat', t:'Tahák tasků', d:'Které tasky budete používat a kdy.', min:5, done:() => !!(S.exSeen && S.exSeen.cheat), go:'cheat'}
 ];
 const exDone = st => { if (st.done) return st.done(); const w = W.find(x => x.id === st.w); if (!w) return false; const d = w.days[st.l]; return st.cards ? (d.cards || []).every((_, ci) => cardAns(st.w + '.' + st.l + '.' + ci) !== undefined) : lessonDone(w, st.l); };
@@ -1109,8 +1110,42 @@ document.addEventListener('play', e => { if (e.target.matches && e.target.matche
 /* ---------- modul ---------- */
 /* Úkol s ověřením z VS Code: odškrtne se až odpovědí, kterou člověk zjistí jen tak, že úkol opravdu udělá. */
 const proofAns = k => (S.proof || {})[k];
-const proofOk = (k, o) => !o.check || (o.check.kind === 'seen' ? proofAns(k) !== undefined : proofAns(k) === o.check.a);
+const proofOk = (k, o) => !o.check || (o.check.kind === 'run' ? !!((S.runev || {})[k] || (S.selfok || {})[k]) : o.check.kind === 'seen' ? proofAns(k) !== undefined : proofAns(k) === o.check.a);
+/* Důkaz z běhu: člověk vloží RUN-STATE.md vlastního běhu a web v prohlížeči ověří, že fáze je schválená a bránu podepsal člověk.
+   Formát podle .github/scripts/run-state.mjs ve SPOCKu (render: decision_gates → - id, decided_by, decided_at, by_agent: false),
+   starší záznamy mají decision_gate bez seznamu. Text se nikam neposílá ani neukládá; uloží se jen datum podpisu a otisk názvu běhu. */
+function runEvidence(txt, gate){
+  const t = String(txt || '').replace(/\r/g, ''), un = v => v.trim().replace(/^["']|["']$/g, '');
+  const val = (re, src) => { const m = src.match(re); return m ? un(m[1]) : ''; };
+  if (!/^record:\s*run-state\s*$/m.test(t)) return {ok:false, why:'Tohle nevypadá jako RUN-STATE.md. Otevřete runs/<váš běh>/RUN-STATE.md, označte všechno a vložte celý obsah.'};
+  const run = val(/^run_id:\s*(.+)$/m, t);
+  if (!run) return {ok:false, why:'V záznamu chybí run_id. Zkopírujte celý soubor, i úplný začátek.'};
+  if (SAMPLES.includes(run)) return {ok:false, why:'„' + run + '“ je ukázkový běh, který SPOCK přibaluje. Vložte RUN-STATE.md vlastního běhu ze složky runs/.'};
+  const n = gate.slice(1), L = t.split('\n'), i = L.findIndex(l => new RegExp('^  - id:\\s*["\']?' + n + '["\']?\\s*$').test(l));
+  if (i < 0) return {ok:false, why:'V záznamu chybí fáze ' + n + '. Zkopírujte celý soubor.'};
+  let j = i + 1; while (j < L.length && !/^  - id:/.test(L[j]) && !/^\S/.test(L[j])) j++;
+  const blk = L.slice(i, j), st = val(/^    status:\s*(.+)$/m, blk.join('\n'));
+  const gi = blk.findIndex(l => new RegExp('^\\s+(- )?id:\\s*["\']?' + gate + '["\']?\\s*$').test(l));
+  if (gi < 0) return {ok:false, why:'Podpis ' + gate + ' v záznamu zatím není. Spusťte task SPOCK: approve what is in front of me, pak RUN-STATE.md zkopírujte znovu.'};
+  const g = blk.slice(gi, gi + 4).join('\n'), by = val(/decided_by:\s*(.+)$/m, g), at = val(/decided_at:\s*(\d{4}-\d{2}-\d{2})/m, g);
+  if (/by_agent:\s*true/.test(g)) return {ok:false, why:'Podpis ' + gate + ' je zapsaný jako od agenta. Bránu musí podepsat člověk v tasku.'};
+  if (!by || !at) return {ok:false, why:'U ' + gate + ' chybí jméno nebo datum podpisu. Spusťte task SPOCK: approve what is in front of me.'};
+  if (st !== 'accepted') return {ok:false, why:'Fáze ' + n + ' má stav „' + (st || 'neznámý') + '“, ne accepted. Dokončete schválení a zkopírujte soubor znovu.'};
+  return {ok:true, run, at};
+}
+const RUNERR = {};
+const rhash = s => { let h = 5381; for (const ch of String(s)) h = ((h << 5) + h + ch.charCodeAt(0)) >>> 0; return h.toString(36); };
+function runBlock(k, c){
+  const ev = (S.runev || {})[k], self = (S.selfok || {})[k], err = RUNERR[k], id = 're-' + k.replace(/\./g, '-');
+  if (ev) return `<div class="tchk proof run"><span class="tchk-l">Důkaz z běhu</span><p class="lc-why ok"><b>Ověřeno z vašeho běhu.</b> Fáze ${esc(c.gate.slice(1))} je schválená a ${esc(c.gate)} jste podepsali ${esc(ev.signed)}. Tohle je váš první skutečný výsledek ve SPOCKu.</p></div>`;
+  return `<div class="tchk proof run"><span class="tchk-l">Důkaz z běhu</span><b>Vložte celý obsah <code>RUN-STATE.md</code> vašeho běhu</b>
+    <textarea class="runev-in" id="${id}" rows="4" spellcheck="false" aria-label="Obsah souboru RUN-STATE.md" placeholder="---&#10;run_id: …&#10;record: run-state&#10;…"></textarea>
+    <div class="runev-act"><button class="btn sm primary" type="button" data-runev="${k}">Ověřit</button>${self ? '<span class="muted">Odškrtnuto bez důkazu. Důkaz můžete vložit kdykoli.</span>' : `<button class="linkbtn" type="button" data-runself="${k}">Nejde to? Odškrtnout bez důkazu</button>`}</div>
+    ${err ? `<p class="lc-why bad" role="alert"><b>Zatím to nesedí.</b> ${esc(err)}</p>` : ''}
+    <p class="muted runev-pv">Text zůstává jen ve vašem prohlížeči a nikam se neposílá. Uloží se jen to, že podpis ${esc(c.gate)} existuje, a jeho datum.</p></div>`;
+}
 function checkBlock(k, c){
+  if (c.kind === 'run') return runBlock(k, c);
   const a = proofAns(k), ans = a !== undefined, seen = c.kind === 'seen', tries = (S.ptries || {})[k] || 0;
   const right = ans && a === c.a, locked = seen ? ans : right;
   let fb = '';
@@ -1122,7 +1157,7 @@ function checkBlock(k, c){
 function todoItem(k, o, cur){
   const nh = o.how ? o.how.length : 0, how = nh ? `<ol class="thow">${o.how.map(h => `<li>${fmt(h)}</li>`).join('')}</ol>` : '', chk = o.check ? checkBlock(k, o.check) : '';
   const fold = nh > 2 || (nh && o.check);
-  const body = fold ? `<details class="tfold" ${cur ? 'open' : ''}><summary><span class="tf-o">Zobrazit postup</span><span class="tf-c">Skrýt postup</span> · ${nh} ${nh === 1 ? 'krok' : nh < 5 ? 'kroky' : 'kroků'}${o.check ? (o.check.kind === 'seen' ? ' a otázka, co jste viděli' : ' a ověření') : ''}</summary>${how}${chk}</details>` : how + chk;
+  const body = fold ? `<details class="tfold" ${cur ? 'open' : ''}><summary><span class="tf-o">Zobrazit postup</span><span class="tf-c">Skrýt postup</span> · ${nh} ${nh === 1 ? 'krok' : nh < 5 ? 'kroky' : 'kroků'}${o.check ? (o.check.kind === 'seen' ? ' a otázka, co jste viděli' : o.check.kind === 'run' ? ' a důkaz z běhu' : ' a ověření') : ''}</summary>${how}${chk}</details>` : how + chk;
   const det = (o.why || nh || o.check) ? `<div class="tdet">${o.why ? `<p class="twhy"><b>Proč:</b> ${fmt(o.why)}</p>` : ''}${body}</div>` : '';
   const gate = o.check && !proofOk(k, o) && !S.todo[k];
   return `<div class="titem ${o.check ? 'has-chk' : ''}"><label><input type="checkbox" id="t-${k.replace(/\./g,'-')}" data-todo="${k}" ${S.todo[k]?'checked':''} ${gate ? 'disabled title="Odškrtne se odpovědí na ověření níže"' : ''}><span>${fmt(o.t)}${o.min ? ` <span class="tm">~${fmtMin(o.min)}</span>` : ''}${o.note ? ` <span class="tm ${/VS Code/.test(o.note) ? 'where vsc' : ''}">${esc(o.note)}</span>` : ''} <span class="tm xp ${S.got['task.'+k] ? 'got' : ''}">+${XP.task} XP</span></span></label>${det}</div>`;
@@ -1140,6 +1175,28 @@ document.addEventListener('click', e => {
     const box = document.getElementById('t-' + k.replace(/\./g, '-'));
     if (box && !box.checked) { box.disabled = false; box.checked = true; box.dispatchEvent(new Event('change', {bubbles:true})); return; }
   } else save();
+  const y = scrollY; renderWeek(view.week); scrollTo({top:y});
+});
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-runev],[data-runself]'); if (!b) return;
+  const k = b.dataset.runev || b.dataset.runself, [wid, di, ti] = k.split('.'), w = W.find(x => x.id === wid), t = w && w.days[+di] && w.days[+di].todo[+ti], c = t && t.check; if (!c || c.kind !== 'run') return;
+  const now = Date.now(), id = 're-' + k.replace(/\./g, '-');
+  if (b.dataset.runself) {
+    S.selfok = Object.assign({}, S.selfok, {[k]:now}); if (!S.fv) S.fv = {at:now, lvl:'self', gate:c.gate};
+    try { trk('první hodnota', c.gate + ' bez důkazu'); } catch (err) {}
+  } else {
+    const ta = document.getElementById(id), r = runEvidence(ta && ta.value, c.gate);
+    S.ptries = S.ptries || {}; S.ptries[k] = (S.ptries[k] || 0) + 1;
+    if (!r.ok) { RUNERR[k] = r.why; try { trk('důkaz z běhu', c.gate + ' nesedí'); } catch (err) {} save(); const y = scrollY; renderWeek(view.week); scrollTo({top:y}); const el = document.getElementById(id); if (el) el.focus({preventScroll:true}); return; }
+    delete RUNERR[k];
+    S.runev = Object.assign({}, S.runev, {[k]:{at:now, gate:c.gate, signed:r.at, rh:rhash(r.run)}});
+    if (!S.fv || S.fv.lvl !== 'run') S.fv = {at:now, lvl:'run', gate:c.gate, selfAt:S.fv && S.fv.lvl === 'self' ? S.fv.at : null};
+    award('proof.' + k, 5, 'důkaz z běhu');
+    try { trk('první hodnota', c.gate + ' ověřeno z běhu'); } catch (err) {}
+  }
+  save();
+  const box = document.getElementById('t-' + k.replace(/\./g, '-'));
+  if (box && !box.checked) { box.disabled = false; box.checked = true; box.dispatchEvent(new Event('change', {bubbles:true})); return; }
   const y = scrollY; renderWeek(view.week); scrollTo({top:y});
 });
 function qDone(w){ return quizPassed(w) ? 1 : 0; }
@@ -1411,6 +1468,8 @@ document.addEventListener('change', e => {
   if (t.dataset.todo) {
     S.todo[t.dataset.todo] = t.checked; save();
     if (t.checked) award('task.' + t.dataset.todo, XP.task);
+    if (t.checked) try { const [wid, di, ti] = t.dataset.todo.split('.'), w0 = W.find(x => x.id === wid), o = w0 && w0.days[+di] && w0.days[+di].todo[+ti], c = o && o.check;
+      trk('úkol', t.dataset.todo + ' ' + (!c ? 'bez ověření' : c.kind === 'run' ? ((S.runev || {})[t.dataset.todo] ? 'z běhu' : 'bez důkazu') : c.kind === 'seen' ? 'co viděli' : 'otázka')); } catch (err) {}
     updatePills();
 
     const w = W.find(x => x.id === view.week);

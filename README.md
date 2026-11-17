@@ -7,7 +7,7 @@ Uživatelský onboarding do SPOCKu pro **Product Managera, Product Designera, So
 - `.github/agents/spock-pruvodce.agent.md`: stejný průvodce jako agent **Spock průvodce** v GitHub Copilotu ve VS Code (tutoriál otevírejte v samostatném okně, ne se SPOCKem)
 - `materialy/bootcamp/`: původní materiály z bootcampu SPOCKu (PDF), ze kterých lekce čerpají interní postup ČS
 - [revize/TODO-VLASTNIK.md](revize/TODO-VLASTNIK.md): úkoly, které musí udělat lidé v ČS (rozhodnutí, ověření, provoz)
-- `revize/`: [odborná kontrola obsahu](revize/ODBORNA-KONTROLA.md) (kontrolní seznam všech karet, kvízů a úkolů, obnoví ho `nastroje/generuj-revizi.py`) a [scénář pilotu s nováčky](revize/PILOT-S-NOVACKY.md)
+- `revize/`: [odborná kontrola obsahu](revize/ODBORNA-KONTROLA.md) (kontrolní seznam všech karet, kvízů a úkolů, obnoví ho `nastroje/generuj-revizi.py`) a [scénář pilotu s nováčky](revize/PILOT-S-NOVACKY.md); [první hodnota ve SPOCKu](revize/PRVNI-HODNOTA.md): hodnocení podle adopce, měření a plán experimentů
 - [ARCHITEKTURA.md](ARCHITEKTURA.md): jak tutoriál funguje, kudy jde která změna a historie změn
 - `web/`: interaktivní web sestavený z lekcí (návod v [web/README.md](web/README.md))
 - `SPOCK-VERZE.md`: verze SPOCKu, podle které je onboarding napsaný, a jak ho udržovat aktuální

@@ -134,6 +134,9 @@ def parse_module(fn):
                         if w: task['why']=inline(w.group(1)); continue
                         # ověření z VS Code: *Ověření:* (jedna správná odpověď, bez ní úkol nejde odškrtnout)
                         # nebo *Co jste viděli:* (zaškrtnutá možnost je správné chování, ostatní jsou odchylky)
+                        # nebo *Důkaz z běhu:* G1 (člověk vloží RUN-STATE.md svého běhu, web ověří podpis brány v prohlížeči)
+                        r = re.match(r'^\s+- \*Důkaz z běhu:\*\s*(G\d+)\s*$', ln)
+                        if r: chk={'kind':'run','gate':r.group(1),'q':'','o':[],'a':-1,'hint':''}; task['check']=chk; continue
                         c = re.match(r'^\s+- \*(Ověření|Co jste viděli):\*\s*(.+)$', ln)
                         if c: chk={'kind':'proof' if c.group(1)=='Ověření' else 'seen','q':inline(c.group(2)),'o':[],'a':-1,'hint':''}; task['check']=chk; continue
                         o = re.match(r'^\s+- \[( |x)\]\s+(.+)$', ln)
@@ -186,6 +189,10 @@ for blk in re.split(r'^## ', rt, flags=re.M)[1:]:
 READY=[g for g in READY if g['i']]
 for g in READY:
     if g['g'].startswith('Úroveň 4'): g['role']='gm'   # úroveň 4 je jen pro Guild Mastery
-json.dump({'W':mods,'GLOSS':GLOSS,'CHEAT':CHEAT,'CHEAT_INTRO':CHEAT_INTRO,'DIAG':DIAG,'DIAG_INTRO':DIAG_INTRO,'PRINCIPLES':PRINCIPLES,'MISTAKES':MISTAKES,'READY':READY}, open(OUT,'w',encoding='utf-8'), ensure_ascii=False, indent=0)
+# Ukázkové běhy, které SPOCK přibaluje (fixtures/<běh>/): jejich RUN-STATE.md není důkaz vlastního běhu.
+# Bere se z otisku SPOCKu, takže seznam drží krok s verzí v SPOCK-VERZE.md.
+_otisk = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'nastroje', 'spock-otisk.json'), encoding='utf-8'))
+SAMPLES = sorted({k.split('/')[1] for k in _otisk['files'] if k.startswith('fixtures/') and k.count('/') > 1})
+json.dump({'SAMPLES':SAMPLES,'W':mods,'GLOSS':GLOSS,'CHEAT':CHEAT,'CHEAT_INTRO':CHEAT_INTRO,'DIAG':DIAG,'DIAG_INTRO':DIAG_INTRO,'PRINCIPLES':PRINCIPLES,'MISTAKES':MISTAKES,'READY':READY}, open(OUT,'w',encoding='utf-8'), ensure_ascii=False, indent=0)
 for m in mods: print(m['id'], m['time'], len(m['days']), [len(d['todo']) for d in m['days']], len(m['quiz']), [q['a'] for q in m['quiz']])
 print('gloss',len(GLOSS),'cheat',[ (c['g'],len(c['t']['rows'])) for c in CHEAT],'diag',[len(d['t']['rows']) for d in DIAG],'pr',len(PRINCIPLES),'mist',len(MISTAKES),'ready',[(g['g'][:30],len(g['i'])) for g in READY])
