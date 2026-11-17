@@ -69,6 +69,11 @@
   - *Proč:* Záznam má říkat pravdu o tom, kdo co napsal.
   1. Během review fáze ručně upravte jednu větu v dokumentu.
   2. Spusťte `SPOCK: record that I edited a document` → cesta, co, proč a jméno.
+  - *Ověření:* Co je po zaznamenání úpravy v hlavičce dokumentu v poli `modified_by`?
+    - [x] `human`
+    - [ ] `agent`
+    - [ ] Pole z hlavičky zmizí
+  - *Nápověda:* Otevřete upravený dokument a podívejte se do hlavičky.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -119,6 +124,11 @@ Poslední políčko výjimky rozhoduje, kam nález jde. **„the workflow looks 
   1. Až ve cvičném běhu brána neprojde, nechte agenta opravovat.
   2. Pokud se zastaví, zeptejte se agenta **Workflow Support**: „Co teď s tímto během?“ Jeho odpověď má končit konkrétním taskem a jeho políčky.
   3. Spusťte `SPOCK: explain what the gate failed` a do deníku zapište: materiál, nebo workflow?
+  - *Co jste viděli:* Čím skončila odpověď agenta Workflow Support?
+    - [x] Konkrétním taskem a jeho políčky
+    - [ ] Obecnou radou bez tasku
+    - [ ] Agent fázi opravil sám
+  - *Když ne:* Odpověď bez konkrétního tasku je odchylka. Zapište si ji do deníku.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -156,6 +166,11 @@ Nový vlastník otevře nový chat s agentem dané fáze, spustí `SPOCK: record
   - *Proč:* Běh musí přežít dovolenou i změnu člověka, a to bez toho, aby si někdo musel cokoli pamatovat.
   1. Postupujte přesně podle `TESTER-GUIDE.md` §3.4, kroky 1–5.
   2. Kolega ověří na titulní stránce běhu, že vidí stejný stav jako vy.
+  - *Ověření:* Jak se běh kolegovi předává?
+    - [x] Zkopírováním celé složky `runs/<běh>/`, nikdy přes git
+    - [ ] Commitem a pushem do repozitáře
+    - [ ] Exportem chatu fáze
+  - *Nápověda:* Viz `TESTER-GUIDE.md` §3.4, krok 3.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 

@@ -86,6 +86,11 @@
   1. Otevřete `fixtures/2026-09-savings-goals/RUN-STATE.md`.
   2. U dvou fází najděte stav, výsledek brány, kdo fázi vlastní a které know-how a v jaké verzi četla.
   3. Ve `fixtures/2026-09-savings-goals/1-brief/initiative-brief.md` najděte v hlavičce `could_not_verify` a `decision`.
+  - *Ověření:* Kdo v `RUN-STATE.md` běhu savings-goals rozhodl bránu G1?
+    - [x] Igor Tadić, `by_agent: false`
+    - [ ] Agent Product Owner, `by_agent: true`
+    - [ ] Nikdo, G1 je jen kontrola `pass`
+  - *Nápověda:* Najděte u fáze 1 blok `decision_gate`.
 - [ ] **Sepište si, jak má agent mluvit** (20 min, ve VS Code)
   - *Proč:* Většinu odchylek poznáte podle toho, jak agent mluví, dřív než podle výstupu.
   1. Z `agent-interaction.md` §7 a §11 si vypište, co agent nikdy nedělá.
@@ -179,10 +184,20 @@
   2. Otevřete `fixtures/2026-09-savings-goals/1-brief/initiative-brief.md`.
   3. Najděte produktový cíl, metriku, key result a vazbu. Je vazba mechanismus, nebo jen tvrzení?
   4. Najděte sekci „What we could not establish“ a důvody unknown.
+  - *Ověření:* Kolik polí brief savings-goals označuje jako unknown?
+    - [x] Dvě: `success_signal` a `qualitative_signal`
+    - [ ] Žádné, všechno je vyplněné
+    - [ ] Pět, jedno za každou část cíle
+  - *Nápověda:* Podívejte se do sekce „What we could not establish“.
 - [ ] **Projděte Strategy Basis** (20 min, ve VS Code)
   - *Proč:* U G1 budete vybírat key result z tohoto seznamu.
   1. Otevřete `strategy-basis.md` §2 a projděte cíle a key resulty.
   2. Ke svému tématu z cvičného běhu najděte dva možné key resulty a napište vazbu vlastními slovy.
+  - *Ověření:* Kolik strategických směrů popisuje `strategy-basis.md` v §2.2 až §2.7?
+    - [x] Šest, od nového obslužného modelu pro firmy po AI First
+    - [ ] Tři
+    - [ ] Dvanáct, jeden na každý key result
+  - *Nápověda:* Projděte nadpisy oddílů §2.2 až §2.7.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -274,6 +289,11 @@
   2. Ve `fixtures/2026-09-savings-goals/2-problems/` projděte soubory 1 až 5 v tomto pořadí.
   3. U jedné příležitosti z `5-prioritised-opportunities.md` dohledejte hypotézu, pozorování a položku materiálu.
   4. Ověřte trust tag ručně: kolik různých původů, kolik z první ruky?
+  - *Ověření:* Kolik příležitostí jde v `5-prioritised-opportunities.md` dál jako primární?
+    - [x] Dvě, další dvě jsou sekundární a jedna je odložená
+    - [ ] Všech pět
+    - [ ] Jedna
+  - *Nápověda:* Odpověď je hned v první větě dokumentu.
 - [ ] **Napište hypotézu, která neprojde testem tvaru** (10 min, ve VS Code)
   - *Proč:* Naučíte se poznat řešení převlečené za problém.
   1. Napište dvě věty o svém tématu: jednu, kterou by vyřešila jen jedna věc, a jednu, kterou by mohlo vyřešit víc věcí.
@@ -364,6 +384,11 @@
   2. Otevřete `fixtures/2026-09-savings-goals/3-competitive-analysis/2-competitor-cards.md`.
   3. U jedné karty spočítejte nezávislé vydavatele a najděte primární zdroj.
   4. Najděte datum výzkumu. Byla by karta dnes ještě čerstvá?
+  - *Ověření:* Kolik karet konkurentů běh savings-goals má a s jakou confidence?
+    - [x] Deset, všechny s confidence `high`
+    - [ ] Pět, polovina s `low`
+    - [ ] Deset, confidence se u karet neuvádí
+  - *Nápověda:* Odpověď je v úvodu dokumentu `2-competitor-cards.md`.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -456,9 +481,19 @@
   3. U jednoho řešení projděte osm sekcí. Dodržuje *What it does*, že popisuje změnu chování, a ne mechanismus?
   4. V sekci *Compliance* najděte počet touchpointů, oblasti ve hře a eskalační příznak.
   5. Porovnejte `4-solutions/parts/SOL1.md` a `SOL1.compliance.md` se sestaveným dokumentem: kdo napsal kterou část?
+  - *Ověření:* Kolik touchpointů uvádí sekce *Compliance* u řešení SOL1?
+    - [x] 9
+    - [ ] 14
+    - [ ] Žádný, compliance se řeší až v PRD
+  - *Nápověda:* Hledejte řádek **# of touchpoints** v sekci *Compliance* u SOL1.
 - [ ] **Najděte důvod volby** (10 min, ve VS Code)
   - *Proč:* Důvod je to, co z rozhodnutí zbude za dva roky.
   1. Otevřete `4-solutions/2-selected-solution.md` téhož běhu a najděte „Why this one“.
+  - *Ověření:* Které řešení bylo vybrané a proč?
+    - [x] SOL3, jako jediné vrátí žadatele, který už z procesu odešel
+    - [ ] SOL1, protože je nejlevnější
+    - [ ] SOL2, protože ho doporučil agent
+  - *Nápověda:* Přečtěte nadpis dokumentu a sekci „Why this one“.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -531,6 +566,11 @@
   2. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/5-mvp/1-mvp-options.md`.
   3. U každé varianty najděte, čím se liší. Je to skutečný rozdíl, nebo jen jiná míra?
   4. V `2-expanded-mvp.md` najděte *What has to be handled* a jeho tři bloky.
+  - *Ověření:* Kolik variant MVP nabízí `1-mvp-options.md`?
+    - [x] Dvě, OPT1 a OPT2, žádná není označená jako lepší
+    - [ ] Tři, od nejmenší po největší
+    - [ ] Jednu doporučenou
+  - *Nápověda:* Projděte nadpisy variant v dokumentu.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -603,6 +643,11 @@
   2. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/6-prd/1-prd-draft.md` a `2-prd-agreed.md`.
   3. Najděte rozdíl mezi nimi: blok souhlasu.
   4. U tří požadavků najděte měřítko, kterému slouží, a touchpointy, které nesou.
+  - *Ověření:* Co má `2-prd-agreed.md` navíc oproti draftu?
+    - [x] Blok souhlasu se jménem a datem (`agreement_block`) a rozhodnutí G6
+    - [ ] Nové požadavky doplněné agentem
+    - [ ] Nic, oba soubory jsou stejné
+  - *Nápověda:* Porovnejte hlavičky obou dokumentů.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -673,6 +718,11 @@
   2. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/7-initiative/initiative.md` a `6-prd/2-prd-agreed.md`.
   3. U tří tvrzení v iniciativě najděte oporu v PRD.
   4. Najděte Jira klíč a porovnejte iniciativu s její čitelnou kopií v `read/7-initiative/`.
+  - *Ověření:* Jaký Jira klíč má iniciativa běhu digital-onboarding-dropoff?
+    - [x] `SPOCK-1245`
+    - [ ] `A15`
+    - [ ] Žádný, klíč doplní agent až v Jiře
+  - *Nápověda:* Hledejte `jiraLink` v hlavičce `initiative.md`.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 

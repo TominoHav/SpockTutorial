@@ -157,6 +157,11 @@ Ve fázi 2 platí **karanténa**: pokyn schovaný v materiálu je jen text a age
 - [ ] **Přidejte problém vlastními slovy** (10 min, ve VS Code)
   - *Proč:* Některé věci víte, ale nemáte je napsané. Takhle se dostanou do materiálu jako váš výrok.
   1. Spusťte `SPOCK: add a problem in my own words` a napište jeden problém.
+  - *Ověření:* Kam se uložil problém, který jste napsali?
+    - [x] Jako soubor do `2-problems/supplied/` a přidal se do materiálu
+    - [ ] Jen do chatu
+    - [ ] Do briefu ve fázi 1
+  - *Nápověda:* Otevřete ve složce běhu `2-problems/supplied/`.
 - [ ] **Potvrďte a seřaďte příležitosti (G2)** (40 min, ve VS Code)
   - *Proč:* Rozhodujete, které příležitosti tenhle běh sleduje. Na nich stojí všechno, co přijde potom.
   1. Projděte rámované příležitosti s PD, pokud ho máte. U každé zkontrolujte trust tag a ze kterých souborů vychází.

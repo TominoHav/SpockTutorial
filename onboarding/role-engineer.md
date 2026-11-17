@@ -67,6 +67,11 @@
   1. V terminálu ve složce SPOCKu: `node .github/scripts/check.mjs fixtures/2026-01-mortgage-onboarding` (příkaz je v `fixtures/README.md`). Spouštíte ho jen nad ukázkovým během, ne místo tasků ve vlastním běhu.
   2. Najděte, kolik kontrol proběhlo a proti kolika z registrovaných se tento starší běh čte. Starší běh se čte jen proti kontrolám, které na něj dosáhnou svým datem a artefakty.
   3. Výpis pravděpodobně ukáže, že pár kontrol neprošlo. To je záměr: `fixtures/README.md` vysvětluje, že některé ukázkové běhy selhávají schválně a proč se nespravují. Najděte ve výpisu, co se stane s fází, která neprojde.
+  - *Ověření:* Co se podle konce výpisu stane s fází, jejíž kontrola neprojde?
+    - [x] Nedostane se k člověku a vrátí se skillu
+    - [ ] Jde rovnou k člověku k podpisu
+    - [ ] Smaže se a začíná znovu
+  - *Nápověda:* Přečtěte poslední řádky výpisu pod souhrnem kontrol.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -150,6 +155,11 @@ Compliance část vzniká tak, že producent odpoví na uzavřené otázky a skr
   - *Proč:* Iniciativa je dokument, který jde do backlogu ČS.
   1. Otevřete `7-initiative/initiative.md` téhož běhu.
   2. Najděte akceptační kritéria a Jira klíč. Jira klíč nikdy nevymýšlí agent, zadává ho člověk. Jira iniciativa (A15) se zatím nevytváří.
+  - *Ověření:* Odkud se v ukázkovém běhu hypotéky vzal Jira klíč `SPOCK-101`?
+    - [x] Dodal ho člověk jako vstup, agent ho nikdy negeneruje
+    - [ ] Vygeneroval ho agent podle Jiry
+    - [ ] Doplnil ho skript kontrol
+  - *Nápověda:* Přečtěte poznámku hned pod nadpisem iniciativy.
 
 ## 2E.4 — Záznamy a kontroly ve vlastním běhu
 
@@ -174,6 +184,11 @@ Užitečné tasky bez políček: **`SPOCK: check the whole run`**, **`SPOCK: run
   1. Ve vlastním (cvičném) běhu, až některá brána neprojde, spusťte `SPOCK: explain what the gate failed`.
   2. Najděte C-číslo kontroly v `.github/COVERAGE-CHECKS.md` a přečtěte, k čemu slouží.
   3. Řekněte PM, jestli jde o materiál, nebo o chybu workflow. Jak se s tím dál zachází, popisuje úroveň 3.
+  - *Ověření:* Zapíše `SPOCK: explain what the gate failed` něco do běhu?
+    - [x] Ne, spustí bránu a nic nezaznamená
+    - [ ] Ano, zapíše výsledek do `RUN-STATE.md`
+    - [ ] Ano, podepíše výjimku
+  - *Nápověda:* Podívejte se, jestli se po tasku změnil `RUN-STATE.md`.
 
 ## 2E.5 — Compliance do hloubky
 
@@ -224,6 +239,11 @@ Užitečné tasky bez políček: **`SPOCK: check the whole run`**, **`SPOCK: run
   1. Otevřete `fixtures/2026-09-digital-onboarding-dropoff/4-solutions/parts/SOL1.compliance.md` a příslušnou sekci *ICT and security* v `1-solution-set.md`.
   2. U každého touchpointu se zeptejte: platí to pro naše systémy? Chybí něco, co by mělo odpovědět `yes`?
   3. Zapište si otevřené položky a ověřte, jestli se objevují v PRD (`6-prd/1-prd-draft.md`).
+  - *Ověření:* Které ICT and security touchpointy jsou ve hře u SOL1?
+    - [x] I1, I4, I5, I9
+    - [ ] I1, I2, I4, I5, I7, I9, I10, I11
+    - [ ] Žádné
+  - *Nápověda:* Hledejte řádek „In play“ v sekci *Compliance* u SOL1.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
