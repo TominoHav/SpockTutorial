@@ -123,7 +123,18 @@ def _mincss(m):
     return '<style>' + c.strip() + '</style>'
 head = _re.sub(r'<style>(.*?)</style>', _mincss, head, flags=_re.S)
 out = head + app + "\n\n" + bot + tail
+# výkon: hlavní skript se zmenší nástrojem esbuild (npm install --no-save esbuild@0.24.2). Bez něj se sestaví nezmenšený a vypíše se varování.
+def _esbuild(js):
+    _bin = os.path.join(HERE, '..', 'node_modules', '.bin', 'esbuild')
+    if not os.path.exists(_bin):
+        print('VAROVÁNÍ: esbuild chybí, JavaScript se nezmenší (npm install --no-save esbuild@0.24.2)', file=sys.stderr); return js
+    r = subprocess.run([_bin, '--minify', '--charset=utf8', '--target=es2020', '--loader=js', '--log-level=error'], input=js, capture_output=True, text=True, encoding='utf-8')
+    if r.returncode != 0: raise SystemExit('esbuild selhal: ' + r.stderr[:2000])
+    return r.stdout.replace('</script', '<\\/script')
+_s0 = out.index('<script>\n(function(){'); _s1 = out.rindex('</script>')
+out = out[:_s0] + '<script>' + _esbuild(out[_s0 + len('<script>'):_s1]) + out[_s1:]
 BUILD['size']['html'] = len(out.encode('utf-8'))
 out = out.replace('__BUILD__', json.dumps(BUILD, ensure_ascii=False))
+json.dump(BUILD, open(os.path.join('dist', 'build.json'), 'w', encoding='utf-8'), ensure_ascii=False)
 open(os.path.join('dist','spock-user-onboarding.html'),'w',encoding='utf-8').write(out)
 print(len(out))

@@ -16,7 +16,7 @@ const med=a=>{a=a.slice().sort((x,y)=>x-y);return a[Math.floor(a.length/2)];};
   await p.goto('file://'+FILE);await p.waitForTimeout(900);
   fcp.push(await p.evaluate(()=>{const f=performance.getEntriesByName('first-contentful-paint')[0];return Math.round(f?f.startTime:0);}));
   /* uvítání při prvním otevření se přeskočí, měří se stránka za ním */
-  await p.evaluate(()=>{const k=document.querySelector('.wl .vidov-x');if(k)k.click();});
+  
   await p.locator('.startb [data-role=pm]').click();await p.waitForTimeout(300);
   lesson.push(await p.evaluate(()=>{const t=performance.now();document.querySelector('[data-week=l0]').click();document.body.offsetHeight;return Math.round(performance.now()-t);}));
   for(const v of ['badges','map','cheat']) views.push(await p.evaluate(v=>{const t=performance.now();document.querySelector('[data-go='+v+']').click();document.body.offsetHeight;return Math.round(performance.now()-t);},v));
@@ -34,7 +34,7 @@ const med=a=>{a=a.slice().sort((x,y)=>x-y);return a[Math.floor(a.length/2)];};
 var fdb={doc:function(p){return {get:async function(){return {exists:p in db,data:function(){return db[p]}}},set:async function(d){db[p]=d}}},collection:function(p){var q={limit:function(){return q},get:async function(){return {docs:Object.keys(db).filter(function(k){return k.indexOf(p+'/')===0}).map(function(k){return {id:k.split('/')[1],data:function(){return db[k]}}})}}};return q}};
 var fu={me:async function(){return {id:'u_ja',isOwner:true,canEdit:true}},profiles:async function(ids){var o={};ids.forEach(function(i){o[i]={name:'Člověk '+i}});return o}};window.claude={use:async function(n){return n==='db'?fdb:n==='user'?fu:null}};})();</script>`;
   const DF=path.join(DIST,'vykon-dashboard.html');fs.writeFileSync(DF,'<!doctype html><html><head><meta charset="utf-8">'+gen+'</head><body>'+html.toString('utf8')+'</body></html>');
-  const p=await b.newPage({viewport:{width:1280,height:900}});await p.goto('file://'+DF);await p.waitForTimeout(800);await p.evaluate(()=>{const k=document.querySelector('.wl .vidov-x');if(k)k.click();});
+  const p=await b.newPage({viewport:{width:1280,height:900}});await p.goto('file://'+DF);await p.waitForTimeout(800);
   await p.locator('.startb [data-role=pm]').click();await p.waitForTimeout(300);
   await p.evaluate(()=>document.querySelector('[data-go=dash]').click());await p.waitForFunction(()=>document.querySelector('#dash .ds-tabs'),null,{timeout:60000});
   const t=sel=>p.evaluate(s=>{const t0=performance.now();document.querySelector(s).click();document.body.offsetHeight;return Math.round(performance.now()-t0)},sel);

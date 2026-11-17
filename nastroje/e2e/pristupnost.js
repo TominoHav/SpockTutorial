@@ -17,9 +17,7 @@ for(const [dev,w,h] of [['mobil',390,844],['počítač',1280,850]]){
  for(const role of ['pm','pd','se','gm']){
   const c=await b.newContext({viewport:{width:w,height:h},hasTouch:dev==='mobil'});const p=await c.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
   await p.goto(F);await p.waitForTimeout(600);let clicks=0;
-  /* uvítání při prvním otevření: Začít je jedno kliknutí navíc */
-  if(await p.locator('.vidov.wl').count()){await p.evaluate(()=>document.querySelector('[data-wl=go]').click());clicks++;await p.locator(`.wl [data-role=${role}]`).click();clicks++;}
-  else{await p.locator(`.startb [data-role=${role}]`).click();clicks++;}
+  await p.locator(`.startb [data-role=${role}]`).click();clicks++;
   await p.waitForTimeout(250);
   await p.locator('[data-golesson],[data-week=l0]').first().click();clicks++;await p.waitForTimeout(250);
   const inLesson=await p.locator('.lpanel .lcard').count()>0;
@@ -28,13 +26,13 @@ for(const [dev,w,h] of [['mobil',390,844],['počítač',1280,850]]){
   const l4=await p.locator('[data-week=l4]').count()>0;
   await p.evaluate(r=>{const e=document.querySelector('[data-week='+r+']');e&&e.click();},role);await p.waitForTimeout(250);
   const roleOpen=(await p.locator('.main').innerText()).length>200;
-  ok(`${dev}, ${role.toUpperCase()}: do první lekce na 3 kliknutí (uvítání, role, lekce), karta jde zodpovědět, modul role se otevře`, clicks===3&&inLesson&&answered&&roleOpen&&!errs.length, errs[0]||'');
+  ok(`${dev}, ${role.toUpperCase()}: do první lekce na 2 kliknutí (role, lekce), karta jde zodpovědět, modul role se otevře`, clicks===2&&inLesson&&answered&&roleOpen&&!errs.length, errs[0]||'');
   ok(`${dev}, ${role.toUpperCase()}: úroveň 4 ${role==='gm'?'je vidět':'není vidět'}`, l4===(role==='gm'));
   await c.close();}
  // 2) přístupnost, 3) dotykové plochy
  for(const scheme of ['light','dark']){
   const c=await b.newContext({viewport:{width:w,height:h},colorScheme:scheme});const p=await c.newPage();
-  await p.goto(F);await p.waitForTimeout(600);await p.evaluate(()=>{const g=document.querySelector('.wl .vidov-x');if(g)g.click();});await p.locator('.startb [data-role=pm]').click();await p.waitForTimeout(300);
+  await p.goto(F);await p.waitForTimeout(600);await p.locator('.startb [data-role=pm]').click();await p.waitForTimeout(300);
   for(const v of VIEWS){
    await open(p,v);await p.waitForTimeout(350);await p.evaluate(()=>{for(const e of document.querySelectorAll('.notice,.cel'))e.remove();});
    await p.addScriptTag({content:AXE});
@@ -50,12 +48,12 @@ for(const [dev,w,h] of [['mobil',390,844],['počítač',1280,850]]){
 // dashboard (jen vlastník), simulace SPOCK nanečisto, závěrečný příběh a minihra: v testovacím prostředí s daty
 /* čtyři kombinace (mobil, počítač × světlý, tmavý) běží souběžně */
 await Promise.all([['mobil',390,844],['počítač',1280,850]].flatMap(([dev,w,h])=>['light','dark'].map(scheme=>[dev,w,h,scheme])).map(async([dev,w,h,scheme])=>{
- const c=await b.newContext({viewport:{width:w,height:h},colorScheme:scheme});await c.addInitScript(()=>{window.__E2E_WELCOME=true;});const p=await c.newPage();
+ const c=await b.newContext({viewport:{width:w,height:h},colorScheme:scheme});const p=await c.newPage();
  await p.goto(FX);await p.waitForSelector('.startb [data-role]');
  const audit=async name=>{await p.evaluate(()=>{for(const e of document.querySelectorAll('.notice,.cel,.fl-tip'))e.remove();/* animace dojedou do konce, kontrast se měří na výsledném stavu */document.getAnimations().forEach(a=>{try{a.finish()}catch(e){}});});await p.addScriptTag({content:AXE});
   const viol=await p.evaluate(async()=>{const r=await axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa']},resultTypes:['violations']});return r.violations.map(x=>x.id+' ×'+x.nodes.length+' ('+x.nodes.slice(0,2).map(n=>n.target.join(' ')).join(' | ')+')');});
   ok(`${dev}, ${scheme==='dark'?'tmavý':'světlý'} režim, ${name}: bez chyb přístupnosti (WCAG 2 A a AA)`, viol.length===0, viol.join('; ').slice(0,300));};
- await p.waitForSelector('.vidov.wl');await audit('uvítání s videem');await p.evaluate(()=>document.querySelector('[data-wl=skip]').click());await p.waitForSelector('.wl-role');await audit('uvítání, výběr role');await p.evaluate(()=>document.querySelector('.wl .vidov-x').click());
+ await audit('první použití');
  await p.locator('.startb [data-role=pm]').click();await p.waitForTimeout(200);
  await p.evaluate(()=>document.querySelector('[data-go=dash]').click());await p.waitForSelector('#dash .ds-tabs');
  for(const t of ['lide','pohyb','ver']){await p.evaluate(t=>document.querySelector('[data-dash="tab:'+t+'"]').click(),t);await p.waitForTimeout(250);await audit('dashboard '+t);}

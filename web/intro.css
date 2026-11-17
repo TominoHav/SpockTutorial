@@ -34,7 +34,7 @@
 .cv-road li.now{color:var(--ink);font-weight:700;border-left:2px solid var(--c)}
 .cv-road small{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
 .cv-quote{margin:0;border-left:3px solid var(--c);padding:2px 0 2px 12px;font-size:14.5px;line-height:1.55;color:var(--ink)}
-.cv-quote b{color:#1068D2}
+.cv-quote b{color:var(--blue-2)}
 [class*="cv"] .eyebrow{color:var(--c)}
 /* A · kapitoly */
 @media (max-width:560px){.cv-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -53,6 +53,7 @@
 .cvB-card{scroll-snap-align:start;position:relative;display:grid;gap:10px;align-content:start;background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:14px;padding:16px;min-height:250px}
 .cvB-card h3{font-size:17px;font-weight:800;letter-spacing:-.01em;padding-right:34px}
 .cvB-no{position:absolute;top:12px;right:14px;font-size:22px;font-weight:800;color:color-mix(in srgb,var(--c) 45%,transparent)}
+.cvB-no::before{content:attr(data-n)} /* dekorativní číslo karty jako pseudoprvek: čtečka i kontrola kontrastu ho přeskočí */
 .cvB-card .cv-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
 .cvB-card .cv-ben{grid-template-columns:1fr}
 @media (max-width:900px){.cvB-top{grid-template-columns:1fr}.cvB-film{transform:none}.cvB-strip{grid-auto-columns:85%}}
