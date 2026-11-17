@@ -511,3 +511,11 @@ button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var
 .exf-mini b{font-size:15px}.exf-mini span:last-child{font-size:13px;color:var(--ink-2)}.exf-mini:hover{background:var(--surface)}
 .exf-more summary{cursor:pointer;font-size:14.5px;font-weight:700;color:var(--blue-2);padding:4px 0}.exf-more[open]{display:grid;gap:8px}.exf-more .exf-alt,.exf-more .exf-place{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 @media (max-width:600px){.exf-side{grid-template-columns:1fr}}
+/* rozcestí: hlavní a vedlejší tlačítko */
+.exf-btns{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.exv-a .exf.full{display:grid;gap:8px;cursor:default}
+.exf-lead{margin:0;font-size:15px;color:var(--ink-2);max-width:560px}
+.exf-sec{display:inline-grid;text-align:left;line-height:1.2;gap:2px}.exf-sec small{font-size:12px;font-weight:600;color:var(--ink-3)}
+.exf-chip{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:99px;font-size:12.5px;font-weight:700;background:rgba(255,255,255,.2)}
+.exf-ghost{font-weight:700;padding:8px 4px}.exf-ghost .exf-chip{background:var(--surface-2);color:var(--ink-2)}
+@media (max-width:600px){.exf-btns{display:grid;grid-template-columns:1fr}.exf-btns .btn{width:100%;justify-content:center}.exf-sec{justify-items:center;text-align:center}.exf-ghost{justify-self:center}}

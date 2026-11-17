@@ -1066,15 +1066,21 @@ function exHeroAction(roleLine){
 /* Rozcestí: dvě rovnocenné volby po výběru role, dokud se člověk nerozhodne */
 const FKV = window.__FKV || 'A';
 function exFork(roleLine){
-  /* celá cesta je hlavní volba; expresní start a vstupní test jsou vedlejší možnosti pod ní */
-  const full = pathHours();
-  return `<div class="exfork" role="group" aria-label="Jak chcete začít">
+  /* celá cesta je hlavní volba (plné tlačítko), expresní start druhé, vedlejší tlačítko; vstupní test je odkaz */
+  const full = pathHours(), place = `<p class="exf-place">Znáte už SPOCK? <button class="linkbtn" type="button" data-place>Vstupní test (${PLACE_N} otázek)</button> přeskočí teorii úrovně 0.</p>`;
+  const go = `<button class="btn primary" type="button" data-express="full" data-golesson="l0:0">Začít celou cestu →</button>`;
+  if (FKV === 'A') return `<div class="exfork exv-a" role="group" aria-label="Jak chcete začít">
     <span class="hx-nl">Jak chcete začít?</span>
-    <button type="button" class="exf full" data-express="full" data-golesson="l0:0"><span class="exf-k">Doporučeno · celá cesta</span><b>~${full} h</b><span>Všechny úrovně s praxí ve VS Code až po vlastní běh. Po 30 minutách denně.</span><span class="exf-go">Začít lekcí 0.1 →</span></button>
-    ${FKV === 'B' ? `<div class="exf-side"><button type="button" class="exf-mini" data-express="on"><span class="exf-k">Málo času?</span><b>Expresní start · 1 h 40 min</b><span>To nejnutnější a objednání přístupů</span></button><button type="button" class="exf-mini" data-place><span class="exf-k">Znáte už SPOCK?</span><b>Vstupní test · ${PLACE_N} otázek</b><span>Přeskočí teorii úrovně 0</span></button></div>`
-     : FKV === 'C' ? `<details class="exf-more"><summary>Jiné možnosti začátku</summary><p class="exf-alt"><button class="btn sm" type="button" data-express="on">Expresní start · 1 h 40 min</button> To nejnutnější a objednání přístupů. Pokrok se započítá.</p><p class="exf-place"><button class="btn sm" type="button" data-place>Vstupní test · ${PLACE_N} otázek</button> Znáte už SPOCK? Přeskočí teorii úrovně 0.</p></details>`
-     : `<p class="exf-alt">Málo času? <button class="linkbtn" type="button" data-express="on">Expresní start za 1 h 40 min</button>: to nejnutnější a objednání přístupů. Pokrok se započítá.</p>
-    <p class="exf-place">Znáte už SPOCK? <button class="linkbtn" type="button" data-place>Vstupní test (${PLACE_N} otázek)</button> přeskočí teorii úrovně 0.</p>`}${roleLine}</div>`;
+    <div class="exf full"><span class="exf-k">Doporučeno · celá cesta · ~${full} h</span><span>Všechny úrovně s praxí ve VS Code až po vlastní běh. Po 30 minutách denně.</span>
+    <div class="exf-btns">${go}<button class="btn" type="button" data-express="on">Expresní start · 1 h 40 min</button></div></div>${place}${roleLine}</div>`;
+  if (FKV === 'B') return `<div class="exfork exv-b" role="group" aria-label="Jak chcete začít">
+    <span class="hx-nl">Jak chcete začít?</span>
+    <p class="exf-lead">Celá cesta trvá zhruba ${full} h po 30 minutách denně: všechny úrovně s praxí ve VS Code až po vlastní běh.</p>
+    <div class="exf-btns">${go}<button class="btn exf-sec" type="button" data-express="on"><span>Málo času? Expresní start</span><small>1 h 40 min · to nejnutnější</small></button></div>${place}${roleLine}</div>`;
+  return `<div class="exfork exv-c" role="group" aria-label="Jak chcete začít">
+    <span class="hx-nl">Jak chcete začít?</span>
+    <div class="exf-btns">${go.replace('Začít celou cestu →', `Začít celou cestu <span class="exf-chip">~${full} h</span>`)}<button class="linkbtn exf-ghost" type="button" data-express="on">nebo expresní start <span class="exf-chip">1 h 40 min</span></button></div>
+    <p class="exf-lead">Celá cesta: všechny úrovně s praxí ve VS Code. Expres: to nejnutnější a objednání přístupů, pokrok se započítá.</p>${place}${roleLine}</div>`;
 }
 function exCheck(){
   if (!S.express || S.got['express']) return;
