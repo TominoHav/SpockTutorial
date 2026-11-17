@@ -14,6 +14,7 @@ RC=0
 for t in $SADY; do
   printf '%-12s %s\n' "$t" "$(grep -E '^CELKEM' "$TMP/$t.log" | tail -1 || true)"
   grep -E '^FAIL' "$TMP/$t.log" | cut -c1-240
+  grep -qE '^CELKEM' "$TMP/$t.log" || { echo "  sada nedoběhla, konec výpisu:"; tail -5 "$TMP/$t.log" | cut -c1-240; }
   grep -qE 'FAIL 0$' "$TMP/$t.log" || RC=1
 done
 (cd web && python3 build.py | tail -1 | sed 's/^/velikost stránky (B): /')
