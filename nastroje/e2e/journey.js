@@ -140,11 +140,11 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  ok(T('všechny karty všech modulů jdou zodpovědět'), Object.keys(sc.cards||{}).length===tot, Object.keys(sc.cards||{}).length+' z '+tot);
  ok(T('žádná lekce nepřetéká do strany'), ovf.length===0, ovf.join(', '));
  // opora
- for(const v of ['map','diag','cheat','gloss','badges','ready']){await p.evaluate(v=>{const e=document.querySelector(`[data-go="${v}"]`);e&&e.click()},v);await settle(p);ok(T('stránka '+v+' bez přetékání'), (await ov())<=0);}
+ for(const v of ['diag','cheat','gloss','badges']){await p.evaluate(v=>{const e=document.querySelector(`[data-go="${v}"]`);e&&e.click()},v);await settle(p);ok(T('stránka '+v+' bez přetékání'), (await ov())<=0);}
  await p.evaluate(()=>document.querySelector('[data-go="gloss"]').click());await p.fill('#gloss-q','trust');await settle(p);
  ok(T('slovník: hledání „trust“'), (await p.locator('.gloss dt').count())>=1 && (await p.locator('.gloss dt').count())<5);
  // dotazník
- await p.evaluate(()=>document.querySelector('[data-go="ready"]').click());await settle(p);
+ await p.evaluate(()=>document.querySelector('[data-go="badges"]').click());await settle(p);
  for(const v of ['0:4','1:5','2:3'])await p.locator(`[data-svy="${v}"]`).click();
  await p.fill('#svy-txt','Test e2e');await p.locator('[data-svy-send]').click();await settle(p);
  const clip=await p.evaluate(()=>navigator.clipboard.readText().catch(()=> ''));

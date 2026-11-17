@@ -9,7 +9,7 @@ const {buildE2E,browserType}=require('./fixture');const fs=require('fs');const p
 const ROOT=path.resolve(__dirname,'..','..');const DIST=path.join(ROOT,'web','dist');const F='file://'+path.join(DIST,'spock-user-onboarding.html');
 let AXE;try{AXE=fs.readFileSync(require.resolve('axe-core/axe.min.js'),'utf8');}catch(e){console.error('Chybí axe-core. Spusťte: npm install --no-save axe-core@4.10.2');process.exit(1);}
 const R=[];const ok=(n,c,d='')=>R.push([c?'PASS':'FAIL',n,d]);
-const VIEWS=['home','expres','lesson','badges','map','diag','gloss','cheat','ready','tym'];
+const VIEWS=['home','expres','lesson','badges','diag','gloss','cheat','tym'];
 const open=(p,v)=>p.evaluate(v=>{if(v==='home')document.querySelector('#home-btn').click();else if(v==='expres'){document.querySelector('[data-express=on]').click();const d=document.querySelector('.exall');if(d)d.open=true;}else if(v==='lesson')document.querySelector('[data-week=l0]').click();else{const e=document.querySelector('[data-go='+v+']');e&&e.click();}},v);
 (async()=>{buildE2E();const FX='file://'+path.join(DIST,'e2e.html');const b=await browserType().launch();
 for(const [dev,w,h] of [['mobil',390,844],['počítač',1280,850]]){
@@ -54,13 +54,12 @@ await Promise.all([['mobil',390,844],['počítač',1280,850]].flatMap(([dev,w,h]
   const viol=await p.evaluate(async()=>{const r=await axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa']},resultTypes:['violations']});return r.violations.map(x=>x.id+' ×'+x.nodes.length+' ('+x.nodes.slice(0,2).map(n=>n.target.join(' ')).join(' | ')+')');});
   ok(`${dev}, ${scheme==='dark'?'tmavý':'světlý'} režim, ${name}: bez chyb přístupnosti (WCAG 2 A a AA)`, viol.length===0, viol.join('; ').slice(0,300));};
  await audit('první použití');
+ /* SPOCK nanečisto: z banneru při prvním použití */
+ await p.evaluate(()=>document.querySelector('.hx [data-simstart]').click());await p.waitForSelector('#sim');await audit('SPOCK nanečisto');
+ await p.evaluate(()=>{const x=document.querySelector('[data-sim=close],#sim .sim-x');x&&x.click();});await p.keyboard.press('Escape');await p.waitForTimeout(150);
  await p.locator('.startb [data-role=pm]').click();await p.waitForTimeout(200);
  await p.evaluate(()=>document.querySelector('[data-go=dash]').click());await p.waitForSelector('#dash .ds-tabs');
  for(const t of ['lide','pohyb','ver']){await p.evaluate(t=>document.querySelector('[data-dash="tab:'+t+'"]').click(),t);await p.waitForTimeout(250);await audit('dashboard '+t);}
- /* SPOCK nanečisto je pro vracejícího se v menu pod Další (na stránkách s menu) */
- await p.evaluate(()=>document.querySelector('[data-go=cheat]').click());await p.waitForTimeout(200);
- await p.evaluate(()=>document.querySelector('[data-simstart]')?.click());await p.waitForSelector('#sim');await audit('SPOCK nanečisto');
- await p.evaluate(()=>{const x=document.querySelector('[data-sim=close],#sim .sim-x');x&&x.click();});await p.keyboard.press('Escape');await p.waitForTimeout(150);
  await p.evaluate(()=>{const s=document.getElementById('sim');if(s)s.remove();document.body.classList.remove('noscroll');__kviz.finish();});await p.waitForTimeout(300);
  await p.locator('#home-btn').click();await p.waitForTimeout(300);
  await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});

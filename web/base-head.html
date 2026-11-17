@@ -101,29 +101,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .cp span{color:var(--ink-2);font-size:13px}
 
 /* SPOCK v kostce */
-.phases{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
-.ph{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:10px;display:grid;gap:4px;align-content:start;min-width:0}
-.ph:hover,.ph.on{border-color:var(--c)}
-.ph.on{box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 30%,transparent)}
-.ph:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.ph .k{font-size:11px;font-weight:800;color:var(--c);letter-spacing:.06em}
-.ph b{font-size:13.5px;line-height:1.25}
-.ph .g{font-size:11.5px;color:var(--ink-3);font-weight:600}
 .detail{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--c,var(--blue-2));border-radius:0 var(--r) var(--r) 0;padding:14px 16px;display:grid;gap:8px}
 .detail h4{font-size:16px}
 .kv{display:grid;grid-template-columns:150px minmax(0,1fr);gap:6px 14px;font-size:14px}
 .kv dt{font-weight:700;color:var(--ink)} .kv dd{margin:0;color:var(--ink-2)}
 
 .split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:14px;align-items:start}
-.layers{display:grid;gap:6px}
-.layer{all:unset;box-sizing:border-box;cursor:pointer;display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:14px;font-weight:600}
-.layer:hover,.layer.on{border-color:var(--blue-2)}
-.layer.on{background:var(--surface-2)}
-.layer:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.layer .who{margin-left:auto;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:5px;background:var(--surface-2);color:var(--ink-3);white-space:nowrap}
-.layer .who.me{background:var(--ok-bg);color:var(--ok)}
-.layer .lt{min-width:0}
-.layer small{display:block;font-weight:500;color:var(--ink-3);font-size:12px}
 .analogy{background:var(--surface-2);border-radius:8px;padding:10px 12px;font-size:14px}
 .analogy::before{content:"Přirovnání: ";font-weight:700;color:var(--ink)}
 
@@ -234,12 +217,6 @@ pre.cmd{margin:0;background:var(--surface-2);border-radius:8px;padding:10px 12px
 .exw{font-size:14px;color:var(--ink-2)}
 .exn{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px}
 .rail .rl{min-width:0;flex:1}
-.rail .rt{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--ink-3);white-space:nowrap}
-.tsum{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:flex-end;border:1px solid var(--line);border-left:4px solid var(--c);border-radius:0 8px 8px 0;padding:12px 14px;max-width:80ch}
-.tsum > div:not(.tdays){display:grid;gap:2px}
-.tsum .big{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1;color:var(--ink)}
-.tsum .mid{font-size:16px;font-weight:700;line-height:1.1;color:var(--ink)}
-.tsum .lbl{font-size:12px;color:var(--ink-3);font-weight:600}
 .tdays{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px;padding-top:8px;border-top:1px solid var(--line)}
 .tdays span{font-size:12.5px;color:var(--ink-2);background:var(--surface-2);border-radius:5px;padding:2px 8px;white-space:nowrap}
 .tdays b{color:var(--ink)}
@@ -285,11 +262,9 @@ pre.cmd{margin:0;background:var(--surface-2);border-radius:8px;padding:10px 12px
 
 @media (max-width:980px){
   .hero,.split{grid-template-columns:1fr}
-  .phases{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 @media (max-width:760px){
   .journey{grid-template-columns:1fr}
-  .phases{grid-template-columns:repeat(2,minmax(0,1fr))}
   .ed{grid-template-columns:minmax(0,1fr)}
   .rail{position:static;display:flex;overflow-x:auto;gap:4px;padding:8px}
   .rail .grp{display:none}
