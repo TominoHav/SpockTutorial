@@ -2,14 +2,14 @@
  {
   "id": "hook",
   "img": "",
-  "h": "1 500 lidí, jeden nový nástroj",
+  "h": "Nový nástroj pro produktové týmy",
   "s": "Jak je naučit SPOCK dobře a rychle?",
   "en": [
-   "Fifteen hundred people are about to start using SPOCK. Each of them has to learn seven stages, six agents, quality gates and rules that must not be broken.",
+   "Product teams are about to start using SPOCK. Everyone has to learn seven stages, six agents, quality gates and rules that must not be broken.",
    "Learning that from documents takes weeks, and every team ends up using SPOCK a little differently."
   ],
   "cs": [
-   "Používat SPOCK začne patnáct set lidí. Každý se musí naučit sedm fází, šest agentů, brány kvality a pravidla, která se neporušují.",
+   "Produktové týmy začínají používat SPOCK. Každý se musí naučit sedm fází, šest agentů, brány kvality a pravidla, která se neporušují.",
    "Z dokumentace to trvá týdny a každý tým pak SPOCK používá trochu jinak."
   ]
  },
@@ -127,12 +127,12 @@
   "id": "krok",
   "img": "",
   "h": "Další krok: pilot",
-  "s": "Pět nováčků · pak 1 500 lidí",
+  "s": "Pět nováčků · pak všechny týmy",
   "en": [
-   "The next step is a pilot with five newcomers. We measure, we fix, and then we roll it out to all fifteen hundred people."
+   "The next step is a pilot with five newcomers. We measure, we fix, and then we roll it out to every team."
   ],
   "cs": [
-   "Dalším krokem je pilot s pěti nováčky. Změříme, opravíme a pak ho nasadíme všem patnácti stům lidí."
+   "Dalším krokem je pilot s pěti nováčky. Změříme, opravíme a pak ho nasadíme všem týmům."
   ]
  },
  {

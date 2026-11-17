@@ -3,7 +3,7 @@
 Asi 80 s: anglický komentář hlasem Piper `en-us-ryan`, české titulky v obraze, snímky skutečné aplikace.
 Dvě verze se stejnými snímky:
 - `scenar-vedeni.json`: pro Head of Product a Head of Design (proč to zavést, co je hotové, další krok: pilot), asi 90 s.
-- `scenar-uzivatele.json`: pro 1 500 lidí, kteří budou SPOCK používat (co je čeká a proč začít), asi 75 s.
+- `scenar-uzivatele.json`: pro lidi, kteří budou SPOCK používat (co je čeká a proč začít), asi 75 s.
 
 ```bash
 python3 web/build.py
