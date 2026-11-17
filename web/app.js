@@ -1064,14 +1064,17 @@ function exHeroAction(roleLine){
     ${roleLine}</div>`;
 }
 /* Rozcestí: dvě rovnocenné volby po výběru role, dokud se člověk nerozhodne */
+const FKV = window.__FKV || 'A';
 function exFork(roleLine){
   /* celá cesta je hlavní volba; expresní start a vstupní test jsou vedlejší možnosti pod ní */
   const full = pathHours();
   return `<div class="exfork" role="group" aria-label="Jak chcete začít">
     <span class="hx-nl">Jak chcete začít?</span>
     <button type="button" class="exf full" data-express="full" data-golesson="l0:0"><span class="exf-k">Doporučeno · celá cesta</span><b>~${full} h</b><span>Všechny úrovně s praxí ve VS Code až po vlastní běh. Po 30 minutách denně.</span><span class="exf-go">Začít lekcí 0.1 →</span></button>
-    <p class="exf-alt">Málo času? <button class="linkbtn" type="button" data-express="on">Expresní start za 1 h 40 min</button>: to nejnutnější a objednání přístupů. Pokrok se započítá.</p>
-    <p class="exf-place">Znáte už SPOCK? <button class="linkbtn" type="button" data-place>Vstupní test (${PLACE_N} otázek)</button> přeskočí teorii úrovně 0.</p>${roleLine}</div>`;
+    ${FKV === 'B' ? `<div class="exf-side"><button type="button" class="exf-mini" data-express="on"><span class="exf-k">Málo času?</span><b>Expresní start · 1 h 40 min</b><span>To nejnutnější a objednání přístupů</span></button><button type="button" class="exf-mini" data-place><span class="exf-k">Znáte už SPOCK?</span><b>Vstupní test · ${PLACE_N} otázek</b><span>Přeskočí teorii úrovně 0</span></button></div>`
+     : FKV === 'C' ? `<details class="exf-more"><summary>Jiné možnosti začátku</summary><p class="exf-alt"><button class="btn sm" type="button" data-express="on">Expresní start · 1 h 40 min</button> To nejnutnější a objednání přístupů. Pokrok se započítá.</p><p class="exf-place"><button class="btn sm" type="button" data-place>Vstupní test · ${PLACE_N} otázek</button> Znáte už SPOCK? Přeskočí teorii úrovně 0.</p></details>`
+     : `<p class="exf-alt">Málo času? <button class="linkbtn" type="button" data-express="on">Expresní start za 1 h 40 min</button>: to nejnutnější a objednání přístupů. Pokrok se započítá.</p>
+    <p class="exf-place">Znáte už SPOCK? <button class="linkbtn" type="button" data-place>Vstupní test (${PLACE_N} otázek)</button> přeskočí teorii úrovně 0.</p>`}${roleLine}</div>`;
 }
 function exCheck(){
   if (!S.express || S.got['express']) return;
