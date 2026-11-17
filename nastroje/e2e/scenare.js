@@ -117,7 +117,8 @@ runs.push(scenario('opora',async()=>{
  ok('opora: na stránce z Další zůstane Další rozbalené', await p.evaluate(()=>document.querySelector('.rail-x').open));
  await p.evaluate(()=>document.querySelector('[data-go=cheat]').click());await settle(p,100);
  await p.evaluate(()=>document.querySelector('[data-week=l0]').click());await settle(p,150);
- ok('konec lekce: teoretická lekce má pořadí karty, Teď to zkuste, Co si odnést do práce', await p.evaluate(()=>{const h=[...document.querySelectorAll('.lpanel .blk h4')].map(x=>x.innerText.replace(/^\d+\s*/,''));return h.length===3&&/^Nauč se/i.test(h[0])&&/^Teď to zkuste/i.test(h[1])&&/^Co si odnést do práce/i.test(h[2]);}));
+ ok('kroky lekce: teoretická lekce má kroky Pochopte, Vyzkoušejte, Co si odnést do práce', await p.evaluate(()=>{const h=[...document.querySelectorAll('.lpanel .lstep .ls-t')].map(x=>x.innerText);return h.length===3&&h[0]==='Pochopte'&&/^Vyzkoušejte/.test(h[1])&&h[2]==='Co si odnést do práce';}));
+ ok('kroky lekce: první nehotový krok je Na řadě a hotové se při otevření lekce sbalí', await p.evaluate(()=>{const st=[...document.querySelectorAll('.lpanel .lstep')];return st.filter(e=>e.classList.contains('ls-now')).length===1&&st.filter(e=>e.classList.contains('ls-done')).every(e=>!e.open);}));
  ok('konec lekce: co si odnést se neukáže dřív než karty (neprozradí odpovědi)', await p.locator('.takeaway .tk-wait').count()===1 && await p.locator('.takeaway .keys').count()===0);
  ok('čas: v menu a u bloků lekcí nejsou odhady času', await p.locator('.rail .rt').count()===0 && await p.locator('.tsum').count()===0);
  ok('opora: dashboard je pod Jen pro vás', /jen pro vás/i.test(await p.locator('.rail-more').innerText()));
