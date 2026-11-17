@@ -56,9 +56,17 @@ assert n1 == 1 and n2 == 1
 head = head.replace('placeholder="Např. Jak mám začít se SPOCKem?"', 'placeholder="Zeptejte se Spocka…"')
 head = head.replace('<b>Průvodce SPOCK</b>', '<b>Spock</b>').replace('Zná celý tento onboarding. Odpovídá z vašeho Claude účtu.', 'Průvodce onboardingem. Zná všechny lekce a odpovídá z vašeho Claude účtu.')
 head = head.replace('aria-label="Průvodce SPOCK onboardingem"', 'aria-label="Spock, průvodce onboardingem"')
+# ikona aplikace (záložka prohlížeče a plocha telefonu): vložená přímo do stránky, aby fungovala i bez dalších souborů.
+# Pro vlastní server jsou stejné soubory a manifest ve složce web/ikona/.
+import base64 as _b64
+_b = lambda f: _b64.b64encode(open(os.path.join('ikona', f), 'rb').read()).decode()
+_icons = ('<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,' + _b('ikona.svg') + '">'
+          '<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,' + _b('ikona-180.png') + '">'
+          '<meta name="theme-color" content="#1068D2"><meta name="apple-mobile-web-app-title" content="SPOCK"><meta name="application-name" content="SPOCK">\n')
+head = rep(head, '<meta name="claude:viewport-fit-sides" content="cover">', '<meta name="claude:viewport-fit-sides" content="cover">\n' + _icons)
 os.makedirs('dist', exist_ok=True)
 import hashlib, glob as _glob
-_srcs = ['app.js', 'sim.js', 'track.js'] + sorted(_glob.glob('*.css')) + ['base-head.html', os.path.join('dist', 'data.json')]
+_srcs = ['app.js', 'sim.js', 'track.js'] + sorted(_glob.glob('*.css')) + ['base-head.html', os.path.join('dist', 'data.json')] + sorted(_glob.glob(os.path.join('ikona', '*')))
 _src = hashlib.sha1(b''.join(open(f, 'rb').read() for f in _srcs)).hexdigest()[:12]
 _tok = lambda n: round(n / 3.5)
 _sz = lambda fs: sum(os.path.getsize(f) for f in fs)

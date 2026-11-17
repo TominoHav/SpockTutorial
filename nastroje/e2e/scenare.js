@@ -105,6 +105,20 @@ for(const [name,w,h,scheme] of [['tablet',768,1024,'light'],['tablet na šířku
   await ctx.close();
  }));
 }
+// 10) ikona aplikace: záložka prohlížeče a plocha telefonu
+runs.push(scenario('ikona',async()=>{
+ const ctx=await b.newContext({viewport:{width:390,height:844}});const p=await ctx.newPage();CUR=p;
+ await p.goto(F);await p.waitForSelector('.startb [data-role]');
+ const ic=await p.evaluate(async()=>{const size=h=>new Promise(r=>{const i=new Image();i.onload=()=>r([i.naturalWidth,i.naturalHeight]);i.onerror=()=>r(null);i.src=h;});
+  const a=document.querySelector('link[rel="apple-touch-icon"]'),f=document.querySelector('link[rel="icon"]'),t=document.querySelector('meta[name="theme-color"]'),n=document.querySelector('meta[name="apple-mobile-web-app-title"]');
+  return {touch:a?await size(a.href):null,fav:f?await size(f.href):null,theme:t&&t.content,name:n&&n.content};});
+ ok('ikona: ikona pro plochu telefonu je ve stránce a má 180 × 180 px', !!ic.touch&&ic.touch[0]===180&&ic.touch[1]===180, JSON.stringify(ic.touch));
+ ok('ikona: ikona pro záložku prohlížeče se načte', !!ic.fav&&ic.fav[0]>0, JSON.stringify(ic.fav));
+ ok('ikona: stránka má barvu lišty a krátký název SPOCK pro plochu', ic.theme==='#1068D2'&&ic.name==='SPOCK', JSON.stringify(ic));
+ const dir=path.join(path.resolve(__dirname,'..','..'),'web','ikona');const m=JSON.parse(fs.readFileSync(path.join(dir,'manifest.webmanifest'),'utf8'));
+ ok('ikona: manifest pro vlastní server odkazuje na existující soubory', m.short_name==='SPOCK'&&m.icons.length>=2&&m.icons.every(i=>fs.existsSync(path.join(dir,i.src))));
+ await ctx.close();
+}));
 // 8) offline režim: bez sítě jde dál hrát a učit se, po připojení se vše odešle
 runs.push(scenario('offline',async()=>{
  const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));

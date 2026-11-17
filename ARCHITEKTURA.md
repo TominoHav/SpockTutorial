@@ -53,7 +53,7 @@ Běží na GitHubu při každém pull requestu a po sloučení do `main`. Když 
 | Test | Co hlídá | Kolik kontrol |
 |---|---|---|
 | `nastroje/e2e/journey.js` | Cesta uživatele na počítači i mobilu (souběžně): simulace, role, karty, úkoly s ověřením, kvíz, zámky a skokový test, všech 9 modulů, opora, chat, dashboard a jeho analýzy, hra, vesmírná cesta, minihry, shrnutí, příběh, mluvený komentář, zmrazení série, pokrok v účtu | 219 |
-| `nastroje/e2e/scenare.js` | Offline režim (výpadek za běhu i start bez sítě), výpadek chatu, nedostupná databáze, chybějící právo zápisu, pokrok ze dvou zařízení, ovládání klávesnicí (Tab, Enter, Escape, viditelné zaměření), tablet, tablet na šířku, široký monitor, tmavý režim, platnost videí | 64 |
+| `nastroje/e2e/scenare.js` | Offline režim (výpadek za běhu i start bez sítě), výpadek chatu, nedostupná databáze, chybějící právo zápisu, pokrok ze dvou zařízení, ovládání klávesnicí (Tab, Enter, Escape, viditelné zaměření), tablet, tablet na šířku, široký monitor, tmavý režim, platnost videí | 68 |
 | `nastroje/e2e/pristupnost.js` | Průchod za každou roli; WCAG 2 A a AA (axe-core) na osmi stránkách a na úvodu se zapnutou expresní cestou, v dashboardu, simulaci, minihře a příběhu, světlý i tmavý režim; dotykové plochy na mobilu | 85 |
 | `nastroje/e2e/vykon.js` | Rozpočty: velikost stránky (700 kB, po kompresi 230 kB), první vykreslení, vykreslení lekce a opory, procesor po 15 s nečinnosti, počet prvků; dashboard s 500 smyšlenými lidmi | 10 |
 | Safari (WebKit) | `journey.js` v jádru Safari na počítači i mobilu (iPhone, iPad, Mac). Chrome a Edge pokrývá Chromium | 2 × 101 |
@@ -96,6 +96,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
+| [#61](https://github.com/TominoHav/SpockTutorial/pull/61) | Aplikace | Ikona aplikace pro plochu telefonu a záložku prohlížeče (hlava Spocka na hvězdném nebi): vložená ve stránce, soubory a manifest pro vlastní server ve `web/ikona/` | 17. 11. 2026 |
 | [#60](https://github.com/TominoHav/SpockTutorial/pull/60) | Údržba, Aplikace | Měření načtení v testu: medián ze 7 načtení o samotě místo jednoho měření za souběžného běhu (hlásilo zhoršení, které nebylo); dashboard srovnává jen stejně měřené verze; sestavení vypouští řádky s komentáři v JavaScriptu (stránka o 12 kB menší) | 17. 11. 2026 |
 | [#59](https://github.com/TominoHav/SpockTutorial/pull/59) | Aplikace | Offline režim: bez sítě jdou lekce, kvízy a hra dál a pokrok se ukládá v zařízení; štítek Offline v hlavičce, zpětná vazba ve frontě, chat vysvětlí výpadek a nechá otázku, video ukáže hlášku; po připojení se aplikace sama připojí k účtu a odešle pokrok, měření i frontu. Scénáře offline a start bez sítě | 17. 11. 2026 |
 | [#58](https://github.com/TominoHav/SpockTutorial/pull/58) | Aplikace | Expresní cesta v banneru: po výběru role rozcestí Celá cesta × Expresní start, potom jedno hlavní tlačítko s dalším krokem, postup v sedmi dílcích a seznam kroků k rozbalení; samostatná karta zrušena; audit přístupnosti i se zapnutým expresem | 17. 11. 2026 |
