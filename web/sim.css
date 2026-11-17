@@ -225,7 +225,7 @@ body.noscroll{overflow:hidden}
 .fb-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}.fb-foot .muted{font-size:13px}
 .ver-n{display:block;margin-bottom:4px}
 /* dashboard */
-#dash{display:grid;gap:14px;min-width:0}
+#dash{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;min-width:0}
 #dash .sec-h{margin-top:14px}#dash h3{font-size:15px;margin:0 0 8px}
 .ds-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:10px}
 .ds-tile{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 14px;display:grid;gap:2px;min-width:0}
@@ -480,5 +480,3 @@ button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var
 .tm-foot{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.tm-priv{font-size:13px;margin-top:8px}
 .tm-err{background:var(--surface-2);border-left:4px solid var(--pink);border-radius:10px;padding:10px 12px}.tm-note{color:var(--ink-2)}
 @media (max-width:700px){.tm-two{grid-template-columns:1fr}.tm-kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
-/* mobil: sloupce rozvržení se nesmí roztáhnout podle obsahu menu (Safari počítá šířku posuvného menu jinak) */
-@media (max-width:760px){.ed>*{min-width:0;max-width:100%}.rail,.rail-more{min-width:0;max-width:100%}}
