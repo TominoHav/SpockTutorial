@@ -127,6 +127,7 @@ runs.push(scenario('uvítání',async()=>{
  }
  const ctx=await b.newContext({viewport:{width:1280,height:900}});await ctx.addInitScript(()=>{window.__E2E_WELCOME=true;});const p=await ctx.newPage();
  await p.goto(F);await p.waitForSelector('.vidov.wl');await p.locator('[data-wl=skip]').click();await settle(p,50);
+ ok('úvod: tlačítko Co je SPOCK pustí 2minutové video', await p.locator('.hx [data-playvideo=""]').count()===1);
  ok('uvítání: úvodní stránka má tlačítko Co vás čeká, které pustí stejné video', await p.locator('.hx [data-playvideo=pitch]').count()===1 && await p.evaluate(()=>{document.querySelector('.hx [data-playvideo=pitch]').click();return !!document.querySelector('.vidov video source[src="spock-pitch.mp4"]');}));
  await ctx.close();
 }));

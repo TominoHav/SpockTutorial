@@ -950,7 +950,7 @@ function heroFirst(){
     <div class="hx-brand">${pdeLogo()}<span class="eyebrow">Onboarding do SPOCKu · nový nástroj pro discovery v ČS</span></div>
     <h1>Seznamte se <em>se SPOCKem</em></h1>
     <p class="hx-lead">AI asistent ve VS Code, který produktovým týmům připraví discovery od nápadu po iniciativu. <b>Agenti připravují, vy rozhodujete.</b></p>
-    <div class="hx-cta"><button class="btn primary" type="button" data-simstart>Vyzkoušet nanečisto · 5 min</button><button class="btn" type="button" data-playvideo="pitch">▶ Co vás čeká · 76 s</button></div>
+    <div class="hx-cta"><button class="btn primary" type="button" data-simstart>Vyzkoušet nanečisto · 5 min</button><button class="btn" type="button" data-playvideo="pitch">▶ Co vás čeká · 76 s</button><button class="btn" type="button" data-playvideo="">▶ Co je SPOCK · 2 min</button></div>
     <p class="hx-note">Nic neinstalujete. Začíná se tady na webu.</p>
   </div>${heroArt('Ahoj, jsem Spock')}</section>`;
 }
