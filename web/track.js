@@ -826,7 +826,7 @@ const PROG = {ref:null, ready:false, h:null, busy:false};
 function pMerge(a, b){
   const o = Object.assign({}, b, a), newer = (b._at || 0) > (a._at || 0) ? b : a;
   ['role','goal','skin','av','sound','pos','survey','dq','seenVideo','flown','express'].forEach(k => { if (newer[k] !== undefined) o[k] = newer[k]; });
-  ['todo','cards','proof','got','badges','unlocked','qpass','ready','quiz','frozen','vids','exSeen'].forEach(k => { o[k] = Object.assign({}, b[k] || {}, a[k] || {}); });
+  ['todo','cards','proof','got','badges','unlocked','qpass','ready','quiz','frozen','vids','exSeen','rev'].forEach(k => { o[k] = Object.assign({}, b[k] || {}, a[k] || {}); });
   o.days = Object.assign({}, b.days || {}); Object.entries(a.days || {}).forEach(([d, v]) => { o.days[d] = Math.max(v, o.days[d] || 0); });
   ['ptries','tries'].forEach(k => { o[k] = Object.assign({}, b[k] || {}); Object.entries(a[k] || {}).forEach(([x, v]) => { o[k][x] = Math.max(v, o[k][x] || 0); }); });
   ['xp','freeze','rankLvl'].forEach(k => { o[k] = Math.max(a[k] || 0, b[k] || 0); });

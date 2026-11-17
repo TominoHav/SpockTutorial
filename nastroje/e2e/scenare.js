@@ -105,6 +105,48 @@ for(const [name,w,h,scheme] of [['tablet',768,1024,'light'],['tablet na šířku
   await ctx.close();
  }));
 }
+// 13) přizpůsobení: opakování chyb s odstupem, vstupní test, co je nového ve SPOCKu
+runs.push(scenario('přizpůsobení',async()=>{
+ const ctx=await b.newContext({viewport:{width:1280,height:900}});await ctx.addInitScript(()=>{window.__E2E_NOVINKY={'1.16.1':['Nový task **SPOCK: Kontrola**.']};});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
+ const clean=()=>p.evaluate(()=>{for(const e of document.querySelectorAll('.cel,.notices'))e.remove();});
+ const answer=async right=>{for(let g=0;g<20&&await p.locator('#ses').count();g++){const pick=await p.evaluate(r=>{const it=(S=>S.items[S.qs[S.i]])(__kviz.ses());return r?it.a:(it.a+1)%it.o.length},right);await p.locator('.ses-opt').nth(pick).click();await p.locator('[data-scheck]').click();await p.locator('[data-snext]').click();await settle(p);}};
+ await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=pm]').click();await settle(p,300);
+ ok('přizpůsobení: rozcestí nabízí vstupní test', await p.locator('.exfork [data-place]').count()===1);
+ // vstupní test: špatně → nevyjde, nic se nezmění
+ await p.locator('[data-place]').click();await p.waitForSelector('#ses');
+ ok('přizpůsobení: vstupní test má 8 otázek a srdíčka', await p.evaluate(()=>__kviz.ses().total===8)&&await p.locator('.ses-hearts').count()===1&&/vstupní test/i.test(await p.locator('.ses-body .eyebrow').innerText()));
+ await answer(false);await clean();
+ ok('přizpůsobení: nevydařený vstupní test nic neodemkne', !(await loadState(p)).placed && !((await loadState(p)).unlocked||{}).l1);
+ // vstupní test: správně → teorie úrovně 0 splněná, Příprava odemčená, úkoly zůstávají
+ await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,200);
+ await p.locator('[data-place]').click();await p.waitForSelector('#ses');await answer(true);await clean();
+ const st=await loadState(p);
+ ok('přizpůsobení: zvládnutý vstupní test odemkne Přípravu a splní karty i kvíz úrovně 0', !!st.placed&&st.unlocked.l1===true&&!!st.qpass.l0&&Object.keys(st.cards).filter(k=>k.startsWith('l0.')).length>10);
+ ok('přizpůsobení: praktické úkoly úrovně 0 testem nezmizí', Object.keys(st.todo||{}).filter(k=>k.startsWith('l0.')).length===0);
+ // opakování chyb: špatná odpověď na kartu → karta se vrátí za den
+ await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,100);
+ await p.evaluate(()=>{__kviz.state(S=>{delete S.cards['l1.0.0'];});});
+ await p.evaluate(()=>document.querySelector('[data-week=l1]')?.click());await p.waitForSelector('.lpanel .lcard.cur .lc-opt',{timeout:5000}).catch(()=>{});
+ const wrong=await p.evaluate(()=>{const o=document.querySelector('.lpanel .lcard.cur .lc-opt');if(!o)return null;const [k]=o.dataset.card.split(':');const a=__kviz.cardA(k);const bad=[...document.querySelectorAll('.lpanel .lcard.cur .lc-opt')].find(b=>+b.dataset.card.split(':')[1]!==a);bad.click();return k;});
+ await clean();const s2=await loadState(p);
+ ok('přizpůsobení: netrefená karta se zařadí k opakování za den', !!wrong&&s2.rev&&s2.rev[wrong]&&s2.rev[wrong].due>Date.now()+20*36e5, wrong);
+ await p.evaluate(k=>__kviz.state(S=>{S.rev[k].due=Date.now()-1;}),wrong);
+ await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,200);
+ ok('přizpůsobení: úvod nabídne opakování s počtem karet', await p.locator('.revc [data-review]').count()===1&&/1 karta/.test(await p.locator('.revc').innerText()));
+ const x0=(await loadState(p)).xp;
+ await p.locator('[data-review]').click();await p.waitForSelector('#ses');await answer(true);await clean();
+ const s3=await loadState(p);
+ ok('přizpůsobení: trefa při opakování posune kartu na 3 dny a přidá XP', s3.rev[wrong]&&s3.rev[wrong].step===1&&s3.rev[wrong].due>Date.now()+2.5*864e5&&s3.xp>x0, JSON.stringify(s3.rev[wrong]));
+ await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,200);
+ ok('přizpůsobení: po opakování karta z úvodu zmizí', await p.locator('.revc').count()===0);
+ // co je nového: kdo onboarding používal před novou verzí SPOCKu, uvidí novinky
+ await p.evaluate(()=>__kviz.state(S=>{S.spockSeen='1.15.0';}));await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,200);
+ ok('přizpůsobení: po nové verzi SPOCKu ukáže úvod, co je nového', await p.locator('.newsc').count()===1&&(await p.locator('.newsc').innerText()).includes('Kontrola'));
+ await p.locator('[data-newsok]').click();await settle(p,100);
+ ok('přizpůsobení: Rozumím novinky skryje', await p.locator('.newsc').count()===0&&(await loadState(p)).spockSeen==='1.16.1');
+ ok('přizpůsobení: bez chyb v konzoli', errs.length===0, errs.slice(0,2).join(' | '));
+ await ctx.close();
+}));
 // 12) tým: založení, kód, přehled členů, odebrání, zrušení; připojení kódem k jinému týmu
 runs.push(scenario('tým',async()=>{
  const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));p.on('dialog',d=>d.accept());
