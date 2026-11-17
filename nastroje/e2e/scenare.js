@@ -105,6 +105,32 @@ for(const [name,w,h,scheme] of [['tablet',768,1024,'light'],['tablet na šířku
   await ctx.close();
  }));
 }
+// 11) uvítání při prvním otevření: video Onboarding do SPOCKu za necelé dvě minuty
+runs.push(scenario('uvítání',async()=>{
+ for(const [W,H,dev] of [[1280,900,'počítač'],[390,844,'mobil']]){
+  const ctx=await b.newContext({viewport:{width:W,height:H}});await ctx.addInitScript(()=>{window.__E2E_WELCOME=true;});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
+  await p.goto(F);await p.waitForSelector('.vidov.wl',{timeout:5000}).catch(()=>{});
+  ok(`uvítání, ${dev}: při prvním otevření se ukáže okno s videem a logem PDE`, await p.locator('.vidov.wl video source[src="spock-pitch.mp4"]').count()===1 && await p.locator('.vidov.wl .pde-logo').count()===1);
+  ok(`uvítání, ${dev}: video se nepouští samo a okno se vejde na obrazovku`, await p.evaluate(()=>{const v=document.querySelector('.wl video'),r=document.querySelector('.wl-in').getBoundingClientRect();return v.paused&&r.bottom<=innerHeight+1&&r.right<=innerWidth+1;}));
+  ok(`uvítání, ${dev}: zaměření je v okně (klávesnice)`, await p.evaluate(()=>!!document.activeElement.closest('.wl')));
+  if(dev==='počítač'){
+   await p.keyboard.press('Escape');await settle(p,50);
+   ok('uvítání: Escape okno zavře', await p.locator('.vidov.wl').count()===0);
+   await p.reload();await settle(p,600);
+   ok('uvítání: po zavření se při dalším otevření už neukáže', await p.locator('.vidov.wl').count()===0);
+  }else{
+   await p.locator('[data-wl=go]').click();await settle(p,80);
+   ok('uvítání, mobil: Začít zavře okno a zaměří výběr role', await p.locator('.vidov.wl').count()===0 && await p.evaluate(()=>document.activeElement.matches('.startb [data-role]')));
+  }
+  ok(`uvítání, ${dev}: bez chyb v konzoli`, errs.length===0, errs.slice(0,2).join(' | '));
+  await ctx.close();
+ }
+ const ctx=await b.newContext({viewport:{width:1280,height:900}});await ctx.addInitScript(()=>{window.__E2E_WELCOME=true;});const p=await ctx.newPage();
+ await p.goto(F);await p.waitForSelector('.vidov.wl');await p.locator('[data-wl=skip]').click();await settle(p,50);
+ ok('úvod: tlačítko Co je SPOCK pustí 2minutové video', await p.locator('.hx [data-playvideo=""]').count()===1);
+ ok('uvítání: úvodní stránka má tlačítko Co vás čeká, které pustí stejné video', await p.locator('.hx [data-playvideo=pitch]').count()===1 && await p.evaluate(()=>{document.querySelector('.hx [data-playvideo=pitch]').click();return !!document.querySelector('.vidov video source[src="spock-pitch.mp4"]');}));
+ await ctx.close();
+}));
 // 10) ikona aplikace: záložka prohlížeče a plocha telefonu
 runs.push(scenario('ikona',async()=>{
  const ctx=await b.newContext({viewport:{width:390,height:844}});const p=await ctx.newPage();CUR=p;

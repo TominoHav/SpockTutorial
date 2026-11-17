@@ -1,0 +1,206 @@
+[
+ {
+  "id": "hook",
+  "img": "",
+  "h": "Nový nástroj pro produktové týmy",
+  "s": "Jak je naučit SPOCK dobře a rychle?",
+  "en": [
+   "Product teams are about to start using SPOCK. Everyone has to learn seven stages, six agents, quality gates and rules that must not be broken.",
+   "Learning that from documents takes weeks, and every team ends up using SPOCK a little differently."
+  ],
+  "cs": [
+   "Produktové týmy začínají používat SPOCK. Každý se musí naučit sedm fází, šest agentů, brány kvality a pravidla, která se neporušují.",
+   "Z dokumentace to trvá týdny a každý tým pak SPOCK používá trochu jinak."
+  ]
+ },
+ {
+  "id": "uvod",
+  "img": "uvod.jpg",
+  "h": "Onboarding do SPOCKu",
+  "s": "Jedno místo pro všechny role",
+  "en": [
+   "The SPOCK Onboarding Tutorial teaches it in one place, the same way for everyone. Product Managers, Designers, Engineers and Guild Masters."
+  ],
+  "cs": [
+   "Onboarding do SPOCKu ho učí na jednom místě a pro všechny stejně. Product Manageři, Designeři, Engineeři i Guild Masteři."
+  ]
+ },
+ {
+  "id": "rozcesti",
+  "img": "rozcesti.jpg",
+  "h": "Cesta podle role",
+  "s": "Nebo expresní start za 1 h 40 min",
+  "en": [
+   "Every role gets its own path. People short on time take the express start, and order their access on day one."
+  ],
+  "cs": [
+   "Každá role má vlastní cestu. Kdo nemá čas, začne expresním startem a hned první den si objedná přístupy."
+  ]
+ },
+ {
+  "id": "lekce",
+  "img": "lekce.jpg",
+  "h": "Učení praxí, ne čtením",
+  "s": "Karty, kvízy a úkoly ve VS Code",
+  "en": [
+   "Learning by doing. Short cards, quizzes, and real tasks in VS Code, verified with answers people can only get by doing the task."
+  ],
+  "cs": [
+   "Učení praxí. Krátké karty, kvízy a skutečné úkoly ve VS Code, ověřené odpovědí, kterou člověk zjistí jen tak, že úkol opravdu udělá."
+  ]
+ },
+ {
+  "id": "spock",
+  "img": "spock.jpg",
+  "h": "Podpora bez čekání",
+  "s": "Spock odpoví na otázky k lekcím",
+  "en": [
+   "Questions get answered on the spot by Spock, a guide that knows every lesson. Fewer tickets for the core team."
+  ],
+  "cs": [
+   "Na otázky hned odpoví Spock, průvodce, který zná každou lekci. Méně dotazů na core tým."
+  ]
+ },
+ {
+  "id": "odmeny",
+  "img": "",
+  "ranks": [
+   "Nováček",
+   "Učeň",
+   "Praktik",
+   "Znalec",
+   "Expert",
+   "Mistr"
+  ],
+  "chips": [
+   "16 odznaků",
+   "Denní výzvy a truhla",
+   "Série dní",
+   "Medaile absolventa",
+   "Pokrok vidíte v dashboardu"
+  ],
+  "h": "Hra, která drží lidi u toho",
+  "s": "Hodnosti, odznaky, výzvy a finále se Spockem",
+  "en": [
+   "People finish because it feels like a game. Six ranks from Rookie to Master, each one with a new look for Spock, sixteen badges and daily challenges.",
+   "The journey ends with a graduate medal and a celebration. And you can see everyone's progress in the dashboard."
+  ],
+  "cs": [
+   "Lidé cestu dokončí, protože je to hra. Šest hodností od Nováčka po Mistra, s každou nový vzhled Spocka, šestnáct odznaků a denní výzvy.",
+   "Cesta končí medailí absolventa a oslavou. A pokrok všech vidíte v dashboardu."
+  ]
+ },
+ {
+  "id": "dashboard",
+  "img": "dashboard.jpg",
+  "h": "Vidíte, co funguje",
+  "s": "Průchod, problémová místa a zpětná vazba",
+  "en": [
+   "You see the whole rollout. Who is progressing, where people get stuck, and what is unclear. Feedback from every lesson arrives as a task."
+  ],
+  "cs": [
+   "Vidíte celé zavádění. Kdo postupuje, kde se lidé zasekávají a čemu nerozumí. Zpětná vazba z každé lekce přijde jako úkol."
+  ]
+ },
+ {
+  "id": "fakta",
+  "img": "",
+  "facts": [
+   [
+    "9",
+    "modulů"
+   ],
+   [
+    "51",
+    "lekcí"
+   ],
+   [
+    "93",
+    "úkolů ve VS Code"
+   ],
+   [
+    "382",
+    "automatických kontrol"
+   ],
+   [
+    "3",
+    "prohlížeče: Chrome, Edge, Safari"
+   ],
+   [
+    "WCAG AA",
+    "přístupnost"
+   ]
+  ],
+  "h": "Připraveno k pilotu",
+  "s": "Počítač, mobil, offline",
+  "en": [
+   "It is ready for a pilot. Nine modules, fifty one lessons, ninety three hands-on tasks. Tested automatically on Chrome, Edge and Safari, on desktop and phone, accessible, and it works offline."
+  ],
+  "cs": [
+   "Je připravený k pilotu. Devět modulů, padesát jedna lekcí, devadesát tři praktické úkoly. Automaticky testovaný v Chrome, Edge i Safari, na počítači i telefonu, přístupný a funguje i offline."
+  ]
+ },
+ {
+  "id": "krok",
+  "img": "",
+  "h": "Další krok: pilot",
+  "s": "Pět nováčků · pak všechny týmy",
+  "en": [
+   "The next step is a pilot with five newcomers. We measure, we fix, and then we roll it out to every team."
+  ],
+  "cs": [
+   "Dalším krokem je pilot s pěti nováčky. Změříme, opravíme a pak ho nasadíme všem týmům."
+  ]
+ },
+ {
+  "id": "montaz",
+  "img": "",
+  "montage": [
+   "uvod.jpg",
+   "simulace.jpg",
+   "rozcesti.jpg",
+   "lekce.jpg",
+   "spock.jpg",
+   "hra.jpg",
+   "dashboard.jpg",
+   "role.jpg"
+  ],
+  "h": "Sedm fází. Šest agentů.",
+  "s": "Jeden způsob, jak se je naučit.",
+  "music": true,
+  "en": [
+   "Seven stages. Six agents. One way to learn them."
+  ],
+  "cs": [
+   "Sedm fází. Šest agentů. Jeden způsob, jak se je naučit."
+  ]
+ },
+ {
+  "id": "finale",
+  "img": "",
+  "finale": true,
+  "stages": [
+   "Brief",
+   "Problémy",
+   "Trh",
+   "Řešení",
+   "MVP",
+   "PRD",
+   "Iniciativa"
+  ],
+  "h": "Od první instalace k vlastnímu běhu",
+  "s": "Agenti připravují. Lidé rozhodují.",
+  "music": true,
+  "tail": 3.5,
+  "en": [
+   "SPOCK Onboarding.",
+   "From the first install, to your own run.",
+   "Agents prepare. People decide."
+  ],
+  "cs": [
+   "Onboarding do SPOCKu.",
+   "Od první instalace k vlastnímu běhu.",
+   "Agenti připravují. Lidé rozhodují."
+  ]
+ }
+]

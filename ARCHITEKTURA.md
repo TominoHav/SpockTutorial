@@ -53,8 +53,8 @@ Běží na GitHubu při každém pull requestu a po sloučení do `main`. Když 
 | Test | Co hlídá | Kolik kontrol |
 |---|---|---|
 | `nastroje/e2e/journey.js` | Cesta uživatele na počítači i mobilu (souběžně): simulace, role, karty, úkoly s ověřením, kvíz, zámky a skokový test, všech 9 modulů, opora, chat, dashboard a jeho analýzy, hra, vesmírná cesta, minihry, shrnutí, příběh, mluvený komentář, zmrazení série, pokrok v účtu | 219 |
-| `nastroje/e2e/scenare.js` | Offline režim (výpadek za běhu i start bez sítě), výpadek chatu, nedostupná databáze, chybějící právo zápisu, pokrok ze dvou zařízení, ovládání klávesnicí (Tab, Enter, Escape, viditelné zaměření), tablet, tablet na šířku, široký monitor, tmavý režim, platnost videí | 68 |
-| `nastroje/e2e/pristupnost.js` | Průchod za každou roli; WCAG 2 A a AA (axe-core) na osmi stránkách a na úvodu se zapnutou expresní cestou, v dashboardu, simulaci, minihře a příběhu, světlý i tmavý režim; dotykové plochy na mobilu | 85 |
+| `nastroje/e2e/scenare.js` | Offline režim (výpadek za běhu i start bez sítě), výpadek chatu, nedostupná databáze, chybějící právo zápisu, pokrok ze dvou zařízení, ovládání klávesnicí (Tab, Enter, Escape, viditelné zaměření), tablet, tablet na šířku, široký monitor, tmavý režim, platnost videí | 80 |
+| `nastroje/e2e/pristupnost.js` | Průchod za každou roli; WCAG 2 A a AA (axe-core) na osmi stránkách a na úvodu se zapnutou expresní cestou, v dashboardu, simulaci, minihře a příběhu, světlý i tmavý režim; dotykové plochy na mobilu | 89 |
 | `nastroje/e2e/vykon.js` | Rozpočty: velikost stránky (700 kB, po kompresi 230 kB), první vykreslení, vykreslení lekce a opory, procesor po 15 s nečinnosti, počet prvků; dashboard s 500 smyšlenými lidmi | 10 |
 | Safari (WebKit) | `journey.js` v jádru Safari na počítači i mobilu (iPhone, iPad, Mac). Chrome a Edge pokrývá Chromium | 2 × 101 |
 
@@ -96,6 +96,7 @@ S každým sloučeným pull requestem sem přibude řádek: číslo, vrstvy a co
 | PR | Vrstvy | Co se změnilo | Sloučeno |
 |---|---|---|---|
 | [#38](https://github.com/TominoHav/SpockTutorial/pull/38) | Aplikace | Lehčí úvodní stránka: SPOCK nanečisto jen jednou, video v okně, Co je SPOCK sbalené, kratší texty, kompaktní role a opora na mobilu | 15. 11. 2026 |
+| [#64](https://github.com/TominoHav/SpockTutorial/pull/64) | Aplikace, Údržba | Pitch video „Onboarding do SPOCKu za necelé dvě minuty“ (s odměnami ve hře a náznakem finále): uvítání při prvním otevření (jednou, nepouští se samo, Přeskočit) a tlačítka „Co vás čeká“ a „Co je SPOCK“ na úvodní stránce; výroba videa ve dvou verzích (vedení, uživatelé) v `nastroje/video/pitch/` | 17. 11. 2026 |
 | [#63](https://github.com/TominoHav/SpockTutorial/pull/63) | Aplikace | Nadtitulek banneru: místo „PDE“ srozumitelné „Onboarding do SPOCKu“ (logo PDE zůstává) | 17. 11. 2026 |
 | [#62](https://github.com/TominoHav/SpockTutorial/pull/62) | Aplikace | Logo PDE Journey v banneru úvodní stránky vedle nadtitulku (nováček i vracející se), překreslené do SVG | 17. 11. 2026 |
 | [#61](https://github.com/TominoHav/SpockTutorial/pull/61) | Aplikace | Ikona aplikace pro plochu telefonu a záložku prohlížeče (hlava Spocka na hvězdném nebi): vložená ve stránce, soubory a manifest pro vlastní server ve `web/ikona/` | 17. 11. 2026 |
