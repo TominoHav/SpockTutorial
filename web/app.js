@@ -931,9 +931,23 @@ function contacts(){
     <li><b>Onboarding Tutorial</b><span>Tomáš Havlíček, Guild Master Product Management.</span></li>
   </ul></section>`;
 }
+/* Logo PDE Journey (Product Discovery Experience): kruh s cestou kolem nápisu PDE, překreslené do SVG, aby bylo ostré v každé velikosti */
+let PDE_N = 0;
+function pdeLogo(cls){
+  const id = 'pdeg' + (++PDE_N), m = 'pdem' + PDE_N;
+  return `<svg class="pde-logo ${cls || ''}" viewBox="0 0 100 100" role="img" aria-label="PDE Journey"><defs>
+    <linearGradient id="${id}" x1=".15" y1=".1" x2=".85" y2=".95"><stop offset="0" stop-color="#36299A"/><stop offset=".6" stop-color="#4B2EA0"/><stop offset="1" stop-color="#7A3C9E"/></linearGradient>
+    <mask id="${m}"><rect width="100" height="100" fill="#fff"/><rect x="42" y="25" width="16" height="12" fill="#000"/><rect x="13" y="40" width="12" height="16" fill="#000"/><rect x="75" y="40" width="12" height="16" fill="#000"/><rect x="30" y="58" width="40" height="13" fill="#000"/></mask></defs>
+    <circle cx="50" cy="50" r="49" fill="url(#${id})"/>
+    <rect x="19" y="31" width="62" height="34" rx="7" fill="none" stroke="#fff" stroke-width="1.7" stroke-dasharray="3.4 2.8" stroke-linecap="round" mask="url(#${m})"/>
+    <g fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M45 28.5l2.5 2.5-2.5 2.5M50 28.5l2.5 2.5-2.5 2.5"/><path d="M16.5 46l2.5-2.5 2.5 2.5M16.5 51l2.5-2.5 2.5 2.5"/><path d="M78.5 45l2.5 2.5 2.5-2.5M78.5 50l2.5 2.5 2.5-2.5"/></g>
+    <text x="50" y="54.5" text-anchor="middle" font-family="Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif" font-weight="600" font-size="19" fill="#fff" letter-spacing=".5">PDE</text>
+    <rect x="33" y="60.5" width="34" height="8" rx="4" fill="#fff"/>
+    <text x="50" y="66.4" text-anchor="middle" font-family="Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif" font-weight="800" font-size="4.6" fill="#3A2B95" letter-spacing="1.1">JOURNEY</text></svg>`;
+}
 function heroFirst(){
   return `<section class="hx hx-first"><div class="hx-txt">
-    <span class="eyebrow">Nový nástroj pro discovery v ČS</span>
+    <div class="hx-brand">${pdeLogo()}<span class="eyebrow">Nový nástroj pro discovery v ČS · PDE</span></div>
     <h1>Seznamte se <em>se SPOCKem</em></h1>
     <p class="hx-lead">AI asistent ve VS Code, který produktovým týmům připraví discovery od nápadu po iniciativu. <b>Agenti připravují, vy rozhodujete.</b></p>
     <div class="hx-cta"><button class="btn primary" type="button" data-simstart>Vyzkoušet nanečisto · 5 min</button><button class="btn" type="button" data-playvideo="">▶ Pustit video · 2 min</button></div>
@@ -1031,7 +1045,7 @@ function heroStable(){
         ${exLink}${roleLine}
       </div>${miniStats()}`;
   return `<section class="hx"><div class="hx-txt">
-    <span class="eyebrow">${first ? 'Vítejte v onboardingu SPOCKu' : 'Vítejte zpět'}</span>
+    <div class="hx-brand">${pdeLogo()}<span class="eyebrow">${first ? 'Vítejte v onboardingu SPOCKu' : 'Vítejte zpět'} · PDE</span></div>
     <h1>Od první instalace <em>k vlastnímu běhu</em></h1>
     ${first ? '<p class="hx-lead">Pro Product Managera, Product Designera, Software Engineera a Guild Mastera. Naučí vás, jak SPOCK funguje uvnitř každé fáze, provede vás vlastním během a ukáže, čemu výstupu věřit a čemu ne.</p>' : ''}
     ${action}
