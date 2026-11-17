@@ -225,7 +225,7 @@ body.noscroll{overflow:hidden}
 .fb-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}.fb-foot .muted{font-size:13px}
 .ver-n{display:block;margin-bottom:4px}
 /* dashboard */
-#dash{display:grid;gap:14px;min-width:0}
+#dash{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;min-width:0}
 #dash .sec-h{margin-top:14px}#dash h3{font-size:15px;margin:0 0 8px}
 .ds-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:10px}
 .ds-tile{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 14px;display:grid;gap:2px;min-width:0}
@@ -485,3 +485,5 @@ button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var
 .revc h3{margin:2px 0}.revc p{margin:0;font-size:14px}
 .newsc{border-left-color:var(--pink)}.newsc ul{margin:6px 0 0;padding-left:20px;display:grid;gap:4px;font-size:15px}
 .exf-place{margin:0;font-size:14px;color:var(--ink-2)}
+/* nadpis stránky: mřížka se nesmí roztáhnout podle obsahu a dlouhá slova (hash verze, URL) se zalomí; v Safari na mobilu jinak přetékalo */
+.mh{grid-template-columns:minmax(0,1fr)}.mh h1,.mh p{overflow-wrap:anywhere}
