@@ -19,7 +19,7 @@ const med=a=>{a=a.slice().sort((x,y)=>x-y);return a[Math.floor(a.length/2)];};
   
   await p.locator('.startb [data-role=pm]').click();await p.waitForTimeout(300);
   lesson.push(await p.evaluate(()=>{const t=performance.now();document.querySelector('[data-week=l0]').click();document.body.offsetHeight;return Math.round(performance.now()-t);}));
-  for(const v of ['badges','map','cheat']) views.push(await p.evaluate(v=>{const t=performance.now();document.querySelector('[data-go='+v+']').click();document.body.offsetHeight;return Math.round(performance.now()-t);},v));
+  for(const v of ['badges','gloss','cheat']) views.push(await p.evaluate(v=>{const t=performance.now();document.querySelector('[data-go='+v+']').click();document.body.offsetHeight;return Math.round(performance.now()-t);},v));
   dom=Math.max(dom,await p.evaluate(()=>document.querySelectorAll('*').length));
   if(i===0){ // nečinnost: po 15 s se dekorativní animace mají pozastavit
    await p.locator('#home-btn').click();await p.waitForTimeout(16500);

@@ -96,7 +96,7 @@ for(const [name,w,h,scheme] of [['tablet',768,1024,'light'],['tablet na šířku
   const ctx=await b.newContext({viewport:{width:w,height:h},colorScheme:scheme});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
   await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=gm]').click();await settle(p,50);
   const bad=[];
-  for(const v of ['home','lesson','badges','map','cheat','ready']){await open(p,v);await settle(p,30);const o=await overflow(p);if(o>0)bad.push(v+' +'+o);}
+  for(const v of ['home','lesson','badges','gloss','cheat']){await open(p,v);await settle(p,30);const o=await overflow(p);if(o>0)bad.push(v+' +'+o);}
   await p.evaluate(()=>document.querySelector('[data-go=dash]').click());await p.waitForSelector('#dash .ds-tabs');
   for(const t of ['lide','pohyb','ver']){await p.evaluate(t=>document.querySelector('[data-dash="tab:'+t+'"]').click(),t);await settle(p,30);const o=await overflow(p);if(o>0)bad.push('dashboard '+t+' +'+o);}
   ok(`${name}: žádná stránka ani dashboard nepřetéká do strany`, bad.length===0, bad.join(', '));
@@ -111,12 +111,15 @@ runs.push(scenario('opora',async()=>{
  await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=pm]').click();await settle(p,200);
  await p.evaluate(()=>document.querySelector('[data-go=cheat]').click());await settle(p,100);
  const vis=await p.evaluate(()=>[...document.querySelectorAll('.rail-more > button')].map(b=>b.dataset.go));
- ok('opora: v menu jsou nahoře jen tahák, když něco nejde, slovníček a tým', JSON.stringify(vis)==='["cheat","diag","gloss","tym","dash"]', JSON.stringify(vis));
- ok('opora: nanečisto, mapa, příručka, odznaky, připravenost a jiné role jsou sbalené pod Další', await p.evaluate(()=>{const d=document.querySelector('.rail-x');return d&&!d.open&&!!d.querySelector('[data-simstart]')&&['map','badges','ready'].every(x=>d.querySelector('[data-go='+x+']'))&&!!d.querySelector('[data-week=l1b]')&&!!d.querySelector('[data-week=pd]');}));
- await p.evaluate(()=>document.querySelector('.rail-x [data-go=map]').click());await settle(p,100);
+ ok('opora: v menu jsou nahoře jen tahák, když něco nejde a slovníček', JSON.stringify(vis)==='["cheat","diag","gloss","dash"]', JSON.stringify(vis));
+ ok('opora: pod Další jsou jen odznaky a profil, tým a příručka (bez mapy, připravenosti, nanečisto a jiných rolí)', await p.evaluate(()=>{const d=document.querySelector('.rail-x');return d&&!d.open&&!d.querySelector('[data-simstart]')&&['badges','tym'].every(x=>d.querySelector('[data-go='+x+']'))&&!d.querySelector('[data-go=map],[data-go=ready]')&&!!d.querySelector('[data-week=l1b]')&&!d.querySelector('[data-week=pd]');}));
+ await p.evaluate(()=>document.querySelector('.rail-x [data-go=tym]').click());await settle(p,100);
  ok('opora: na stránce z Další zůstane Další rozbalené', await p.evaluate(()=>document.querySelector('.rail-x').open));
+ await p.evaluate(()=>document.querySelector('[data-go=cheat]').click());await settle(p,100);
+ ok('čas: v menu a u bloků lekcí nejsou odhady času', await p.locator('.rail .rt').count()===0 && await p.locator('.tsum').count()===0);
  ok('opora: dashboard je pod Jen pro vás', /jen pro vás/i.test(await p.locator('.rail-more').innerText()));
  await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,100);
+ ok('čas: úvod bez „30 minut denně“ a bez denního cíle', !/30 minut|denní cíl|dnešní cíl/i.test(await p.evaluate(()=>document.body.innerText)));
  ok('opora: úvodní stránka nabízí jen tři nejdůležitější opory', await p.evaluate(()=>{const j=[...document.querySelectorAll('.journey .jstep')].map(b=>b.dataset.go);return JSON.stringify(j)==='["diag","gloss","cheat"]';}));
  await ctx.close();
 }));
