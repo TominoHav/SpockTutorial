@@ -469,13 +469,19 @@ function vDelta(cur, prev, pctLimit, absLimit){
   return {txt:(d > 0 ? '+' : '−') + Math.abs(pct) + ' %' + (bad ? ' · horší' : good ? ' · lepší' : ''), bad, good};
 }
 const vCell = (val, dl) => `${val}${dl && dl.txt ? ` <small class="${dl.bad ? 'ds-bad' : dl.good ? 'ds-good' : ''}">${dl.txt}</small>` : ''}`;
+/* Načtení v testu se srovnává jen mezi verzemi měřenými mediánem ze 7 načtení o samotě (m: 'median7').
+   Starší verze měřily jednou za souběžného běhu testů; to kolísalo o desítky procent a hlásilo zhoršení, které nebylo. */
+function vLoadDelta(v, p, tag){
+  if (vLab(v, tag, 'm') !== 'median7' || vLab(p, tag, 'm') !== 'median7') return {txt:'', bad:false, good:false};
+  return vDelta(vLab(v, tag, 'load'), vLab(p, tag, 'load'), 20, 30);
+}
 function vField(ver, k){ return dMed((DASH.rows || []).flatMap(r => ((r.perfv || {})[ver] || {})[k] || [])); }
 function renderDashVer(){
   const vers = DASH.vers.slice(), cur = vers.find(v => v.ver === BUILD.ver) || BUILD, i = vers.findIndex(v => v.ver === cur.ver), prev = i > 0 ? vers[i - 1] : null;
   const e = cur.e2e, P = prev || {};
   const kB = n => Math.round((n || 0) / 1024) + ' kB';
   const dSize = vDelta((cur.size || {}).html, (P.size || {}).html, 5, 10240);
-  const dLoadD = vDelta(vLab(cur, 'počítač', 'load'), vLab(P, 'počítač', 'load'), 20, 30), dLoadM = vDelta(vLab(cur, 'mobil', 'load'), vLab(P, 'mobil', 'load'), 20, 30);
+  const dLoadD = vLoadDelta(cur, P, 'počítač'), dLoadM = vLoadDelta(cur, P, 'mobil');
   const dRenD = vDelta(vLab(cur, 'počítač', 'render'), vLab(P, 'počítač', 'render'), 20, 3), dRenM = vDelta(vLab(cur, 'mobil', 'render'), vLab(P, 'mobil', 'render'), 20, 3);
   const dCtx = vDelta(vCtxMax(cur), vCtxMax(P), 10, 3500), dEdit = vDelta((cur.edit || {}).celkem, (P.edit || {}).celkem, 10, 2000);
   const fLoad = vField(cur.ver, 'load'), fLoadP = prev ? vField(prev.ver, 'load') : null, fRen = vField(cur.ver, 'render'), fRenP = prev ? vField(prev.ver, 'render') : null;
@@ -504,7 +510,7 @@ function renderDashVer(){
     return [`<b>${esc(v.ver)}</b>${v.ver === BUILD.ver ? ' <small>(tato)</small>' : ''}<small class="ds-vt">${esc(v.date || '')} · ${esc(v.title || '')}</small>`,
       v.e2e ? (v.e2e.fail ? `<span class="ds-bad">✕ ${v.e2e.fail} neprošlo</span> z ${v.e2e.total}` : `<span class="ds-good">✓ ${v.e2e.pass}/${v.e2e.total}</span>`) : '<span class="muted">neběžely</span>',
       vCell(kB((v.size || {}).html), vDelta((v.size || {}).html, (pp.size || {}).html, 5, 10240)),
-      vCell(dMs(vLab(v, 'mobil', 'load')), vDelta(vLab(v, 'mobil', 'load'), vLab(pp, 'mobil', 'load'), 20, 30)),
+      vCell(dMs(vLab(v, 'mobil', 'load')) + (vLab(v, 'mobil', 'load') !== null && vLab(v, 'mobil', 'm') !== 'median7' ? ' <small class="muted">orientačně</small>' : ''), vLoadDelta(v, pp, 'mobil')),
       vCell(dMs(vLab(v, 'mobil', 'render')), vDelta(vLab(v, 'mobil', 'render'), vLab(pp, 'mobil', 'render'), 20, 3)),
       vCell(vCtxMax(v) === null ? '—' : dNum(vTok(vCtxMax(v))), vDelta(vCtxMax(v), vCtxMax(pp), 10, 3500)),
       vCell(dNum((v.edit || {}).celkem || 0), vDelta((v.edit || {}).celkem, (pp.edit || {}).celkem, 10, 2000)),
@@ -521,7 +527,7 @@ function renderDashVer(){
     <div class="sec-h"><h2>End-to-end testy</h2><p>Automatický průchod webem na počítači i mobilu. Běží před publikací a na GitHubu při každé změně.</p></div>
     ${e ? dTable(['Kontrol', 'Prošlo', 'Neprošlo', 'Doba běhu', 'Kdy'], [[e.total, e.pass, e.fail, dDur(Math.round(e.durMs / 1000)), dWhen(e.at)]]) + (e.failed && e.failed.length ? dTable(['Co neprošlo'], e.failed.map(f => [esc(f)])) : '') : '<p class="muted">Výsledek testů u této verze chybí.</p>'}
 
-    <div class="sec-h"><h2>Výkon a rychlost</h2><p>„V testu“ je měření v laboratorním prohlížeči při testech, hodí se k porovnání verzí. „U lidí“ je medián ze skutečných návštěv dané verze.</p></div>
+    <div class="sec-h"><h2>Výkon a rychlost</h2><p>„V testu“ je měření v laboratorním prohlížeči při testech, hodí se k porovnání verzí. Načtení je medián ze sedmi načtení; u starších verzí šlo o jedno měření, proto je u nich jen orientační a neporovnává se. „U lidí“ je medián ze skutečných návštěv dané verze.</p></div>
     ${dTable(['Měření', 'Tato verze', 'Předchozí'], [
       ['Velikost stránky', vCell(kB((cur.size || {}).html), dSize), prev ? kB((P.size || {}).html) : '—'],
       ['Z toho kód', kB((cur.size || {}).js), prev ? kB((P.size || {}).js) : '—'], ['Z toho obsah lekcí', kB((cur.size || {}).data), prev ? kB((P.size || {}).data) : '—'],
