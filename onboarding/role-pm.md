@@ -91,11 +91,8 @@ Když přinesete vlastní dokument, agent začne tím, co je slabé nebo chybí,
   1. Agent nejdřív spustí kontrolu a opraví, co najde. **Teprve pak** vás požádá o schválení.
   2. Spusťte `SPOCK: approve what is in front of me`. Má 4 políčka: jméno, roli, odpovědi na otázky brány (nepovinné, např. `1y 2n`) a co jste chtěli změnit (nepovinné).
   3. Otevřete `runs/<běh>/README.md` a `RUN-STATE.md` a najděte svůj podpis G1.
-  - *Ověření:* Kolik políček otevřel task `SPOCK: approve what is in front of me`?
-    - [x] Čtyři
-    - [ ] Dvě
-    - [ ] Osm
-  - *Nápověda:* Spusťte task a spočítejte políčka: jméno, role, odpovědi na otázky brány a co jste chtěli změnit.
+  4. V `RUN-STATE.md` označte všechno (Ctrl+A nebo Cmd+A), zkopírujte a vložte níže. Tutoriál v prohlížeči ověří, že fáze 1 vašeho běhu je schválená a G1 podepsal člověk.
+  - *Důkaz z běhu:* G1
 
 ### Pro zvídavé
 
