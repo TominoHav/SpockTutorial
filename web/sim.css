@@ -465,8 +465,6 @@ button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var
 @media (max-width:600px){.wl-in{padding:14px}.wl-foot .btn{width:100%;justify-content:center}.wl-logo{width:40px;height:40px}}
 .wl-logo{width:52px;height:52px;flex:none}
 /* tým */
-.tmc{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px 18px;margin:16px 0}
-.tmc h3{margin:2px 0}.tmc p{margin:0;font-size:14px}
 .tm-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .tm-box{display:grid;gap:8px;align-content:start;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:16px 18px}.tm-box h2{margin:0;font-size:20px}.tm-box p{margin:0}
 .tm-box input[type=text],.tm-box input:not([type]){font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
