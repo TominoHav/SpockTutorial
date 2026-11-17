@@ -62,3 +62,7 @@
   .exf-opts{grid-template-columns:1fr}.exf{padding:12px 14px}.exf b{font-size:22px}
   .hx-next.ex .hx-cta .btn.primary{width:100%;justify-content:center;white-space:normal}
 }
+/* logo PDE vedle nadtitulku v banneru */
+.hx-brand{display:flex;align-items:center;gap:14px}
+.pde-logo{width:56px;height:56px;flex:none;display:block;border-radius:50%;box-shadow:0 4px 14px rgba(55,43,145,.28)}
+@media (max-width:600px){.pde-logo{width:44px;height:44px}.hx-brand{gap:10px}}
