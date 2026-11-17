@@ -32,6 +32,12 @@ function tSnapshot(){
   T.prog = {xp:S.xp || 0, pct:tot ? Math.round(100 * done / tot) : 0, mods, loc:tLoc(), badges:Object.keys(S.badges || {}).filter(k => k.startsWith('got.')).length, streak:streak(), sim:!!(S.badges && S.badges.sim), video:!!S.seenVideo};
   T.devs = Object.keys(S.proof || {}).filter(k => { const [wid, di, ti] = k.split('.'), w = W.find(x => x.id === wid), t = w && w.days[+di] && w.days[+di].todo[+ti]; return t && t.check && t.check.kind === 'seen' && S.proof[k] !== t.check.a; });
   T.ptries = Object.assign({}, S.ptries || {});
+  /* První hodnota (čas od první návštěvy = T.first) a síla důkazu u hotových úkolů: odškrtnuté bez ověření,
+     otázka ověření, co jste viděli, důkaz z vlastního běhu, odškrtnuté bez důkazu z běhu. Jména ani obsah běhu se neukládají. */
+  T.fv = S.fv ? {at:S.fv.at, lvl:S.fv.lvl, gate:S.fv.gate || null, selfAt:S.fv.selfAt || null} : null;
+  const ver = {self:0, proof:0, seen:0, run:0, runself:0};
+  W.forEach(w => w.days.forEach((d, di) => d.todo.forEach((t, ti) => { const k = w.id + '.' + di + '.' + ti; if (!S.todo[k]) return; const c = t.check; ver[!c ? 'self' : c.kind === 'run' ? ((S.runev || {})[k] ? 'run' : 'runself') : c.kind]++; })));
+  T.ver = ver;
   T.wrong = Object.keys(S.cards || {}).filter(k => { const [wid, di, ci] = k.split('.'), w = W.find(x => x.id === wid), c = w && w.days[+di] && w.days[+di].cards[+ci]; return c && S.cards[k] !== c.a; });
 }
 function tTick(){
@@ -826,10 +832,13 @@ const PROG = {ref:null, ready:false, h:null, busy:false};
 function pMerge(a, b){
   const o = Object.assign({}, b, a), newer = (b._at || 0) > (a._at || 0) ? b : a;
   ['role','goal','skin','av','sound','pos','survey','dq','seenVideo','flown','express'].forEach(k => { if (newer[k] !== undefined) o[k] = newer[k]; });
-  ['todo','cards','proof','got','badges','unlocked','qpass','ready','quiz','frozen','vids','exSeen','rev'].forEach(k => { o[k] = Object.assign({}, b[k] || {}, a[k] || {}); });
+  ['todo','cards','proof','got','badges','unlocked','qpass','ready','quiz','frozen','vids','exSeen','rev','runev','selfok'].forEach(k => { o[k] = Object.assign({}, b[k] || {}, a[k] || {}); });
   o.days = Object.assign({}, b.days || {}); Object.entries(a.days || {}).forEach(([d, v]) => { o.days[d] = Math.max(v, o.days[d] || 0); });
   ['ptries','tries'].forEach(k => { o[k] = Object.assign({}, b[k] || {}); Object.entries(a[k] || {}).forEach(([x, v]) => { o[k][x] = Math.max(v, o[k][x] || 0); }); });
   ['xp','freeze','rankLvl'].forEach(k => { o[k] = Math.max(a[k] || 0, b[k] || 0); });
+  /* první hodnota: ověřená z běhu má přednost před odškrtnutou bez důkazu, jinak platí dřívější */
+  const fvs = [a.fv, b.fv].filter(Boolean).sort((x, y) => (x.lvl === 'run' ? 0 : 1) - (y.lvl === 'run' ? 0 : 1) || (x.at || 0) - (y.at || 0));
+  if (fvs.length) o.fv = fvs[0];
   o._at = Math.max(a._at || 0, b._at || 0);
   return o;
 }
