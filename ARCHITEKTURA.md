@@ -53,7 +53,7 @@ Běží na GitHubu při každém pull requestu a po sloučení do `main`. Když 
 | Test | Co hlídá | Kolik kontrol |
 |---|---|---|
 | `nastroje/e2e/journey.js` | Cesta uživatele na počítači i mobilu (souběžně): simulace, role, karty, úkoly s ověřením, kvíz, zámky a skokový test, všech 9 modulů, opora, chat, dashboard a jeho analýzy, hra, vesmírná cesta, minihry, shrnutí, příběh, mluvený komentář, zmrazení série, pokrok v účtu | 213 |
-| `nastroje/e2e/scenare.js` | Offline režim (výpadek za běhu i start bez sítě), výpadek chatu, nedostupná databáze, chybějící právo zápisu, pokrok ze dvou zařízení, ovládání klávesnicí (Tab, Enter, Escape, viditelné zaměření), tablet, tablet na šířku, široký monitor, tmavý režim, platnost videí | 120 |
+| `nastroje/e2e/scenare.js` | Offline režim (výpadek za běhu i start bez sítě), výpadek chatu, nedostupná databáze, chybějící právo zápisu, pokrok ze dvou zařízení, ovládání klávesnicí (Tab, Enter, Escape, viditelné zaměření), tablet, tablet na šířku, široký monitor, tmavý režim, platnost videí | 128 |
 | `nastroje/e2e/pristupnost.js` | Průchod za každou roli; WCAG 2 A a AA (axe-core) na sedmi stránkách a na úvodu se zapnutou expresní cestou, v dashboardu, simulaci, minihře a příběhu, světlý i tmavý režim; dotykové plochy na mobilu | 92 |
 | `nastroje/e2e/vykon.js` | Rozpočty: velikost stránky (700 kB, po kompresi 230 kB), první vykreslení, vykreslení lekce a opory, procesor po 15 s nečinnosti, počet prvků; dashboard s 500 smyšlenými lidmi | 10 |
 | Safari (WebKit) | `journey.js` v jádru Safari na počítači i mobilu (iPhone, iPad, Mac). Chrome a Edge pokrývá Chromium | 2 × 101 |
