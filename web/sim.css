@@ -456,3 +456,11 @@ button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var
 .vid-off{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:var(--surface);color:var(--ink);font-size:14.5px}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .net-pill{background:#352A12;color:#F2C66B}}:root[data-theme="dark"] .net-pill{background:#352A12;color:#F2C66B}
 @media (max-width:600px){.net-pill .net-t{display:none}.net-pill{padding-inline:10px}}
+/* uvítání při prvním otevření: video Onboarding do SPOCKu za 76 sekund */
+.wl-in{display:grid;gap:14px;background:var(--surface);color:var(--ink);border-radius:18px;padding:20px;width:min(900px,100%);max-height:calc(100vh - 32px);overflow:auto}
+.wl-in .vidov-x{top:10px;right:10px}
+.wl-head{display:flex;gap:14px;align-items:center;padding-right:40px}.wl-head h2{margin:0;font-size:clamp(20px,2.6vw,26px);letter-spacing:-.01em}.wl-head p{margin:2px 0 0;color:var(--ink-2);font-size:14.5px}
+.wl-logo{width:52px;height:52px;flex:none}
+.wl-in video{width:100%;max-height:60vh;border-radius:12px;background:#000}
+.wl-foot{display:flex;gap:10px;flex-wrap:wrap}
+@media (max-width:600px){.wl-in{padding:14px}.wl-foot .btn{width:100%;justify-content:center}.wl-logo{width:40px;height:40px}}

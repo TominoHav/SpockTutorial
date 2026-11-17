@@ -867,7 +867,7 @@ const CH = [
 ];
 const fmtT = s => Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
 /* Videa „SPOCK krok za krokem“: dlouhé a klipy po fázích (bez zvuku, české titulky v obraze). Vyrábí je nastroje/video/record.js. */
-const VIDS = Object.assign({'krok-za-krokem':['Video: SPOCK krok za krokem · 4 min', 'Sedm fází na hotovém běhu']}, Object.fromEntries(['Brief','Problémy a příležitosti','Trh','Řešení','MVP','PRD','Iniciativa'].map((n, i) => ['faze-' + (i + 1), ['Video: fáze ' + (i + 1) + ' · ' + n, 'Fáze ' + (i + 1) + ': ' + n]])));
+const VIDS = Object.assign({'krok-za-krokem':['Video: SPOCK krok za krokem · 4 min', 'Sedm fází na hotovém běhu'], 'pitch':['Video: Onboarding do SPOCKu za 76 sekund', 'Co vás v onboardingu čeká']}, Object.fromEntries(['Brief','Problémy a příležitosti','Trh','Řešení','MVP','PRD','Iniciativa'].map((n, i) => ['faze-' + (i + 1), ['Video: fáze ' + (i + 1) + ' · ' + n, 'Fáze ' + (i + 1) + ': ' + n]])));
 const vidTag = id => VIDS[id] ? `<video class="cv-video" controls preload="none" playsinline poster="spock-${id}-poster.jpg" aria-label="Video: ${VIDS[id][1]}"><source src="spock-${id}.mp4" type="video/mp4">Váš prohlížeč video neumí přehrát.</video>` : VIDEO;
 const VIDEO = `<video class="cv-video" controls preload="none" playsinline poster="spock-intro-poster.jpg" aria-label="Video: Co je SPOCK"><source src="spock-intro.mp4" type="video/mp4">Váš prohlížeč video neumí přehrát.</video>`;
 const BRAND = () => `<div class="cv-lock">${spockLogo('md')}<div><b>SPOCK</b><span>Lepší produktová rozhodnutí, rychleji.</span></div></div>`;
@@ -950,7 +950,7 @@ function heroFirst(){
     <div class="hx-brand">${pdeLogo()}<span class="eyebrow">Onboarding do SPOCKu · nový nástroj pro discovery v ČS</span></div>
     <h1>Seznamte se <em>se SPOCKem</em></h1>
     <p class="hx-lead">AI asistent ve VS Code, který produktovým týmům připraví discovery od nápadu po iniciativu. <b>Agenti připravují, vy rozhodujete.</b></p>
-    <div class="hx-cta"><button class="btn primary" type="button" data-simstart>Vyzkoušet nanečisto · 5 min</button><button class="btn" type="button" data-playvideo="">▶ Pustit video · 2 min</button></div>
+    <div class="hx-cta"><button class="btn primary" type="button" data-simstart>Vyzkoušet nanečisto · 5 min</button><button class="btn" type="button" data-playvideo="pitch">▶ Co vás čeká · 76 s</button></div>
     <p class="hx-note">Nic neinstalujete. Začíná se tady na webu.</p>
   </div>${heroArt('Ahoj, jsem Spock')}</section>`;
 }
@@ -1638,6 +1638,28 @@ function gFiles(){
   };
   $('#g-files').addEventListener('click', ev => { const b = ev.target.closest('[data-gdel]'); if (b) { G.files.splice(+b.dataset.gdel, 1); gFiles(); } });
 })();
+/* Uvítání při prvním otevření: jednou, než si člověk vybere roli, nabídne video „Onboarding do SPOCKu za 76 sekund“.
+   Video se nepouští samo (prohlížeče zvuk bez kliknutí nedovolí); Přeskočit i zavření okno už nikdy neukážou. */
+function welcomeOpen(){
+  if (S.role || S.seenPitch || document.querySelector('.vidov') || (window.__E2E && !window.__E2E_WELCOME)) return;
+  const ov = document.createElement('div'); ov.className = 'vidov wl'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-labelledby', 'wl-h');
+  ov.innerHTML = `<div class="vidov-in wl-in"><button type="button" class="g-x vidov-x" aria-label="Zavřít uvítání">×</button>
+    <div class="wl-head">${pdeLogo('wl-logo')}<div><h2 id="wl-h">Vítejte v onboardingu do SPOCKu</h2><p>Za 76 sekund uvidíte, co vás čeká. Anglický komentář, české titulky.</p></div></div>
+    ${vidTag('pitch')}
+    <div class="wl-foot"><button class="btn primary" type="button" data-wl="go">Začít: vyberte svou roli →</button><button class="btn" type="button" data-wl="skip">Přeskočit video</button></div></div>`;
+  document.body.append(ov);
+  const v = ov.querySelector('video');
+  const close = how => { try { v.pause(); } catch (e) {} ov.remove(); S.seenPitch = true; save(); try { trk('uvítání', how); } catch (e) {}
+    if (how === 'začít') { const r = document.querySelector('.startb [data-role]'); if (r) { r.closest('.startb').scrollIntoView({block:'center'}); r.focus({preventScroll:true}); } } };
+  v.addEventListener('play', () => { S.vids = Object.assign({}, S.vids, {pitch:1}); save(); try { trk('video', 'pitch'); } catch (e) {} }, {once:true});
+  ov.querySelector('.vidov-x').onclick = () => close('zavřeno');
+  ov.querySelector('[data-wl=skip]').onclick = () => close('přeskočeno');
+  ov.querySelector('[data-wl=go]').onclick = () => close('začít');
+  ov.addEventListener('click', e => { if (e.target === ov) close('zavřeno'); });
+  ov.addEventListener('keydown', e => { if (e.key === 'Escape') close('zavřeno'); });
+  ov.querySelector('.vidov-x').focus();
+}
+setTimeout(welcomeOpen, 400);
 /* po načtení: zvolený vzhled Spocka a případné zakrytí vynechaného dne zmrazením */
 if (!S.rankLvl) S.rankLvl = rank().lvl;   /* stávající uživatelé: odměny až od další hodnosti */
 applySkin(); try { useFreezes(); } catch (e) {}
