@@ -52,7 +52,7 @@ jobs:
           python3 web/build.py
       - name: Playwright
         run: |
-          npm install --no-save playwright@1.63.0
+          npm install --no-save playwright@1.63.0 esbuild@0.24.2
           npx playwright install --with-deps chromium
       - name: Cesta uživatele (počítač, mobil, doplňky, pokrok v účtu)
         run: node nastroje/e2e/journey.js
@@ -96,7 +96,7 @@ jobs:
           python3 web/build.py
       - name: Playwright a axe-core
         run: |
-          npm install --no-save playwright@1.63.0 axe-core@4.10.2
+          npm install --no-save playwright@1.63.0 axe-core@4.10.2 esbuild@0.24.2
           npx playwright install --with-deps chromium
       - name: Přístupnost a průchod rolí (stránky, dashboard, simulace, minihra, příběh; světlý i tmavý režim)
         run: node nastroje/e2e/pristupnost.js
@@ -129,7 +129,7 @@ jobs:
           python3 web/build.py
       - name: Playwright s WebKitem
         run: |
-          npm install --no-save playwright@1.63.0
+          npm install --no-save playwright@1.63.0 esbuild@0.24.2
           npx playwright install --with-deps webkit
       - name: Cesta uživatele v Safari (WebKit), počítač
         run: E2E_BROWSER=webkit E2E_ONLY=počítač node nastroje/e2e/journey.js

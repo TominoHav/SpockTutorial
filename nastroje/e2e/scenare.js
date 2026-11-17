@@ -212,38 +212,20 @@ runs.push(scenario('tým',async()=>{
  ok('tým, mobil: stránka nepřetéká do strany a tabulka se dá posouvat', await q.evaluate(()=>document.documentElement.scrollWidth-innerWidth)<=0&&await q.locator('.tm-t tbody tr').count()===2);
  await m.close();
 }));
-// 11) uvítání při prvním otevření: video Onboarding do SPOCKu za necelé dvě minuty
-runs.push(scenario('uvítání',async()=>{
+// 11) první použití: bez uvítacího okna; role se vybírá na stránce, pod ní rozbalené Co je SPOCK, až pak cesta
+runs.push(scenario('první použití',async()=>{
  for(const [W,H,dev] of [[1280,900,'počítač'],[390,844,'mobil']]){
-  const ctx=await b.newContext({viewport:{width:W,height:H}});await ctx.addInitScript(()=>{window.__E2E_WELCOME=true;});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
-  await p.goto(F);await p.waitForSelector('.vidov.wl',{timeout:5000}).catch(()=>{});
-  ok(`uvítání, ${dev}: při prvním otevření se ukáže okno s videem, logem PDE a přivítáním`, await p.locator('.vidov.wl video source[src="spock-pitch.mp4"]').count()===1 && await p.locator('.vidov.wl .pde-logo').count()===1 && (await p.locator('#wl-h').innerText()).includes('Vítejte'));
-  ok(`uvítání, ${dev}: video se nepouští samo a okno se vejde na obrazovku`, await p.evaluate(()=>{const v=document.querySelector('.wl video'),r=document.querySelector('.wl-in').getBoundingClientRect();return v.paused&&r.bottom<=innerHeight+1&&r.right<=innerWidth+1;}));
-  ok(`uvítání, ${dev}: zaměření je v okně (klávesnice)`, await p.evaluate(()=>!!document.activeElement.closest('.wl')));
-  if(dev==='počítač'){
-   await p.keyboard.press('Escape');await settle(p,50);
-   ok('uvítání: Escape okno zavře', await p.locator('.vidov.wl').count()===0);
-   await p.reload();await settle(p,600);
-   ok('uvítání: po zavření se při dalším otevření už neukáže', await p.locator('.vidov.wl').count()===0);
-  }else{
-   await p.locator('[data-wl=go]').click();await settle(p,80);
-   ok('uvítání, mobil: Začít ukáže v okně výběr role a zaměří první roli', await p.locator('.vidov.wl .wl-role [data-role]').count()===4 && await p.evaluate(()=>document.activeElement.matches('.wl [data-role]')));
-   await p.locator('.wl [data-role=pd]').click();await settle(p,150);
-   ok('uvítání, mobil: výběr role okno zavře a nabídne rozcestí', await p.locator('.vidov.wl').count()===0 && (await loadState(p)).role==='pd' && await p.locator('.exfork').count()===1);
-  }
-  ok(`uvítání, ${dev}: bez chyb v konzoli`, errs.length===0, errs.slice(0,2).join(' | '));
+  const ctx=await b.newContext({viewport:{width:W,height:H}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
+  await p.goto(F);await settle(p,700);
+  ok(`první použití, ${dev}: neotevře se žádné uvítací okno`, await p.locator('.vidov').count()===0);
+  ok(`první použití, ${dev}: pořadí banner, výběr role, Co je SPOCK, cesta`, await p.evaluate(()=>{const q=s=>document.querySelector(s),y=e=>e?e.getBoundingClientRect().top+scrollY:NaN;const h=y(q('.hx')),r=y(q('.startb')),i=y(q('.cvB')),c=y(q('.hp-head'));return h<r&&r<i&&i<c&&!q('.introfold');}));
+  ok(`první použití, ${dev}: Co je SPOCK je rozbalené s videem`, await p.locator('.cvB video').count()===1 && await p.locator('.cvB').isVisible());
+  ok(`první použití, ${dev}: bez chyb v konzoli`, errs.length===0, errs.slice(0,2).join(' | '));
+  if(dev==='mobil'){await p.locator('.startb [data-role=pd]').click();await settle(p,150);ok('první použití: po výběru role na stránce banner nabídne rozcestí', (await loadState(p)).role==='pd' && await p.locator('.exfork').count()===1);}
   await ctx.close();
  }
- const ctx=await b.newContext({viewport:{width:1280,height:900}});await ctx.addInitScript(()=>{window.__E2E_WELCOME=true;});const p=await ctx.newPage();
- await p.goto(F);await p.waitForSelector('.vidov.wl');await p.locator('[data-wl=skip]').click();await settle(p,50);
- ok('uvítání: Přeskočit video vede rovnou na výběr role', await p.locator('.vidov.wl .wl-role').count()===1);
- await p.locator('.wl .vidov-x').click();await settle(p,50);
- await p.evaluate(()=>{localStorage.removeItem('spock-user-onboarding-v1');});await p.reload();await p.waitForSelector('.vidov.wl video');
- await p.evaluate(()=>document.querySelector('.wl video').dispatchEvent(new Event('ended')));await settle(p,50);
- ok('uvítání: po dohrání videa se v okně ukáže výběr role', await p.locator('.vidov.wl .wl-role [data-role]').count()===4);
- await p.locator('.wl .vidov-x').click();await settle(p,50);
- ok('úvod: tlačítko Co je SPOCK pustí 2minutové video', await p.locator('.hx [data-playvideo=""]').count()===1);
- ok('uvítání: úvodní stránka má tlačítko Co vás čeká, které pustí stejné video', await p.locator('.hx [data-playvideo=pitch]').count()===1 && await p.evaluate(()=>{document.querySelector('.hx [data-playvideo=pitch]').click();return !!document.querySelector('.vidov video source[src="spock-pitch.mp4"]');}));
+ const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();await p.goto(F);await settle(p,300);
+ ok('úvod: tlačítko Co vás čeká pustí pitch video', await p.locator('.hx [data-playvideo=pitch]').count()===1 && await p.evaluate(()=>{document.querySelector('.hx [data-playvideo=pitch]').click();return !!document.querySelector('.vidov video source[src="spock-pitch.mp4"]');}));
  await ctx.close();
 }));
 // 10) ikona aplikace: záložka prohlížeče a plocha telefonu
@@ -311,7 +293,7 @@ runs.push(scenario('start offline',async()=>{
 runs.push(scenario('expresní cesta',async()=>{
  const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
  await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=se]').click();await settle(p,50);
- ok('expresní cesta: po výběru role banner nabídne celou cestu jako hlavní volbu a expres do 2 hodin jako vedlejší', await p.locator('.hx .exfork .exf').count()===1 && /1 h \d+ min/.test(await p.locator('.exfork .exf-alt').innerText()) && await p.locator('.exf-alt [data-express=on]').count()===1);
+ ok('expresní cesta: po výběru role banner nabídne dvě rovnocenné karty jako ve videu, celou cestu a expres do 2 hodin', await p.locator('.hx .exfork .exf-opts .exf').count()===2 && /1 h \d+ min/.test(await p.locator('.exfork .exf.fast').innerText()) && await p.locator('.exf.fast[data-express=on]').count()===1);
  ok('expresní cesta: v rozcestí je zaměřená první volba (klávesnice)', await p.evaluate(()=>document.activeElement&&document.activeElement.matches('.exfork .exf')));
  await p.locator('.exfork [data-express=on]').click();await settle(p,50);
  ok('expresní cesta: banner ukazuje další krok a v úvodu je jen jedno hlavní tlačítko', (await p.locator('.hx-next.ex .hx-nt').innerText()).includes('nanečisto') && await p.locator('.hx .btn.primary').count()===1 && await p.locator('.exfork').count()===0);

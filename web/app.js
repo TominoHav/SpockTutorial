@@ -960,7 +960,7 @@ function introB(){
       <div class="cvB-film"><span class="cvB-frame">${VIDEO}</span><span class="cvB-cap">2 min 26 s · anglicky s komentářem</span></div>
     </div>
     <div class="cvB-strip-h"><b>8 věcí z videa</b><span class="sp"></span><button class="btn sm" type="button" data-cvscroll="-1" aria-label="Předchozí">←</button><button class="btn sm" type="button" data-cvscroll="1" aria-label="Další">→</button></div>
-    <ol class="cvB-strip">${CH.map((x,i) => `<li class="cvB-card c-${x.c}"><span class="cvB-no">${String(i+1).padStart(2,'0')}</span><span class="eyebrow">${x.k}</span><h3>${x.h}</h3>${x.body}</li>`).join('')}</ol>
+    <ol class="cvB-strip">${CH.map((x,i) => `<li class="cvB-card c-${x.c}"><span class="cvB-no" aria-hidden="true" data-n="${String(i+1).padStart(2,'0')}"></span><span class="eyebrow">${x.k}</span><h3>${x.h}</h3>${x.body}</li>`).join('')}</ol>
   </section>`;
 }
 document.addEventListener('click', e => {
@@ -1027,7 +1027,7 @@ function heroFirst(){
     <div class="hx-brand">${pdeLogo()}<span class="eyebrow">Onboarding do SPOCKu · nový nástroj pro discovery v ČS</span></div>
     <h1>Seznamte se <em>se SPOCKem</em></h1>
     <p class="hx-lead">AI asistent ve VS Code, který produktovým týmům připraví discovery od nápadu po iniciativu. <b>Agenti připravují, vy rozhodujete.</b></p>
-    <div class="hx-cta"><button class="btn primary" type="button" data-simstart>Vyzkoušet nanečisto · 5 min</button><button class="btn" type="button" data-playvideo="pitch">▶ Co vás čeká · 1 min 40 s</button><button class="btn" type="button" data-playvideo="">▶ Co je SPOCK · 2 min</button></div>
+    <div class="hx-cta"><button class="btn primary" type="button" data-simstart>Vyzkoušet nanečisto · 5 min</button><button class="btn" type="button" data-playvideo="pitch">▶ Co vás čeká · 1 min 40 s</button></div>
     <p class="hx-note">Nic neinstalujete. Začíná se tady na webu.</p>
   </div>${heroArt('Ahoj, jsem Spock')}</section>`;
 }
@@ -1065,12 +1065,14 @@ function exHeroAction(roleLine){
 }
 /* Rozcestí: dvě rovnocenné volby po výběru role, dokud se člověk nerozhodne */
 function exFork(roleLine){
-  /* celá cesta je hlavní volba; expresní start a vstupní test jsou vedlejší možnosti pod ní */
+  /* jako v pitch videu: dvě rovnocenné karty vedle sebe, pod nimi vstupní test */
   const full = pathHours();
   return `<div class="exfork" role="group" aria-label="Jak chcete začít">
     <span class="hx-nl">Jak chcete začít?</span>
-    <button type="button" class="exf full" data-express="full" data-golesson="l0:0"><span class="exf-k">Doporučeno · celá cesta</span><b>~${full} h</b><span>Všechny úrovně s praxí ve VS Code až po vlastní běh. Po 30 minutách denně.</span><span class="exf-go">Začít lekcí 0.1 →</span></button>
-    <p class="exf-alt">Málo času? <button class="linkbtn" type="button" data-express="on">Expresní start za 1 h 40 min</button>: to nejnutnější a objednání přístupů. Pokrok se započítá.</p>
+    <div class="exf-opts">
+      <button type="button" class="exf full" data-express="full" data-golesson="l0:0"><span class="exf-k">Celá cesta</span><b>~${full} h</b><span>Všechny úrovně s praxí ve VS Code až po vlastní běh. Po 30 minutách denně.</span><span class="exf-go">Začít lekcí 0.1 →</span></button>
+      <button type="button" class="exf fast" data-express="on"><span class="exf-k">Expresní start</span><b>1 h 40 min</b><span>To nejnutnější: co SPOCK dělá, pravidla, video a objednání přístupů. Pokrok se započítá.</span><span class="exf-go">Začít expres →</span></button>
+    </div>
     <p class="exf-place">Znáte už SPOCK? <button class="linkbtn" type="button" data-place>Vstupní test (${PLACE_N} otázek)</button> přeskočí teorii úrovně 0.</p>${roleLine}</div>`;
 }
 function exCheck(){
@@ -1129,9 +1131,11 @@ function heroStable(){
 }
 function homeV4(){
   /* nováček: jedna hlavní akce (nanečisto) v úvodu, pak výběr role a cesta; vysvětlení a opora sbalené níž */
-  if (isFirst()) return heroFirst() + startBlock() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora');
+  /* první použití (původní verze): banner, výběr role na stránce, pak rozbalené vysvětlení Co je SPOCK, až potom cesta */
+  if (isFirst()) return heroFirst() + startBlock() + introSection() + pathBlock('Co vás čeká') + toolsBlock('Opora');
   const l1 = W.find(w => w.id === 'l1'), showSvy = l1 && modPct(l1) === 1 && !(S.survey && S.survey.at);
-  return heroStable() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
+  /* Co je SPOCK hned pod banner, až pak Vaše cesta vesmírem */
+  return heroStable() + `<div class="v4-gap">${introCollapsed()}</div>` + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
 }
 function renderHome(){ app.innerHTML = homeV4(); }
 document.addEventListener('click', e => {
@@ -1718,34 +1722,6 @@ function gFiles(){
   };
   $('#g-files').addEventListener('click', ev => { const b = ev.target.closest('[data-gdel]'); if (b) { G.files.splice(+b.dataset.gdel, 1); gFiles(); } });
 })();
-/* Uvítání při prvním otevření: jednou, než si člověk vybere roli, nabídne video „Onboarding do SPOCKu za necelé dvě minuty“.
-   Video se nepouští samo (prohlížeče zvuk bez kliknutí nedovolí); Přeskočit i zavření okno už nikdy neukážou. */
-function welcomeOpen(){
-  if (S.role || S.seenPitch || document.querySelector('.vidov') || (window.__E2E && !window.__E2E_WELCOME)) return;
-  const ov = document.createElement('div'); ov.className = 'vidov wl'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-labelledby', 'wl-h');
-  ov.innerHTML = `<div class="vidov-in wl-in"><button type="button" class="g-x vidov-x" aria-label="Zavřít uvítání">×</button>
-    <div class="wl-head">${pdeLogo('wl-logo')}<div><h2 id="wl-h">Vítejte v onboardingu do SPOCKu</h2><p>Podívejte se, co vás čeká. Necelé 2 minuty.</p></div></div>
-    ${vidTag('pitch')}
-    <div class="wl-foot"><button class="btn primary" type="button" data-wl="go">Začít: vyberte svou roli →</button><button class="btn" type="button" data-wl="skip">Přeskočit video</button></div></div>`;
-  document.body.append(ov);
-  const v = ov.querySelector('video');
-  /* krok 2: po videu (nebo po Začít / Přeskočit video) se v okně rovnou vybírá role */
-  const roleStep = how => { try { v.pause(); } catch (e) {} try { trk('uvítání', how); } catch (e) {}
-    ov.querySelector('.wl-in').innerHTML = `<button type="button" class="g-x vidov-x" aria-label="Zavřít uvítání">×</button><div class="wl-role"><h2 id="wl-h">Vyberte svou roli</h2><p>Role určí, který modul vás čeká na úrovni 2. Změnit ji jde kdykoli.</p>${roleCards()}</div>`;
-    ov.querySelector('.vidov-x').onclick = () => close('zavřeno'); const r = ov.querySelector('[data-role]'); if (r) r.focus(); };
-  ov.addEventListener('click', e => { if (e.target.closest('[data-role]')) setTimeout(() => close('role'), 0); });
-  v.addEventListener('ended', () => roleStep('video dokončeno'));
-  const close = how => { try { v.pause(); } catch (e) {} ov.remove(); S.seenPitch = true; save(); try { trk('uvítání', how); } catch (e) {}
-    if (how === 'role') { window.scrollTo(0, 0); const f = document.querySelector('.exfork .exf, .hx [data-golesson]'); if (f) f.focus({preventScroll:true}); } };
-  v.addEventListener('play', () => { S.vids = Object.assign({}, S.vids, {pitch:1}); save(); try { trk('video', 'pitch'); } catch (e) {} }, {once:true});
-  ov.querySelector('.vidov-x').onclick = () => close('zavřeno');
-  ov.querySelector('[data-wl=skip]').onclick = () => roleStep('přeskočeno');
-  ov.querySelector('[data-wl=go]').onclick = () => roleStep('začít');
-  ov.addEventListener('click', e => { if (e.target === ov) close('zavřeno'); });
-  ov.addEventListener('keydown', e => { if (e.key === 'Escape') close('zavřeno'); });
-  ov.querySelector('.vidov-x').focus();
-}
-setTimeout(welcomeOpen, 400);
 /* po načtení: zvolený vzhled Spocka a případné zakrytí vynechaného dne zmrazením */
 if (!S.rankLvl) S.rankLvl = rank().lvl;   /* stávající uživatelé: odměny až od další hodnosti */
 applySkin(); try { useFreezes(); } catch (e) {} try { revInit(); } catch (e) {}
