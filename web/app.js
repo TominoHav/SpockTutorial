@@ -1055,7 +1055,7 @@ function homeV4(){
   /* nováček: jedna hlavní akce (nanečisto) v úvodu, pak výběr role a cesta; vysvětlení a opora sbalené níž */
   if (isFirst()) return heroFirst() + startBlock() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora', true);
   const l1 = W.find(w => w.id === 'l1'), showSvy = l1 && modPct(l1) === 1 && !(S.survey && S.survey.at);
-  return heroStable() + questCard() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
+  return heroStable() + questCard() + teamCard() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
 }
 function renderHome(){ app.innerHTML = homeV4(); }
 document.addEventListener('click', e => {
@@ -1355,7 +1355,7 @@ function shell(active, body){
   }).join('');
   const gw = W.find(w => w.id === 'l1b');
   const guide = gw ? `<button type="button" class="${active===gw.id?'on':''} c-${gw.c}" data-week="${gw.id}"><span class="dm"></span>Příručka: ${esc(gw.title)}</button>` + sideLessons(gw, active) : '';
-  const ex = [['badges','Odznaky a profil','indigo'],['map','SPOCK v kostce','blue'],['diag','Diagnostika','purple'],['gloss','Slovníček','blue'],['cheat','Tahák tasků','blue'],['ready','Připravenost','indigo']]
+  const ex = [['tym','Tým','indigo'],['badges','Odznaky a profil','indigo'],['map','SPOCK v kostce','blue'],['diag','Diagnostika','purple'],['gloss','Slovníček','blue'],['cheat','Tahák tasků','blue'],['ready','Připravenost','indigo']]
     .concat(TRK.owner ? [['dash','Dashboard (jen vy)','indigo']] : [])
     .map(x => `<button type="button" class="${active===x[0]?'on':''} c-${x[2]}" data-go="${x[0]}"><span class="dm"></span>${x[1]}</button>`).join('');
   return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more">${otherRoles(active)}<span class="grp">Opora</span>${guide}${ex}</div>`}</nav><section class="main">${body}</section></div>`;
@@ -1376,6 +1376,7 @@ function render(){
   else if (view.name === 'ready') renderReady();
   else if (view.name === 'cheat') renderCheat();
   else if (view.name === 'badges') renderBadges();
+  else if (view.name === 'tym') renderTeam();
   updatePills();
   /* poslední místo pro „Pokračovat tam, kde jste skončil(a)“ */
   if (view.name === 'week' && typeof view.lesson === 'number' && (!S.pos || S.pos.w !== view.week || S.pos.l !== view.lesson)) { S.pos = {w:view.week, l:view.lesson}; save(); }

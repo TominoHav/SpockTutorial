@@ -211,7 +211,7 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  const vtx=await p.locator('#dash').innerText().catch(()=>'');
  ok(T('záložka Verze a kvalita ukáže testy, výkon a tokeny verze'), vtx.includes('End-to-end testy') && vtx.includes('Náročnost na tokeny') && vtx.includes('Historie verzí'));
  ok(T('verze se zapíše do historie'), Object.keys(await p.evaluate(()=>window.__db)).some(k=>k.startsWith('versions/')));
- ok(T('záložka Verze bez přetékání'), (await ov())<=0);
+ ok(T('záložka Verze bez přetékání'), (await ov())<=0, await p.evaluate(()=>{/* při chybě: prvky, jejichž obsah přesahuje mimo posuvné kontejnery */const nm=e=>e.tagName.toLowerCase()+(e.id?'#'+e.id:'')+(e.classList.length?'.'+[...e.classList].join('.'):'');return [...document.querySelectorAll('body *')].filter(x=>{if(getComputedStyle(x).overflowX!=='visible')return false;const r=x.getBoundingClientRect();if(!(x.scrollWidth>x.clientWidth+1&&r.left+x.scrollWidth>innerWidth+1))return false;let a=x.parentElement;while(a&&a!==document.body){if(getComputedStyle(a).overflowX!=='visible')return false;a=a.parentElement;}return true;}).slice(-4).map(x=>nm(x)+' +'+(x.scrollWidth-x.clientWidth)+'px').join(' | ');}));
  {const r=((await p.evaluate(()=>window.__db['track/u_ja']))||{perf:{render:[]}}).perf.render.slice().sort((a,b)=>a-b);LAB[tag].render=r.length?r[Math.floor(r.length/2)]:null;LAB[tag].renderP90=r.length?r[Math.min(r.length-1,Math.floor(r.length*.9))]:null;}
  if(!CTX)CTX=await p.evaluate(()=>__kviz.ctx());
  // trvalost

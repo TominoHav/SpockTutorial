@@ -225,7 +225,7 @@ body.noscroll{overflow:hidden}
 .fb-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}.fb-foot .muted{font-size:13px}
 .ver-n{display:block;margin-bottom:4px}
 /* dashboard */
-#dash{display:grid;gap:14px;min-width:0}
+#dash{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;min-width:0}
 #dash .sec-h{margin-top:14px}#dash h3{font-size:15px;margin:0 0 8px}
 .ds-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:10px}
 .ds-tile{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 14px;display:grid;gap:2px;min-width:0}
@@ -257,7 +257,7 @@ button.pill{font:inherit;cursor:pointer;border:1px solid var(--line)}button.pill
 .ds-tabs button{font:inherit;font-weight:700;font-size:14.5px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);border-radius:99px;padding:8px 16px;cursor:pointer}
 .ds-tabs button.on{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
 .ds-bad{color:var(--pink);font-weight:700}.ds-good{color:var(--ok);font-weight:700}
-.ds-vt{display:block;color:var(--ink-3);font-size:12px;max-width:260px}
+.ds-vt{display:block;color:var(--ink-3);font-size:12px;max-width:260px;overflow-wrap:anywhere}
 .ds-vtodo{cursor:default;border-left-color:var(--pink)}.ds-vtodo>span:first-child{font-weight:800;color:var(--pink)}
 .ds-okline{border:1px solid var(--line);border-left:4px solid #1a8f5a;border-radius:12px;background:var(--surface);padding:12px 14px;margin:0}
 /* ověření z VS Code u úkolu */
@@ -464,3 +464,21 @@ button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var
 .wl-foot{display:flex;gap:10px;flex-wrap:wrap}
 @media (max-width:600px){.wl-in{padding:14px}.wl-foot .btn{width:100%;justify-content:center}.wl-logo{width:40px;height:40px}}
 .wl-logo{width:52px;height:52px;flex:none}
+/* tým */
+.tmc{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px 18px;margin:16px 0}
+.tmc h3{margin:2px 0}.tmc p{margin:0;font-size:14px}
+.tm-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.tm-box{display:grid;gap:8px;align-content:start;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:16px 18px}.tm-box h2{margin:0;font-size:20px}.tm-box p{margin:0}
+.tm-box input[type=text],.tm-box input:not([type]){font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.tm-box label{font-size:14px;font-weight:600}.tm-ok{display:flex;gap:8px;align-items:flex-start;font-weight:400!important;color:var(--ink-2)}.tm-ok input{margin-top:3px;width:18px;height:18px;flex:none}
+.tm-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:6px}.tm-head h2{margin:2px 0 0}
+.tm-code{display:flex;align-items:center;gap:10px;border:1px dashed var(--line);border-radius:12px;padding:8px 12px}.tm-code span{font-size:13px;color:var(--ink-2)}.tm-code b{font-size:22px;letter-spacing:.14em;font-variant-numeric:tabular-nums}
+.tm-kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}.tm-kpi div{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px;display:grid}.tm-kpi b{font-size:22px}.tm-kpi span{font-size:13px;color:var(--ink-2)}
+.tm-stuck{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:14px}
+.tm-t tr.me td{background:color-mix(in srgb,var(--blue-2) 8%,transparent)}
+.tm-bar{display:flex;align-items:center;gap:8px;min-width:120px}.tm-bar .bar{flex:1}.tm-bar .num{font-size:13px;font-weight:700}
+.tm-foot{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.tm-priv{font-size:13px;margin-top:8px}
+.tm-err{background:var(--surface-2);border-left:4px solid var(--pink);border-radius:10px;padding:10px 12px}.tm-note{color:var(--ink-2)}
+@media (max-width:700px){.tm-two{grid-template-columns:1fr}.tm-kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* nadpis stránky: mřížka se nesmí roztáhnout podle obsahu a dlouhá slova (hash verze, URL) se zalomí; v Safari na mobilu jinak přetékalo */
+.mh{grid-template-columns:minmax(0,1fr)}.mh h1,.mh p{overflow-wrap:anywhere}
