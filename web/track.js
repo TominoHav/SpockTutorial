@@ -143,7 +143,7 @@ async function tInitRun(){
   trackView(); await tFlush();
   if (!TRK.timer) TRK.timer = setInterval(tFlush, 20000);
   if (TRK.owner) {
-    const pp = document.getElementById('pill-prog');
+    const pp = document.getElementById('pill-fb');
     if (pp && !document.getElementById('pill-dash')) pp.insertAdjacentHTML('afterend', '<button class="pill fb-pill" id="pill-dash" type="button" data-go="dash" aria-label="Dashboard: jak lidé procházejí tutoriálem a zpětná vazba" title="Dashboard: jak lidé procházejí tutoriálem a zpětná vazba"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="fb-t">Dashboard</span></button>');
     if (view.name !== 'week' && view.name !== 'home') render();
   }
@@ -881,7 +881,7 @@ async function fbOutboxSend(){
 function netPill(){
   const off = !navigator.onLine, q = fbOutbox().length;
   let el = document.getElementById('pill-net');
-  if (!el) { const pp = document.getElementById('pill-prog'); if (!pp) return; pp.insertAdjacentHTML('beforebegin', '<span class="pill net-pill" id="pill-net" role="status" hidden></span>'); el = document.getElementById('pill-net'); }
+  if (!el) { const pp = document.querySelector('.hg-act'); if (!pp) return; pp.insertAdjacentHTML('afterbegin', '<span class="pill net-pill" id="pill-net" role="status" hidden></span>'); el = document.getElementById('pill-net'); }
   el.hidden = !off;
   el.innerHTML = '<span class="net-dot" aria-hidden="true"></span><span class="net-t">Offline</span>' + (q ? '<span class="net-q">· ' + q + '</span>' : '');
   el.title = 'Jste offline. Lekce, kvízy a hra fungují dál a pokrok se ukládá v zařízení. Synchronizace pod účtem' + (q ? ', ' + q + ' zpětná vazba ve frontě' : '') + ' a chat se Spockem počkají na připojení.';

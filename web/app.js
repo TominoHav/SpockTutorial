@@ -894,15 +894,6 @@ function spockSVG(cls, skin){
 function roleBtns(){
   return `<div class="roles" role="group" aria-label="Vaše role">${Object.keys(ROLES).map(r => `<button type="button" class="rolebtn ${S.role===r?'on':''}" data-role="${r}" aria-pressed="${S.role===r}" title="${esc(ROLE_WHO[r])}">${ROLES[r]}</button>`).join('')}</div>`;
 }
-function pathStep(no, c, title, text, ids, btn){
-  const mods = ids.map(id => W.find(w => w.id === id)).filter(Boolean);
-  let tot = 0, done = 0; mods.forEach(w => { const t = weekTotals(w); tot += t.tot; done += t.done; });
-  const pct = tot ? done / tot : 0, gems = [0,1,2,3].map(i => `<i class="${pct > i/4 + .001 || pct === 1 ? 'on' : ''}"></i>`).join('');
-  const pend = !mods.length, locked = mods.length && isLocked(mods[0]), fin = mods.length && pct === 1;
-  const nx = nextOnPath(), here = mods.length && nx && nx.id === mods[0].id && !locked;
-  const lbl = locked ? 'Náhled' : here ? 'Pokračovat' : fin ? 'Zopakovat' : 'Otevřít'; btn = btn.replace('>Otevřít<', '>' + lbl + '<');
-  return `<li class="hp-st c-${c} ${pend?'tbd':''} ${locked?'locked':''} ${fin?'done':''} ${here?'here':''}">${here ? '<span class="hp-here">Na řadě</span>' : ''}<span class="hp-dia"><span>${locked ? LOCK : fin ? '✓' : no}</span></span><h3>${title}</h3><p>${text}</p><span class="hp-gems" aria-label="Hotovo ${Math.round(pct*100)} %">${gems}</span><span class="hp-a">${btn}</span></li>`;
-}
 function badgeProg(id){
   const st = streak();
   if (id === 'streak3') return [Math.min(st,3), 3];
@@ -953,7 +944,6 @@ const CH = [
  {id:'proc', t:114, c:'blue', k:'Proč Spock?', h:'Inspirováno kombinací člověka a Vulkánce', short:'Data a objektivita spojené s lidskou zvědavostí.',
   body:`<blockquote class="cv-quote"><b>SPOCK</b> připomíná, že myšlení opřené o data a objektivitu, spojené s lidskou zvědavostí, kreativitou a společným posláním, posouvá hranice našeho vesmíru.</blockquote>`}
 ];
-const fmtT = s => Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
 /* Videa „SPOCK krok za krokem“: dlouhé a klipy po fázích (bez zvuku, české titulky v obraze). Vyrábí je nastroje/video/record.js. */
 const VIDS = Object.assign({'krok-za-krokem':['Video: SPOCK krok za krokem · 4 min', 'Sedm fází na hotovém běhu'], 'pitch':['Video: Onboarding do SPOCKu za necelé dvě minuty', 'Co vás v onboardingu čeká']}, Object.fromEntries(['Brief','Problémy a příležitosti','Trh','Řešení','MVP','PRD','Iniciativa'].map((n, i) => ['faze-' + (i + 1), ['Video: fáze ' + (i + 1) + ' · ' + n, 'Fáze ' + (i + 1) + ': ' + n]])));
 const vidTag = id => VIDS[id] ? `<video class="cv-video" controls preload="none" playsinline poster="spock-${id}-poster.jpg" aria-label="Video: ${VIDS[id][1]}"><source src="spock-${id}.mp4" type="video/mp4">Váš prohlížeč video neumí přehrát.</video>` : VIDEO;
@@ -1053,7 +1043,6 @@ const EXPRESS = [
   {id:'cheat', t:'Tahák tasků', d:'Které tasky budete používat a kdy.', min:5, done:() => !!(S.exSeen && S.exSeen.cheat), go:'cheat'}
 ];
 const exDone = st => { if (st.done) return st.done(); const w = W.find(x => x.id === st.w); if (!w) return false; const d = w.days[st.l]; return st.cards ? (d.cards || []).every((_, ci) => cardAns(st.w + '.' + st.l + '.' + ci) !== undefined) : lessonDone(w, st.l); };
-const exMin = () => EXPRESS.reduce((n, st) => n + st.min, 0);
 const pathHours = () => { try { return Math.round(pathIds().reduce((n, id) => { const w = W.find(x => x.id === id); return n + (w ? w.days.reduce((m, d) => m + dayLearn(d) + dayDo(d), 0) : 0); }, 0) / 60); } catch (e) { return 15; } };
 /* Rozcestí jen pro toho, kdo ještě nic nezačal; ostatním stačí odkaz v banneru */
 const started = () => !!S.pos || W.some(w => modPct(w) > 0);
@@ -1076,13 +1065,13 @@ function exHeroAction(roleLine){
 }
 /* Rozcestí: dvě rovnocenné volby po výběru role, dokud se člověk nerozhodne */
 function exFork(roleLine){
+  /* celá cesta je hlavní volba; expresní start a vstupní test jsou vedlejší možnosti pod ní */
   const full = pathHours();
   return `<div class="exfork" role="group" aria-label="Jak chcete začít">
     <span class="hx-nl">Jak chcete začít?</span>
-    <div class="exf-opts">
-      <button type="button" class="exf full" data-express="full" data-golesson="l0:0"><span class="exf-k">Celá cesta</span><b>~${full} h</b><span>Všechny úrovně s praxí ve VS Code až po vlastní běh. Po 30 minutách denně.</span><span class="exf-go">Začít lekcí 0.1 →</span></button>
-      <button type="button" class="exf fast" data-express="on"><span class="exf-k">Expresní start</span><b>1 h 40 min</b><span>To nejnutnější: co SPOCK dělá, pravidla, video a objednání přístupů. Pokrok se započítá.</span><span class="exf-go">Začít expres →</span></button>
-    </div><p class="exf-place">Znáte už SPOCK? <button class="linkbtn" type="button" data-place>Vstupní test (${PLACE_N} otázek)</button> přeskočí teorii úrovně 0.</p>${roleLine}</div>`;
+    <button type="button" class="exf full" data-express="full" data-golesson="l0:0"><span class="exf-k">Doporučeno · celá cesta</span><b>~${full} h</b><span>Všechny úrovně s praxí ve VS Code až po vlastní běh. Po 30 minutách denně.</span><span class="exf-go">Začít lekcí 0.1 →</span></button>
+    <p class="exf-alt">Málo času? <button class="linkbtn" type="button" data-express="on">Expresní start za 1 h 40 min</button>: to nejnutnější a objednání přístupů. Pokrok se započítá.</p>
+    <p class="exf-place">Znáte už SPOCK? <button class="linkbtn" type="button" data-place>Vstupní test (${PLACE_N} otázek)</button> přeskočí teorii úrovně 0.</p>${roleLine}</div>`;
 }
 function exCheck(){
   if (!S.express || S.got['express']) return;
@@ -1740,12 +1729,18 @@ function welcomeOpen(){
     <div class="wl-foot"><button class="btn primary" type="button" data-wl="go">Začít: vyberte svou roli →</button><button class="btn" type="button" data-wl="skip">Přeskočit video</button></div></div>`;
   document.body.append(ov);
   const v = ov.querySelector('video');
+  /* krok 2: po videu (nebo po Začít / Přeskočit video) se v okně rovnou vybírá role */
+  const roleStep = how => { try { v.pause(); } catch (e) {} try { trk('uvítání', how); } catch (e) {}
+    ov.querySelector('.wl-in').innerHTML = `<button type="button" class="g-x vidov-x" aria-label="Zavřít uvítání">×</button><div class="wl-role"><h2 id="wl-h">Vyberte svou roli</h2><p>Role určí, který modul vás čeká na úrovni 2. Změnit ji jde kdykoli.</p>${roleCards()}</div>`;
+    ov.querySelector('.vidov-x').onclick = () => close('zavřeno'); const r = ov.querySelector('[data-role]'); if (r) r.focus(); };
+  ov.addEventListener('click', e => { if (e.target.closest('[data-role]')) setTimeout(() => close('role'), 0); });
+  v.addEventListener('ended', () => roleStep('video dokončeno'));
   const close = how => { try { v.pause(); } catch (e) {} ov.remove(); S.seenPitch = true; save(); try { trk('uvítání', how); } catch (e) {}
-    if (how === 'začít') { const r = document.querySelector('.startb [data-role]'); if (r) { r.closest('.startb').scrollIntoView({block:'center'}); r.focus({preventScroll:true}); } } };
+    if (how === 'role') { window.scrollTo(0, 0); const f = document.querySelector('.exfork .exf, .hx [data-golesson]'); if (f) f.focus({preventScroll:true}); } };
   v.addEventListener('play', () => { S.vids = Object.assign({}, S.vids, {pitch:1}); save(); try { trk('video', 'pitch'); } catch (e) {} }, {once:true});
   ov.querySelector('.vidov-x').onclick = () => close('zavřeno');
-  ov.querySelector('[data-wl=skip]').onclick = () => close('přeskočeno');
-  ov.querySelector('[data-wl=go]').onclick = () => close('začít');
+  ov.querySelector('[data-wl=skip]').onclick = () => roleStep('přeskočeno');
+  ov.querySelector('[data-wl=go]').onclick = () => roleStep('začít');
   ov.addEventListener('click', e => { if (e.target === ov) close('zavřeno'); });
   ov.addEventListener('keydown', e => { if (e.key === 'Escape') close('zavřeno'); });
   ov.querySelector('.vidov-x').focus();
