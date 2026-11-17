@@ -17,6 +17,10 @@ Po každé schválené aktualizaci onboardingu přepište řádky výše na novo
 python3 nastroje/kontrola-aktualnosti.py ../SPOCK-Workflow-1.0 --zapis-otisk
 ```
 
+## Co je nového pro uživatele
+
+Když onboarding aktualizujete na novou verzi SPOCKu, doplňte do `web/app.js` do `NOVINKY` záznam pro nový release, třeba `'1.17.0': ['Nový task **SPOCK: …**.', 'Brána G3 má nové pole …']`. Kdo onboarding používal na starší verzi, uvidí na úvodu kartu „Co je nového ve SPOCKu“, dokud ji nepotvrdí. Nováčci ji nevidí. Bez záznamu se karta neukáže.
+
 ## Údržba
 
 Jednou měsíčně (a po každém novém vydání SPOCKu) spusťte v Claude Code ve složce tohoto repozitáře:

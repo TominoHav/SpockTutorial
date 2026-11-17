@@ -202,7 +202,10 @@ document.addEventListener('click', e => {
   const b = e.target.closest('[data-card]'); if (!b) return;
   const [k, o] = b.dataset.card.split(':'), [wid, di, ci] = k.split('.');
   const w = W.find(x => x.id === wid), c = w && w.days[+di].cards[+ci]; if (!c || (S.cards || {})[k] !== undefined) return;
-  S.cards = S.cards || {}; S.cards[k] = +o; save();
+  S.cards = S.cards || {}; S.cards[k] = +o;
+  /* netrefená karta se vrátí k opakování za den */
+  if (+o !== c.a) { try { revAdd(k); } catch (err) {} }
+  save();
   if (+o === c.a) award('card.' + k, 5, 'karta');
   const d = w.days[+di];
   if (lessonDone(w, +di) && award('lesson.' + wid + '.' + di, XP.lesson, 'lekce')) {

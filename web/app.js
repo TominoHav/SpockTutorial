@@ -99,6 +99,7 @@ function updatePills(){
   const ps = $('#pill-streak'); if (ps) { ps.hidden = !S.xp; ps.innerHTML = FLAME + '<b>' + st + '</b>'; ps.classList.toggle('lit', lit); ps.title = 'Série: ' + st + ' dní' + (lit ? '' : ' · dnes ještě nic'); }
   const px = $('#pill-xp'); if (px) { px.hidden = !S.xp; px.innerHTML = `<span class="ring sm" style="--p:${Math.min(100, todayXP()/S.goal*100)}"></span><b>${S.xp}</b> XP`; px.title = 'Dnes ' + todayXP() + ' z ' + S.goal + ' XP · ' + rank().name; }
   $('#pill-prog').innerHTML = '<span class="pp-l">Hotovo </span>' + overall() + ' %'; $('#pill-prog').title = 'Hotovo z vaší cesty';
+  try { ntfUpdate(); } catch (e) {}
 }
 function toast(msg){ notice({kind:'info', title:msg}); }
 
@@ -332,7 +333,85 @@ function confetti(cv, n){
 }
 
 /* ---------- kvíz jako lekce (Duolingo): losuje 5 otázek ze zásoby, pořadí otázek i možností se míchá při každém spuštění ---------- */
-const QN = 5, QPASS = .8;
+const QN = 5, QPASS = .8, PLACE_N = 8;
+/* ---------- opakování chyb s odstupem ----------
+   Karta zodpovězená špatně se vrátí k zopakování za 1 den; když ji člověk pak trefí napoprvé, další opakování je za 3,
+   7 a 14 dní, pak karta z opakování zmizí. Netrefená se vrací zase za den. Za každou trefu +5 XP. */
+const REV_DAYS = [1, 3, 7, 14];
+function revInit(){
+  if (S.revInit) return; S.rev = S.rev || {};
+  let n = 0;
+  Object.keys(S.cards || {}).forEach(k => { const [wid, di, ci] = k.split('.'), w = W.find(x => x.id === wid), c = w && w.days[+di] && (w.days[+di].cards || [])[+ci]; if (c && c.o.length && S.cards[k] !== c.a && !S.rev[k]) { S.rev[k] = {due:Date.now(), step:0}; n++; } });
+  /* bez nových karet se neukládá: uložení by posunulo čas pokroku a na novém zařízení by přebilo pokrok z účtu */
+  S.revInit = true; if (n) save();
+}
+const revCardOf = k => { const [wid, di, ci] = k.split('.'), w = W.find(x => x.id === wid); return w && w.days[+di] && (w.days[+di].cards || [])[+ci]; };
+const revDue = () => Object.keys(S.rev || {}).filter(k => S.rev[k].due <= Date.now() && revCardOf(k));
+function revAdd(k){ S.rev = S.rev || {}; S.rev[k] = {due:Date.now() + REV_DAYS[0] * 864e5, step:0}; }
+function revDone(key, ok){
+  const k = key.replace(/^rev\./, ''), r = (S.rev || {})[k]; if (!r) return 0;
+  if (!ok) { r.step = 0; r.due = Date.now() + REV_DAYS[0] * 864e5; save(); return 0; }
+  r.step++; if (r.step >= REV_DAYS.length) delete S.rev[k]; else r.due = Date.now() + REV_DAYS[r.step] * 864e5;
+  return award('rev.' + k + '.' + dKey(0), 5, 'opakování') || 0;
+}
+function startReview(){
+  const due = revDue(); if (!due.length) { toast('Teď není co opakovat.'); return; }
+  const items = shuffle(due).slice(0, QN).map(k => sesItem(revCardOf(k), 'rev.' + k));
+  SES = {wid:'rev', mode:'rev', items, qs:items.map((_, i) => i), i:0, hearts:0, pick:null, checked:false, right:0, total:items.length, missed:new Set(), gained:0};
+  try { trk('opakování', items.length + ' karet'); } catch (e) {}
+  renderSession();
+}
+document.addEventListener('click', e => { if (e.target.closest('[data-review]')) startReview(); if (e.target.closest('[data-place]')) startSession('l0', 'place'); });
+/* vstupní test: splní karty a kvíz úrovně 0 a odemkne Přípravu; praktické úkoly zůstávají */
+function placeCredit(){
+  const w = W.find(x => x.id === 'l0'); if (!w) return;
+  S.cards = S.cards || {}; w.days.forEach((d, di) => (d.cards || []).forEach((c, ci) => { const k = w.id + '.' + di + '.' + ci; if (S.cards[k] === undefined) S.cards[k] = c.a; }));
+  S.qpass = S.qpass || {}; if (!S.qpass.l0) S.qpass.l0 = {at:Date.now(), right:0, total:0, place:true};
+  S.unlocked = S.unlocked || {}; S.unlocked.l1 = true; S.placed = dKey(0); save(); award('place.l0', XP.jump, 'vstupní test'); checkModuleDone(w);
+}
+/* ---------- co je nového ve SPOCKu ----------
+   Když vyjde nová verze SPOCKu a onboarding se podle ní aktualizuje, sem se doplní, co se změnilo pro uživatele
+   (klíč = release ze SPOCK-VERZE.md). Kdo už onboarding používal, uvidí na úvodu kartu s novinkami, dokud ji nezavře.
+   Nováček kartu nevidí, učí se rovnou novou verzi. */
+const NOVINKY = {};
+if (window.__E2E && window.__E2E_NOVINKY) Object.assign(NOVINKY, window.__E2E_NOVINKY);
+/* ---------- upozornění v horní liště: opakování chyb a novinky ve SPOCKu ----------
+   Zvonek vedle série, XP a procent ukazuje počet; po kliknutí se otevře panel. Když přibude něco nového,
+   jednou vyskočí hláška (opakování nejvýš jednou denně, novinky jednou). Úvodní stránka zůstává jen pro cestu. */
+const newsItems = () => S.role && S.spockSeen && S.spockSeen !== BUILD.spock ? NOVINKY[BUILD.spock] || null : null;
+function ntfCount(){ return (S.role && revDue().length ? 1 : 0) + (newsItems() ? 1 : 0); }
+function ntfPanel(){
+  const n = S.role ? revDue().length : 0, news = newsItems(), parts = [];
+  if (n) parts.push(`<div class="ntf-i"><b>Opakování chyb</b><p>${n} ${n === 1 ? 'karta' : n < 5 ? 'karty' : 'karet'} k zopakování. Co jste netrefili, se vrací s odstupem, dokud to neumíte. +5 XP za každou.</p><button class="btn primary sm" type="button" data-review>Opakovat →</button></div>`);
+  if (news) parts.push(`<div class="ntf-i"><b>Co je nového ve SPOCKu ${esc(BUILD.spock)}</b><ul>${news.map(x => `<li>${fmt(x)}</li>`).join('')}</ul><button class="btn sm" type="button" data-newsok>Rozumím</button></div>`);
+  return parts.length ? parts.join('') : '<p class="ntf-empty">Nic nového. Až budete mít co opakovat nebo SPOCK přinese novinky, objeví se tady.</p>';
+}
+function ntfUpdate(){
+  if (S.role && !S.spockSeen) { S.spockSeen = BUILD.spock; save(); }
+  const b = document.getElementById('pill-ntf'); if (!b) return;
+  const c = ntfCount(); b.hidden = !S.role; b.classList.toggle('has', !!c);
+  b.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>${c ? `<b class="ntf-n">${c}</b>` : ''}`;
+  b.setAttribute('aria-label', c ? 'Upozornění: ' + c : 'Upozornění: nic nového'); b.title = b.getAttribute('aria-label');
+  const pop = document.getElementById('ntf-pop'); if (pop && !pop.hidden) pop.innerHTML = ntfPanel();
+  /* vyskočí jednou: novinky po nové verzi, opakování jednou denně */
+  if (S.role && newsItems() && S.newsNotified !== BUILD.spock) { S.newsNotified = BUILD.spock; save(); notice({kind:'badge', title:'Co je nového ve SPOCKu ' + BUILD.spock, text:'Podívejte se na zvonek nahoře.'}); }
+  const n = S.role ? revDue().length : 0;
+  if (n && S.revNotified !== dKey(0)) { S.revNotified = dKey(0); save(); notice({kind:'badge', title:n + ' ' + (n === 1 ? 'karta' : n < 5 ? 'karty' : 'karet') + ' k zopakování', text:'Najdete je u zvonku nahoře.'}); }
+}
+function ntfToggle(open){
+  const b = document.getElementById('pill-ntf'); let pop = document.getElementById('ntf-pop'); if (!b) return;
+  if (!pop) { pop = document.createElement('div'); pop.id = 'ntf-pop'; pop.className = 'ntf-pop'; pop.setAttribute('role', 'region'); pop.setAttribute('aria-label', 'Upozornění'); pop.hidden = true; document.body.append(pop); }
+  const show = open === undefined ? pop.hidden : open;
+  pop.hidden = !show; b.setAttribute('aria-expanded', String(show));
+  if (show) { pop.innerHTML = ntfPanel(); const f = pop.querySelector('button'); if (f) f.focus(); try { trk('upozornění', 'otevřeno'); } catch (e) {} }
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('#pill-ntf')) { ntfToggle(); return; }
+  if (e.target.closest('[data-review],[data-newsok]')) ntfToggle(false);
+  else if (!e.target.closest('#ntf-pop')) { const p = document.getElementById('ntf-pop'); if (p && !p.hidden) ntfToggle(false); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { const p = document.getElementById('ntf-pop'); if (p && !p.hidden) { ntfToggle(false); document.getElementById('pill-ntf').focus(); } } });
+document.addEventListener('click', e => { if (e.target.closest('[data-newsok]')) { S.spockSeen = BUILD.spock; save(); ntfUpdate(); render(); } });
 let SES = null;
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const cardsTotal = w => w.days.reduce((n, d) => n + (d.cards || []).length, 0);
@@ -344,33 +423,36 @@ function sesItem(src, key){
   return {key, q:src.q, e:src.e !== undefined ? src.e : src.why, o:ord.map(i => src.o[i]), a:ord.indexOf(src.a)};
 }
 function startSession(wid, mode){
+  if (mode === 'rev') return startReview();
   const w = W.find(x => x.id === wid); if (!w) return;
   if (mode === 'quiz' && !quizReady(w)) { toast('Kvíz se odemkne po kartách modulu (' + cardsAll(w) + ' z ' + cardsTotal(w) + ').'); return; }
   let pool = w.quiz.map((q, i) => q.o.length ? sesItem(q, w.id + '.' + i) : null).filter(Boolean);
   if (mode === 'jump') w.days.forEach((d, di) => (d.cards || []).forEach((c, ci) => { if (c.o.length && c.a >= 0) pool.push(sesItem(c, 'card.' + w.id + '.' + di + '.' + ci)); }));
-  const items = shuffle(pool).slice(0, QN);
+  /* vstupní test: otázky z karet a kvízu úrovně 0; kdo ho zvládne, má teorii úrovně 0 splněnou a Přípravu odemčenou */
+  if (mode === 'place') { pool = w.quiz.map((q, i) => q.o.length ? sesItem(q, w.id + '.' + i) : null).filter(Boolean); w.days.forEach((d, di) => (d.cards || []).forEach((c, ci) => { if (c.o.length && c.a >= 0) pool.push(sesItem(c, 'card.' + w.id + '.' + di + '.' + ci)); })); }
+  const items = shuffle(pool).slice(0, mode === 'place' ? PLACE_N : QN);
   if (!items.length) return;
-  SES = {wid, mode, items, qs:items.map((_, i) => i), i:0, hearts:mode === 'jump' ? Math.max(1, items.length - Math.ceil(items.length * QPASS)) + 1 : 0, pick:null, checked:false, right:0, total:items.length, missed:new Set(), gained:0};
+  SES = {wid, mode, items, qs:items.map((_, i) => i), i:0, hearts:(mode === 'jump' || mode === 'place') ? Math.max(1, items.length - Math.ceil(items.length * QPASS)) + 1 : 0, pick:null, checked:false, right:0, total:items.length, missed:new Set(), gained:0};
   SES.heartsMax = SES.hearts;
   renderSession();
 }
 /* jen pro automatický test: čtení stavu kvízu */
 /* testovací háčky: jen v testovacím sestavení (e2e.html nastaví window.__E2E), ne pro uživatele */
-if (window.__E2E) window.__kviz = {liveNow: () => dashLive(), streak: () => streak(), state: fn => { fn(S); save(); return true; },
+if (window.__E2E) window.__kviz = {cardA: k => { const c = revCardOf(k); return c ? c.a : null; }, liveNow: () => dashLive(), streak: () => streak(), state: fn => { fn(S); save(); return true; },
   /* vyplní modul až na jeden úkol bez ověření a vrátí, kde zůstal: test ho pak odškrtne opravdovým kliknutím */
   almost: wid => { const w = W.find(x => x.id === wid); let left = null; S.qpass = S.qpass || {};
     for (let di = w.days.length - 1; di >= 0 && !left; di--) for (let ti = w.days[di].todo.length - 1; ti >= 0; ti--) if (!w.days[di].todo[ti].check) { left = [di, ti]; break; }
     w.days.forEach((d, di) => { d.todo.forEach((_, ti) => { if (!(left && left[0] === di && left[1] === ti)) S.todo[wid+'.'+di+'.'+ti] = true; }); (d.cards || []).forEach((c, ci) => { S.cards[wid+'.'+di+'.'+ci] = c.a; }); });
     S.qpass[wid] = {at:Date.now(), right:5, total:5}; save(); render(); return left; },
   skins: () => SKINS.map(k => [k.n, k.d, spockSVG('fab', k)]), finish: () => { S.qpass = S.qpass || {}; pathMods().forEach(w => { w.days.forEach((d, di) => { d.todo.forEach((_, ti) => { S.todo[w.id+'.'+di+'.'+ti] = true; }); (d.cards || []).forEach((c, ci) => { S.cards[w.id+'.'+di+'.'+ci] = c.a; }); }); S.qpass[w.id] = S.qpass[w.id] || {at:Date.now(), right:5, total:5}; }); save(); render(); return pathDone(); }, path: () => pathIds(), badges: () => myBadges().map(b => b[0]), idle: mins => { const now = Date.now(); tTick(); const b = Object.values(TRK.doc.secs).reduce((n, x) => n + x, 0); TRK.act = now - (mins + 2) * 60000; TRK.curAt = now - mins * 60000; tTick(); return Object.values(TRK.doc.secs).reduce((n, x) => n + x, 0) - b; }, check: (w, d, t) => { const m = W.find(x => x.id === w); return m.days[d].todo[t].check.a; }, build: () => BUILD, ctx: () => { const v = view, out = {}; W.forEach(w => { view = Object.assign({}, v, {name:'week', week:w.id}); out[w.id] = rules().length; }); view = v; return out; }, mods: () => W.map(w => ({id:w.id, lessons:w.days.length, cards:cardsTotal(w)})), ses: () => SES, pool: id => { const w = W.find(x => x.id === id); return w ? w.quiz.length : 0; }};
-function sesQ(){ const w = W.find(x => x.id === SES.wid), qi = SES.qs[SES.i]; return {w, qi, q:SES.items[qi]}; }
+function sesQ(){ const w = W.find(x => x.id === SES.wid) || {id:SES.wid, title:'Opakování chyb', c:'indigo'}, qi = SES.qs[SES.i]; return {w, qi, q:SES.items[qi]}; }
 function renderSession(){
   let ov = document.getElementById('ses');
   if (!ov) { ov = document.createElement('div'); ov.id = 'ses'; ov.className = 'ses'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); document.body.append(ov); }
   const {w, q} = sesQ();
   ov.className = 'ses c-' + w.c;
   const pct = Math.round(SES.i / SES.qs.length * 100);
-  const hearts = SES.mode === 'jump' ? `<span class="ses-hearts" aria-label="Zbývá ${SES.hearts} ${SES.hearts === 1 ? 'srdíčko' : 'srdíčka'}">${Array.from({length:SES.heartsMax || SES.hearts}, (_, i) => `<span class="${i < SES.hearts ? '' : 'lost'}">${HEART}</span>`).join('')}</span>` : `<span class="ses-n num">${Math.min(SES.i + 1, SES.qs.length)} / ${SES.qs.length}</span>`;
+  const hearts = (SES.mode === 'jump' || SES.mode === 'place') ? `<span class="ses-hearts" aria-label="Zbývá ${SES.hearts} ${SES.hearts === 1 ? 'srdíčko' : 'srdíčka'}">${Array.from({length:SES.heartsMax || SES.hearts}, (_, i) => `<span class="${i < SES.hearts ? '' : 'lost'}">${HEART}</span>`).join('')}</span>` : `<span class="ses-n num">${Math.min(SES.i + 1, SES.qs.length)} / ${SES.qs.length}</span>`;
   const body = `<div class="ses-opts">${q.o.map((o,oi) => {
       let cls = ''; if (SES.checked) { if (oi === q.a) cls = 'right'; else if (oi === SES.pick) cls = 'wrong'; } else if (oi === SES.pick) cls = 'picked';
       return `<button type="button" class="ses-opt ${cls}" data-sopt="${oi}" ${SES.checked?'disabled':''}><span class="ses-k">${oi+1}</span><span>${fmt(o)}</span></button>`; }).join('')}</div>`;
@@ -382,7 +464,7 @@ function renderSession(){
   }
   ov.innerHTML = `<div class="ses-in">
     <div class="ses-top"><button class="g-x" type="button" data-sclose aria-label="Ukončit kvíz">×</button><span class="ses-bar"><i style="width:${pct}%"></i></span>${hearts}</div>
-    <div class="ses-body"><span class="eyebrow">${SES.mode === 'jump' ? 'Skokový test · ' : 'Ověř se · '}${esc(w.title)}</span><h2 class="ses-q">${fmt(q.q)}</h2>${body}</div>
+    <div class="ses-body"><span class="eyebrow">${SES.mode === 'jump' ? 'Skokový test · ' : SES.mode === 'place' ? 'Vstupní test · ' : SES.mode === 'rev' ? '' : 'Ověř se · '}${esc(SES.mode === 'place' ? 'Poznejte SPOCK' : w.title)}</span><h2 class="ses-q">${fmt(q.q)}</h2>${body}</div>
     ${foot}</div>`;
   const f = ov.querySelector('[data-snext],[data-scheck]:not([disabled]),.ses-opt'); if (f) f.focus();
 }
@@ -390,12 +472,12 @@ function sesCheck(){
   const {qi, q} = sesQ();
   SES.checked = true;
   const ok = SES.pick === q.a, first = !SES.missed.has(qi);
-  if (ok) { if (first) SES.right++; if (SES.mode === 'quiz') SES.gained += award('quiz.' + q.key, first ? XP.quizFirst : XP.quizRetry); }
-  else { SES.missed.add(qi); if (SES.mode === 'jump') SES.hearts--; else SES.qs.push(qi); }
+  if (ok) { if (first) SES.right++; if (SES.mode === 'quiz') SES.gained += award('quiz.' + q.key, first ? XP.quizFirst : XP.quizRetry); if (SES.mode === 'rev' && first) SES.gained += revDone(q.key, true); }
+  else { if (SES.mode === 'rev' && first) revDone(q.key, false); SES.missed.add(qi); if (SES.mode === 'jump' || SES.mode === 'place') SES.hearts--; else SES.qs.push(qi); }
   renderSession();
 }
 function sesNext(){
-  if (SES.mode === 'jump' && SES.hearts <= 0) return endSession(false);
+  if ((SES.mode === 'jump' || SES.mode === 'place') && SES.hearts <= 0) return endSession(false);
   SES.i++; SES.pick = null; SES.checked = false;
   if (SES.i >= SES.qs.length) return endSession(true);
   renderSession();
@@ -404,7 +486,13 @@ function endSession(ok){
   const s = SES, w = W.find(x => x.id === s.wid); SES = null;
   const ov = document.getElementById('ses'); if (ov) ov.remove();
   const need = Math.ceil(s.total * QPASS);
-  try { trackQuiz(w.id, s.mode, !!ok && s.right >= need, s.right, s.total); } catch (e) {}
+  try { trackQuiz(s.wid, s.mode, !!ok && s.right >= need, s.right, s.total); } catch (e) {}
+  if (s.mode === 'rev') { save(); celebrate({kind:'quiz', title:'Opakování hotové', text:`Napoprvé správně ${s.right} z ${s.total}. ${s.right === s.total ? 'Tyhle karty se vrátí za delší dobu.' : 'Netrefené karty se vrátí zítra.'} Získáno ${s.gained} XP.`}); render(); return; }
+  if (s.mode === 'place') {
+    if (ok && s.right >= need) { placeCredit(); celebrate({kind:'unlock', title:'Vstupní test zvládnutý', text:`${s.right} z ${s.total} správně. Teorii úrovně 0 máte splněnou a Příprava je odemčená. Praktické úkoly ve VS Code na vás počkají, ty se testem přeskočit nedají.`}); }
+    else celebrate({kind:'fail', title:'Vstupní test nevyšel', text:`Potřebujete aspoň ${need} z ${s.total} správně. Nevadí, úroveň 0 vás to naučí. Test můžete zkusit znovu s jinými otázkami.`});
+    render(); return;
+  }
   if (s.mode === 'jump') {
     if (ok && s.right >= need) { S.unlocked[w.id] = true; save(); award('jump.' + w.id, XP.jump, 'skok'); celebrate({kind:'unlock', title:'Odemčeno: ' + w.title, text:`Skokový test zvládnutý: ${s.right} z ${s.total}. Modul je otevřený.`}); }
     else celebrate({kind:'fail', title:'Skokový test nevyšel', text:`Potřebujete aspoň ${need} z ${s.total} správně. Vraťte se k předchozímu modulu, nebo to zkuste znovu s jinými otázkami.`});
@@ -806,15 +894,6 @@ function spockSVG(cls, skin){
 function roleBtns(){
   return `<div class="roles" role="group" aria-label="Vaše role">${Object.keys(ROLES).map(r => `<button type="button" class="rolebtn ${S.role===r?'on':''}" data-role="${r}" aria-pressed="${S.role===r}" title="${esc(ROLE_WHO[r])}">${ROLES[r]}</button>`).join('')}</div>`;
 }
-function pathStep(no, c, title, text, ids, btn){
-  const mods = ids.map(id => W.find(w => w.id === id)).filter(Boolean);
-  let tot = 0, done = 0; mods.forEach(w => { const t = weekTotals(w); tot += t.tot; done += t.done; });
-  const pct = tot ? done / tot : 0, gems = [0,1,2,3].map(i => `<i class="${pct > i/4 + .001 || pct === 1 ? 'on' : ''}"></i>`).join('');
-  const pend = !mods.length, locked = mods.length && isLocked(mods[0]), fin = mods.length && pct === 1;
-  const nx = nextOnPath(), here = mods.length && nx && nx.id === mods[0].id && !locked;
-  const lbl = locked ? 'Náhled' : here ? 'Pokračovat' : fin ? 'Zopakovat' : 'Otevřít'; btn = btn.replace('>Otevřít<', '>' + lbl + '<');
-  return `<li class="hp-st c-${c} ${pend?'tbd':''} ${locked?'locked':''} ${fin?'done':''} ${here?'here':''}">${here ? '<span class="hp-here">Na řadě</span>' : ''}<span class="hp-dia"><span>${locked ? LOCK : fin ? '✓' : no}</span></span><h3>${title}</h3><p>${text}</p><span class="hp-gems" aria-label="Hotovo ${Math.round(pct*100)} %">${gems}</span><span class="hp-a">${btn}</span></li>`;
-}
 function badgeProg(id){
   const st = streak();
   if (id === 'streak3') return [Math.min(st,3), 3];
@@ -865,7 +944,6 @@ const CH = [
  {id:'proc', t:114, c:'blue', k:'Proč Spock?', h:'Inspirováno kombinací člověka a Vulkánce', short:'Data a objektivita spojené s lidskou zvědavostí.',
   body:`<blockquote class="cv-quote"><b>SPOCK</b> připomíná, že myšlení opřené o data a objektivitu, spojené s lidskou zvědavostí, kreativitou a společným posláním, posouvá hranice našeho vesmíru.</blockquote>`}
 ];
-const fmtT = s => Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
 /* Videa „SPOCK krok za krokem“: dlouhé a klipy po fázích (bez zvuku, české titulky v obraze). Vyrábí je nastroje/video/record.js. */
 const VIDS = Object.assign({'krok-za-krokem':['Video: SPOCK krok za krokem · 4 min', 'Sedm fází na hotovém běhu'], 'pitch':['Video: Onboarding do SPOCKu za necelé dvě minuty', 'Co vás v onboardingu čeká']}, Object.fromEntries(['Brief','Problémy a příležitosti','Trh','Řešení','MVP','PRD','Iniciativa'].map((n, i) => ['faze-' + (i + 1), ['Video: fáze ' + (i + 1) + ' · ' + n, 'Fáze ' + (i + 1) + ': ' + n]])));
 const vidTag = id => VIDS[id] ? `<video class="cv-video" controls preload="none" playsinline poster="spock-${id}-poster.jpg" aria-label="Video: ${VIDS[id][1]}"><source src="spock-${id}.mp4" type="video/mp4">Váš prohlížeč video neumí přehrát.</video>` : VIDEO;
@@ -915,11 +993,11 @@ function pathBlock(title){
 function roleCards(){
   return `<div class="rcards">${W.filter(w => w.role).map(w => `<button type="button" class="rcard c-${w.c} ${S.role === w.role ? 'on' : ''}" data-role="${w.role}" aria-pressed="${S.role === w.role}"><span class="rc-dia"><span>${S.role === w.role ? '✓' : ROLE_SHORT[w.role]}</span></span><b>${esc(ROLES[w.role])}</b><span>${esc(ROLE_WHO[w.role])}</span></button>`).join('')}</div>`;
 }
-function toolsBlock(title, noSim){
-  return `<div class="sec-h"><h2>${title || 'Opora'}</h2></div><div class="journey ${noSim ? 'three' : 'four'}">
-    ${noSim ? '' : `<button class="jstep c-pink" type="button" data-simstart><span class="n">5 minut · interaktivně</span><h3>SPOCK nanečisto</h3><p>Zkrácený běh od nápadu po iniciativu. Vy rozhodujete na každé bráně.</p></button>`}
-    <button class="jstep c-blue" type="button" data-go="map"><span class="n">Interaktivní mapa</span><h3>SPOCK v kostce</h3><p>7 fází a 6 agentů. Kdo v které fázi rozhoduje a na co si dát pozor.</p></button>
+function toolsBlock(title){
+  /* jen to, bez čeho se člověk neobejde; mapa, příručka a sebehodnocení jsou v menu pod Další */
+  return `<div class="sec-h"><h2>${title || 'Opora'}</h2></div><div class="journey three">
     <button class="jstep c-purple" type="button" data-go="diag"><span class="n">Když něco nejde</span><h3>Diagnostika</h3><p>Co vidím → co udělám a nejčastější chyby uživatelů.</p></button>
+    <button class="jstep c-blue" type="button" data-go="gloss"><span class="n">Neznámý pojem</span><h3>Slovníček</h3><p>Pojmy SPOCKu jednou větou: brána, agent, task, iniciativa.</p></button>
     <button class="jstep c-indigo" type="button" data-go="cheat"><span class="n">Opora</span><h3>Tahák tasků</h3><p>Všechny tasky SPOCKu, kdy je spustit a která políčka otevřou.</p></button></div>${contacts()}`;
 }
 function contacts(){
@@ -927,7 +1005,6 @@ function contacts(){
     <li><b>SPOCK core tým</b><span>Přístup k pilotu, materiály a data, obecné otázky: Veronika Bedáňová (vbedanova@csas.cz) a Ines Bamburać-Alibašić (ibamburac-alibasic@csas.cz).</span></li>
     <li><b>Repozitář a prostředí</b><span>Ilya Shramov. Instalace a běžné potíže: nejdřív support engineer ve vašem týmu, pak IT podpora ČS.</span></li>
     <li><b>SPOCK</b><span>CoE Product Management a CoE Product Design. Na otázky k lekcím onboardingu odpoví průvodce Spock v rohu stránky.</span><button class="linkbtn" type="button" data-open-spock>Zeptat se</button></li>
-    <li><b>Know-how SPOCKu</b><span>Pět oblastí (Compliance, Market, Method, Product, Writing) vlastní Česká spořitelna. Osobu pro každou oblast ČS teprve jmenuje.</span></li>
     <li><b>Onboarding Tutorial</b><span>Tomáš Havlíček, Guild Master Product Management.</span></li>
   </ul></section>`;
 }
@@ -966,7 +1043,6 @@ const EXPRESS = [
   {id:'cheat', t:'Tahák tasků', d:'Které tasky budete používat a kdy.', min:5, done:() => !!(S.exSeen && S.exSeen.cheat), go:'cheat'}
 ];
 const exDone = st => { if (st.done) return st.done(); const w = W.find(x => x.id === st.w); if (!w) return false; const d = w.days[st.l]; return st.cards ? (d.cards || []).every((_, ci) => cardAns(st.w + '.' + st.l + '.' + ci) !== undefined) : lessonDone(w, st.l); };
-const exMin = () => EXPRESS.reduce((n, st) => n + st.min, 0);
 const pathHours = () => { try { return Math.round(pathIds().reduce((n, id) => { const w = W.find(x => x.id === id); return n + (w ? w.days.reduce((m, d) => m + dayLearn(d) + dayDo(d), 0) : 0); }, 0) / 60); } catch (e) { return 15; } };
 /* Rozcestí jen pro toho, kdo ještě nic nezačal; ostatním stačí odkaz v banneru */
 const started = () => !!S.pos || W.some(w => modPct(w) > 0);
@@ -989,13 +1065,13 @@ function exHeroAction(roleLine){
 }
 /* Rozcestí: dvě rovnocenné volby po výběru role, dokud se člověk nerozhodne */
 function exFork(roleLine){
+  /* celá cesta je hlavní volba; expresní start a vstupní test jsou vedlejší možnosti pod ní */
   const full = pathHours();
   return `<div class="exfork" role="group" aria-label="Jak chcete začít">
     <span class="hx-nl">Jak chcete začít?</span>
-    <div class="exf-opts">
-      <button type="button" class="exf full" data-express="full" data-golesson="l0:0"><span class="exf-k">Celá cesta</span><b>~${full} h</b><span>Všechny úrovně s praxí ve VS Code až po vlastní běh. Po 30 minutách denně.</span><span class="exf-go">Začít lekcí 0.1 →</span></button>
-      <button type="button" class="exf fast" data-express="on"><span class="exf-k">Expresní start</span><b>1 h 40 min</b><span>To nejnutnější: co SPOCK dělá, pravidla, video a objednání přístupů. Pokrok se započítá.</span><span class="exf-go">Začít expres →</span></button>
-    </div>${roleLine}</div>`;
+    <button type="button" class="exf full" data-express="full" data-golesson="l0:0"><span class="exf-k">Doporučeno · celá cesta</span><b>~${full} h</b><span>Všechny úrovně s praxí ve VS Code až po vlastní běh. Po 30 minutách denně.</span><span class="exf-go">Začít lekcí 0.1 →</span></button>
+    <p class="exf-alt">Málo času? <button class="linkbtn" type="button" data-express="on">Expresní start za 1 h 40 min</button>: to nejnutnější a objednání přístupů. Pokrok se započítá.</p>
+    <p class="exf-place">Znáte už SPOCK? <button class="linkbtn" type="button" data-place>Vstupní test (${PLACE_N} otázek)</button> přeskočí teorii úrovně 0.</p>${roleLine}</div>`;
 }
 function exCheck(){
   if (!S.express || S.got['express']) return;
@@ -1053,7 +1129,7 @@ function heroStable(){
 }
 function homeV4(){
   /* nováček: jedna hlavní akce (nanečisto) v úvodu, pak výběr role a cesta; vysvětlení a opora sbalené níž */
-  if (isFirst()) return heroFirst() + startBlock() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora', true);
+  if (isFirst()) return heroFirst() + startBlock() + pathBlock('Co vás čeká') + `<div class="v4-gap">${introCollapsed()}</div>` + toolsBlock('Opora');
   const l1 = W.find(w => w.id === 'l1'), showSvy = l1 && modPct(l1) === 1 && !(S.survey && S.survey.at);
   return heroStable() + questCard() + teamCard() + (showSvy ? surveyCard(true) : '') + pathBlock() + `<div class="v4-gap">${introCollapsed()}</div>` + `<div class="sec-h"><h2>Profil a odznaky</h2>${isFirst() ? '<p>Za každý úkol, lekci a kvíz získáte XP. První odznak dostanete za první splněný úkol.</p>' : ''}</div>` + profileCard(true) + toolsBlock();
 }
@@ -1355,10 +1431,13 @@ function shell(active, body){
   }).join('');
   const gw = W.find(w => w.id === 'l1b');
   const guide = gw ? `<button type="button" class="${active===gw.id?'on':''} c-${gw.c}" data-week="${gw.id}"><span class="dm"></span>Příručka: ${esc(gw.title)}</button>` + sideLessons(gw, active) : '';
-  const ex = [['tym','Tým','indigo'],['badges','Odznaky a profil','indigo'],['map','SPOCK v kostce','blue'],['diag','Diagnostika','purple'],['gloss','Slovníček','blue'],['cheat','Tahák tasků','blue'],['ready','Připravenost','indigo']]
-    .concat(TRK.owner ? [['dash','Dashboard (jen vy)','indigo']] : [])
-    .map(x => `<button type="button" class="${active===x[0]?'on':''} c-${x[2]}" data-go="${x[0]}"><span class="dm"></span>${x[1]}</button>`).join('');
-  return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more">${otherRoles(active)}<span class="grp">Opora</span>${guide}${ex}</div>`}</nav><section class="main">${body}</section></div>`;
+  /* Opora: nahoře jen to, bez čeho se člověk neobejde; zbytek sbalený v Další; dashboard jen pro vlastníka */
+  const it = x => `<button type="button" class="${active===x[0]?'on':''} c-${x[2]}" data-go="${x[0]}"><span class="dm"></span>${x[1]}</button>`;
+  const core = [['cheat','Tahák tasků','blue'],['diag','Když něco nejde','purple'],['gloss','Slovníček','blue'],['tym','Tým','indigo']].map(it).join('');
+  const extra = [['map','SPOCK v kostce','blue'],['badges','Odznaky a profil','indigo'],['ready','Připravenost','indigo']], exOpen = extra.some(x => x[0] === active) || (gw && active === gw.id) || W.some(w => w.role && w.role !== S.role && w.id === active);
+  const more = `<details class="rail-x" ${exOpen ? 'open' : ''}><summary>Další</summary><button type="button" class="c-pink" data-simstart><span class="dm"></span>SPOCK nanečisto</button>${extra.map(it).join('')}${guide}${otherRoles(active)}</details>`;
+  const own = TRK.owner ? `<span class="grp">Jen pro vás</span>${it(['dash','Dashboard','indigo'])}` : '';
+  return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more"><span class="grp">Opora</span>${core}${more}${own}</div>`}</nav><section class="main">${body}</section></div>`;
 }
 
 function nextWeek(){
@@ -1650,12 +1729,18 @@ function welcomeOpen(){
     <div class="wl-foot"><button class="btn primary" type="button" data-wl="go">Začít: vyberte svou roli →</button><button class="btn" type="button" data-wl="skip">Přeskočit video</button></div></div>`;
   document.body.append(ov);
   const v = ov.querySelector('video');
+  /* krok 2: po videu (nebo po Začít / Přeskočit video) se v okně rovnou vybírá role */
+  const roleStep = how => { try { v.pause(); } catch (e) {} try { trk('uvítání', how); } catch (e) {}
+    ov.querySelector('.wl-in').innerHTML = `<button type="button" class="g-x vidov-x" aria-label="Zavřít uvítání">×</button><div class="wl-role"><h2 id="wl-h">Vyberte svou roli</h2><p>Role určí, který modul vás čeká na úrovni 2. Změnit ji jde kdykoli.</p>${roleCards()}</div>`;
+    ov.querySelector('.vidov-x').onclick = () => close('zavřeno'); const r = ov.querySelector('[data-role]'); if (r) r.focus(); };
+  ov.addEventListener('click', e => { if (e.target.closest('[data-role]')) setTimeout(() => close('role'), 0); });
+  v.addEventListener('ended', () => roleStep('video dokončeno'));
   const close = how => { try { v.pause(); } catch (e) {} ov.remove(); S.seenPitch = true; save(); try { trk('uvítání', how); } catch (e) {}
-    if (how === 'začít') { const r = document.querySelector('.startb [data-role]'); if (r) { r.closest('.startb').scrollIntoView({block:'center'}); r.focus({preventScroll:true}); } } };
+    if (how === 'role') { window.scrollTo(0, 0); const f = document.querySelector('.exfork .exf, .hx [data-golesson]'); if (f) f.focus({preventScroll:true}); } };
   v.addEventListener('play', () => { S.vids = Object.assign({}, S.vids, {pitch:1}); save(); try { trk('video', 'pitch'); } catch (e) {} }, {once:true});
   ov.querySelector('.vidov-x').onclick = () => close('zavřeno');
-  ov.querySelector('[data-wl=skip]').onclick = () => close('přeskočeno');
-  ov.querySelector('[data-wl=go]').onclick = () => close('začít');
+  ov.querySelector('[data-wl=skip]').onclick = () => roleStep('přeskočeno');
+  ov.querySelector('[data-wl=go]').onclick = () => roleStep('začít');
   ov.addEventListener('click', e => { if (e.target === ov) close('zavřeno'); });
   ov.addEventListener('keydown', e => { if (e.key === 'Escape') close('zavřeno'); });
   ov.querySelector('.vidov-x').focus();
@@ -1663,7 +1748,7 @@ function welcomeOpen(){
 setTimeout(welcomeOpen, 400);
 /* po načtení: zvolený vzhled Spocka a případné zakrytí vynechaného dne zmrazením */
 if (!S.rankLvl) S.rankLvl = rank().lvl;   /* stávající uživatelé: odměny až od další hodnosti */
-applySkin(); try { useFreezes(); } catch (e) {}
+applySkin(); try { useFreezes(); } catch (e) {} try { revInit(); } catch (e) {}
 /* výkon: dekorativní animace (Spock, hvězdy, mapa) běží jen, když na ně člověk kouká. Po 15 s bez pohybu
    a u prvků mimo obrazovku se pozastaví; pohyb myši, dotyk, posun nebo klávesa je zase rozběhne. */
 (function(){

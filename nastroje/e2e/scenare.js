@@ -105,6 +105,70 @@ for(const [name,w,h,scheme] of [['tablet',768,1024,'light'],['tablet na šířku
   await ctx.close();
  }));
 }
+// 14) opora: v menu jen to nezbytné, zbytek pod Další, dashboard jen pro vlastníka
+runs.push(scenario('opora',async()=>{
+ const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;
+ await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=pm]').click();await settle(p,200);
+ await p.evaluate(()=>document.querySelector('[data-go=cheat]').click());await settle(p,100);
+ const vis=await p.evaluate(()=>[...document.querySelectorAll('.rail-more > button')].map(b=>b.dataset.go));
+ ok('opora: v menu jsou nahoře jen tahák, když něco nejde, slovníček a tým', JSON.stringify(vis)==='["cheat","diag","gloss","tym","dash"]', JSON.stringify(vis));
+ ok('opora: nanečisto, mapa, příručka, odznaky, připravenost a jiné role jsou sbalené pod Další', await p.evaluate(()=>{const d=document.querySelector('.rail-x');return d&&!d.open&&!!d.querySelector('[data-simstart]')&&['map','badges','ready'].every(x=>d.querySelector('[data-go='+x+']'))&&!!d.querySelector('[data-week=l1b]')&&!!d.querySelector('[data-week=pd]');}));
+ await p.evaluate(()=>document.querySelector('.rail-x [data-go=map]').click());await settle(p,100);
+ ok('opora: na stránce z Další zůstane Další rozbalené', await p.evaluate(()=>document.querySelector('.rail-x').open));
+ ok('opora: dashboard je pod Jen pro vás', /jen pro vás/i.test(await p.locator('.rail-more').innerText()));
+ await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,100);
+ ok('opora: úvodní stránka nabízí jen tři nejdůležitější opory', await p.evaluate(()=>{const j=[...document.querySelectorAll('.journey .jstep')].map(b=>b.dataset.go);return JSON.stringify(j)==='["diag","gloss","cheat"]';}));
+ await ctx.close();
+}));
+// 13) přizpůsobení: opakování chyb s odstupem, vstupní test, co je nového ve SPOCKu
+runs.push(scenario('přizpůsobení',async()=>{
+ const ctx=await b.newContext({viewport:{width:1280,height:900}});await ctx.addInitScript(()=>{window.__E2E_NOVINKY={'1.16.1':['Nový task **SPOCK: Kontrola**.']};});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
+ const clean=()=>p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});
+ const answer=async right=>{for(let g=0;g<20&&await p.locator('#ses').count();g++){const pick=await p.evaluate(r=>{const it=(S=>S.items[S.qs[S.i]])(__kviz.ses());return r?it.a:(it.a+1)%it.o.length},right);await p.locator('.ses-opt').nth(pick).click();await p.locator('[data-scheck]').click();await p.locator('[data-snext]').click();await settle(p);}};
+ await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=pm]').click();await settle(p,300);
+ ok('přizpůsobení: rozcestí nabízí vstupní test', await p.locator('.exfork [data-place]').count()===1);
+ // vstupní test: špatně → nevyjde, nic se nezmění
+ await p.locator('[data-place]').click();await p.waitForSelector('#ses');
+ ok('přizpůsobení: vstupní test má 8 otázek a srdíčka', await p.evaluate(()=>__kviz.ses().total===8)&&await p.locator('.ses-hearts').count()===1&&/vstupní test/i.test(await p.locator('.ses-body .eyebrow').innerText()));
+ await answer(false);await clean();
+ ok('přizpůsobení: nevydařený vstupní test nic neodemkne', !(await loadState(p)).placed && !((await loadState(p)).unlocked||{}).l1);
+ // vstupní test: správně → teorie úrovně 0 splněná, Příprava odemčená, úkoly zůstávají
+ await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,200);
+ await p.locator('[data-place]').click();await p.waitForSelector('#ses');await answer(true);await clean();
+ const st=await loadState(p);
+ ok('přizpůsobení: zvládnutý vstupní test odemkne Přípravu a splní karty i kvíz úrovně 0', !!st.placed&&st.unlocked.l1===true&&!!st.qpass.l0&&Object.keys(st.cards).filter(k=>k.startsWith('l0.')).length>10);
+ ok('přizpůsobení: praktické úkoly úrovně 0 testem nezmizí', Object.keys(st.todo||{}).filter(k=>k.startsWith('l0.')).length===0);
+ // opakování chyb: špatná odpověď na kartu → karta se vrátí za den
+ await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,100);
+ await p.evaluate(()=>{__kviz.state(S=>{delete S.cards['l1.0.0'];});});
+ await p.evaluate(()=>document.querySelector('[data-week=l1]')?.click());await p.waitForSelector('.lpanel .lcard.cur .lc-opt',{timeout:5000}).catch(()=>{});
+ const wrong=await p.evaluate(()=>{const o=document.querySelector('.lpanel .lcard.cur .lc-opt');if(!o)return null;const [k]=o.dataset.card.split(':');const a=__kviz.cardA(k);const bad=[...document.querySelectorAll('.lpanel .lcard.cur .lc-opt')].find(b=>+b.dataset.card.split(':')[1]!==a);bad.click();return k;});
+ await clean();const s2=await loadState(p);
+ ok('přizpůsobení: netrefená karta se zařadí k opakování za den', !!wrong&&s2.rev&&s2.rev[wrong]&&s2.rev[wrong].due>Date.now()+20*36e5, wrong);
+ await p.evaluate(k=>__kviz.state(S=>{S.rev[k].due=Date.now()-1;}),wrong);
+ await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,200);
+ ok('přizpůsobení: opakování je v horní liště u zvonku, ne na úvodní stránce', await p.locator('#pill-ntf .ntf-n').innerText().then(t=>t==='1')&&await p.locator('.revc,.newsc').count()===0);
+ await p.waitForFunction(()=>[...document.querySelectorAll('.notice')].some(n=>/k zopakování/.test(n.textContent)),null,{timeout:12000}).then(()=>true,()=>false).then(v=>ok('přizpůsobení: vyskočí upozornění na karty k zopakování',v));
+ await clean();await p.locator('#pill-ntf').click();await settle(p,80);
+ ok('přizpůsobení: zvonek otevře panel s opakováním a počtem karet', await p.locator('#ntf-pop [data-review]').isVisible()&&/1 karta/.test(await p.locator('#ntf-pop').innerText())&&(await p.locator('#pill-ntf').getAttribute('aria-expanded'))==='true');
+ const x0=(await loadState(p)).xp;
+ await p.locator('#ntf-pop [data-review]').click();await p.waitForSelector('#ses');await answer(true);await clean();
+ const s3=await loadState(p);
+ ok('přizpůsobení: trefa při opakování posune kartu na 3 dny a přidá XP', s3.rev[wrong]&&s3.rev[wrong].step===1&&s3.rev[wrong].due>Date.now()+2.5*864e5&&s3.xp>x0, JSON.stringify(s3.rev[wrong]));
+ await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,200);
+ ok('přizpůsobení: po opakování zvonek nic neukazuje', await p.locator('#pill-ntf .ntf-n').count()===0);
+ // co je nového: kdo onboarding používal před novou verzí SPOCKu, uvidí novinky
+ await p.evaluate(()=>__kviz.state(S=>{S.spockSeen='1.15.0';}));await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,200);
+ await p.waitForFunction(()=>[...document.querySelectorAll('.notice')].some(n=>/Co je nového/.test(n.textContent)),null,{timeout:12000}).then(()=>true,()=>false).then(v=>ok('přizpůsobení: po nové verzi SPOCKu vyskočí upozornění na novinky',v));
+ await clean();await p.locator('#pill-ntf').click();await settle(p,80);
+ ok('přizpůsobení: novinky jsou v panelu u zvonku', (await p.locator('#ntf-pop').innerText()).includes('Kontrola'));
+ await p.locator('#ntf-pop [data-newsok]').click();await settle(p,100);
+ ok('přizpůsobení: Rozumím novinky skryje a panel zavře', await p.locator('#ntf-pop').isHidden()&&await p.locator('#pill-ntf .ntf-n').count()===0&&(await loadState(p)).spockSeen==='1.16.1');
+ await p.locator('#pill-ntf').click();await settle(p,50);await p.keyboard.press('Escape');await settle(p,50);
+ ok('přizpůsobení: prázdný panel zavře Escape a zaměření se vrátí na zvonek', await p.locator('#ntf-pop').isHidden()&&await p.evaluate(()=>document.activeElement.id==='pill-ntf'));
+ ok('přizpůsobení: bez chyb v konzoli', errs.length===0, errs.slice(0,2).join(' | '));
+ await ctx.close();
+}));
 // 12) tým: založení, kód, přehled členů, odebrání, zrušení; připojení kódem k jinému týmu
 runs.push(scenario('tým',async()=>{
  const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));p.on('dialog',d=>d.accept());
@@ -161,13 +225,21 @@ runs.push(scenario('uvítání',async()=>{
    ok('uvítání: po zavření se při dalším otevření už neukáže', await p.locator('.vidov.wl').count()===0);
   }else{
    await p.locator('[data-wl=go]').click();await settle(p,80);
-   ok('uvítání, mobil: Začít zavře okno a zaměří výběr role', await p.locator('.vidov.wl').count()===0 && await p.evaluate(()=>document.activeElement.matches('.startb [data-role]')));
+   ok('uvítání, mobil: Začít ukáže v okně výběr role a zaměří první roli', await p.locator('.vidov.wl .wl-role [data-role]').count()===4 && await p.evaluate(()=>document.activeElement.matches('.wl [data-role]')));
+   await p.locator('.wl [data-role=pd]').click();await settle(p,150);
+   ok('uvítání, mobil: výběr role okno zavře a nabídne rozcestí', await p.locator('.vidov.wl').count()===0 && (await loadState(p)).role==='pd' && await p.locator('.exfork').count()===1);
   }
   ok(`uvítání, ${dev}: bez chyb v konzoli`, errs.length===0, errs.slice(0,2).join(' | '));
   await ctx.close();
  }
  const ctx=await b.newContext({viewport:{width:1280,height:900}});await ctx.addInitScript(()=>{window.__E2E_WELCOME=true;});const p=await ctx.newPage();
  await p.goto(F);await p.waitForSelector('.vidov.wl');await p.locator('[data-wl=skip]').click();await settle(p,50);
+ ok('uvítání: Přeskočit video vede rovnou na výběr role', await p.locator('.vidov.wl .wl-role').count()===1);
+ await p.locator('.wl .vidov-x').click();await settle(p,50);
+ await p.evaluate(()=>{localStorage.removeItem('spock-user-onboarding-v1');});await p.reload();await p.waitForSelector('.vidov.wl video');
+ await p.evaluate(()=>document.querySelector('.wl video').dispatchEvent(new Event('ended')));await settle(p,50);
+ ok('uvítání: po dohrání videa se v okně ukáže výběr role', await p.locator('.vidov.wl .wl-role [data-role]').count()===4);
+ await p.locator('.wl .vidov-x').click();await settle(p,50);
  ok('úvod: tlačítko Co je SPOCK pustí 2minutové video', await p.locator('.hx [data-playvideo=""]').count()===1);
  ok('uvítání: úvodní stránka má tlačítko Co vás čeká, které pustí stejné video', await p.locator('.hx [data-playvideo=pitch]').count()===1 && await p.evaluate(()=>{document.querySelector('.hx [data-playvideo=pitch]').click();return !!document.querySelector('.vidov video source[src="spock-pitch.mp4"]');}));
  await ctx.close();
@@ -237,7 +309,7 @@ runs.push(scenario('start offline',async()=>{
 runs.push(scenario('expresní cesta',async()=>{
  const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
  await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=se]').click();await settle(p,50);
- ok('expresní cesta: po výběru role banner nabídne rozcestí, celá cesta a expres do 2 hodin', await p.locator('.hx .exfork .exf').count()===2 && /1 h \d+ min/.test(await p.locator('.exfork .exf.fast').innerText()));
+ ok('expresní cesta: po výběru role banner nabídne celou cestu jako hlavní volbu a expres do 2 hodin jako vedlejší', await p.locator('.hx .exfork .exf').count()===1 && /1 h \d+ min/.test(await p.locator('.exfork .exf-alt').innerText()) && await p.locator('.exf-alt [data-express=on]').count()===1);
  ok('expresní cesta: v rozcestí je zaměřená první volba (klávesnice)', await p.evaluate(()=>document.activeElement&&document.activeElement.matches('.exfork .exf')));
  await p.locator('.exfork [data-express=on]').click();await settle(p,50);
  ok('expresní cesta: banner ukazuje další krok a v úvodu je jen jedno hlavní tlačítko', (await p.locator('.hx-next.ex .hx-nt').innerText()).includes('nanečisto') && await p.locator('.hx .btn.primary').count()===1 && await p.locator('.exfork').count()===0);

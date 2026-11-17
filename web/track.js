@@ -143,7 +143,7 @@ async function tInitRun(){
   trackView(); await tFlush();
   if (!TRK.timer) TRK.timer = setInterval(tFlush, 20000);
   if (TRK.owner) {
-    const pp = document.getElementById('pill-prog');
+    const pp = document.getElementById('pill-fb');
     if (pp && !document.getElementById('pill-dash')) pp.insertAdjacentHTML('afterend', '<button class="pill fb-pill" id="pill-dash" type="button" data-go="dash" aria-label="Dashboard: jak lidé procházejí tutoriálem a zpětná vazba" title="Dashboard: jak lidé procházejí tutoriálem a zpětná vazba"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="fb-t">Dashboard</span></button>');
     if (view.name !== 'week' && view.name !== 'home') render();
   }
@@ -826,7 +826,7 @@ const PROG = {ref:null, ready:false, h:null, busy:false};
 function pMerge(a, b){
   const o = Object.assign({}, b, a), newer = (b._at || 0) > (a._at || 0) ? b : a;
   ['role','goal','skin','av','sound','pos','survey','dq','seenVideo','flown','express'].forEach(k => { if (newer[k] !== undefined) o[k] = newer[k]; });
-  ['todo','cards','proof','got','badges','unlocked','qpass','ready','quiz','frozen','vids','exSeen'].forEach(k => { o[k] = Object.assign({}, b[k] || {}, a[k] || {}); });
+  ['todo','cards','proof','got','badges','unlocked','qpass','ready','quiz','frozen','vids','exSeen','rev'].forEach(k => { o[k] = Object.assign({}, b[k] || {}, a[k] || {}); });
   o.days = Object.assign({}, b.days || {}); Object.entries(a.days || {}).forEach(([d, v]) => { o.days[d] = Math.max(v, o.days[d] || 0); });
   ['ptries','tries'].forEach(k => { o[k] = Object.assign({}, b[k] || {}); Object.entries(a[k] || {}).forEach(([x, v]) => { o[k][x] = Math.max(v, o[k][x] || 0); }); });
   ['xp','freeze','rankLvl'].forEach(k => { o[k] = Math.max(a[k] || 0, b[k] || 0); });
@@ -881,7 +881,7 @@ async function fbOutboxSend(){
 function netPill(){
   const off = !navigator.onLine, q = fbOutbox().length;
   let el = document.getElementById('pill-net');
-  if (!el) { const pp = document.getElementById('pill-prog'); if (!pp) return; pp.insertAdjacentHTML('beforebegin', '<span class="pill net-pill" id="pill-net" role="status" hidden></span>'); el = document.getElementById('pill-net'); }
+  if (!el) { const pp = document.querySelector('.hg-act'); if (!pp) return; pp.insertAdjacentHTML('afterbegin', '<span class="pill net-pill" id="pill-net" role="status" hidden></span>'); el = document.getElementById('pill-net'); }
   el.hidden = !off;
   el.innerHTML = '<span class="net-dot" aria-hidden="true"></span><span class="net-t">Offline</span>' + (q ? '<span class="net-q">· ' + q + '</span>' : '');
   el.title = 'Jste offline. Lekce, kvízy a hra fungují dál a pokrok se ukládá v zařízení. Synchronizace pod účtem' + (q ? ', ' + q + ' zpětná vazba ve frontě' : '') + ' a chat se Spockem počkají na připojení.';
