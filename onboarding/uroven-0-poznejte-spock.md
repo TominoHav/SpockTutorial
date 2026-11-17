@@ -101,7 +101,7 @@ SPOCK je **interní nástroj České spořitelny v pilotu**. Vlastní a rozvíj�
   1. Klikněte na {{video:krok-za-krokem}}. Komentář je anglicky, titulky česky.
 - [ ] **Vyzkoušejte SPOCK nanečisto** (5 min, jen na webu)
   - *Proč:* Zažijete celý běh od briefu po iniciativu dřív, než cokoli instalujete.
-  1. Klikněte na {{nanecisto}} a projděte všech 7 fází. Najdete ho i na úvodní stránce a v Opoře.
+  1. Klikněte na {{nanecisto}} a projděte všech 7 fází. Najdete ho i na úvodní stránce.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 

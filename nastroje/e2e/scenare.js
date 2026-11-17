@@ -116,6 +116,9 @@ runs.push(scenario('opora',async()=>{
  await p.evaluate(()=>document.querySelector('.rail-x [data-go=tym]').click());await settle(p,100);
  ok('opora: na stránce z Další zůstane Další rozbalené', await p.evaluate(()=>document.querySelector('.rail-x').open));
  await p.evaluate(()=>document.querySelector('[data-go=cheat]').click());await settle(p,100);
+ await p.evaluate(()=>document.querySelector('[data-week=l0]').click());await settle(p,150);
+ ok('konec lekce: teoretická lekce má pořadí karty, Teď to zkuste, Co si odnést do práce', await p.evaluate(()=>{const h=[...document.querySelectorAll('.lpanel .blk h4')].map(x=>x.innerText.replace(/^\d+\s*/,''));return h.length===3&&/^Nauč se/i.test(h[0])&&/^Teď to zkuste/i.test(h[1])&&/^Co si odnést do práce/i.test(h[2]);}));
+ ok('konec lekce: co si odnést se neukáže dřív než karty (neprozradí odpovědi)', await p.locator('.takeaway .tk-wait').count()===1 && await p.locator('.takeaway .keys').count()===0);
  ok('čas: v menu a u bloků lekcí nejsou odhady času', await p.locator('.rail .rt').count()===0 && await p.locator('.tsum').count()===0);
  ok('opora: dashboard je pod Jen pro vás', /jen pro vás/i.test(await p.locator('.rail-more').innerText()));
  await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p,100);
