@@ -1,0 +1,48 @@
+<!doctype html><html lang="cs"><head><meta charset="utf-8">
+<style>
+/* Pitch video 1280 × 720: scéna = nadpis vlevo, snímek aplikace vpravo v okně prohlížeče, české titulky dole. Úvod a závěr: Spock uprostřed. */
+*{box-sizing:border-box}html,body{margin:0;width:1280px;height:720px;overflow:hidden;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#fff}
+#bg{position:absolute;inset:0;background:radial-gradient(1200px 700px at 75% 40%,#2B2470 0%,#141A3A 55%,#0A0E22 100%)}
+.stars i{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff}
+.sc{position:absolute;inset:0;opacity:0}
+.txt{position:absolute;left:72px;top:0;bottom:120px;width:440px;display:flex;flex-direction:column;justify-content:center;gap:16px}
+.k{font-size:15px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#F29AC0}
+.h{font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-.02em}
+.s{font-size:24px;line-height:1.3;color:#C9D2F0}
+.win{position:absolute;right:56px;top:50px;width:680px;height:440px;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.12)}
+.win .bar{height:30px;background:#E9EDF3;display:flex;align-items:center;gap:7px;padding:0 12px}.win .bar i{width:11px;height:11px;border-radius:50%;background:#C8CFD9}
+.win .vp{position:absolute;top:30px;left:0;right:0;bottom:0;overflow:hidden}.win img{position:absolute;left:0;top:0;width:100%;transform-origin:30% 20%}
+.phone{position:absolute;right:190px;top:24px;width:244px;height:500px;border-radius:38px;background:#0B0F1C;padding:10px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 2px rgba(255,255,255,.15)}
+.phone .vp{position:relative;width:100%;height:100%;border-radius:30px;overflow:hidden;background:#fff}.phone img{width:100%;position:absolute;top:0;left:0}
+.center{position:absolute;inset:0 0 120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}
+.center .h{font-size:64px;max-width:1000px}.center .s{font-size:28px}
+.cap{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);max-width:1060px;padding:12px 22px;border-radius:12px;background:rgba(5,8,20,.72);font-size:26px;line-height:1.35;text-align:center;font-weight:500}
+.cap:empty{display:none}
+.mascot{width:190px;height:190px}
+.prog{position:absolute;left:0;bottom:0;height:5px;background:linear-gradient(90deg,#E15079,#A54CB2,#372B91)}
+</style></head><body>
+<div id="bg"><div class="stars" id="stars"></div></div><div id="sc"></div><div class="cap" id="cap"></div><div class="prog" id="prog"></div>
+<script>
+const SC = window.__SCENES || [], T = window.__T || {};
+const mascot = `<svg class="mascot" viewBox="0 0 120 140"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E15079"/><stop offset=".55" stop-color="#A54CB2"/><stop offset="1" stop-color="#372B91"/></linearGradient></defs><g stroke="#4A37B8" stroke-width="6" stroke-linecap="round"><line x1="49" y1="96" x2="44" y2="122"/><line x1="71" y1="96" x2="76" y2="122"/><line x1="28" y1="70" x2="12" y2="56"/><line x1="92" y1="70" x2="108" y2="54"/></g><circle cx="11" cy="55" r="6" fill="#A54CB2"/><circle cx="109" cy="53" r="6" fill="#A54CB2"/><line x1="60" y1="24" x2="60" y2="10" stroke="#A54CB2" stroke-width="5" stroke-linecap="round"/><circle cx="60" cy="8" r="6" fill="#E15079"/><rect x="30" y="34" width="60" height="60" rx="16" transform="rotate(45 60 64)" fill="url(#g)"/><rect x="38" y="54" width="44" height="22" rx="11" fill="#0C1B2A"/><circle cx="51" cy="64" r="5" fill="#7DE3FF"/><circle cx="69" cy="64" r="5" fill="#7DE3FF"/><path d="M55 71q5 4 10 0" stroke="#7DE3FF" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`;
+let st = ''; for (let i = 0; i < 70; i++) { const x = (i * 97) % 1280, y = (i * 53 + i * i * 7) % 720, o = .15 + (i % 7) / 12; st += `<i style="left:${x}px;top:${y}px;opacity:${o};transform:scale(${.5 + (i % 3) * .4})"></i>`; } document.getElementById('stars').innerHTML = st;
+const root = document.getElementById('sc');
+root.innerHTML = SC.map((s, i) => s.img ? `<div class="sc" data-i="${i}"><div class="txt"><span class="k">${String(i).padStart(2, '0')} · SPOCK Onboarding</span><div class="h">${s.h}</div><div class="s">${s.s}</div></div>${s.mobile ? `<div class="phone"><div class="vp"><img src="${s.src}"></div></div>` : `<div class="win"><div class="bar"><i></i><i></i><i></i></div><div class="vp"><img src="${s.src}"></div></div>`}</div>`
+  : `<div class="sc" data-i="${i}"><div class="center">${mascot}<div class="h">${s.h}</div><div class="s">${s.s}</div></div></div>`).join('');
+const ease = x => x < 0 ? 0 : x > 1 ? 1 : 1 - Math.pow(1 - x, 3);
+let starts = [], acc = 0; SC.forEach((s, i) => { starts.push(acc); acc += T.scenes[i].dur; }); window.__total = acc;
+window.__seek = t => {
+  let i = starts.findIndex((a, k) => t >= a && t < a + T.scenes[k].dur); if (i < 0) i = SC.length - 1;
+  const lt = t - starts[i], d = T.scenes[i].dur;
+  document.querySelectorAll('.sc').forEach(el => { const k = +el.dataset.i; el.style.opacity = k === i ? Math.min(ease(lt / .5), ease((d - lt) / .4)) : 0; });
+  const el = document.querySelector(`.sc[data-i="${i}"]`), inn = ease(lt / .8);
+  const txt = el.querySelector('.txt, .center'); if (txt) txt.style.transform = `translateY(${(1 - inn) * 24}px)`;
+  const img = el.querySelector('.win img'); if (img) img.style.transform = `scale(${1 + .08 * (lt / d)}) translateY(${-(lt / d) * 14}px)`;
+  const win = el.querySelector('.win, .phone'); if (win) win.style.transform = `translateX(${(1 - inn) * 60}px)`;
+  const ph = el.querySelector('.phone img'); if (ph) { const max = ph.offsetHeight - ph.parentNode.offsetHeight; ph.style.top = -Math.max(0, max) * ease(Math.max(0, lt - 1.2) / (d - 1.5)) * .35 + 'px'; }
+  const m = el.querySelector('.mascot'); if (m) m.style.transform = `translateY(${Math.sin(t * 2.2) * 8}px) rotate(${Math.sin(t * 1.3) * 3}deg)`;
+  const c = (T.scenes[i].caps || []).find(c => lt >= c[0] && lt < c[1] + .25); document.getElementById('cap').textContent = c ? c[2] : '';
+  document.getElementById('prog').style.width = (t / acc * 100) + '%';
+  document.getElementById('stars').style.transform = `translateX(${-t * 6}px)`;
+};
+</script></body></html>
