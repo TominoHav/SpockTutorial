@@ -105,6 +105,47 @@ for(const [name,w,h,scheme] of [['tablet',768,1024,'light'],['tablet na šířku
   await ctx.close();
  }));
 }
+// 12) tým: založení, kód, přehled členů, odebrání, zrušení; připojení kódem k jinému týmu
+runs.push(scenario('tým',async()=>{
+ const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));p.on('dialog',d=>d.accept());
+ await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=pm]').click();await settle(p,300);
+ ok('tým: na úvodu je karta Učte se s týmem', await p.locator('.tmc [data-go=tym]').count()===1);
+ await p.evaluate(()=>document.querySelector('[data-go=tym]').click());await settle(p,100);
+ ok('tým: bez týmu jde tým založit nebo se připojit kódem', await p.locator('[data-tmform=create]').count()===1&&await p.locator('[data-tmform=join]').count()===1);
+ await p.locator('[data-tmform=create] button').click();await settle(p,200);
+ ok('tým: bez názvu se tým nezaloží a ukáže se proč', await p.evaluate(()=>!window.__db['tymy/u_ja'])&&/název/i.test(await p.locator('.tm-err').innerText()));
+ await p.fill('#tm-name','Tribe Platby');await p.locator('[data-tmform=create] button').click();await p.waitForSelector('#tm-code-v');
+ const code=await p.locator('#tm-code-v').innerText();
+ ok('tým: po založení je vidět šestiznakový kód a zakladatel je v týmu', /^[A-Z0-9]{6}$/.test(code)&&await p.evaluate(()=>window.__db['clenove/u_ja'].team==='u_ja'), code);
+ await p.evaluate(()=>{window.__db['clenove/u_kolega']={team:'u_ja',role:'pd',xp:320,rank:'Praktik',lvl:3,pct:41,mod:'pd',streak:4,last:Date.now()-864e5,done:false};window.__db['clenove/u_novak']={team:'u_ja',role:'se',xp:60,rank:'Nováček',lvl:1,pct:6,mod:'l0',streak:0,last:Date.now()-5*864e5,done:false};window.__db['clenove/u_cizi']={team:'u_jiny',pct:90};});
+ await p.locator('[data-tm=reload]').click();await settle(p,300);
+ ok('tým: přehled ukáže jen členy tohoto týmu se jmény, postupem a poslední aktivitou', await p.locator('.tm-t tbody tr').count()===3&&(await p.locator('.tm-t').innerText()).includes('Kolega Testovací')&&(await p.locator('.tm-t').innerText()).includes('41 %'));
+ ok('tým: upozorní na lidi bez aktivity přes 3 dny', await p.locator('.tm-stuck').count()===1);
+ ok('tým: souhrnná čísla týmu (lidé, průměr, hotovo, aktivní)', (await p.locator('.tm-kpi').innerText()).includes('3'));
+ await p.locator('[data-tm="remove:u_novak"]').click();await settle(p,300);
+ ok('tým: zakladatel může člověka odebrat', await p.locator('.tm-t tbody tr').count()===2&&await p.evaluate(()=>window.__db['tymy/u_ja'].removed.includes('u_novak')));
+ await p.evaluate(()=>{window.__S=JSON.parse(localStorage.getItem('spock-user-onboarding-v1'));__kviz.state(S=>{S.xp=S.xp+40;});});await p.waitForTimeout(2600);
+ ok('tým: změna postupu se propíše do souhrnu v týmu', await p.evaluate(()=>window.__db['clenove/u_ja'].xp>=50), await p.evaluate(()=>window.__db['clenove/u_ja'].xp));
+ await p.locator('[data-tm=dissolve]').click();await settle(p,300);
+ ok('tým: zakladatel může tým zrušit', await p.evaluate(()=>!window.__db['tymy/u_ja']&&window.__db['clenove/u_ja'].team===null)&&await p.locator('[data-tmform=join]').count()===1);
+ await p.evaluate(()=>{window.__db['tymy/u_jiny']={name:'Jiný tým',code:'K7M2QX',removed:[]};});
+ await p.fill('#tm-code','ZZZZZZ');await p.locator('#tm-agree').check();await p.locator('[data-tmform=join] button').click();await settle(p,300);
+ ok('tým: neexistující kód vysvětlí, co dělat', /neexistuje/.test(await p.locator('.tm-err').innerText()));
+ await p.fill('#tm-code','k7m2qx');await p.locator('#tm-agree').uncheck();await p.locator('[data-tmform=join] button').click();await settle(p,150);
+ ok('tým: bez souhlasu se sdílením souhrnu se nepřipojí', /souhlas/.test(await p.locator('.tm-err').innerText())&&await p.evaluate(()=>window.__db['clenove/u_ja'].team===null));
+ await p.locator('#tm-agree').check();await p.locator('[data-tmform=join] button').click();await settle(p,300);
+ ok('tým: s kódem (i malými písmeny) a souhlasem se připojí k cizímu týmu', await p.evaluate(()=>window.__db['clenove/u_ja'].team==='u_jiny')&&(await p.locator('.tm-head').innerText()).includes('Jiný tým')&&await p.locator('#tm-code-v').count()===0);
+ await p.locator('[data-tm=leave]').click();await settle(p,300);
+ ok('tým: člen může tým opustit', await p.evaluate(()=>window.__db['clenove/u_ja'].team===null));
+ ok('tým: bez chyb v konzoli', errs.length===0, errs.slice(0,2).join(' | '));
+ await ctx.close();
+ const m=await b.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});const q=await m.newPage();
+ await q.goto(F);await q.waitForSelector('.startb [data-role]');await q.locator('.startb [data-role=pm]').click();await settle(q,300);
+ await q.evaluate(()=>{window.__db['tymy/u_ja']={name:'Tribe Platby s dlouhým názvem týmu',code:'ABC234',removed:[]};window.__db['clenove/u_ja']={team:'u_ja',pct:0};window.__db['clenove/u_kolega']={team:'u_ja',role:'pd',xp:320,rank:'Praktik',pct:41,mod:'pd',streak:4,last:Date.now()};});
+ await q.evaluate(()=>document.querySelector('[data-go=tym]').click());await q.waitForSelector('.tm-t tbody tr',{timeout:5000}).catch(()=>{});await settle(q,200);
+ ok('tým, mobil: stránka nepřetéká do strany a tabulka se dá posouvat', await q.evaluate(()=>document.documentElement.scrollWidth-innerWidth)<=0&&await q.locator('.tm-t tbody tr').count()===2);
+ await m.close();
+}));
 // 11) uvítání při prvním otevření: video Onboarding do SPOCKu za necelé dvě minuty
 runs.push(scenario('uvítání',async()=>{
  for(const [W,H,dev] of [[1280,900,'počítač'],[390,844,'mobil']]){
