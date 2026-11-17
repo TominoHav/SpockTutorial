@@ -74,7 +74,8 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  for(let li=1;li<4;li++){await dismiss();await p.evaluate(li=>{const e=document.querySelector(`.pd-in-card [data-lesson="${li}"], .pd-mob-card [data-lesson="${li}"]`);e&&e.click()},li);await settle(p);await doLesson();}
  const s1b=await st();ok(T('všechny 4 lekce úrovně 0 hotové jen na webu'), [0,1,2,3].every(i=>s1b.got['lesson.l0.'+i]), Object.keys(s1b.got).filter(k=>k.startsWith('lesson.l0')).join(','));
  // kvíz: před kartami zamčený (ověřeno na modulu Příprava), po kartách losuje 5 otázek
- const runQuiz=async(wid,good)=>{await dismiss();await p.evaluate(w=>document.querySelector(`.qlaunch [data-quiz="${w}"]`).click(),wid);await settle(p);let g=0,seen=[];
+ const lastLesson=async()=>{await p.evaluate(()=>{const b=[...document.querySelectorAll('.pd-in-card [data-lesson], .pd-mob-card [data-lesson]')];if(b.length)b[b.length-1].click();});await settle(p);};
+ const runQuiz=async(wid,good)=>{await dismiss();if(!(await p.locator(`.qlaunch [data-quiz="${wid}"]`).count()))await lastLesson();await p.evaluate(w=>document.querySelector(`.qlaunch [data-quiz="${w}"]`).click(),wid);await settle(p);let g=0,seen=[];
    while(await p.locator('#ses').count() && g++<40){
      const key=await p.evaluate(()=>(S=>S.items[S.qs[S.i]])(__kviz.ses()).key);const bad=!good && !seen.includes(key);seen.push(key);
      const pick=await p.evaluate(bad=>{const it=(S=>S.items[S.qs[S.i]])(__kviz.ses());return bad?(it.a+1)%it.o.length:it.a},bad);
@@ -92,6 +93,8 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  await dismiss();
  const s2=await st();ok(T('modul Poznejte SPOCK hotový (100 %) a odznaky'), s2.got['module.l0']===true, `XP ${s2.xp}, odznaky ${Object.keys(s2.badges).filter(k=>k.startsWith('got.')).length}`);
  await p.evaluate(()=>document.querySelector('[data-week=l1]').click());await settle(p);
+ ok(T('kvíz je jen na poslední lekci modulu, ne pod každou lekcí'), await p.locator('.qlaunch').count()===0);
+ await lastLesson();
  ok(T('kvíz Přípravy je před kartami zamčený'), await p.locator('.qlaunch [data-quiz][disabled]').count()===1);
  // praktická lekce: nejdřív práce ve VS Code, úkol se odškrtne až ověřením
  await p.evaluate(()=>{const e=document.querySelector('.pd-in-card [data-lesson="1"], .pd-mob-card [data-lesson="1"]');e&&e.click()});await settle(p);
@@ -126,7 +129,7 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  await p.evaluate(()=>document.querySelector('#home-btn').click());await settle(p);
  const mods=await p.evaluate(()=>__kviz.mods());const miss=[],ovf=[];
  for(const m of mods){await dismiss();
-  const nav=await p.evaluate(id=>{const e=document.querySelector(`.rail [data-week="${id}"]`)||document.querySelector(`[data-week="${id}"]`);if(!e)return 0;e.click();return 1},m.id);
+  const nav=await p.evaluate(id=>{const e=document.querySelector(`.rail [data-week="${id}"]`)||document.querySelector(`[data-week="${id}"]`);if(!e){/* moduly jiných rolí v menu nejsou, otevřou se po změně role */__kviz.open(id);return 1;}e.click();return 1},m.id);
   if(!nav){miss.push(m.id+': chybí v menu');continue;}
   await settle(p);await p.evaluate(()=>{const e=document.querySelector('[data-peek]');e&&e.click()});await settle(p);
   for(let li=0;li<m.lessons;li++){await dismiss();
@@ -231,22 +234,15 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  ok(T('příběh jde projít do konce a zavřít'), (await p.locator('#story .st-cap h2').innerText())==='Odlet');
  await p.locator('#story [data-st=next]').click();await settle(p);
  ok(T('po příběhu se stránka vrátí a nepřetéká'), await p.locator('#story').count()===0 && (await ov())<=0);
- await p.locator('.spmap [data-mgame=l0]').click();await settle(p);
- ok(T('minihra u překážky se otevře s otázkou a jde přeskočit'), await p.locator('#mg .mg-opt').count()>1 && await p.locator('#mg [data-mg=close]').count()===1);
- for(let g=0;g<60;g++){const n=await p.locator('#mg .mg-opt').count();if(!n)break;await p.evaluate(k=>document.querySelectorAll('#mg .mg-opt')[k].click(),g%n);await settle(p);}
- ok(T('minihra: po pěti správných volbách je překážka proletěná'), await p.locator('#mg .mg-end').count()===1);
- await p.locator('#mg [data-mg=close]').click();await settle(p);await dismiss();
- ok(T('dohraná minihra dá +15 XP'), (await st()).got['mg.l0']===true && await p.locator('#mg').count()===0);
- await p.locator('.spmap [data-mgame=l1]').click();await settle(p);await p.locator('#mg [data-mg=close]').click();await settle(p);
- ok(T('přeskočená minihra nic nepřičte a zavře se'), !(await st()).got['mg.l1'] && await p.locator('#mg').count()===0);
- await p.locator('.spmap [data-recap=l0]').click();await settle(p);
- ok(T('shrnutí úrovně má scénu pro každou lekci'), (await p.locator('#story .st-cap .eyebrow').innerText()).includes('1/6'));
- await p.locator('#story [data-st=next]').click();await settle(p);
- ok(T('shrnutí ukazuje, co se v lekci probralo'), await p.locator('#story .st-cap li').count()>=3);
+ await p.locator('.spmap [data-quiz=l0]').click();await settle(p);
+ ok(T('kvíz u překážky má podobu minihry: vesmír, loď na trati a překážka úrovně'), await p.locator('#ses.ses-game .mg-track .mg-ship').count()===1 && /Překážka/i.test(await p.locator('#ses .eyebrow').innerText()));
+ await p.locator('#ses [data-sclose]').click();await settle(p);await dismiss();
+ ok(T('na mapě už není shrnutí ani samostatná minihra'), await p.locator('.spmap [data-recap], .spmap [data-mgame]').count()===0);
+ await p.evaluate(()=>__kviz.scenes());await settle(p);
  await p.locator('#story [data-st=snd]').click();await settle(p);
  ok(T('zvuk jde vypnout a volba se uloží'), (await st()).sound===false);
  await p.locator('#story [data-st=snd]').click();await p.locator('#story [data-st=close]').click();await settle(p);
- ok(T('shrnutí jde přeskočit'), await p.locator('#story').count()===0);
+ ok(T('příběh jde přeskočit'), await p.locator('#story').count()===0);
  await p.evaluate(()=>document.querySelector('[data-go=badges]').click());await settle(p);
  ok(T('profil: postup v hodnostech a odemčené vzhledy Spocka'), await p.locator('.ladder li').count()===7 && await p.locator('.skin[data-setskin]').count()>=2 && await p.locator('.ladder li.cur').count()===1);
  await p.locator('.skin[data-setskin]').nth(1).click();await settle(p);
@@ -275,13 +271,13 @@ const P1=process.env.E2E_ONLY?null:scenario('doplňky',async()=>{
  const finishBy=async wid=>{const left=await p.evaluate(w=>__kviz.almost(w),wid);await p.evaluate(w=>document.querySelector('[data-week='+w+']').click(),wid);await settle(p);
   await p.evaluate(di=>{const e=document.querySelector('[data-lesson="'+di+'"]');if(e)e.click()},left[0]);await settle(p);
   await p.evaluate(()=>{const e=document.querySelector('.lpanel input[data-todo]:not(:checked)');e.scrollIntoView({block:'center'});e.click();});await settle(p);
-  for(let i=0;i<10 && !(await p.locator('.cel .cel-recap').count());i++){const c=p.locator('.cel .cel-go');if(!(await c.count()))break;await c.first().click();await settle(p);}};
+  for(let i=0;i<10 && !(await p.locator('.cel .cel-card.module').count());i++){const c=p.locator('.cel .cel-go');if(!(await c.count()))break;await c.first().click();await settle(p);}};
  await finishBy('l0');
- ok(T('dokončená úroveň: oslava překonané překážky nabízí shrnutí, minihru i přeskočení'), await p.locator('.cel .cel-recap').count()===1 && await p.locator('.cel .cel-game').count()===1 && await p.locator('.cel .cel-go').count()===1 && (await p.locator('.cel h2').innerText()).includes('Mlhovina nejasností'));
- await p.locator('.cel .cel-recap').click();await settle(p);
- ok(T('„Přehrát shrnutí úrovně“ v oslavě spustí shrnutí'), (await p.locator('#story .st-cap .eyebrow').innerText()).toLowerCase().includes('shrnutí úrovně') && await p.locator('.cel').count()===0);
+ ok(T('dokončená úroveň: oslava překonané překážky nabízí jen Pokračovat (bez shrnutí a minihry)'), await p.locator('.cel .cel-recap, .cel .cel-game').count()===0 && await p.locator('.cel .cel-go').count()===1 && (await p.locator('.cel h2').innerText()).includes('Překážka'));
+ for(let i=0;i<8;i++){const c=p.locator('.cel .cel-go');if(await c.count()){await c.first().click();await settle(p);}else break;}
+ await p.evaluate(()=>__kviz.scenes());await settle(p);
  const sp=await p.evaluate(()=>window.__spoken);
- ok(T('komentář se čte českým hlasem a obsahuje text scény'), sp.length>=1 && sp[0].lang==='cs-CZ' && sp[0].text.includes('Shrnutí'), sp.length+' promluv');
+ ok(T('komentář příběhu se čte českým hlasem'), sp.length>=1 && sp[0].lang==='cs-CZ', sp.length+' promluv');
  await p.waitForTimeout(1300);
  ok(T('po dočtení komentáře se scéna sama přepne'), !(await p.locator('#story .st-cap .eyebrow').innerText()).includes('1/'));
  await p.locator('#story [data-st=snd]').click();await settle(p);const n0=(await p.evaluate(()=>window.__spoken)).length;
@@ -289,10 +285,6 @@ const P1=process.env.E2E_ONLY?null:scenario('doplňky',async()=>{
  ok(T('s vypnutým zvukem se komentář nečte'), (await p.evaluate(()=>window.__spoken)).length===n0);
  await p.locator('#story [data-st=snd]').click();await p.locator('#story [data-st=close]').click();await settle(p);
  for(let i=0;i<8;i++){const c=p.locator('.cel .cel-go');if(await c.count()){await c.first().click();await settle(p);}else break;}
- await finishBy('l1');
- await p.locator('.cel .cel-game').click();await settle(p);
- ok(T('„Zahrát minihru“ v oslavě spustí minihru dané úrovně'), await p.locator('#mg .mg-opt').count()>1 && (await p.locator('#mg h2').innerText()).includes('Asteroidové pole') && await p.locator('.cel').count()===0);
- await p.locator('#mg [data-mg=close]').click();await settle(p);
  for(let i=0;i<8;i++){const c=p.locator('.cel .cel-go');if(await c.count()){await c.first().click();await settle(p);}else break;}
  // zmrazení série: včera nic, předtím dva dny s XP, jedno zmrazení v zásobě
  const day=o=>{const d=new Date();d.setDate(d.getDate()-o);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
