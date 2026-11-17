@@ -157,7 +157,20 @@ async function tInitRun(){
 tInit();
 
 /* ---------- zpětná vazba ---------- */
-const FB_KINDS = [['chyba','Chyba v obsahu'],['nejasne','Něčemu nerozumím'],['navrh','Návrh na zlepšení'],['technika','Něco nefunguje']];
+const FB_KINDS = [['chyba','Chyba v obsahu'],['nejasne','Něčemu nerozumím'],['navrh','Návrh na zlepšení'],['technika','Něco nefunguje'],['dotaznik','Dotazník k onboardingu']];
+/* uloží zpětnou vazbu do databáze (feedback/<id>); offline ji dá do fronty. Vrací 'sent', 'queued', nebo 'fail'. */
+async function fbStore(item){
+  if (TRK.ok) {
+    try {
+      const ref = TRK.db.doc('feedback/' + TRK.uid), s = await ref.get();
+      const items = s.exists && Array.isArray(s.data().items) ? JSON.parse(JSON.stringify(s.data().items)) : [];
+      const i = items.findIndex(x => x.id === item.id); if (i >= 0) items[i] = item; else items.push(item);
+      await ref.set({items, last:tNow()}); return 'sent';
+    } catch (err) {}
+  }
+  if (!navigator.onLine || (TRK.uid && !TRK.ok) || NET.lost) { fbOutboxAdd(item); return 'queued'; }
+  return 'fail';
+}
 function fbOpen(){
   if (document.getElementById('fb')) return;
   const where = tLocLabel(tLoc()), card = (document.querySelector('.lpanel .lcard.cur h3') || {}).textContent || '';
@@ -181,16 +194,9 @@ function fbOpen(){
     const item = {id:'f' + tNow().toString(36) + Math.random().toString(36).slice(2, 6), at:tNow(), loc:tLoc(), where:ov.querySelector('#fb-where').textContent, kind:ov.querySelector('#fb-kind').value, text:ov.querySelector('#fb-text').value.trim(), fix:ov.querySelector('#fb-fix').value.trim(), role:S.role || null, ver:BUILD.ver || ''};
     if (!item.text) return;
     const msg = ov.querySelector('#fb-msg'); msg.textContent = 'Odesílám…';
-    let sent = false;
-    if (TRK.ok) {
-      try {
-        const ref = TRK.db.doc('feedback/' + TRK.uid), s = await ref.get();
-        const items = s.exists && Array.isArray(s.data().items) ? JSON.parse(JSON.stringify(s.data().items)) : [];
-        items.push(item); await ref.set({items, last:tNow()}); sent = true;
-      } catch (err) {}
-    }
-    if (sent) { trk('zpětná vazba', item.kind); award('feedback.' + item.id, 10, 'zpětná vazba'); close(); toast('Díky. Zpětná vazba je u vlastníka tutoriálu.'); }
-    else if (!navigator.onLine || (TRK.uid && !TRK.ok) || NET.lost) { fbOutboxAdd(item); trk('zpětná vazba', item.kind + ' (ve frontě)'); close(); toast('Jste offline. Zpětnou vazbu odešlu sám, jakmile budete zase připojeni.'); }
+    const res = await fbStore(item);
+    if (res === 'sent') { trk('zpětná vazba', item.kind); award('feedback.' + item.id, 10, 'zpětná vazba'); close(); toast('Díky. Zpětná vazba je u vlastníka tutoriálu.'); }
+    else if (res === 'queued') { trk('zpětná vazba', item.kind + ' (ve frontě)'); close(); toast('Jste offline. Zpětnou vazbu odešlu sám, jakmile budete zase připojeni.'); }
     else {
       const txt = `Zpětná vazba k SPOCK tutoriálu\nKde: ${item.where}\nTyp: ${(FB_KINDS.find(k => k[0] === item.kind) || [])[1]}\nCo: ${item.text}\nNávrh: ${item.fix || '—'}`;
       try { await navigator.clipboard.writeText(txt); msg.textContent = 'Odeslat se nepodařilo. Text je ve schránce, pošlete ho prosím vlastníkovi tutoriálu.'; }

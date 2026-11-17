@@ -63,7 +63,8 @@ await Promise.all([['mobil',390,844],['počítač',1280,850]].flatMap(([dev,w,h]
  await p.evaluate(()=>{const s=document.getElementById('sim');if(s)s.remove();document.body.classList.remove('noscroll');__kviz.finish();});await p.waitForTimeout(300);
  await p.locator('#home-btn').click();await p.waitForTimeout(300);
  await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});
- await p.locator('.spmap [data-quiz=l0]').click();await p.waitForSelector('#ses.ses-game .ses-opt');await audit('kvíz u překážky');
+ ok('mapa: u hotové úrovně jen jedna akce Otevřít', await p.locator('.spmap .sw.done:first-child button.linkbtn').count()===1 && /Otevřít/.test(await p.locator('.spmap .sw.done:first-child button.linkbtn').innerText()));
+ await p.locator('.spmap [data-week=l0]').click();await p.waitForTimeout(250);await p.evaluate(()=>{const b=[...document.querySelectorAll('.pd-in-card [data-lesson], .pd-mob-card [data-lesson]')];if(b.length)b[b.length-1].click();});await p.waitForTimeout(250);await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});await p.locator('.qlaunch [data-quiz=l0]').click();await p.waitForSelector('#ses.ses-game .ses-opt');await audit('kvíz u překážky');
  await p.locator('#ses .ses-opt').first().click();await p.locator('[data-scheck]').click();await p.waitForTimeout(150);await audit('kvíz u překážky, odpověď');
  await p.locator('#ses [data-sclose]').click();await p.waitForTimeout(150);
  await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});

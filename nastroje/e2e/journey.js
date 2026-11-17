@@ -151,8 +151,8 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  await p.evaluate(()=>document.querySelector('[data-go="badges"]').click());await settle(p);
  for(const v of ['0:4','1:5','2:3'])await p.locator(`[data-svy="${v}"]`).click();
  await p.fill('#svy-txt','Test e2e');await p.locator('[data-svy-send]').click();await settle(p);
- const clip=await p.evaluate(()=>navigator.clipboard.readText().catch(()=> ''));
- ok(T('dotazník zkopíruje odpovědi'), clip.includes('4/5') && clip.includes('Test e2e'));
+ const svy=await p.evaluate(()=>{const d=window.__db['feedback/u_ja'];return d&&d.items?d.items.find(x=>x.id==='svy'):null;});
+ ok(T('dotazník se odešle týmu CoE Product Management a uloží se mezi zpětnou vazbu pro dashboard'), !!svy && svy.kind==='dotaznik' && svy.text.includes('4/5') && svy.text.includes('Test e2e') && /Odesláno týmu CoE/.test(await p.locator('.svy-ok').innerText()), JSON.stringify(svy).slice(0,120));
  // chat se Spockem
  await p.locator('[data-open-spock]').first().click().catch(async()=>{await p.locator('#g-fab').click()});await settle(p);
  const open=await p.locator('#g-panel:not([hidden])').count();
@@ -168,7 +168,7 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  await p.locator('[data-fbopen]').click();await settle(p);
  await p.fill('#fb-text','Test: karta je nejasná');await p.fill('#fb-fix','Zkrátit ji');await p.locator('#fb-form button[type=submit]').click();await settle(p);
  const fbd=await p.evaluate(()=>window.__db['feedback/u_ja']);
- ok(T('zpětná vazba se uloží s místem a návrhem'), !!fbd && fbd.items.length===1 && fbd.items[0].fix==='Zkrátit ji' && !!fbd.items[0].where, fbd?JSON.stringify(fbd.items[0]).slice(0,90):'');
+ ok(T('zpětná vazba se uloží s místem a návrhem'), !!fbd && fbd.items.some(x=>x.fix==='Zkrátit ji' && !!x.where), fbd?JSON.stringify(fbd.items).slice(0,120):'');
  await dismiss();await p.locator('#pill-dash').click();await p.waitForTimeout(600);
  const trd=await p.evaluate(()=>window.__db['track/u_ja']);
  ok(T('průchod se zaznamená: stránky, kliknutí, kvíz, pokrok'), !!trd && Object.keys(trd.pv).length>5 && Object.keys(trd.clicks).length>5 && trd.ev.length>20 && !!trd.quiz['l0:quiz'] && trd.prog.mods.l0[0]===trd.prog.mods.l0[1], trd?`stránek ${Object.keys(trd.pv).length}, druhů kliknutí ${Object.keys(trd.clicks).length}, kroků ${trd.ev.length}`:'nic');
@@ -177,7 +177,8 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  ok(T('dashboard ukáže lidi, trychtýř, výkon a tokeny'), dtx.includes('Kolega Testovací') && dtx.includes('Trychtýř cesty') && dtx.includes('Výkon a rychlost') && dtx.includes('Spock a tokeny') && await p.locator('.ds-tile').count()>=20);
  ok(T('dashboard: lidé mají čas první a poslední návštěvy a počet sezení'), await p.evaluate(()=>{const h=[...document.querySelectorAll('#dash th')].map(e=>e.innerText.toLowerCase());return h.includes('poprvé')&&h.includes('naposledy')&&h.includes('sezení')}));
  ok(T('dashboard: přehled, kdy lidé tutoriál používají (den × hodina)'), await p.locator('#dash .ds-heat .hc').count()===168);
- ok(T('dashboard ukáže zpětnou vazbu jako úkoly'), await p.locator('.ds-fbi').count()===2 && dtx.includes('Přidat příklad'));
+ ok(T('dashboard ukáže zpětnou vazbu jako úkoly'), await p.locator('.ds-fbi').count()===3 && dtx.includes('Přidat příklad'));
+ ok(T('dashboard: dotazník z profilu je mezi zpětnou vazbou'), dtx.includes('Dotazník k onboardingu') && dtx.includes('Test e2e'));
  await p.evaluate(()=>{const b=[...document.querySelectorAll('#dash [data-dash^="who:u_"]')].find(e=>e.dataset.dash!=='who:u_ja');b&&b.click();});await settle(p);
  ok(T('dashboard: u člověka je vidět, kdy aplikaci používal (sezení s časem od–do)'), (await p.locator('#dash .ds-who').first().innerText()).includes('Kdy aplikaci používal') && await p.locator('#dash .ds-who').first().locator('tbody tr').count()===2 && await p.locator('#dash .ds-hours span').count()===24);
  await p.locator('#dash [data-dash="tab:pohyb"]').click();await settle(p);
@@ -234,7 +235,8 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  ok(T('příběh jde projít do konce a zavřít'), (await p.locator('#story .st-cap h2').innerText())==='Odlet');
  await p.locator('#story [data-st=next]').click();await settle(p);
  ok(T('po příběhu se stránka vrátí a nepřetéká'), await p.locator('#story').count()===0 && (await ov())<=0);
- await p.locator('.spmap [data-quiz=l0]').click();await settle(p);
+ ok(T('mapa: u hotové úrovně jen jedna akce Otevřít'), await p.locator('.spmap .sw.done:first-child button.linkbtn').count()===1 && /Otevřít/.test(await p.locator('.spmap .sw.done:first-child button.linkbtn').innerText()));
+ await p.locator('.spmap [data-week=l0]').click();await p.waitForTimeout(250);await p.evaluate(()=>{const b=[...document.querySelectorAll('.pd-in-card [data-lesson], .pd-mob-card [data-lesson]')];if(b.length)b[b.length-1].click();});await p.waitForTimeout(250);await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});await p.locator('.qlaunch [data-quiz=l0]').click();await settle(p);
  ok(T('kvíz u překážky má podobu minihry: vesmír, loď na trati a překážka úrovně'), await p.locator('#ses.ses-game .mg-track .mg-ship').count()===1 && /Překážka/i.test(await p.locator('#ses .eyebrow').innerText()));
  await p.locator('#ses [data-sclose]').click();await settle(p);await dismiss();
  ok(T('na mapě už není shrnutí ani samostatná minihra'), await p.locator('.spmap [data-recap], .spmap [data-mgame]').count()===0);

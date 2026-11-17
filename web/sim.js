@@ -171,20 +171,26 @@ function glossify(root){
 const SURVEY_Q = ['Rozumím, co SPOCK dělá a k čemu ho budu používat.','Poznám, kdy výstupu SPOCKu věřit a kdy ne.','Vím, na koho se obrátit, když něco nefunguje.'];
 function surveyCard(compact){
   const sv = S.survey || {};
-  return `<section class="svy" id="svy"><div class="svy-h">${spockSVG('fab')}<div><h3>${sv.at ? 'Díky za zpětnou vazbu!' : 'Jak se vám onboarding daří?'}</h3><p>${sv.at ? 'Odpovědi můžete kdykoli upravit a znovu zkopírovat.' : 'Tři otázky, minuta času. Pomůže to onboarding zlepšit pro další kolegy.'}</p></div></div>
+  return `<section class="svy" id="svy"><div class="svy-h">${spockSVG('fab')}<div><h3>${sv.at ? 'Díky za zpětnou vazbu!' : 'Jak se vám onboarding daří?'}</h3><p>${sv.at ? 'Odpovědi jsou u týmu CoE Product Management. Když je upravíte, pošlete je znovu.' : 'Tři otázky, minuta času. Pomůže to onboarding zlepšit pro další kolegy.'}</p></div></div>
     ${SURVEY_Q.map((q,i) => `<div class="svy-q"><span>${q}</span><div class="svy-s" role="radiogroup" aria-label="${esc(q)}">${[1,2,3,4,5].map(v => `<button type="button" role="radio" aria-checked="${sv['q'+i] === v}" class="${sv['q'+i] === v ? 'on' : ''}" data-svy="${i}:${v}" title="${['vůbec nesouhlasím','spíš nesouhlasím','napůl','spíš souhlasím','plně souhlasím'][v-1]}">${v}</button>`).join('')}</div></div>`).join('')}
     <label class="svy-t"><span>Co bylo nejtěžší nebo nejasné?</span><textarea id="svy-txt" rows="${compact ? 2 : 3}" placeholder="Volitelné">${esc(sv.txt || '')}</textarea></label>
-    <div class="svy-f"><span class="muted">1 = vůbec nesouhlasím, 5 = plně souhlasím. Odpovědi zůstávají jen ve vašem prohlížeči, dokud je nepošlete.</span><button class="btn primary" type="button" data-svy-send ${SURVEY_Q.every((_,i) => sv['q'+i]) ? '' : 'disabled'}>Zkopírovat odpovědi</button></div>
-    ${sv.at ? '<p class="svy-ok">Zkopírováno. Vložte je do zprávy týmu CoE Product Management nebo tomu, kdo vám onboarding zadal.</p>' : ''}</section>`;
+    <div class="svy-f"><span class="muted">1 = vůbec nesouhlasím, 5 = plně souhlasím. Odešlou se týmu CoE Product Management, který onboarding spravuje.</span><button class="btn primary" type="button" data-svy-send ${SURVEY_Q.every((_,i) => sv['q'+i]) ? '' : 'disabled'}>${sv.at ? 'Odeslat znovu' : 'Odeslat zpětnou vazbu CoE Product Managementu'}</button></div>
+    ${sv.at ? `<p class="svy-ok" role="status">${sv.queued ? 'Jste offline. Odešlu je sám, jakmile budete zase připojeni.' : 'Odesláno týmu CoE Product Management. Díky!'}</p>` : ''}</section>`;
 }
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-svy],[data-svy-send]'); if (!b) return;
   S.survey = S.survey || {};
   if (b.dataset.svy) { const [i, v] = b.dataset.svy.split(':').map(Number); S.survey['q'+i] = v; save(); const y = scrollY; render(); scrollTo({top:y}); return; }
   const tx = document.getElementById('svy-txt'); S.survey.txt = tx ? tx.value : '';
-  const out = 'Zpětná vazba k onboardingu SPOCKu' + (S.role ? ' (' + ROLES[S.role] + ')' : '') + '\n' + SURVEY_Q.map((q,i) => '- ' + q + ' ' + S.survey['q'+i] + '/5').join('\n') + (S.survey.txt ? '\n- Nejtěžší: ' + S.survey.txt : '') + '\n- Hotovo: ' + overall() + ' %';
-  const ok = () => { S.survey.at = dKey(0); save(); award('survey', 20, 'zpětná vazba'); const y = scrollY; render(); scrollTo({top:y}); toast('Odpovědi jsou ve schránce'); };
-  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(out).then(ok, () => { prompt('Zkopírujte odpovědi:', out); ok(); }); else { prompt('Zkopírujte odpovědi:', out); ok(); }
+  const out = SURVEY_Q.map((q,i) => q + ' ' + S.survey['q'+i] + '/5').join(' · ') + (S.survey.txt ? '\nNejtěžší: ' + S.survey.txt : '');
+  /* jeden dotazník na člověka: opakované odeslání přepíše ten předchozí */
+  const item = {id:'svy', at:Date.now(), loc:'badges', where:'Dotazník k onboardingu', kind:'dotaznik', text:out, fix:'', role:S.role || null, ver:BUILD.ver || ''};
+  b.disabled = true; b.textContent = 'Odesílám…';
+  fbStore(item).then(res => {
+    if (res === 'fail') { b.disabled = false; b.textContent = 'Odeslat znovu'; toast('Odeslat se nepodařilo. Zkuste to prosím znovu.'); return; }
+    S.survey.at = dKey(0); S.survey.queued = res === 'queued'; save(); award('survey', 20, 'zpětná vazba'); try { trk('zpětná vazba', 'dotazník'); } catch (e) {}
+    const y = scrollY; render(); scrollTo({top:y}); toast(res === 'sent' ? 'Odesláno týmu CoE Product Management' : 'Odešlu, až budete online');
+  });
 });
 document.addEventListener('input', e => { if (e.target.id === 'svy-txt') { S.survey = S.survey || {}; S.survey.txt = e.target.value; save(); } });
 
