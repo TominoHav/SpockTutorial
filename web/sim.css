@@ -462,6 +462,5 @@ button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var
 .wl-head{display:flex;gap:14px;align-items:center;padding-right:40px}.wl-head h2{margin:0;font-size:clamp(20px,2.6vw,26px);letter-spacing:-.01em}.wl-head p{margin:2px 0 0;color:var(--ink-2);font-size:14.5px}
 .wl-in video{width:100%;max-height:60vh;border-radius:12px;background:#000}
 .wl-foot{display:flex;gap:10px;flex-wrap:wrap}
-@media (max-width:600px){.wl-in{padding:14px}.wl-foot .btn{width:100%;justify-content:center}.wl-sp{width:60px;height:70px}}
-.wl-b{align-items:flex-end}.wl-sp{width:76px;height:88px;flex:none}
-.wl-bub{position:relative;background:var(--surface-2);border-radius:16px 16px 16px 4px;padding:10px 14px}.wl-bub h2{font-size:clamp(18px,2.4vw,22px)}
+@media (max-width:600px){.wl-in{padding:14px}.wl-foot .btn{width:100%;justify-content:center}.wl-logo{width:40px;height:40px}}
+.wl-logo{width:52px;height:52px;flex:none}

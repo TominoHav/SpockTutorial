@@ -110,7 +110,7 @@ runs.push(scenario('uvítání',async()=>{
  for(const [W,H,dev] of [[1280,900,'počítač'],[390,844,'mobil']]){
   const ctx=await b.newContext({viewport:{width:W,height:H}});await ctx.addInitScript(()=>{window.__E2E_WELCOME=true;});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
   await p.goto(F);await p.waitForSelector('.vidov.wl',{timeout:5000}).catch(()=>{});
-  ok(`uvítání, ${dev}: při prvním otevření se ukáže okno s videem a Spock pozdraví`, await p.locator('.vidov.wl video source[src="spock-pitch.mp4"]').count()===1 && await p.locator('.vidov.wl .spock').count()===1 && (await p.locator('#wl-h').innerText()).includes('Ahoj, jsem Spock'));
+  ok(`uvítání, ${dev}: při prvním otevření se ukáže okno s videem, logem PDE a přivítáním`, await p.locator('.vidov.wl video source[src="spock-pitch.mp4"]').count()===1 && await p.locator('.vidov.wl .pde-logo').count()===1 && (await p.locator('#wl-h').innerText()).includes('Vítejte'));
   ok(`uvítání, ${dev}: video se nepouští samo a okno se vejde na obrazovku`, await p.evaluate(()=>{const v=document.querySelector('.wl video'),r=document.querySelector('.wl-in').getBoundingClientRect();return v.paused&&r.bottom<=innerHeight+1&&r.right<=innerWidth+1;}));
   ok(`uvítání, ${dev}: zaměření je v okně (klávesnice)`, await p.evaluate(()=>!!document.activeElement.closest('.wl')));
   if(dev==='počítač'){

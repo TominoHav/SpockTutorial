@@ -1644,7 +1644,7 @@ function welcomeOpen(){
   if (S.role || S.seenPitch || document.querySelector('.vidov') || (window.__E2E && !window.__E2E_WELCOME)) return;
   const ov = document.createElement('div'); ov.className = 'vidov wl'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-labelledby', 'wl-h');
   ov.innerHTML = `<div class="vidov-in wl-in"><button type="button" class="g-x vidov-x" aria-label="Zavřít uvítání">×</button>
-    <div class="wl-head wl-b">${spockSVG('wl-sp')}<div class="wl-bub"><h2 id="wl-h">Ahoj, jsem Spock</h2><p>Za necelé 2 minuty vám ukážu, co vás tu čeká.</p></div></div>
+    <div class="wl-head">${pdeLogo('wl-logo')}<div><h2 id="wl-h">Vítejte v onboardingu do SPOCKu</h2><p>Podívejte se, co vás čeká. Necelé 2 minuty.</p></div></div>
     ${vidTag('pitch')}
     <div class="wl-foot"><button class="btn primary" type="button" data-wl="go">Začít: vyberte svou roli →</button><button class="btn" type="button" data-wl="skip">Přeskočit video</button></div></div>`;
   document.body.append(ov);
