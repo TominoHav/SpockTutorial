@@ -105,13 +105,34 @@ for(const [name,w,h,scheme] of [['tablet',768,1024,'light'],['tablet na šířku
   await ctx.close();
  }));
 }
+// 15) testování kurzu: vlastník smaže svůj pokrok a skočí do kterékoli fáze
+runs.push(scenario('testování kurzu',async()=>{
+ const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
+ await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=pm]').click();await settle(p,300);
+ await p.evaluate(()=>document.querySelector('[data-go=cheat]').click());await settle(p,100);
+ ok('testování: v menu Jen pro vás je Testování kurzu vedle dashboardu', await p.locator('.rail-more [data-go=admin]').count()===1);
+ await p.evaluate(()=>document.querySelector('[data-go=admin]').click());await settle(p,100);
+ ok('testování: stránka nabízí reset a skok do každé lekce', await p.locator('#adm [data-adm=ask]').count()===1 && await p.locator('#adm [data-adm^="jump:l3:"]').count()>3);
+ await p.locator('#adm [data-adm="jump:l3:2"]').first().click();await settle(p,200);
+ const s1=await loadState(p);
+ ok('testování: skok do úrovně 3 otevře její 3. lekci a předchozí úrovně cesty označí jako hotové', /Pokročilý/.test(await p.locator('.unit h1').innerText()) && (await p.locator('#lpanel').getAttribute('data-lk'))==='l3.2' && !!(s1.qpass&&s1.qpass.l0&&s1.qpass.l1&&s1.qpass.pm), JSON.stringify(Object.keys(s1.qpass||{})));
+ await p.evaluate(()=>document.querySelector('[data-go=admin]').click());await settle(p,100);
+ await p.locator('#adm [data-adm=ask]').click();await settle(p,50);
+ ok('testování: reset chce potvrzení', await p.locator('#adm [data-adm=reset]').count()===1);
+ await p.locator('#adm [data-adm=reset]').click();await settle(p,2600);
+ const s2=await loadState(p), acc=await p.evaluate(()=>{const d=window.__db['data/users/u_ja/progress'];return d&&d.state?d.state:null;});
+ ok('testování: reset smaže pokrok, roli ponechá a vrátí na úvod', !Object.keys(s2.todo||{}).length && !Object.keys(s2.qpass||{}).length && s2.role==='pm' && !!s2.resetAt && await p.locator('.hx').count()===1);
+ ok('testování: reset se zapíše i do pokroku pod účtem', !!acc && !Object.keys(acc.todo||{}).length && !!acc.resetAt, JSON.stringify(acc||{}).slice(0,100));
+ ok('testování: bez chyb v konzoli', errs.length===0, errs.slice(0,2).join(' | '));
+ await ctx.close();
+}));
 // 14) opora: v menu jen to nezbytné, zbytek pod Další, dashboard jen pro vlastníka
 runs.push(scenario('opora',async()=>{
  const ctx=await b.newContext({viewport:{width:1280,height:900}});const p=await ctx.newPage();CUR=p;
  await p.goto(F);await p.waitForSelector('.startb [data-role]');await p.locator('.startb [data-role=pm]').click();await settle(p,200);
  await p.evaluate(()=>document.querySelector('[data-go=cheat]').click());await settle(p,100);
  const vis=await p.evaluate(()=>[...document.querySelectorAll('.rail-more > button')].map(b=>b.dataset.go));
- ok('opora: v menu jsou nahoře jen tahák, když něco nejde a slovníček', JSON.stringify(vis)==='["cheat","diag","gloss","dash"]', JSON.stringify(vis));
+ ok('opora: v menu jsou nahoře jen tahák, když něco nejde a slovníček (a pro vlastníka dashboard a testování)', JSON.stringify(vis)==='["cheat","diag","gloss","dash","admin"]', JSON.stringify(vis));
  ok('opora: pod Další jsou jen odznaky a profil, tým a příručka (bez mapy, připravenosti, nanečisto a jiných rolí)', await p.evaluate(()=>{const d=document.querySelector('.rail-x');return d&&!d.open&&!d.querySelector('[data-simstart]')&&['badges','tym'].every(x=>d.querySelector('[data-go='+x+']'))&&!d.querySelector('[data-go=map],[data-go=ready]')&&!!d.querySelector('[data-week=l1b]')&&!d.querySelector('[data-week=pd]');}));
  await p.evaluate(()=>document.querySelector('.rail-x [data-go=tym]').click());await settle(p,100);
  ok('opora: na stránce z Další zůstane Další rozbalené', await p.evaluate(()=>document.querySelector('.rail-x').open));

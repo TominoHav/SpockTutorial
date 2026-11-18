@@ -4,6 +4,9 @@
    Přechod na vlastní server: stačí nahradit pLoad a pPush. */
 const PROG = {ref:null, ready:false, h:null, busy:false};
 function pMerge(a, b){
+  /* reset kurzu: stav starší než reset na druhé straně se nepřimíchá */
+  if ((a.resetAt || 0) > (b._at || 0)) return Object.assign({}, a);
+  if ((b.resetAt || 0) > (a._at || 0)) return Object.assign({}, b);
   const o = Object.assign({}, b, a), newer = (b._at || 0) > (a._at || 0) ? b : a;
   ['role','goal','skin','av','sound','pos','survey','dq','seenVideo','flown','express'].forEach(k => { if (newer[k] !== undefined) o[k] = newer[k]; });
   ['todo','cards','proof','got','badges','unlocked','qpass','ready','quiz','frozen','vids','exSeen','rev','runev','selfok'].forEach(k => { o[k] = Object.assign({}, b[k] || {}, a[k] || {}); });

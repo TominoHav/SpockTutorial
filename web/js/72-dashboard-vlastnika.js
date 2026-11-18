@@ -183,7 +183,7 @@ function renderDash(){
     `<span class="ds-nw"><span class="ds-pct"><i style="width:${(r.prog || {}).pct || 0}%"></i></span> ${(r.prog || {}).pct || 0} %</span>`, esc(tLocLabel((r.prog || {}).loc || 'home')), dNum((r.prog || {}).xp || 0), (r.dev || {}).mobile ? 'mobil' : 'počítač']);
   app.innerHTML = shell('dash', `<div id="dash">${dTabs()}
     <div class="mh c-indigo"><span class="eyebrow">Dashboard · jen pro vlastníka</span><h1>Jak lidé procházejí tutoriálem</h1>
-      <p>Data z databáze stránky, načtená ${dWhen(DASH.at)}. Měří se jen lidé přihlášení na claude.ai s právem zápisu (sdílení jako Přispěvatel). <button class="btn sm" type="button" data-dash="reload">${DASH.loading ? 'Načítám…' : 'Načíst znovu'}</button>
+      <p>Data z databáze stránky, načtená ${dWhen(DASH.at)}. Měří se jen lidé přihlášení na claude.ai s právem zápisu (sdílení jako Přispěvatel). <button class="btn sm" type="button" data-dash="reload">${DASH.loading ? 'Načítám…' : 'Načíst znovu'}</button> <button class="btn sm" type="button" data-go="admin">Testování kurzu →</button>
       <label class="ds-chk"><input type="checkbox" data-dash="me" ${DASH.withMe ? 'checked' : ''}> Započítat i mě</label></p></div>
     <div class="ds-tiles">${dTile('Lidé celkem', n)}${dTile('Aktivní za 7 dní', act7)}${dTile('Návštěv dnes', today)}${dTile('Návštěv celkem', dNum(totVisits))}${dTile('Čas na stránce', dDur(totSecs), n ? 'průměr ' + dDur(Math.round(totSecs / n)) + ' na člověka' : '')}${dTile('Dokončili úroveň 0', steps[4][1], n ? Math.round(100 * steps[4][1] / n) + ' % lidí' : '')}${dTile('Otevřená zpětná vazba', openFb.length, DASH.fb.length + ' celkem')}${dTile('Dotazy na Spocka', dNum(sp.n), 'lidí: ' + sp.people)}</div>
 
