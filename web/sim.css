@@ -518,3 +518,11 @@ button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var
 @media (max-width:600px){.lsteps{grid-template-columns:1fr 1fr 1fr;gap:6px}.lsteps li button{flex-direction:column;gap:4px;padding:8px 6px;font-size:12px;text-align:center}.lstep>summary{padding:12px}.ls-chip{display:none}.ls-b{padding:0 12px 12px}}
 .lstep{min-width:0;max-width:100%}.ls-b{display:grid;gap:16px;min-width:0}
 .ls-b .blk,.ls-b .todo,.ls-b .titem{min-width:0}.ls-b .titem{overflow-wrap:anywhere}
+/* testování kurzu (jen vlastník) */
+.adm-box{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:16px 18px;margin:0 0 16px}
+.adm-box h2{margin:0 0 6px;font-size:20px}.adm-box p{margin:6px 0}
+.adm-list{display:grid;gap:10px;margin-top:10px}
+.adm-m{border-left:4px solid var(--c);padding:8px 10px;border-radius:0 10px 10px 0;background:var(--surface-2)}
+.adm-mh{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}.adm-mh .muted{font-size:13px}
+.adm-ls{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.btn.danger{background:var(--err-ink,#A82A30);border-color:var(--err-ink,#A82A30);color:var(--bg)}

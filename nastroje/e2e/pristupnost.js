@@ -60,6 +60,7 @@ await Promise.all([['mobil',390,844],['počítač',1280,850]].flatMap(([dev,w,h]
  await p.locator('.startb [data-role=pm]').click();await p.waitForTimeout(200);
  await p.evaluate(()=>document.querySelector('[data-go=dash]').click());await p.waitForSelector('#dash .ds-tabs');
  for(const t of ['lide','pohyb','ver']){await p.evaluate(t=>document.querySelector('[data-dash="tab:'+t+'"]').click(),t);await p.waitForTimeout(250);await audit('dashboard '+t);}
+ await p.evaluate(()=>document.querySelector('[data-go=admin]').click());await p.waitForSelector('#adm');await audit('testování kurzu');await p.locator('#adm [data-adm=ask]').click();await p.waitForTimeout(100);await audit('testování kurzu, potvrzení resetu');
  await p.evaluate(()=>{const s=document.getElementById('sim');if(s)s.remove();document.body.classList.remove('noscroll');__kviz.finish();});await p.waitForTimeout(300);
  await p.locator('#home-btn').click();await p.waitForTimeout(300);
  await p.evaluate(()=>{for(const e of document.querySelectorAll('.cel'))e.remove();});

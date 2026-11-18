@@ -91,7 +91,7 @@ function shell(active, body){
   /* Další: profil s týmem a příručka; moduly jiných rolí se ukážou až po změně role */
   const extra = [['badges','Odznaky a profil','indigo'],['tym','Tým','indigo']], exOpen = extra.some(x => x[0] === active) || (gw && active === gw.id) || W.some(w => w.role && w.role !== S.role && w.id === active);
   const more = `<details class="rail-x" ${exOpen ? 'open' : ''}><summary>Další</summary>${extra.map(it).join('')}${guide}${W.some(w => w.role && w.role !== S.role && w.id === active) ? otherRoles(active) : ''}</details>`;
-  const own = TRK.owner ? `<span class="grp">Jen pro vás</span>${it(['dash','Dashboard','indigo'])}` : '';
+  const own = TRK.owner ? `<span class="grp">Jen pro vás</span>${it(['dash','Dashboard','indigo'])}${it(['admin','Testování kurzu','indigo'])}` : '';
   return `<div class="ed"><nav class="rail" aria-label="Navigace">${railPathD(active) + `<div class="rail-more"><span class="grp">Opora</span>${core}${more}${own}</div>`}</nav><section class="main">${body}</section></div>`;
 }
 
@@ -109,6 +109,7 @@ function render(){
   else if (view.name === 'cheat') renderCheat();
   else if (view.name === 'badges') renderBadges();
   else if (view.name === 'tym') renderTeam();
+  else if (view.name === 'admin') renderAdmin();
   updatePills();
   /* poslední místo pro „Pokračovat tam, kde jste skončil(a)“ */
   if (view.name === 'week' && typeof view.lesson === 'number' && (!S.pos || S.pos.w !== view.week || S.pos.l !== view.lesson)) { S.pos = {w:view.week, l:view.lesson}; save(); }
