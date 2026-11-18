@@ -494,3 +494,26 @@ button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var
 /* konec lekce: co si odnést do práce */
 .blk.takeaway{border:1px solid var(--line);border-left:4px solid var(--c);border-radius:0 12px 12px 0;background:var(--surface);padding:12px 16px}
 .tk-wait{margin:0;font-size:14px}
+/* lekce ve třech krocích: lišta a výrazné karty kroků */
+.lsteps{list-style:none;margin:14px 0 12px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px}
+.lsteps li button{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-weight:700;font-size:14px;color:var(--ink-2)}
+.lsteps li button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.lsteps .ls-now button{border-color:var(--c);color:var(--ink);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 18%,transparent)}
+.lsteps .ls-done button{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}
+.ls-n{flex:none;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--surface-2);color:var(--ink-2);font-size:13px;font-weight:800}
+.ls-now .ls-n{background:var(--c);color:#fff}.ls-done .ls-n{background:var(--ok);color:#fff}
+.lstep{border:1px solid var(--line);border-left:5px solid var(--line);border-radius:14px;background:var(--surface);margin:0 0 12px}
+.lstep.ls-now{border-left-color:var(--c)}.lstep.ls-done{border-left-color:var(--ok)}
+.lstep>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:14px 16px;flex-wrap:wrap}
+.lstep>summary::-webkit-details-marker{display:none}
+.lstep>summary::after{content:"▾";margin-left:8px;color:var(--ink-3)}.lstep:not([open])>summary::after{content:"▸"}
+.ls-t{font-size:clamp(17px,2.2vw,20px);font-weight:800;color:var(--ink)}
+.ls-sub2{font-size:13.5px;color:var(--ink-3);font-weight:600}
+.ls-chip{margin-left:auto;font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px;background:var(--surface-2);color:var(--ink-2)}
+.ls-now .ls-chip{background:color-mix(in srgb,var(--c) 14%,var(--surface));color:var(--ink)}.ls-done .ls-chip{background:var(--ok-bg);color:var(--ok)}
+.ls-b{padding:0 16px 16px}.ls-b>.blk{margin-top:0}
+.ls-b .blk.takeaway{border:0;padding:0;background:none}
+.ls-sub{font-size:12px}
+@media (max-width:600px){.lsteps{grid-template-columns:1fr 1fr 1fr;gap:6px}.lsteps li button{flex-direction:column;gap:4px;padding:8px 6px;font-size:12px;text-align:center}.lstep>summary{padding:12px}.ls-chip{display:none}.ls-b{padding:0 12px 12px}}
+.lstep{min-width:0;max-width:100%}.ls-b{display:grid;gap:16px;min-width:0}
+.ls-b .blk,.ls-b .todo,.ls-b .titem{min-width:0}.ls-b .titem{overflow-wrap:anywhere}
