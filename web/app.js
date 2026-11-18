@@ -1251,11 +1251,10 @@ function archSvg(){
 function lessonPanel(w, di){
   const d = w.days[di]; if (!d) return '';
   const dn = d.todo.filter((_,ti) => S.todo[w.id+'.'+di+'.'+ti]).length, done = lessonDone(w, di);
-  const prakt = w.id !== 'l0' && d.todo.some(t => t.check || /VS Code|katalog|REDIM|prohlížeč/.test(t.note || ''));
-  const learn = d.learn.length ? `<div class="blk"><h4><i>\u0001</i>Nauč se${d.learn.some(r => /`/.test(r.l)) ? ' · v kopii SPOCKu' : ''}</h4><div class="res">${d.learn.map(r => `<div class="ritem"><span class="ty text">text</span><span>${fmt(r.l)}<small>${fmt(r.n||'')}</small></span></div>`).join('')}</div></div>` : '';
+  const learn = d.learn.length ? `<div class="blk"><h4 class="ls-sub">Ke čtení${d.learn.some(r => /`/.test(r.l)) ? ' · v kopii SPOCKu' : ''}</h4><div class="res">${d.learn.map(r => `<div class="ritem"><span class="ty text">text</span><span>${fmt(r.l)}<small>${fmt(r.n||'')}</small></span></div>`).join('')}</div></div>` : '';
   const cards = d.cards && d.cards.length ? (() => {
     const nAns = cardsDone(w, di), shown = d.cards.slice(0, Math.min(d.cards.length, nAns + 1));
-    return `<div class="blk"><h4><i>\u0001</i>${prakt ? 'Proč to tak je' : 'Nauč se'} · ${d.cards.length} ${d.cards.length === 1 ? "karta" : d.cards.length < 5 ? "karty" : "karet"} <span class="where web">jen na webu</span></h4><div class="cards">${shown.map((c, ci) => {
+    return `<div class="blk"><div class="cards">${shown.map((c, ci) => {
       const k = w.id + '.' + di + '.' + ci, a = cardAns(k), answered = a !== undefined;
       return `<article class="lcard ${answered ? 'done' : 'cur'}" id="card-${k.replace(/\./g,'-')}"><span class="lc-n num">Karta ${ci + 1} z ${d.cards.length}</span><h3>${fmt(c.t)}</h3>${(c.blocks || c.text.map(p => ({p}))).map(b => b.p !== undefined ? `<p>${fmt(b.p)}</p>` : b.list ? `<ul class="keys">${b.list.map(x => `<li><span>${fmt(x)}</span></li>`).join('')}</ul>` : b.table ? tbl(b.table) : b.svg === 'arch' ? archSvg() : b.olist ? `<ol class="lc-ol">${b.olist.map(x => `<li>${fmt(x)}</li>`).join('')}</ol>` : b.code !== undefined ? `<div class="codeblk"><button type="button" class="btn sm codecopy" data-copy>Zkopírovat</button><pre><code>${esc(b.code)}</code></pre></div>` : '').join('')}${c.more || c.moreList ? `<details class="lc-more"><summary>Víc do hloubky</summary>${c.more ? `<p>${fmt(c.more)}</p>` : ''}${c.moreList ? `<ul class="keys">${c.moreList.map(x => `<li><span>${fmt(x)}</span></li>`).join('')}</ul>` : ''}</details>` : ''}${c.q ? `<div class="lc-q"><b>${fmt(c.q)}</b><div class="lc-opts">${c.o.map((o, oi) => `<button type="button" class="lc-opt ${answered ? (oi === c.a ? 'right' : oi === a ? 'wrong' : '') : ''}" data-card="${k}:${oi}" ${answered ? 'disabled' : ''}>${fmt(o)}</button>`).join('')}</div>${answered ? `<p class="lc-why ${a === c.a ? 'ok' : 'bad'}"><b>${a === c.a ? 'Správně.' : 'Ne tak docela.'}</b> ${fmt(c.why)}</p>` : ''}</div>` : ''}</article>`;
     }).join('')}${nAns < d.cards.length ? `<p class="lc-left muted">Odpovězte a otevře se další karta. Zbývá ${d.cards.length - nAns} z ${d.cards.length}.</p>` : ''}</div></div>`;
@@ -1264,23 +1263,41 @@ function lessonPanel(w, di){
   /* Co si odnést do práce: pravidla z vysvětlení karet lekce (žádný nový obsah), ukážou se po zodpovězení karet, ať neprozradí odpovědi */
   const rules = (d.cards || []).map(c => c.why).filter(Boolean).slice(0, 4), rulesOn = rules.length && cardsDone(w, di) === d.cards.length;
   const hasKey = d.key.length || d.tables.length || (d.codes && d.codes.length);
-  const key = (hasKey || rules.length) ? `<div class="blk takeaway"><h4><i>\u0001</i>Co si odnést do práce</h4>${rules.length ? (rulesOn ? `<ul class="keys">${rules.map(r => `<li><span>${fmt(r)}</span></li>`).join('')}</ul>` : '<p class="muted tk-wait">Ukáže se, až zodpovíte karty lekce.</p>') : ''}${w.id === 'gm' && d.d === '2G.6' ? archSvg() : ''}${(() => { const at = t => t.at === undefined ? 0 : t.at; let h = '', ul = []; const flush = () => { if (ul.length) { h += `<ul class="keys">${ul.join('')}</ul>`; ul = []; } }; const codes = d.codes || [], cb = c => `<div class="codeblk"><button type="button" class="btn sm codecopy" data-copy>Zkopírovat</button><pre><code>${esc(c.text)}</code></pre></div>`; d.key.forEach((k, i) => { d.tables.filter(t => at(t) === i).forEach(t => { flush(); h += tbl(t); }); codes.filter(c => c.at === i).forEach(c => { flush(); h += cb(c); }); ul.push(`<li><span>${fmt(k)}</span></li>`); }); flush(); d.tables.filter(t => at(t) >= d.key.length).forEach(t => { h += tbl(t); }); codes.filter(c => c.at >= d.key.length).forEach(c => { h += cb(c); }); return h; })()}</div>` : '';
-  const todo = d.todo.length ? `<div class="blk"><h4><i>\u0001</i>${prakt ? 'Vyzkoušejte ve SPOCKu' : d.todo.some(t => /VS Code/.test(t.note || '') || t.check) ? 'Teď to zkuste ve SPOCKu' : 'Teď to zkuste'}</h4><div class="todo">${(() => { const ci = d.todo.findIndex((_,ti) => !S.todo[w.id+'.'+di+'.'+ti]); return d.todo.map((t,ti) => todoItem(w.id+'.'+di+'.'+ti, t, ti === ci)).join(''); })()}</div></div>` : '';
+  const key = (hasKey || rules.length) ? `<div class="blk takeaway">${rules.length ? (rulesOn ? `<ul class="keys">${rules.map(r => `<li><span>${fmt(r)}</span></li>`).join('')}</ul>` : '<p class="muted tk-wait">Ukáže se, až zodpovíte karty lekce.</p>') : ''}${w.id === 'gm' && d.d === '2G.6' ? archSvg() : ''}${(() => { const at = t => t.at === undefined ? 0 : t.at; let h = '', ul = []; const flush = () => { if (ul.length) { h += `<ul class="keys">${ul.join('')}</ul>`; ul = []; } }; const codes = d.codes || [], cb = c => `<div class="codeblk"><button type="button" class="btn sm codecopy" data-copy>Zkopírovat</button><pre><code>${esc(c.text)}</code></pre></div>`; d.key.forEach((k, i) => { d.tables.filter(t => at(t) === i).forEach(t => { flush(); h += tbl(t); }); codes.filter(c => c.at === i).forEach(c => { flush(); h += cb(c); }); ul.push(`<li><span>${fmt(k)}</span></li>`); }); flush(); d.tables.filter(t => at(t) >= d.key.length).forEach(t => { h += tbl(t); }); codes.filter(c => c.at >= d.key.length).forEach(c => { h += cb(c); }); return h; })()}</div>` : '';
+  const todo = d.todo.length ? `<div class="blk"><div class="todo">${(() => { const ci = d.todo.findIndex((_,ti) => !S.todo[w.id+'.'+di+'.'+ti]); return d.todo.map((t,ti) => todoItem(w.id+'.'+di+'.'+ti, t, ti === ci)).join(''); })()}</div></div>` : '';
   const xpLeft = d.todo.filter((_,ti) => !S.got['task.'+w.id+'.'+di+'.'+ti]).length * XP.task + (S.got['lesson.'+w.id+'.'+di] ? 0 : XP.lesson);
   const next = di + 1 < w.days.length
     ? `<button class="btn ${done ? 'primary' : ''}" type="button" data-lesson="${di+1}">Další lekce: ${esc(w.days[di+1].d)} →</button>`
     : ''; /* poslední lekce: další krok je kvíz u překážky hned pod lekcí */
-  return `<section class="lpanel c-${w.c}" id="lpanel" aria-label="Lekce ${esc(d.d)}">
+  return `<section class="lpanel c-${w.c}" id="lpanel" data-lk="${w.id}.${di}" aria-label="Lekce ${esc(d.d)}">
     <div class="lp-head">
       <span class="lp-badge">${done ? '✓' : esc(d.d)}</span>
       <div class="lp-ht"><span class="eyebrow">Lekce ${esc(d.d)} · ~${fmtMin(dayLearn(d) + dayDo(d))}${xpLeft ? ' · ještě ' + xpLeft + ' XP' : ' · hotovo'}</span><h2>${fmt(d.t)}</h2></div>
     </div>
     <div class="lp-prog"><span class="bar"><i style="width:${Math.round(lessonPct(w, di)*100)}%"></i></span><span class="num">${d.cards && d.cards.length ? cardsDone(w, di) + '/' + d.cards.length + ' karet · ' : ''}${dn}/${d.todo.length} úkolů</span></div>
-    <div class="dbody">${(() => { let n = 0; return (prakt ? learn + todo + cards + key : learn + cards + todo + key) /* lekce končí praxí a tím, co si odnést do práce */.replace(/<i>\u0001<\/i>/g, () => '<i>' + (++n) + '</i>'); })()}${extra}</div>
+    ${lessonSteps(w, di, [
+      (learn || cards) && {k:'learn', t:'Pochopte', sub:d.cards && d.cards.length ? cardsDone(w, di) + '/' + d.cards.length + ' ' + (d.cards.length === 1 ? 'karta' : d.cards.length < 5 ? 'karty' : 'karet') : 'ke čtení', done:!!(d.cards && d.cards.length) && cardsDone(w, di) === d.cards.length, body:learn + cards},
+      todo && {k:'todo', t:d.todo.some(t => /VS Code/.test(t.note || '') || t.check) ? 'Vyzkoušejte ve SPOCKu' : 'Vyzkoušejte', sub:dn + '/' + d.todo.length + ' ' + (d.todo.length === 1 ? 'úkol' : d.todo.length < 5 ? 'úkoly' : 'úkolů'), done:dn === d.todo.length, body:todo},
+      key && {k:'take', t:'Co si odnést do práce', short:'Co si odnést', sub:rules.length && !rulesOn ? 'po kartách' : '', done:false, wait:!!rules.length && !rulesOn, body:key}
+    ])}<div class="dbody">${extra}</div>
     <p class="lp-fb"><button class="btn sm ghost" type="button" data-fbopen>Něco tu nesedí? Napište nám</button></p>
     <div class="lp-foot">${di > 0 ? `<button class="btn" type="button" data-lesson="${di-1}">← ${esc(w.days[di-1].d)}</button>` : '<span></span>'}${next}</div>
   </section>`;
 }
+/* Lekce ve třech stejných krocích: Pochopte → Vyzkoušejte → Co si odnést do práce.
+   Lišta nahoře ukazuje, kde člověk je. Hotové kroky se při otevření lekce sbalí; při překreslení téže lekce
+   zůstane rozbalené to, co bylo (ať po poslední kartě nezmizí její vysvětlení). */
+function lessonSteps(w, di, list){
+  const steps = list.filter(Boolean), lk = w.id + '.' + di, old = document.getElementById('lpanel');
+  const keep = old && old.dataset.lk === lk ? Object.fromEntries([...old.querySelectorAll('.lstep')].map(e => [e.dataset.step, e.open])) : null;
+  const cur = steps.findIndex(st => !st.done && !st.wait);
+  const state = (st, i) => st.done ? 'done' : i === cur ? 'now' : 'wait';
+  const chip = s => s === 'done' ? 'Hotovo ✓' : s === 'now' ? 'Na řadě' : 'Čeká';
+  const bar = `<ol class="lsteps" aria-label="Kroky lekce">${steps.map((st, i) => `<li class="ls-${state(st, i)}"><button type="button" data-lstep="${st.k}"><span class="ls-n">${state(st, i) === 'done' ? '✓' : i + 1}</span><span>${st.short || st.t}</span></button></li>`).join('')}</ol>`;
+  return bar + steps.map((st, i) => { const s = state(st, i), open = keep && keep[st.k] !== undefined ? keep[st.k] : s !== 'done';
+    return `<details class="lstep ls-${s}" data-step="${st.k}" ${open ? 'open' : ''}><summary><span class="ls-n">${s === 'done' ? '✓' : i + 1}</span><span class="ls-t">${st.t}</span>${st.sub ? `<span class="ls-sub2">${st.sub}</span>` : ''}<span class="ls-chip">${chip(s)}</span></summary><div class="ls-b">${st.body}</div></details>`; }).join('');
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-lstep]'); if (!b) return; const d = document.querySelector(`.lstep[data-step="${b.dataset.lstep}"]`); if (d) { d.open = true; d.scrollIntoView({block:'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'}); } });
 /* Po přechodu na jinou lekci skočit na její začátek (pod lištu nahoře) */
 function toLessonTop(){ const p = document.getElementById('lpanel'); if (p) p.scrollIntoView({block:'start', behavior:'auto'}); }
 document.addEventListener('click', e => {

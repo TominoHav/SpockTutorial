@@ -52,6 +52,10 @@
   - *Proč:* Naučíte se Coache používat na otázky k metodě, místo abyste hádali.
   1. Agent **Methodology Coach** → „Co dělá PD v triu a co z toho pilot nedělá?“
   2. Ověřte, že odpověď odkazuje na kánon metody.
+  - *Co jste viděli:* Odkazuje odpověď Coache na kánon metody?
+    - [x] Ano, cituje `method-canon.md`
+    - [ ] Ne, odpovídá obecně bez odkazu
+  - *Když ne:* Coach má odpovídat z know-how. Odpověď bez odkazu si zapište do deníku jako nález.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -122,6 +126,11 @@
   - *Proč:* Když práci na fázi dělá někdo jiný než ten, kdo ji schválí, má to být v záznamu vidět.
   1. Na začátku fáze 2 spusťte `SPOCK: record who owns this stage` → své jméno a roli (např. `Researcher` nebo `Product Designer`).
   2. G2 pak podepíše jeden člověk. Kontrakt jmenuje Researchera a PM (`BUSINESS-LOGIC-OVERVIEW.md` §4).
+  - *Ověření:* Pod jakým polem se u fáze 2 v `RUN-STATE.md` zapsalo vaše jméno a role?
+    - [x] `owner`
+    - [ ] `decision_gate`
+    - [ ] `created_by`
+  - *Nápověda:* Najděte fázi 2 v `RUN-STATE.md` vašeho běhu.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
