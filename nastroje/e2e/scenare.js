@@ -158,6 +158,7 @@ runs.push(scenario('přizpůsobení',async()=>{
  await p.waitForFunction(()=>[...document.querySelectorAll('.notice')].some(n=>/k zopakování/.test(n.textContent)),null,{timeout:12000}).then(()=>true,()=>false).then(v=>ok('přizpůsobení: vyskočí upozornění na karty k zopakování',v));
  await clean();await p.locator('#pill-ntf').click();await settle(p,80);
  ok('přizpůsobení: zvonek otevře panel s opakováním a počtem karet', await p.locator('#ntf-pop [data-review]').isVisible()&&/1 karta/.test(await p.locator('#ntf-pop').innerText())&&(await p.locator('#pill-ntf').getAttribute('aria-expanded'))==='true');
+ ok('zvonek: panel visí přímo pod zvonkem', await p.evaluate(()=>{const b=document.getElementById('pill-ntf').getBoundingClientRect(),q=document.getElementById('ntf-pop').getBoundingClientRect();return q.top>=b.bottom&&q.top-b.bottom<=16&&q.left<=b.right&&q.right>=b.left;}));
  const x0=(await loadState(p)).xp;
  await p.locator('#ntf-pop [data-review]').click();await p.waitForSelector('#ses');await answer(true);await clean();
  const s3=await loadState(p);

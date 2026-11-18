@@ -397,6 +397,8 @@ function ntfToggle(open){
   if (!pop) { pop = document.createElement('div'); pop.id = 'ntf-pop'; pop.className = 'ntf-pop'; pop.setAttribute('role', 'region'); pop.setAttribute('aria-label', 'Upozornění'); pop.hidden = true; document.body.append(pop); }
   const show = open === undefined ? pop.hidden : open;
   pop.hidden = !show; b.setAttribute('aria-expanded', String(show));
+  /* panel visí přímo pod zvonkem a zarovná se k jeho pravé hraně; na úzké obrazovce přes celou šířku */
+  if (show) { const r = b.getBoundingClientRect(), w = Math.min(380, innerWidth - 24); pop.style.top = Math.round(r.bottom + 8) + 'px'; pop.style.left = Math.round(Math.max(12, Math.min(r.right - w, innerWidth - w - 12))) + 'px'; pop.style.right = 'auto'; pop.style.width = w + 'px'; }
   if (show) { pop.innerHTML = ntfPanel(); const f = pop.querySelector('button'); if (f) f.focus(); try { trk('upozornění', 'otevřeno'); } catch (e) {} }
 }
 document.addEventListener('click', e => {
@@ -572,14 +574,16 @@ function spaceMap(){
   const items = (pend ? ['l0','l1',null,'l3'].map(id => id && W.find(w => w.id === id)) : mods).map((w, i) => {
     if (!w) return `<li class="sw tbd"><span class="sw-pl" style="--pc:#A54CB2"><span>2</span></span><h3>Svět discovery</h3><p class="sw-m">Vaše role</p><p class="sw-foe">Nejdřív vyberte roli</p></li>`;
     const wd = worldOf(w), t = weekTotals(w), pct = t.tot ? t.done / t.tot : 0, done = pct === 1, locked = isLocked(w), here = nx && nx.id === w.id && !locked;
-    const lbl = locked ? 'Náhled' : here ? 'Pokračovat' : done ? 'Zopakovat' : 'Otevřít';
+    /* u každé planety jedna akce: další krok, nebo otevření; kvíz si lze zopakovat uvnitř modulu */
+    const quizNext = !locked && !done && quizReady(w) && !quizPassed(w);
+    const lbl = locked ? 'Náhled' : quizNext ? 'Kvíz u překážky' : here ? 'Pokračovat' : 'Otevřít';
     return `<li class="sw ${done ? 'done' : ''} ${here ? 'here' : ''} ${locked ? 'locked' : ''}">
       ${here ? `<span class="sw-me" title="Tady právě jste">${avatarSVG()}</span>` : ''}
       <span class="sw-pl" style="--pc:${wd.c}"><span>${done ? '✓' : locked ? LOCK : i}</span></span>
       <h3>${wd.n}</h3><p class="sw-m">${esc(w.role ? w.title : w.lab + ' · ' + w.title)}</p>
       <p class="sw-foe ${done ? 'won' : ''}">${done ? 'Překonáno: ' : 'Překážka: '}${wd.foe}</p>
       <span class="sw-prog" aria-label="Hotovo ${Math.round(pct*100)} %"><span class="sw-bar"><i style="width:${Math.round(pct*100)}%"></i></span><b class="num">${Math.round(pct*100)} %</b></span>
-      <button class="linkbtn" type="button" data-week="${w.id}">${lbl}</button>${done || (quizReady(w) && !locked) ? `<span class="sw-x"><button class="linkbtn" type="button" data-quiz="${w.id}">${quizPassed(w) ? 'Zopakovat kvíz' : 'Kvíz u překážky'}</button></span>` : ''}</li>`;
+      <button class="linkbtn" type="button" ${quizNext ? `data-quiz="${w.id}"` : `data-week="${w.id}"`}>${lbl}</button></li>`;
   }).join('');
   return `<div class="spmap"><div class="sp-stars" aria-hidden="true"></div>
     <ol class="sp-route ${S.role === 'gm' ? 'five' : ''}">${items}
@@ -971,7 +975,8 @@ function heroFirst(){
   return `<section class="hx hx-first"><div class="hx-txt">
     <div class="hx-brand">${pdeLogo()}<span class="eyebrow">Onboarding do SPOCKu · nový nástroj pro discovery v ČS</span></div>
     <h1>Seznamte se <em>se SPOCKem</em></h1>
-    <p class="hx-lead">AI asistent ve VS Code, který produktovým týmům připraví discovery od nápadu po iniciativu. <b>Agenti připravují, vy rozhodujete.</b></p>
+    <p class="hx-lead">SPOCK je AI asistent ve VS Code. Produktovým týmům připraví podklady v sedmi fázích discovery, od nápadu po iniciativu připravenou k vývoji. <b>Agenti připravují, vy rozhodujete.</b></p>
+    <ul class="hx-ben"><li>Rychleji</li><li>Jednotně napříč týmy</li><li>Na základě důkazů</li><li>Dohledatelně</li></ul>
     <div class="hx-cta"><button class="btn primary" type="button" data-simstart>Vyzkoušet nanečisto · 5 min</button><button class="btn" type="button" data-playvideo="pitch">▶ Co vás čeká · 1 min 40 s</button></div>
     <p class="hx-note">Nic neinstalujete. Začíná se tady na webu.</p>
   </div>${heroArt('Ahoj, jsem Spock')}</section>`;
