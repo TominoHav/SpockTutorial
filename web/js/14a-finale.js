@@ -134,10 +134,10 @@ function playScenes(sc, label, what){
     clearTimeout(STORY.h);
     const next = () => { if (!STORY || STORY.paused || STORY.i !== i0 || STORY.line !== l0) return;
       if (!lastLine) { STORY.line++; line(); } else if (!last) { STORY.i++; STORY.line = 0; show(); } };
-    const wait = ms => { STORY.h = setTimeout(next, ms); };
+    const wait = ms => { if (STORY) STORY.h = setTimeout(next, ms); }; /* hlas může dohlásit konec až po zavření finále */
     if (STORY.paused) return;
     const spoken = sayEn(L[0], () => wait(650));
-    if (!spoken) wait(Math.max(2600, L[1].length * 62)); else STORY.h = setTimeout(next, Math.max(6000, L[0].length * 120)); /* pojistka, kdyby hlas nedal vědět */
+    if (!spoken) wait(Math.max(2600, L[1].length * 62)); else if (STORY) STORY.h = setTimeout(next, Math.max(6000, L[0].length * 120)); /* pojistka, kdyby hlas nedal vědět */
   };
   const show = () => {
     const s = sc[STORY.i], last = STORY.i === sc.length - 1;
