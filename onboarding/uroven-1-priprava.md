@@ -201,11 +201,20 @@ Copilot čerpá **AI kredity**. Stav vidíte vpravo dole ve VS Code u ikony Copi
   1. Extensions (ikona čtverečků vlevo) → nainstalujte **GitHub Copilot** a **GitHub Copilot Chat**, pokud chybí.
   2. **Sign in with GitHub** → přihlaste se **účtem ČS**. Bez výzvy: ikona účtu vlevo dole (Accounts).
   3. Ověření: otevřete chat (View → Chat), napište „ahoj“ a dostanete odpověď. Hlášení o chybějící licenci znamená, že role `CSIN\vcs_github_copilot` ještě není schválená (lekce 1.1).
+  - *Co jste viděli:* Co se stalo, když jste v chatu napsali „ahoj“?
+    - [x] Copilot odpověděl
+    - [ ] Objevilo se hlášení o chybějící licenci
+    - [ ] Chat se neotevřel
+  - *Když ne:* Hlášení o licenci znamená, že role `CSIN\vcs_github_copilot` ještě není schválená (lekce 1.1).
 - [ ] **Ověřte agent mode a výběr modelu** (5 min, ve VS Code)
   - *Proč:* SPOCK potřebuje agenty a konkrétní model. Když chybí, zjistíte to teď a ne uprostřed běhu.
   1. V okně chatu najděte výběr režimu nebo agenta a ověřte, že nabízí **Agent**.
   2. Ve výběru modelu najděte **Claude Sonnet 5**. Pokud tam není, firemní nastavení Copilota ho nepovoluje. Napište to IT nebo týmu CoE Product Management spolu se screenshotem výběru.
   3. Vpravo dole ve VS Code klikněte na ikonu Copilota vedle zvonku a ověřte, že máte dost AI kreditů.
+  - *Co jste viděli:* Nabízí výběr modelu Claude Sonnet 5?
+    - [x] Ano, je ve výběru
+    - [ ] Ne, ve výběru chybí
+  - *Když ne:* Pošlete IT nebo týmu CoE Product Management screenshot výběru modelu.
 
 ### Pro zvídavé (anglicky)
 
@@ -295,6 +304,10 @@ Ve výběru agenta musí být **přesně šest agentů SPOCKu**. Vedle nich uvid
   1. Ve výběru modelu v chatu zvolte **Claude Sonnet 5**, effort **High** a kontext **1M** (`SETUP.md` §6).
   2. Otevřete libovolný dokument ukázkového běhu (např. `fixtures/2026-09-savings-goals/1-brief/initiative-brief.md`) a dejte náhled (Cmd+Shift+V nebo Ctrl+Shift+V).
   3. Když dokument začíná tabulkou `[object Object]`, vypněte rozšíření `bierner.markdown-yaml-preamble` (`TESTER-GUIDE.md` §2.5).
+  - *Co jste viděli:* Čím začíná náhled briefu ukázkového běhu?
+    - [x] Nadpisem a textem dokumentu
+    - [ ] Tabulkou `[object Object]`
+  - *Když ne:* Vypněte rozšíření `bierner.markdown-yaml-preamble` (`TESTER-GUIDE.md` §2.5) a náhled otevřete znovu.
 
 ### Pro zvídavé (anglicky)
 

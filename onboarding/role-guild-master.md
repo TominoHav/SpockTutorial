@@ -87,6 +87,11 @@
   1. Vyberte oblast, kterou držíte nebo budete držet: `compliance/`, `market/`, `method/`, `product/` nebo `writing/` ve `specifications/definitions/know-how/`. Když to ještě nevíte, vezměte `method/` a `product/`.
   2. Otevřete každý soubor oblasti a z hlavičky si zapište **Version**, **Status**, **Owner** a **Written by** (např. Method Canon: 0.4, For review).
   3. Označte si, které mají status *Approved* a které ještě ne. Schválení je práce jmenované osoby v ČS (`KNOW-HOW-OWNERS.md` §4 krok 3).
+  - *Ověření:* Kolik dokumentů know-how ve `specifications/definitions/know-how/` má status *Approved*?
+    - [x] Žádný, všechny jsou *For review* nebo PoC draft
+    - [ ] Všechny
+    - [ ] Jen Method Canon
+  - *Nápověda:* Podívejte se na řádek **Status** v hlavičkách.
 - [ ] **Najděte, které verze know-how běh četl** (15 min, ve VS Code)
   - *Proč:* Když se změní know-how, potřebujete vědět, které běhy vznikly podle staré verze.
   1. Otevřete `RUN-STATE.md` ukázkového běhu `fixtures/2026-09-spending-insights/`.
@@ -203,6 +208,11 @@
   1. U příští brány ve cvičném běhu si nechte od agenta vypsat otázky brány.
   2. Ve třetím políčku `SPOCK: approve what is in front of me` je zodpovězte (např. `1y 2n 3?`).
   3. V `RUN-STATE.md` ověřte, že se odpovědi zapsaly s vaším jménem.
+  - *Ověření:* Pod jakým polem se vaše odpovědi zapsaly do `RUN-STATE.md`?
+    - [x] `judged_half`, s vaším jménem v `by`
+    - [ ] `quality_gate.result`
+    - [ ] `decision_gate.decided_by`
+  - *Nápověda:* Najděte fázi, u které jste podepisovali.
 
 ### Pro zvídavé (anglicky, ve vaší kopii SPOCKu)
 
@@ -512,6 +522,11 @@ Dvě pravidla, která se přímo týkají vašich změn know-how:
   1. Vezměte návrh změny z lekce 2G.4 nebo vyberte jedno know-how z oblasti Method.
   2. V `.github/registry/skills.yaml` najděte všechny skilly, které ho čtou, a k nim fázi (`stage:`) a agenta (`agent:`).
   3. Do návrhu změny dopište: kterých fází a agentů se změna týká a na kterém ukázkovém běhu ji ověříte.
+  - *Ověření:* Vyzkoušejte to na `opportunity-framing`: které skilly ho podle `skills.yaml` čtou?
+    - [x] `opportunity-framing` (2.3) a `prioritisation` (2.4) agenta `hypothesis-designer` a `methodology-guidance` Coache
+    - [ ] Jen `brief-creation`
+    - [ ] Všech 17 skillů
+  - *Nápověda:* Hledejte `opportunity-framing` v seznamech `know_how` jednotlivých skillů.
 - [ ] **Projděte jeden tah ve vlastním běhu a určete, kdo co dělal** (30 min, ve VS Code)
   - *Proč:* Když umíte u každého kroku říct, jestli ho udělal agent, kód, hlídač, nebo člověk, poznáte, kde se metodika do výstupu dostala a kde ne.
   1. Ve cvičném běhu projděte fázi 1 až po schválení G1.
