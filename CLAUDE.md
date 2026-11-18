@@ -10,8 +10,8 @@ Krátká mapa, aby se při každé úpravě nemusel znovu procházet celý kód.
 
 ## Kde co je
 - `onboarding/*.md`: obsah lekcí (karty, úkoly, ověření `*Ověření:*` / `*Co jste viděli:*`, kvízy). `web/parse.py` z nich dělá `web/dist/data.json`.
-- `web/app.js`: aplikace. Sekce hledej podle komentářů `/* ---------- název ---------- */` (`grep -n "^/\* ---" web/app.js`). Hlavní: stav `S` a `save()`, hra (XP, odznaky), kvíz `startSession`/`renderSession`, mapa `spmap`, úvod `homeV4`/`heroFirst`/`heroStable`, modul `renderWeek`, lekce `lessonPanel`, menu `shell`.
-- `web/sim.js`: SPOCK nanečisto, dotazník `surveyCard`. `web/track.js`: měření, zpětná vazba `fbStore`, dashboard, tým, offline.
+- `web/js/NN-nazev.js`: kód webu po modulech (do 15 kB), sestavení je spojí v pořadí čísel do jednoho skriptu, takže sdílí proměnné. Najdi modul: `grep -ln "nazevFunkce" web/js/*.js`, pak čti jen kolem řádku. 10–22 aplikace (stav `S`, hra, kvíz, mapa, úvod `homeV4`, modul `renderWeek`, lekce `lessonPanel`, menu `shell`, Spock), 60–61 SPOCK nanečisto a vysvětlivky, 70–76 měření, zpětná vazba `fbStore`, dashboard, pokrok pod účtem, tým.
+- Nový kód dej do modulu, kam věcně patří; když modul přeroste ~20 kB, rozděl ho na hranici sekce `/* ---------- … ---------- */`.
 - CSS: `web/base-head.html` (základ a barvy `--…` pro světlý i tmavý režim), `home.css`, `game.css`, `sim.css`, `intro.css`, `path.css`. Nové styly přidávej na konec `sim.css`.
 - `web/build.py`: spojí vše do jedné stránky `web/dist/spock-user-onboarding.html`, zmenší JS (esbuild), `BUILD` uloží i do `dist/build.json`.
 - Testy: `nastroje/e2e/` (journey, scenare, pristupnost, vykon; testovací háčky `window.__kviz` jen v `e2e.html`). Rozpočet stránky 700 kB.

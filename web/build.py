@@ -66,15 +66,23 @@ _icons = ('<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64
 head = rep(head, '<meta name="claude:viewport-fit-sides" content="cover">', '<meta name="claude:viewport-fit-sides" content="cover">\n' + _icons)
 os.makedirs('dist', exist_ok=True)
 import hashlib, glob as _glob
-_srcs = ['app.js', 'sim.js', 'track.js'] + sorted(_glob.glob('*.css')) + ['base-head.html', os.path.join('dist', 'data.json')] + sorted(_glob.glob(os.path.join('ikona', '*')))
+_js = sorted(_glob.glob(os.path.join('js', '*.js')))  # kód webu po modulech; pořadí čísel = pořadí ve stránce
+_srcs = _js + sorted(_glob.glob('*.css')) + ['base-head.html', os.path.join('dist', 'data.json')] + sorted(_glob.glob(os.path.join('ikona', '*')))
 _src = hashlib.sha1(b''.join(open(f, 'rb').read() for f in _srcs)).hexdigest()[:12]
 _tok = lambda n: round(n / 3.5)
 _sz = lambda fs: sum(os.path.getsize(f) for f in fs)
 _data = json.load(open(os.path.join('dist', 'data.json'), encoding='utf-8'))
 _les = sorted(_glob.glob(os.path.join('..', 'onboarding', '*.md')))
-_edit = {'lekce': _tok(_sz(_les)), 'aplikace': _tok(_sz(['app.js', 'sim.js', 'track.js'])), 'vzhled': _tok(_sz(sorted(_glob.glob('*.css')) + ['base-head.html'])),
-         'testy': _tok(_sz(sorted(_glob.glob(os.path.join('..', 'nastroje', '*.py'))) + [os.path.join('..', 'nastroje', 'e2e', 'journey.js')])),
-         'top': sorted([[os.path.basename(f), _tok(os.path.getsize(f))] for f in _les + ['app.js', 'sim.js', 'track.js']], key=lambda x: -x[1])[:8]}
+_css = sorted(_glob.glob('*.css')) + ['base-head.html']
+_tst = sorted(_glob.glob(os.path.join('..', 'nastroje', '*.py'))) + sorted(_glob.glob(os.path.join('..', 'nastroje', 'e2e', '*.js')))
+_avg = lambda fs: _tok(_sz(fs) / max(1, len(fs)))
+# cena úpravy: kolik tokenů Claude přečte pro jednu změnu (podle CLAUDE.md najde a čte jeden soubor dané oblasti),
+# k tomu CLAUDE.md, který čte vždy. Celý zdroj oblasti zůstává pro srovnání v 'zdroj'.
+_claude = _tok(os.path.getsize(os.path.join('..', 'CLAUDE.md'))) if os.path.exists(os.path.join('..', 'CLAUDE.md')) else 0
+_edit = {'lekce': _avg(_les) + _claude, 'aplikace': _avg(_js) + _claude, 'vzhled': _avg(_css) + _claude, 'testy': _avg(_tst) + _claude,
+         'zdroj': {'lekce': _tok(_sz(_les)), 'aplikace': _tok(_sz(_js)), 'vzhled': _tok(_sz(_css)), 'testy': _tok(_sz(_tst))},
+         'mira': 'uprava',
+         'top': sorted([[os.path.basename(f), _tok(os.path.getsize(f))] for f in _les + _js], key=lambda x: -x[1])[:8]}
 _edit['celkem'] = _edit['lekce'] + _edit['aplikace'] + _edit['vzhled'] + _edit['testy']
 _rep = None
 try:
@@ -87,7 +95,7 @@ def _report(name):
         r = json.load(open(os.path.join('dist', name), encoding='utf-8'))
         return r if r.get('src') == _src else None
     except Exception: return None
-BUILD = {'a11y': _report('pristupnost-report.json'), 'perf': _report('vykon-report.json'), 'scen': _report('scenare-report.json'), 'src': _src, 'size': {'js': _sz(['app.js', 'sim.js', 'track.js']), 'css': _sz(sorted(_glob.glob('*.css'))), 'data': os.path.getsize(os.path.join('dist', 'data.json'))},
+BUILD = {'a11y': _report('pristupnost-report.json'), 'perf': _report('vykon-report.json'), 'scen': _report('scenare-report.json'), 'src': _src, 'size': {'js': _sz(_js), 'css': _sz(sorted(_glob.glob('*.css'))), 'data': os.path.getsize(os.path.join('dist', 'data.json'))},
          'counts': {'moduly': len(_data['W']), 'lekce': sum(len(w['days']) for w in _data['W']), 'karty': sum(len(d.get('cards', [])) for w in _data['W'] for d in w['days']),
                     'ukoly': sum(len(d['todo']) for w in _data['W'] for d in w['days']), 'kviz': sum(len(w['quiz']) for w in _data['W'])},
          'edit': _edit, 'e2e': _rep}
@@ -97,7 +105,9 @@ def _minjs(js):
     js = _re.sub(r'^[ \t]*//[^\n]*\n', '', js, flags=_re.M)
     # odsazení řádků se vypustí taky: v šablonách HTML na něm nezáleží a bloky kódu (<pre>) se plní z dat, ne z odsazeného textu
     return _re.sub(r'^[ \t]+', '', js, flags=_re.M)
-app = _minjs(open('app.js',encoding='utf-8').read() + '\n' + open('sim.js',encoding='utf-8').read() + '\n' + open('track.js',encoding='utf-8').read()).replace('__DATA__', "JSON.parse('" + json.dumps(json.load(open(os.path.join('dist','data.json'),encoding='utf-8')), ensure_ascii=False, separators=(',',':')).replace('\\', '\\\\').replace("'", "\\'").replace('</', '<\\/') + "')")
+app = _minjs(''.join(open(f, encoding='utf-8').read() for f in _js)).replace('__DATA__', "JSON.parse(document.getElementById('spock-data').textContent)")
+# výkon: data lekcí jsou v bloku JSON vedle skriptu, ne jako řetězec v JavaScriptu; prohlížeč je tak nemusí číst jako kód
+_data_tag = '<script type="application/json" id="spock-data">' + json.dumps(json.load(open(os.path.join('dist','data.json'),encoding='utf-8')), ensure_ascii=False, separators=(',',':')).replace('</', '<\\/') + '</script>\n'
 # verze v patičce: commit tutoriálu a vydání SPOCKu, podle kterého je napsaný
 import subprocess
 def _git(*a):
@@ -112,7 +122,7 @@ tail = "\ndocument.querySelector('#app').insertAdjacentHTML('afterend', " + json
 _rel_ = _rel
 BUILD['spock'] = _rel_
 # výkon: písmo se načte až po prvním vykreslení (neblokuje ho), styly bez komentářů a zbytečných mezer
-_font = "(function(){const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap';document.head.append(l);})();\n"
+_font = "requestAnimationFrame(()=>setTimeout(()=>{const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap';document.head.append(l);},0));\n"
 assert "render();\n})();" in tail
 tail = tail.replace("render();\n})();", "render();\n" + _font + "})();")
 def _mincss(m):
@@ -131,6 +141,7 @@ def _esbuild(js):
     r = subprocess.run([_bin, '--minify', '--charset=utf8', '--target=es2020', '--loader=js', '--log-level=error'], input=js, capture_output=True, text=True, encoding='utf-8')
     if r.returncode != 0: raise SystemExit('esbuild selhal: ' + r.stderr[:2000])
     return r.stdout.replace('</script', '<\\/script')
+_s0 = out.index('<script>\n(function(){'); out = out[:_s0] + _data_tag + out[_s0:]
 _s0 = out.index('<script>\n(function(){'); _s1 = out.rindex('</script>')
 out = out[:_s0] + '<script>' + _esbuild(out[_s0 + len('<script>'):_s1]) + out[_s1:]
 BUILD['size']['html'] = len(out.encode('utf-8'))
