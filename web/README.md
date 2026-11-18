@@ -80,14 +80,15 @@ Jedno dlouhé video přes všech sedm fází a sedm krátkých klipů po fázíc
 | Soubor | Co dělá |
 |---|---|
 | `parse.py` | Přečte `onboarding/*.md` a uloží obsah do `dist/data.json` |
-| `build.py` | Složí stránku: `base-head.html` (vzhled), CSS soubory, `app.js`, `sim.js` a data |
-| `app.js` | Aplikace: úvodní stránka, cesta, lekce, kvízy, odznaky, průvodce Spock |
-| `sim.js` | Simulace SPOCK nanečisto, vysvětlivky pojmů, dotazník |
+| `build.py` | Složí stránku: `base-head.html` (vzhled), CSS soubory, moduly `js/*.js` a data |
+| `js/10–22-*.js` | Aplikace: úvodní stránka, cesta, lekce, kvízy, odznaky, průvodce Spock |
+| `js/60–61-*.js` | Simulace SPOCK nanečisto, vysvětlivky pojmů, dotazník |
+| `js/70–76-*.js` | Měření, zpětná vazba, dashboard, pokrok pod účtem, tým |
 | `*.css` | Vzhled jednotlivých částí |
 | `media/` | Video a náhled videa |
 
 ## Na co dát pozor
 
 - **Pořadí úkolů v lekci je klíč uloženého pokroku** (`modul.lekce.úkol` v prohlížeči). Nový úkol přidávejte na konec lekce, novou lekci na konec modulu. Jinak se uživatelům posune zaškrtnutý pokrok.
-- **Fakta v simulaci** (`sim.js`) jsou ručně napsaná podle SPOCKu. Při kontrole aktuálnosti je projděte také.
-- Text ve slovníku vysvětlivek (`TERMS` v `sim.js`) a popisy rolí (`ROLE_WHO` v `app.js`) jsou mimo markdown.
+- **Fakta v simulaci** (`js/60-spock-nanecisto-zkraceny.js`) jsou ručně napsaná podle SPOCKu. Při kontrole aktuálnosti je projděte také.
+- Text ve slovníku vysvětlivek (`TERMS_SRC` v `js/61-vysvetlivky-odbornych-slov.js`) a popisy rolí (`ROLE_WHO` v `js/`, najdete přes `grep -l ROLE_WHO web/js/*.js`) jsou mimo markdown.

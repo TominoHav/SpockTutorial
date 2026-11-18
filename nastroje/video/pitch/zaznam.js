@@ -3,7 +3,7 @@ const {chromium}=require('playwright');const path=require('path');const fs=requi
 const HERE=__dirname,ROOT=path.resolve(HERE,'..','..','..'),OUT=path.join(ROOT,'web','dist','pitch'),AUD=path.join(OUT,'audio'),FR=path.join(OUT,'frames'),FPS=25;
 const VER=process.argv[2]||'uzivatele';
 /* logo PDE z aplikace do finále */
-const APP=fs.readFileSync(path.join(ROOT,'web','app.js'),'utf8');const PDE=(APP.match(/function pdeLogo\(cls\)\{[\s\S]*?\n\}/)||[''])[0];
+const APP=fs.readdirSync(path.join(ROOT,'web','js')).filter(f=>f.endsWith('.js')).sort().map(f=>fs.readFileSync(path.join(ROOT,'web','js',f),'utf8')).join('');const PDE=(APP.match(/function pdeLogo\(cls\)\{[\s\S]*?\n\}/)||[''])[0];
 /* vzhledy Spocka za hodnosti a jeho kresba: přímo z aplikace, ať video ukazuje skutečné odměny */
 const SPK=(APP.match(/const SKINS = \[[\s\S]*?\n\];/)||[''])[0]+'\n'+(APP.match(/function spockSVG\(cls, skin\)\{[\s\S]*?\n\}/)||[''])[0];
 const SC=JSON.parse(fs.readFileSync(path.join(HERE,'scenar-'+VER+'.json'),'utf8')).map(s=>Object.assign(s,{src:s.img?'data:image/jpeg;base64,'+fs.readFileSync(path.join(OUT,s.img)).toString('base64'):'',msrc:(s.montage||[]).map(f=>'data:image/jpeg;base64,'+fs.readFileSync(path.join(OUT,f)).toString('base64'))}));
