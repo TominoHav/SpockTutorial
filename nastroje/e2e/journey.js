@@ -229,10 +229,15 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
  await p.locator('[data-av="acc:cape"]').click();await settle(p);
  ok(T('cíl cesty: šatna oblékne postavičku'), (await st()).av.acc==='cape' && await p.locator('#wardrobe .avatar').count()===1);
  await p.locator('[data-fly]').click();await settle(p);
- ok(T('odlet spustí příběh cesty se scénou pro každý svět a setkáním se Spockem'), (await p.locator('#story .st-cap .eyebrow').innerText()).includes('1/9'));
- for(let i=0;i<8;i++){await p.locator('#story [data-st=next]').click();await settle(p);if(i===5)ok(T('příběh má scénu setkání se Spockem s vlajkou'), (await p.locator('#story .st-cap h2').innerText())==='Setkání se Spockem' && await p.locator('#story .st-flag').count()===1);if(i===5)ok(T('setkání je oslava: nápis, paprsky, posádka agentů a ohňostroj'), (await p.locator('#story .st-banner').innerText()).includes('Dokázali') && await p.locator('#story .st-rays').count()===1 && await p.locator('#story .st-crowd .cw').count()===6 && await p.locator('#story canvas.st-fw').count()===1);if(i===6)ok(T('souhrn ukazuje medaili absolventa s rolí'), await p.locator('#story .st-medal .medal').count()===1 && (await p.locator('#story .st-medal').innerHTML()).includes('Guild Master'));if(i===6)ok(T('souhrn příběhu skloňuje počty správně'), !/ 1 (odznaků|světů|lekcí|úkolů)/.test(await p.locator('#story .st-cap p').innerText()));}
+ ok(T('odlet spustí finále se scénou pro každý svět, čísly, setkáním se Spockem a certifikátem'), (await p.locator('#story .st-cap .eyebrow').innerText()).includes('1/10'));
+ ok(T('finále: anglický nadpis a české titulky'), await p.locator('#story .st-cap h2[lang=en]').count()===1 && (await p.locator('#story .st-sub').innerText()).length>5 && await p.locator('#story .st-cap .st-cs').count()===1);
+ for(let i=0;i<9;i++){await p.locator('#story [data-st=next]').click();await settle(p);
+  if(i===5){ok(T('finále: čísla z cesty se správným skloňováním'), await p.locator('#story .fn-grid .fn-n').count()===6 && !/^1 (dní|lekcí|úkolů|světů)/m.test(await p.locator('#story .fn-grid').innerText()));}
+  if(i===6){ok(T('finále: setkání se Spockem s vlajkou'), (await p.locator('#story .st-cap h2').innerText())==='Meeting Spock' && (await p.locator('#story .st-cs').innerText())==='Setkání se Spockem' && await p.locator('#story .st-flag').count()===1);ok(T('setkání je oslava: nápis, paprsky, posádka agentů a ohňostroj'), (await p.locator('#story .st-banner').innerText()).includes('Dokázali') && await p.locator('#story .st-rays').count()===1 && await p.locator('#story .st-crowd .cw').count()===6 && await p.locator('#story canvas.st-fw').count()===1);}
+  if(i===7){await p.waitForFunction(()=>{const im=document.querySelector('#story .fn-cert img');return im&&im.src&&im.src.length>1000;},null,{timeout:5000}).catch(()=>{});ok(T('finále: certifikát mise splněna jako obrázek k uložení s rolí'), await p.evaluate(()=>{const im=document.querySelector('#story .fn-cert img');return !!im&&/^data:image\/(png|svg)/.test(im.src);}) && (await p.locator('#story .st-sub').innerText()).includes('Guild Master'));}
+ }
  ok(T('odlet: postavička i Spock jsou v lodi'), await p.locator('#story .st-crew .avatar').count()===1 && await p.locator('#story .st-crew .spock').count()===1);
- ok(T('příběh jde projít do konce a zavřít'), (await p.locator('#story .st-cap h2').innerText())==='Odlet');
+ ok(T('finále jde projít do konce a zavřít'), (await p.locator('#story .st-cap h2').innerText())==='Lift-off');
  await p.locator('#story [data-st=next]').click();await settle(p);
  ok(T('po příběhu se stránka vrátí a nepřetéká'), await p.locator('#story').count()===0 && (await ov())<=0);
  ok(T('mapa: u hotové úrovně jen jedna akce Otevřít'), await p.locator('.spmap .sw.done:first-child button.linkbtn').count()===1 && /Otevřít/.test(await p.locator('.spmap .sw.done:first-child button.linkbtn').innerText()));
@@ -263,7 +268,7 @@ const DEV=Promise.all([[1280,900,'počítač'],[390,844,'mobil']].filter(([,,tag
 const P1=process.env.E2E_ONLY?null:scenario('doplňky',async()=>{
  const ctx=await b.newContext({viewport:{width:1280,height:900}});
  // Zkušební český hlas: testovací prohlížeč žádný nemá. Zapisuje, co se má přečíst, a hned ohlásí konec čtení.
- await ctx.addInitScript(()=>{window.__spoken=[];const fake={getVoices:()=>[{lang:'cs-CZ',name:'Zkušební hlas',default:true}],speak:u=>{window.__spoken.push({text:u.text,lang:u.lang});setTimeout(()=>u.onend&&u.onend(),30)},cancel:()=>{},onvoiceschanged:null};Object.defineProperty(window,'speechSynthesis',{value:fake,configurable:true});window.SpeechSynthesisUtterance=function(t){this.text=t;};});
+ await ctx.addInitScript(()=>{window.__spoken=[];const fake={getVoices:()=>[{lang:'cs-CZ',name:'Zkušební hlas',default:true},{lang:'en-US',name:'Test English',default:false}],speak:u=>{window.__spoken.push({text:u.text,lang:u.lang});setTimeout(()=>u.onend&&u.onend(),30)},cancel:()=>{},onvoiceschanged:null};Object.defineProperty(window,'speechSynthesis',{value:fake,configurable:true});window.SpeechSynthesisUtterance=function(t){this.text=t;};});
  const p=await ctx.newPage();CUR=p;const errs=[];p.on('pageerror',e=>errs.push(e.message));
  const st=()=>p.evaluate(()=>JSON.parse(localStorage.getItem('spock-user-onboarding-v1')||'{}'));
  const T=s=>'doplňky: '+s;CURS['doplňky']=p;
@@ -279,8 +284,8 @@ const P1=process.env.E2E_ONLY?null:scenario('doplňky',async()=>{
  for(let i=0;i<8;i++){const c=p.locator('.cel .cel-go');if(await c.count()){await c.first().click();await settle(p);}else break;}
  await p.evaluate(()=>__kviz.scenes());await settle(p);
  const sp=await p.evaluate(()=>window.__spoken);
- ok(T('komentář příběhu se čte českým hlasem'), sp.length>=1 && sp[0].lang==='cs-CZ', sp.length+' promluv');
- await p.waitForTimeout(1300);
+ ok(T('komentář finále se čte anglicky, titulky jsou české'), sp.length>=1 && /^en/.test(sp[0].lang) && /[a-z]/.test(sp[0].text) && (await p.locator('#story .st-sub').getAttribute('lang'))==='cs', sp.length+' promluv');
+ await p.waitForTimeout(2800);
  ok(T('po dočtení komentáře se scéna sama přepne'), !(await p.locator('#story .st-cap .eyebrow').innerText()).includes('1/'));
  await p.locator('#story [data-st=snd]').click();await settle(p);const n0=(await p.evaluate(()=>window.__spoken)).length;
  await p.locator('#story [data-st=next]').click();await settle(p);
