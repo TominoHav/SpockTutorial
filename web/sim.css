@@ -526,3 +526,8 @@ button,a,summary,[role=button]{-webkit-tap-highlight-color:color-mix(in srgb,var
 .adm-mh{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}.adm-mh .muted{font-size:13px}
 .adm-ls{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .btn.danger{background:var(--err-ink,#A82A30);border-color:var(--err-ink,#A82A30);color:var(--bg)}
+/* video v okně: pevný poměr stran (bez načtených dat nemá na mobilu výšku) a velké tlačítko Přehrát pro dotyk */
+.vidov-in video{aspect-ratio:16/9;height:auto}
+.vid-go{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:84px;height:84px;border-radius:50%;border:0;background:rgba(16,104,210,.92);color:#fff;font-size:34px;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.45)}
+.vid-go span{margin-left:6px}
+.vid-go:focus-visible{outline:3px solid #fff;outline-offset:3px}

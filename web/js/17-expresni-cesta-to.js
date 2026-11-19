@@ -123,7 +123,14 @@ function playVideo(id){
   ov.querySelector('.vidov-x').onclick = close;
   ov.addEventListener('click', e => { if (e.target === ov) close(); });
   ov.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-  v.play().catch(() => {}); ov.querySelector('.vidov-x').focus();
+  /* Na dotykových zařízeních (hlavně iPhone a aplikace Claude) se video spuštěné skriptem často zablokuje.
+     Proto se tam jen připraví (náhled a délka) a spustí se klepnutím, stejně jako video „Co je SPOCK“ ve stránce.
+     Na počítači se spustí hned; kdyby to prohlížeč nedovolil, ukáže se stejné tlačítko. */
+  const btn = () => { if (ov.querySelector('.vid-go')) return; v.insertAdjacentHTML('afterend', '<button type="button" class="vid-go" aria-label="Přehrát video"><span aria-hidden="true">▶</span></button>'); const g = ov.querySelector('.vid-go'); g.onclick = () => { g.remove(); v.play().catch(() => {}); }; };
+  v.addEventListener('play', () => { const g = ov.querySelector('.vid-go'); if (g) g.remove(); });
+  if (matchMedia('(pointer: coarse)').matches) { v.preload = 'metadata'; try { v.load(); } catch (e) {} btn(); }
+  else v.play().catch(btn);
+  ov.querySelector('.vidov-x').focus();
 }
 document.addEventListener('click', e => { const vb = e.target.closest('[data-playvideo]'); if (vb) { e.preventDefault(); playVideo(vb.dataset.playvideo || ''); } });
 document.addEventListener('play', e => { if (e.target.matches && e.target.matches('.cv-video') && !S.seenVideo) { S.seenVideo = true; save(); } }, true);
