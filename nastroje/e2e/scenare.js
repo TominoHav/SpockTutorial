@@ -401,6 +401,14 @@ runs.push(scenario('videa',async()=>{
  const v=await p.evaluate(()=>new Promise(r=>{const el=document.querySelector('.vidov video');const done=()=>r({src:el.currentSrc||el.querySelector('source')?.src||'',poster:el.poster,ready:el.readyState,err:el.error&&el.error.code});if(el.readyState>=1)done();else{el.addEventListener('loadedmetadata',done,{once:true});el.addEventListener('error',done,{once:true});setTimeout(done,3000);}}));
  const posterOk=await p.evaluate(src=>new Promise(r=>{const i=new Image();i.onload=()=>r(i.naturalWidth>0);i.onerror=()=>r(false);i.src=src;}),v.poster);
  ok('videa: okno s videem má zdroj a načte se náhledový obrázek', /\.mp4$/.test(v.src)&&posterOk, JSON.stringify(v));
+ { /* mobil: video v okně se nespouští skriptem (iPhone ho blokuje), ukáže tlačítko a pustí se klepnutím */
+  const mc=await b.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});const mp=await mc.newPage();
+  await mp.goto(F);await settle(mp,400);await mp.locator('[data-playvideo=pitch]').first().tap();await settle(mp,300);
+  const before=await mp.evaluate(()=>{const v=document.querySelector('.vidov video');return {go:!!document.querySelector('.vidov .vid-go'),paused:v&&v.paused,h:v?v.getBoundingClientRect().height:0};});
+  ok('videa, mobil: okno ukáže tlačítko Přehrát místo spuštění skriptem a video má výšku', before.go && before.paused && before.h>100, JSON.stringify(before));
+  await mp.locator('.vidov .vid-go').tap();await mp.waitForTimeout(1200);
+  ok('videa, mobil: klepnutí na Přehrát video spustí a tlačítko zmizí', await mp.evaluate(()=>{const v=document.querySelector('.vidov video');return !!v&&!v.paused&&!document.querySelector('.vidov .vid-go');}));
+  await mc.close(); }
  await ctx.close();
 }));
 await Promise.all(runs);await Promise.all(SHOTS);await b.close();
